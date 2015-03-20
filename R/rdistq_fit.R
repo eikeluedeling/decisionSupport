@@ -1,0 +1,164 @@
+#
+# file: rdistq_fit.R
+#
+# R package: decisionSupport
+# 
+# Authors (ToDo order?): 
+#   Lutz Göhring <lutz.goehring@gmx.de>
+#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#
+# Affiliation: ToDo
+# 
+# License: ToDo
+#
+##############################################################################################
+##############################################################################################
+# rdistq_fit(distribution, n, percentiles, quantiles)
+##############################################################################################
+#' Generate univariate random numbers based on quantiles.
+#' 
+#' This function generates random numbers for a set of univariate distributions based on the 
+#' distribution quantiles. Internally, this is achieved by fitting the distribution function
+#' to the given quantiles using \code{\link[rriskDistributions]{rriskFitdist.perc}}. 
+#' @param distribution A character string that defines the univariate distribution
+#'  to be randomly sampled. 
+#' @param n Number of generated observations.
+#' @param percentiles Numeric vector giving the percentiles. 
+#' @param quantiles Numeric vector giving the quantiles. 
+#' @details
+#' The follwing table shows the available distributions and their identification as a character string:
+#'  \tabular{lll}{
+#'  Identification \tab  Distribution\tab Number of quantiles\cr
+#'  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab >=2  \cr
+#'  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab ToDo \cr  
+#'  \code{cauchy}     \tab ToDo \tab ToDo\cr
+#'  \code{logis}      \tab ToDo \tab ToDo\cr 
+#'  \code{t}          \tab ToDo \tab ToDo\cr 
+#'  \code{chisq}      \tab ToDo \tab ToDo\cr 
+#'  \code{chisqnc}    \tab ToDo: implement? \tab ToDo\cr 
+#'  \code{exp}        \tab ToDo \tab ToDo\cr    
+#'  \code{f}          \tab ToDo \tab ToDo\cr 
+#'  \code{gamma}      \tab ToDo \tab ToDo\cr
+#'  \code{lnorm}      \tab ToDo  \tab ToDo\cr
+#'  \code{unif}       \tab ToDo \tab ToDo\cr
+#'  \code{weibull}    \tab ToDo \tab ToDo\cr
+#'  \code{triang}     \tab ToDo \tab ToDo\cr
+#'  \code{gompertz}   \tab ToDo \tab ToDo\cr
+#'  \code{pert}       \tab ToDo \tab ToDo\cr
+#'  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab ToDo
+#'  }
+#'  
+#' The default for \code{percentiles} is 0.05, 0.5 and 0.95, so for the default, 
+#' the quantiles argument should be a vector with 3 elements. If this is to be longer,
+#' the percentiles argument has to be adjusted to match the length of quantiles.
+#' @return ToDo
+#' @export
+rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles){
+  # Relative tolerance of the maximum relative deviation of generated quantiles from desired value:
+  relativeTolerance = 0.05
+#   # Initialize the loop:
+#   maxRelativeDeviation <- relativeTolerance + 1
+  tolConv=0.001
+  # Fit the desired distribution until the goodnes of fit is tolerated:
+#  while (maxRelativeDeviation > relativeTolerance){
+    # Fit the distribution to the given quantiles:
+    capture.output(dists<-try(rriskFitdist.perc(p=percentiles,
+                                                q=quantiles,
+                                                show.output=FALSE,
+                                                tolConv=tolConv,
+                                                fit.weights=rep(1,length(percentiles)))),
+                   file='NUL')
+    
+    #Todo: necessary?:
+    #  dists$results 
+    possible_dists<-colnames(dists$results[,3:ncol(dists$results)])[which(!is.na(dists$results[1,3:ncol(dists$results)]))]
+    
+    output<-NA
+    # Generate the random numbers according to the distribution type:
+    if(distribution=="norm") 
+      output<-rnorm(n=n, 
+                    mean=dists$results[1,"norm"],
+                    sd=dists$results[2,"norm"])
+    else if(distribution=="beta") 
+      output<-rbeta(n=n,
+                    shape1=dists$results[1,"beta"],
+                    shape2=dists$results[2,"beta"])
+    else if(distribution=="cauchy") 
+      output<-rcauchy(n=n,
+                      location=dists$results[1,"cauchy"],
+                      scale=dists$results[2,"cauchy"])
+    else if(distribution=="logis") 
+      output<-rlogis(n=n,
+                     location=dists$results[1,"logis"],
+                     scale=dists$results[2,"logis"])
+    else if(distribution=="t") 
+      output<-rt(n=n,
+                 df=dists$results[1,"t"])
+    else if(distribution=="chisq") 
+      output<-rchisq(n=n,
+                     df=dists$results[1,"chisq"])
+    #if(distribution=="chisqnc") output<-rchisqnc(n,dists$results[1,"chisqnc"],dists$results[2,"chisqnc"])
+    #not sure how chisqnc works
+    else if(distribution=="exp") 
+      output<-rexp(n=n,
+                   rate=dists$results[1,"exp"])
+    else if(distribution=="f") 
+      output<-rf(n=n,
+                 df1=dists$results[1,"f"],
+                 df2=dists$results[2,"f"])
+    else if(distribution=="gamma") 
+      output<-rgamma(n=n,
+                     shape=dists$results[1,"gamma"],
+                     rate=dists$results[2,"gamma"])
+    else if(distribution=="lnorm") 
+      output<-rlnorm(n=n,
+                     meanlog=dists$results[1,"lnorm"],
+                     sdlog=dists$results[2,"lnorm"])
+    else if(distribution=="unif") 
+      output<-runif(n=n,
+                    min=dists$results[1,"unif"],
+                    max=dists$results[2,"unif"])
+    #unif needs 2 quantiles (can't handle 3)
+    else if(distribution=="weibull") 
+      output<-rweibull(n=n,
+                       shape=dists$results[1,"weibull"],
+                       scale=dists$results[2,"weibull"])
+    else if(distribution=="triang") 
+      output<-rtriang(n=n,
+                      min=dists$results[1,"triang"],
+                      mode=dists$results[2,"triang"],
+                      max=dists$results[3,"triang"])
+    else if(distribution=="gompertz") 
+      output<-rgompertz(n=n,
+                        shape=dists$results[1,"gompertz"],
+                        scale=dists$results[2,"gompertz"])
+    else if(distribution=="pert") 
+      output<-rpert(n=n,
+                    min=dists$results[1,"pert"],
+                    mode=dists$results[2,"pert"],
+                    max=dists$results[3,"pert"],
+                    shape=dists$results[4,"pert"])
+    #pert needs 4 quantiles
+    else if(distribution=="tnorm") 
+      output<-rtnorm(n=n,
+                     mean=dists$results[1,"tnorm"],
+                     sd=dists$results[2,"tnorm"],
+                     lower=dists$results[3,"tnorm"],
+                     upper=dists$results[4,"tnorm"])
+    #tnorm needs 4 quantiles
+    else
+      stop("\"", distribution, "\" is not a valid distribution type.")
+    if(is.na(output[1])) 
+      stop("\"", distribution, "\" distribution could not be fitted. One of the following should work:", 
+           paste(possible_dists,collapse=", "))
+    # Maximum relative deviation of generated quantiles from desired value
+    maxRelativeDeviation <- max ( abs((quantile(x=output, probs=percentiles) - quantiles ) / quantiles ) )
+#     # Increase the absolute tolerance for next loop
+#     tolConv<-tolConv/2
+#   }
+  # Check goodnes of fit:
+  if( maxRelativeDeviation > relativeTolerance )
+    warning ("The maximum relative deviation of generated quantiles from desired value is: ", maxRelativeDeviation)
+  # Return sampeled distribution if it could be achieved, NA otherwise:
+  return(output)
+}

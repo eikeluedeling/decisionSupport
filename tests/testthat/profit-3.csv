@@ -1,0 +1,4 @@
+variable, distribution, lower,  upper
+revenue,  norm,       20000,  100000
+,,,
+costs,    norm,       10000,  70000
