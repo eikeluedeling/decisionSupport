@@ -1,0 +1,18 @@
+\contentsline {paragraph}{\nonumberline The underlying decision problem and its notational framework}{1}{section*.1}
+\contentsline {paragraph}{\nonumberline The meta problem of reducing uncertainty using the value of information}{2}{section*.2}
+\contentsline {subparagraph}{\nonumberline Meta decision principle: Focus on risk management or minimization of expected opportunity loss}{2}{section*.3}
+\contentsline {subparagraph}{\nonumberline Meta decision principle: Focus on utility maximization or maximization of expected welfare}{3}{section*.4}
+\contentsline {paragraph}{\nonumberline Solving the practical problem of calculating expected welfare by Monte Carlo simulation}{3}{section*.5}
+\contentsline {section}{\numberline {1}Introduction}{4}{section.1}
+\contentsline {section}{\numberline {2}The Underlying Decision Making Principle of a Binary Decision Problem}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Special case: Status quo and project approval}{8}{subsection.2.1}
+\contentsline {section}{\numberline {3}The Meta Decision of Reducing Uncertainty Using the Expected Value of Information}{9}{section.3}
+\contentsline {subsection}{\numberline {3.1}Meta decision principle: Focus on Risk Management or Minimization of Expected Opportunity Loss}{10}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Expected Value of Perfect Information}{10}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}Special case: Status quo and project approval}{12}{subsubsection.3.1.2}
+\contentsline {subsection}{\numberline {3.2}Meta decision principle: Focus on utility maximization or maximization of expected welfare}{14}{subsection.3.2}
+\contentsline {section}{\numberline {4}Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{14}{section.4}
+\contentsline {subsection}{\numberline {4.1}The Practical Problem of Calculating Expectation Values}{14}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Monte Carlo Simulations}{15}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{16}{subsection.4.3}
+\contentsline {section}{\numberline {5}Conclusion}{16}{section.5}

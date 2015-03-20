@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100
-Date: 2014-12-14
+Version: 1.101
+Date: 2015-03-20
 Author: Lutz Goehring, Eike Luedeling (-#ToDo: Order?)
 Maintainer: ToDo: Who shall do it: Luedeling, Eike (ICRAF)
     <E.Luedeling@cgiar.org>

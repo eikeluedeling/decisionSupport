@@ -1,19 +1,95 @@
+#
 # file: decisionSupport-package.R
 #
-# authors: Lutz Göhring, Eike Luedeling
+# R package: decisionSupport
+# 
+# Authors: 
+#   Lutz Göhring <lutz.goehring@gmx.de>
+#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
+# Affiliation:  World Agroforestry Centre (ICRAF)
+# 
+# License: ToDo
+#
+##############################################################################################
 
 #' Quantitative Support of Decision Making under Uncertainty
+#' 
+#' The \pkg{decisionSupport} package supports the quantitative analysis of 
+#' welfare based decision making processes using Monte Carlo simulations. This
+#' is an important part of the Applied Information Economics (AIE) approach
+#' developed in Hubbard (2014). These decision making processes can be
+#' categorized into two levels of decision making:
+#' \enumerate{ 
+#' 	\item The actual problem of interest of a policy maker
+#' 	which we call the \emph{underlying welfare based decision} on how to influence an
+#' 	ecological-economic system based on a particular information on the system
+#' 	available to the decision maker and 
+#' 	\item the \emph{meta decision} on how to allocate resources to reduce the
+#' 	uncertainty in the underlying decision problem, i.e to increase the current
+#' 	information to improve the underlying decision making process.
+#' } 
+#' The first problem, i.e. the underlying problem, is the problem of choosing
+#' the decision which maximizes expected welfare. The welfare function can be
+#' interpreted as a von Neumann-Morgentstern utility function. Whereas, the
+#' second problem, i.e. the meta decision problem, is dealt with using the
+#' \emph{Value of Information Analysis (VIA)}. Value of Information Analyis
+#' seeks to assign a value to a certain reduction in uncertainty or,
+#' equivalently, increase in information. Uncertainty is dealt with in a
+#' probabilistic manner. Probabilities are transformed via Monte Carlo
+#' simulations.
+#' 
+#' 
+#' The functionality of this package is subdivided into three main parts: (i) the
+#' welfare based analysis of the underlying decision, (ii) the meta decision of
+#' reducing uncertainty and (iii) the Monte Carlo simulation for the
+#' transformation of probabilities and calculation of expectation values. Furthermore, 
+#' there is a wrapper function around these three parts which aims at providing an 
+#' easy-to-use interface.
+#' \subsection{Welfare based Analysis of the Underlying Decision Problem}{
+#'		\subsection{Welfare Decision Analysis}{
+#'				Implementation: \code{\link{welfareDecisionAnalysis}}
+#'		}
+#'		\subsection{Utility Functions}{
+#'			Implementation: ToDo
+#'		}
+#' } 
+#' \subsection{The Meta Decision of Reducing Uncertainty}{ 
+#' 		The meta decision of how to allocate resources for uncertainty reduction can
+#' 		be analyzed with this package in two different ways: via (i) Expected Value
+#' 		of Information Analysis or (ii) via Partial Least Squares (PLS) analysis and
+#' 		Variable Importance in Projection (VIP).
+#' 		\subsection{Expected Value of Information (EVI)}{
+#' 				Implementation: \code{\link{eviSimulation}}, \code{\link{individualEvpiSimulation}}
+#' 		}
+#' 		\subsection{Partial Least Squares (PLS) analysis and Variable Importance in Projection (VIP)}{
+#' 				Implementation: ToDo
+#' 		}
+#' }
+#' \subsection{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{
+#' 		\subsection{Estimates}{
+#' 			Implementation: \code{\link{estimate}}
+#' 		}
+#' 		\subsection{Multivariate Ranom Number Generation}{
+#' 			Implementation: \code{\link{random.estimate}}
+#' 		}
+#' 		\subsection{Monte Carlo Simulation}{
+#' 			Implementation: \code{\link{mcSimulation}}
+#' 		}
+#' }
+#' \subsection{Uncertainty Analysis: A wrapper function}{
+#' 	Implementation: \code{\link{uncertaintyAnalysis}}
+#' }
 #'
-#' The decisionSupport package supports the Monte Carlo simulation
-#' of different decisions. 
-#'
-#' The package is subdivided in the Monte Carlo simulation and analysis, 
-#' the Value of Information Analysis (VIA) and Partial Least Squares (PLS) analysis 
-#' and Variable Importance in Projection (VIP).
-#'
+#' @section Package Options:
+#' 	ToDo
+#' 
 #' @docType package
 #' @name decisionSupport
 #' @references Hubbarrd, Douglas W., How to Measure Anything? - Finding the Value of "Intangibles" in Business,
 #'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
+#'   
+#'   Hugh Gravelle and Ray Rees, Microeconomics, Pearson Education Limited, 3rd edition, 2004.
+#'   
+#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}	
 NULL

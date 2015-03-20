@@ -1,0 +1,852 @@
+\documentclass[a4paper,10pt,twoside,pagesize,abstracton]{scrartcl}
+%\documentclass[a4paper,10pt,english,twoside,pagesize,abstracton]{scrreprt}
+\usepackage[a4paper]{geometry}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathrsfs}       % for \mathscr
+\usepackage[all,cmtip]{xy}	% for commutative (mathematical diagrams
+%\usepackage{mathtools}
+%\usepackage{bbm}
+\usepackage[authoryear,round,comma,semicolon]{natbib}
+\usepackage{url}
+\usepackage{paralist}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{nicefrac}
+\usepackage[stable]{footmisc}		% for footnotes in headers
+\usepackage{abstract}
+\usepackage[page]{appendix}
+%\usepackage{tikz}				% draw graphics
+%\usetikzlibrary{arrows,shapes}				% draw arrows with TikZ
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% user defined commands
+% symbol for statistical independence:
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\newcommand{\loglik}{\ell}% log likelihood
+\newcommand{\pnorm}{\Phi}% normal distribution function
+\renewcommand{\d}{\mathrm{d}\!} %differential d
+\renewcommand*{\vec}[1]{\boldsymbol{#1}}% vector
+\def\transpose#1{{\,}^t\mspace{-3mu}#1}
+\newcommand{\E}[2][]{\mathrm{E}_{#1}\left[#2\right]} %expectation value
+% \newcommand{\COV}[1]{\mathrm{Cov}\left[#1\right]} %covariance
+% \newcommand{\ATE}[1]{\mathrm{ATE}\left[#1\right]} %average treatment effect
+% \newcommand{\RATE}[1]{\mathrm{RATE}\left[#1\right]} % average relative treatment effect
+% \newcommand{\TT}[1]{\mathrm{TT}\left[#1\right]} %Average Effect of Treatment on the Treated
+% \newcommand{\RTT}[1]{\mathrm{RTT}\left[#1\right]} % average relative effect of treatment on the treated
+\newcommand\Mat{\textrm{Mat}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\sgn}[1]{\mathrm{sgn}\left(#1\right)}
+
+\newcommand{\EL}{\mathrm{EL}} %expected loss
+\newcommand{\NB}{\mathrm{NB}} %net benefit
+\newcommand{\ENB}{\mathrm{ENB}} %expected net benefit
+%\newcommand{\EOL}{\mathrm{EOL}} %expected opportuntity loss
+\newcommand{\EOL}[1][]{\mathrm{EOL}_{#1}} %expected opportuntity loss
+\newcommand{\EVI}{\mathrm{EVI}} %expected value of information
+\newcommand{\EVPI}{\mathrm{EVPI}} %expected value of perfect information
+
+\newcommand{\PA}{\mathrm{PA}} % project approval
+\newcommand{\SQ}{\mathrm{SQ}} % status quo
+
+\renewcommand{\abstractnamefont}{\usekomafont{disposition}\usekomafont{section}}%
+\renewcommand{\abstractname}{Executive Summary}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% user defined theorem styles
+\theoremstyle{plain}% default
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+%\newcounter{Assumption}
+%\newtheorem{asmp}{Assumption}
+%\newtheorem{hyp}{Hypotheses}[section]
+%\newtheorem{prob}{Problem}[section]
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}[thm]{Example}
+
+\theoremstyle{remark}
+%\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem{case}{Case}
+\newtheorem*{sol}{Solution Approach}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% opening
+% Title Page
+\title{Value of Information Analysis Using Monte Carlo Simulations}
+\author{Lutz Göhring}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+\renewcommand{\theequation}{ES~\arabic{equation}}
+Decision making processes can be categorized in two levels of decision making.
+\begin{inparaenum}
+ \item \label{enum:underlyingProblem}
+  The actual problem of interest of a policy maker which we call the underlying decision on how to influence an ecological-economic system based on a particular information on the system available to the decision maker and
+ \item \label{enum:metaProblem}
+ the meta decision on how to allocate resources to reduce uncertainty, i.e to increase the current information to improve the underlying decision making process.
+\end{inparaenum}
+Value of Information Analysis deals with the meta decision problem \ref{enum:metaProblem}.
+
+\paragraph{The underlying decision problem and its notational framework}
+We are considering a decision maker who can influence an ecological-economic system having two alternative decisions $d_1$ and $d_2$ at hand. We assume, that the system can be characterized by the $n-$dimensional vector $X$. The characteristics $X$, are not necessarily known exactly to the decision maker. However, we assume furthermore that she is able to quantify this uncertainty which we call an \emph{estimate} of the characteristics. Mathematically, an estimate is a random variable with probability density $\rho_X$.\par
+
+Furthermore, the characteristics $X$ determine the welfare $W_d$ according to the welfare function $w_d$:
+\[
+ W_d = w_d (X)
+\]
+Thus, the welfare of decision $d$ is also a random variable which probability distribution we call $\rho_{W_d}$. The welfare function $w_d$ values the decision $d$ given a certain state $X$ of the system. In other words, decision $d_2$ is preferred over decision $d_1$, if and only if, the expected welfare of decision $d_2$ is greater than the expected welfare%
+\footnote{\label{fn:welfareFunction}%
+  For a comprehensive discussion of the concept of social preference ordering and its representation by a welfare function cf. \citet{GravelleRees2004}.
+} of decsion $d_1$, formally
+\[
+ d_1 \prec d_2 \Leftrightarrow \E{W_{d_1}}< \E{W_{d_2}}.
+\]
+This means the best decision $d^*$ is the one which maximizes welfare:
+\begin{align}
+  \label{eqn:executiveSummaryUnderlyingDecisionProblem}
+ d^* := \arg \max_{d=d_1,d_2} \E{W_d}
+\end{align}
+
+\par
+
+This maximization principle has a dual minimization principle. We define the net benefit $\NB_{d_1} := W_{d_1} - W_{d_2}$ as the difference between the welfare of the two decision alternatives. A loss $L_d$ is characterized if a decision $d$ produces a negative net benefit. No loss occurs if the decision produces a positive net benefit. This is reflected in the formal definition 
+\[
+  L_d := 
+    \begin{cases} 
+     - \NB_d &, \textrm{~if~} \NB_d  < 0\\
+     0 &, \textrm{~otherwise}.
+    \end{cases}
+\]
+Using this notion it can be shown that the maximization of expected welfare is equivalent to the minimization of the expected loss $\EL_d := \E{L_d}$.
+
+\paragraph{The meta problem of reducing uncertainty using the value of information}
+The meta problem is how resources shall be allocated to reduce the uncertainty inherent to the underlying decision problem (eq.~\ref{eqn:executiveSummaryUnderlyingDecisionProblem})., The uncertainty of the underlying decision problem is represented by the probability density $\rho_X$. Here, we interpret the probability density $\rho_X$ of the characteristics $X$ as the \emph{information that is available of the ecological-economic system} that is to be manipulated by the decision maker.\par
+
+Initially, the decision maker forms an \emph{estimate} to quantify the current information $\rho_X^{current}$. She is interested on how to increase the current information by a particular investigation on the system, which we call a \emph{measurement}, to improve the underlying decision making process. To this end, she specifies a prospective hypothetical information $\rho_X^{prospective}$ and assigns a value to this increase in information. The meta problem is solved by comparing this value of information to the prospective costs of the corresponding measurement.\par
+
+Above, it was stated that the optimal decision $d^*$ is the same if expected welfare is maximized or expected loss is minimized. However, the value of information analysis depends on if one focuses on risk management or on welfare maximization. Thus, we consider two different, but related, principles of defining the value of information: reducing minimal expected loss and increasing maximal expected welfare, which will be described in the sequel. 
+
+\subparagraph{Meta decision principle: Focus on risk management or minimization of expected opportunity loss}
+This principle is along the line described in \citet{Hubbard2014}. The Expected Opportunity Loss ($\EOL$) is defined as the expected loss for the best decision. The best decision minimizes the expected loss:
+\[
+  \EOL := \min \left\{ \EL_{d_1}, \EL_{d_2}\right\}
+\]
+
+The $\EOL$ is always conditional on the available information which is characterized by the probability distribution of X $\rho_X$: $\EOL = \EOL(\rho_X)$. The Expected Value of Information is the decrease in the $\EOL$ for an information improvement from the current ($\rho_X^{current}$) to a better prospective (hypothetical) information ($\rho_X^{prospective}$): 
+\[
+ \EVI := \EOL(\rho_X^{current}) - \EOL(\rho_X^{prospective}).
+\]
+ If some variables under $\rho_{propective}$ are assumed to be known with certainty the $\EVI$ is called the \emph{Clustered Expected Value of Perfect Information} (Clusterd EVPI). If only one variable is assumed to be known with certainty, it is called the Individual EVPI. More precisely, if one assumes under $\rho_X^{prospective}$ to perfectly know $(X_1, \ldots, X_k)$ to equal $(a_1,\ldots , a_k)$ then one can specify the notation as 
+ \[
+    \mathrm{Clustered~}\EVPI^{1, \ldots, k}_{a_1, \ldots, a_k} := \EOL[\mathrm{current}] - \EOL[X_1 =a_1, \ldots, X_k = a_k].
+ \]
+The superscripts of $\mathrm{Clustered~}\EVPI$ denote the components of the characteristics $X=(X_1, \ldots, X_n)$ that are known with certainty. The subscripts denote the corresponding certain values. $\EOL[X_1 =a_1, \ldots, X_k = a_k]$ is the prospective expected opportunity loss with perfectly known characteristics $X_1, \ldots, X_k$ and the remaining characteristics $X_{k+1}, \ldots, X_n$ being distributed according to the current information $\rho_X^{current}$. Analogously is the $\mathrm{Individual~}\EVPI$ defined for knowing only one characteristic, here characteristic $i$ exactly with value $a_i$:  
+\[
+   \mathrm{Individual~}\EVPI^i_{a_i} := \EOL[\mathrm{current}] - \EOL[X_i = a_i].
+\]
+Thus, the EV(P)I depends on the model $w_p$ for valuing a decision $d$, the current information $\rho_X^{current}$, i.e. the current estimate, and the specification of a prospective improvement in information $\rho_X^{prospective}$, i.e. a better estimate. 
+
+\subparagraph{Meta decision principle: Focus on utility maximization or maximization of expected welfare}
+Instead of founding the decision on loss minimization, one can found it on the value maximization (cf. Wikipedia: \url{en.wikipedia.org/wiki/Expected_value_of_perfect_information} ).  The Expected Value is the net benefit of a decision. The Expected Maximum Value (EMV) is the expected value for the best decision, where best, here, refers to the decision that maximizes the Expected Value. Analogously to the EOL case, the EMV is conditional on the available information ($\rho_X$): $\mathrm{EMV} = \mathrm{EMV}(\rho_X)$. In this case the Expected Value of Information is the increase in EMV for an information improvement from the status quo ($\rho_X^{current}$) to a better prospective (hypothetical)  information ($\rho_X^{prospective}$): $\EVI:= \mathrm{EMV}(\rho_X^{prospective}) – \mathrm{EMV} (\rho_X^{current}$). Individual and Clustered EVPI are defined as in the other case. 
+NB: Here, both definitions of the EVI deviate from another common definition, which takes the expectation of  the Clustered EVPI over the distribution of the variables assumed to be known with certainty (cf. \citet{JeffreyPannell2013}). However, in practice computing this further expectation value is computationally very expensive. Thus, we will use the procedure described above as an approximation.  (-\#LG: check this last paragraph)
+
+\paragraph{Solving the practical problem of calculating expected welfare by Monte Carlo simulation}
+In order to solve the underlying decision problem the expected welfare $\E{W_{d}}$ or expected loss $\EL_d$ has to be calculated for each decision $d=d_1, d_2$. \emph{A priori}, only the probability density of $X$, viz. $\rho_X$, is known. Although this determines expected welfare by
+\[
+ \E{W_{d}} = \E[P_X]{w_d}  = \int w_d(x) \rho_{X}(x) \d x, 
+\]
+the integral might be difficult (or impossible) to solve directly in practical applications. If one would have a random sample $w_1, \ldots, w_N$ of the welfare $W_d$, the expected welfare could be approximated as the mean of the random sample:
+\[
+ \E{W_{d}}  \approx \dfrac{1}{N} \sum_{i=1}^N w_i.
+\]
+The Monte Carlo simulation is the method to generate the random sample of $W_d$ as follows. First, we sample $N$ values of $X$: $X_1, \ldots, X_N$. Then we calculate the corresponding welfare $w_1 := w_d(X_1), \ldots, w_N := w_d(X_N)$. Applying the law of large numbers the sample mean $\bar{w}(N)$ converges to the expectation value
+\[
+  \bar{w}(N) := \dfrac{1}{N} \sum_{i=1}^N w_i \xrightarrow[N \rightarrow \infty]{ } \int w \rho_{W_d }(w) \d w.
+\]
+Let's call the probability density of the simulated sample $\rho_W^{MC}(N)$. According to the law of large numbers, for large $N$ the probability density obtained by the Monte Carlo simulation converges to the exact probability density:
+\[
+ \rho_W^{MC}(N) \xrightarrow[N \rightarrow \infty]{ } \rho_{W_d}.
+\]
+\setcounter{equation}{0}
+\end{abstract}
+
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Introduction: Two Levels of Decsion Problems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+The topic of this analysis is the mathematical formalism of the Applied Information Economics (AIE) approach to decision making developed in \citet{Hubbard2014}. An important part of the AIE is a quantitative analysis of welfare based decision making processes%
+\footnote{%
+  cf. footnote \ref{fn:welfareFunction}
+} using Monte Carlo simulations. This is the focus of this article. These decision making processes can be categorized into two levels of decision making:
+\begin{compactenum}
+  \item \label{enum:underlyingProblem} 
+    The actual problem of interest of a policy maker which we call the \emph{underlying welfare based decision} on how to influence an ecological-economic system based on a particular information on the system available to the decision maker and 
+  \item \label{enum:metaProblem}
+    the \emph{meta decision} on how to allocate resources to reduce the uncertainty in the underlying decision problem, i.e to increase the current information to improve the underlying decision making process.
+\end{compactenum}
+The first problem, i.e. the underlying problem, is the problem of choosing the decision which maximizes expected welfare. The welfare function can be interpreted as a von Neumann-Morgentstern utility function \citep{GravelleRees2004}. Whereas, the second problem, i.e. the meta decision problem, is dealt with using the \emph{Value of Information Analysis (VIA)}. Value of Information Analyis seeks to assign a value to a certain reduction in uncertainty or, equivalently, increase in information. Uncertainty is dealt with in a probabilistic manner. Probabilities are transformed via Monte Carlo simulations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Introduction: The Decision Making Principle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Underlying Decision Making Principle of a Binary Decision Problem}
+In this discussion, we are considering a decision maker who can influence an ecological-economic system having two alternative decisions (or projects) $d_1$ and $d_2$ at hand. The set of these two decisions is called
+\begin{equation}
+  \label{eq:underlyingDecisionProblem}
+   \mathcal{D} = \{d_1, d_2\}.
+\end{equation}
+
+Assume there is a welfare function%
+\footnote{%
+  cf. footnote \ref{fn:welfareFunction}
+} 
+\begin{align}
+ w_d: \Xi \subset \R^n \longrightarrow \R\\
+      x \mapsto w_d(x) \nonumber
+\end{align}
+which orders the decisions for the system with characteristics $x$ according to
+\begin{equation}
+ d_1 \prec d_2 \Leftrightarrow w_{d_1}(x) < w_{d_2}(x).
+\end{equation}
+This means decision $d_2$ is strictly preferred over its alternative $d_1$ if, and only if, the welfare under decision $d_2$ is strictly greater than the welfare under decision $d_1$.\par
+
+The characteristics $X$, are not necessarily known exactly to the decision maker. However, we assume furthermore that she is able to quantify this uncertainty which we call an \emph{estimate} of the characteristics. 
+\begin{defn}[Estimate]
+ The knowledge about the ecological-economic system which is available to the decision maker is called an \emph{estimate} and is formally described by the probability space $(\Omega, \mathcal{A}, P)$ where $X: \Omega \longrightarrow \R^n$ with $\Xi=X(\Omega)$ is the random variable of realized characteristics of the ecological-economic system and $P_X = X(P)$ the probability distribution of $X$. A particular characteristic is realized as $x=X(\omega)$. 
+\end{defn}
+
+Now define $W_d := w_d \circ X$. Thus, the welfare of decision $d$ is a random variable with distribution $w_d(P_X)$:
+\begin{equation}
+  W_d \sim w_d(P_X) := P_{W_d}
+\end{equation}
+This completes the notation to define the decision making principle.
+\begin{defn}[The Decision Making Principle (Maximization of Expected Welfare)]
+  Decision $d_2$ is strictly preferred over its alternative $d_1$ if, and only if, the expected welfare under decision $d_2$ is strictly greater than the expected welfare under decision $d_1$:
+  \begin{equation}
+    \label{eq:decisionMakingPrinciple}
+  d_1 \prec d_2 \Leftrightarrow \E{W_{d_1}} < \E{W_{d_2}}, 
+  \end{equation}
+  where 
+    \begin{equation}
+    \E{W_d} = \int_\Omega W_d \d P 
+  \end{equation}
+  is the expected welfare of decision $d\in\mathcal{D}$. This implies that the optimal decision $d^*$ maximizes expected welfare:
+  \begin{equation}
+  d^* = {\arg \max}_{d\in\mathcal{D}} \E{W_d}
+  \end{equation}
+\end{defn}
+\begin{note}
+  \begin{equation}
+    \E{W_d} = \int_\Omega W_d \d P = \int_\Omega w_d \circ X \d P = \int_{X(\Omega)} w_d \d P_X = \int w_d (x) P_X (\d x) = \E[P_X]{w_d}
+  \end{equation}
+\end{note}
+
+Below we will show that maximization of expected welfare is equivalent to minimization of expected loss and maximization of expected net benefit. The notions of loss and net benefit are specified in the sequel.
+\begin{defn}[Loss function and Loss]
+ The \emph{loss function} for decision $d$:
+  \begin{align}
+  l_d &:= 
+    \begin{cases} 
+     - \left( w_d - w_{d'} \right) &, \textrm{~if~} w_d - w_{d'}  < 0\\
+     0 &, \textrm{~otherwise}
+    \end{cases},
+    d\neq d'\\
+    &= - \chi_{\{w_d - w_{d'} < 0\}} \left( w_d - w_{d'} \right), \qquad d\neq d'
+ \end{align}
+ where $\chi$ is the characteristic function
+ \begin{align}
+    \chi_A \left(x\right) := 
+    \begin{cases} 
+     1 &, \textrm{~if~} x \in A\\
+     0 &, \textrm{~otherwise}
+    \end{cases}.
+ \end{align}
+
+ The \emph{loss} for decision $d$ is the random variable
+  \begin{align}
+    L_d &:= l_d \circ X\\
+	&=
+	\begin{cases} 
+	- \left( W_d - W_{d'} \right) &, \textrm{~if~} W_d - W_{d'}  < 0\\
+	0 &, \textrm{~otherwise}
+	\end{cases},\nonumber
+	d\neq d'.
+ \end{align}
+\end{defn}
+\begin{note} The loss is defined being non-negative, i.e. 
+ \begin{align}
+  L_d \geq 0.
+ \end{align}
+\end{note}
+\begin{defn}[Expected Loss] 
+  \emph{Expected loss} is 
+ \begin{align} 
+   \EL_d := \E{L_d}.
+\end{align}
+\end{defn}
+\begin{note}
+  \begin{align}
+  \EL_d \geq 0.
+ \end{align}
+\end{note}
+\begin{prop} 
+  \begin{align} 
+   \EL_d &= \E[P_X]{l_d}	  
+  \end{align}
+\end{prop}
+\begin{proof}
+    It holds for $d\neq d'$ that
+   \begin{align} 
+   \EL_d &= 	\int L_d \d P\nonumber\\
+	  &= - 	\int_{\{W_d - W_{d'} < 0\}} \left( W_d - W_{d'}\right) \d P\nonumber\\
+	  &= - 	\int_{\left\{\left(w_d - w_{d'}\right) \circ X < 0\right\}} \left(w_d - w_{d'}\right) \circ X \d P\nonumber\\
+	  &= - 	\int_{\left\{w_d - w_{d'} < 0\right\}} \left(w_d - w_{d'}\right) \d\left(X\left(P\right)\right)\nonumber\\
+	  &= - 	\int_{\left\{w_d - w_{d'} < 0\right\}} \left(w_d - w_{d'}\right) \d P_X\nonumber\\
+	  &= - 	\int_{\left\{w_d - w_{d'} < 0\right\}} \left(w_d(x) - w_{d'}(x)\right)  P_X(\d x)\nonumber\\	
+	  &= 	\int l_d(x)  P_X(\d x)\nonumber\\
+	  &= 	\E[P_X]{l_d}\nonumber \qedhere 
+  \end{align}
+\end{proof}
+\begin{defn}[Net Benefit]
+  \label{defn:netBenefit}
+ The \emph{net benefit} of decision $d$ vs. the alternative $d'$ is
+  \begin{equation}
+  \NB_d := W_d - W_{d'}, \qquad ~ d'\neq d.
+ \end{equation}
+\end{defn}
+\begin{note} Now the loss can be interpreted as the absolute value of the net benefit where it is negative. Positive net benefit means zero loss:
+ \begin{align}
+  L_d = 
+    \begin{cases} 
+     - \NB_d &, \textrm{~if~} \NB_d  < 0\\
+     0 &, \textrm{~otherwise}
+    \end{cases}
+ \end{align}
+ In other words, loss occurs only in case of negative net benefit.
+\end{note}
+\begin{defn}[Expected Net Benefit]
+ The \emph{expected net benefit} of decision $d$ vs. the alternative $d'$ is
+ \begin{equation}
+  \ENB_d := \E{\NB_d} = \E{W_d - W_{d'}}, \qquad ~ d'\neq d.
+ \end{equation}
+\end{defn}
+\begin{note} It holds for $d\neq d'$ that
+ \begin{equation}
+  \ENB_d = - \ENB_{d'}.
+ \end{equation}
+\end{note}
+\begin{prop} 
+  \label{prop:ENB_EL_relation}
+ It holds for $d\neq d'$ that
+ \begin{equation}
+  \EL_d + \ENB_d = \EL_{d'}.
+ \end{equation}
+\end{prop}
+\begin{proof}
+ \begin{align*}
+  \EL_d &= \int L_d \d P\\
+	&= \int_{\{W_d - W_{d'} < 0\}} \left( W_{d'} - W_d\right) \d P\\
+	&= \int_{\{W_d - W_{d'} < 0\}} W_{d'} \d P - \int_{\{W_d - W_{d'} < 0\}} W_d \d P\\
+	&= \int W_{d'} \d P - \int_{\{W_d - W_{d'} \geq 0\}} W_{d'} \d P + \int_{\{W_d - W_{d'} \geq 0\}} W_d \d P  - \int W_d \d P\\
+	&= - \int \left( W_d - W_{d'} \right) \d P - \int_{\{W_d - W_{d'} \geq 0\}} \left( W_{d'} - W_d \right) \d P\\
+	&= - \underbrace{\int \left( W_d - W_{d'} \right) \d P}_{\ENB_d}
+	    - \underbrace{\int_{\{W_{d'} - W_d < 0\}} \left( W_{d'} - W_d \right) \d P}_{-\EL_{d'}}\qedhere
+ \end{align*}
+\end{proof}
+\begin{thm}[Equivalent Formulations of the Decision Making Principle]
+ The statement that decision $d'$ is strictly better than the alternative $d$, i.e $d \prec d'$, is equivalent to each of the following 
+ \begin{compactenum}[(i)]
+  \item $\E{W_d} < \E{W_{d'}}$
+  \item \label{enum:positivExpectedNetBenefit}
+    $\ENB_{d'} > 0$
+  \item $\EL_d > \EL_{d'}$.
+ \end{compactenum}
+\end{thm}
+\begin{proof}
+ \begin{compactenum}[\emph{Ad}~(i):]
+  \item This is the definition of the decision making principle (eq.~\ref{eq:decisionMakingPrinciple}).
+  \item $\E{W_d} < \E{W_{d'}} \Longleftrightarrow \ENB_{d'} = \E{W_{d'}} - \E{W_d} > 0.$
+  \item Due to prop.~\ref{prop:ENB_EL_relation} (\ref{enum:positivExpectedNetBenefit}) is equivalent to $\ENB_{d'} = \EL_d - \EL_{d'} > 0.$\qedhere
+ \end{compactenum}
+\end{proof}
+\begin{cor}
+  \label{cor:optimalDecision}
+  \begin{subequations}
+  \begin{compactdesc}
+    \item[Expected Net Benefit Maximization:]
+    \begin{equation}
+      d^* = {\arg \max}_{d\in\mathcal{D}} \ENB_d
+	  = \begin{cases}
+	    d_1	&	\mathrm{if~} \ENB_{d_1} > 0\\
+	    d_2	&	\mathrm{otherwise}
+	    \end{cases}
+    \end{equation}    
+    \item[Expected Loss Minimization:]
+    \begin{equation}
+      d^* = {\arg \min}_{d\in\mathcal{D}} \EL_d
+	  = \begin{cases}
+	    d_1	&	\mathrm{if~} \EL_{d_1} <  \EL_{d_2}\\
+	    d_2	&	\mathrm{otherwise}
+	    \end{cases}
+    \end{equation}
+   \end{compactdesc}
+   \end{subequations}
+\end{cor}
+
+\subsection{Special case: Status quo and project approval}
+A very common actual binary decision problem is the question if a certain project shall be approved versus continuing with business as usual, i.e. the status quo. It appears to be natural to identify the status quo with zero welfare. This is a special case\footnote{%
+  Actually, one can show, that this special case is equivalent to the discussion above.%
+}%
+ of the binary decision problem (eq.~\ref{eq:underlyingDecisionProblem}) that we are considering here. The two decision alternatives are
+\begin{inparadesc}
+  \item[$d_1:$] project approval (PA) and 
+  \item[$d_2:$] status quo (SQ),
+\end{inparadesc}
+formally:
+\begin{equation}
+ \mathcal{D} = \left\{ \PA, \SQ \right\}  \qquad \mathrm{and}
+\end{equation}
+the welfare of the approved project (or project outcome or yield of the project) is the random variable $W_\PA$ with distribution $P_{W_\PA} = w_\PA(P_X)$:
+\begin{equation}
+  W_\PA \sim w_\PA(P_X) = P_{W_\PA}
+\end{equation}
+and the welfare of the status quo serves as reference and is normalized to zero:
+\begin{equation}\label{eq:SQPADefNormalization}
+ W_\SQ \equiv 0,
+\end{equation}
+which implies zero expected welfare of the status quo:
+\begin{align}
+  \label{eq:SQPA_W_SQ_0}
+ \E{W_\SQ} 	&= 0.
+\end{align}
+The loss functions simply are 
+\begin{subequations}
+ \begin{align}
+  L_\PA = 
+    \begin{cases} 
+     -  W_\PA&, \textrm{~if~}  W_\PA  < 0\\
+     0 &, \textrm{~otherwise}
+    \end{cases}
+ \end{align}
+and 
+ \begin{align}
+  L_\SQ = 
+    \begin{cases} 
+     W_\PA&, \textrm{~if~}  W_\PA  > 0\\
+     0 &, \textrm{~otherwise}.
+    \end{cases}
+ \end{align}
+\end{subequations}
+The normalization of the status quo's welfare to zero implies that the net benefit of the project approval simply equals its benefit and that the net benefit of the status quo equals the negative welfare of the approved project (follows directly from defn.~\ref{defn:netBenefit}):
+\begin{subequations}
+\begin{align}
+ \NB_\PA &= W_\PA\\
+ \NB_\SQ &= -W_\PA
+\end{align}
+\end{subequations}
+Prop.~\ref{prop:ENB_EL_relation} reads 
+\begin{subequations}
+\begin{align}
+  \EL_\PA + \ENB_\PA  = \EL_\SQ\\
+  \EL_\SQ + \ENB_\SQ  = \EL_\PA
+\end{align}
+\end{subequations}
+or due to  $\ENB_\SQ	= -\E{W_\PA} = - \ENB_\PA$ simply
+\begin{align}
+  \EL_\PA + \E{W_\PA}  = \EL_\SQ.
+\end{align}
+
+
+Finally, the decision making principle reads in these terms, that the project is approved, if and only if, its expected welfare is positive:
+\begin{equation}
+  \label{eq:decisionMakingPrinciplePA}
+ \PA \succ \SQ \Leftrightarrow \E{W_\PA} > 0
+\end{equation}
+Then, the optimal decision is
+\begin{subequations}
+\begin{equation}
+ d^* = \begin{cases}
+         \PA	&	\mathrm{if~} \E{W_\PA} > 0\\
+         \SQ	&	\mathrm{otherwise}
+        \end{cases}
+\end{equation} 
+or equivalently
+\begin{equation}
+ d^* = \begin{cases}
+         \PA	&	\mathrm{if~}  \EL_\PA < \EL_\SQ\\
+         \SQ	&	\mathrm{otherwise}.
+        \end{cases}
+\end{equation}
+\end{subequations}
+Summarizing, choosing positive welfare is equivalent to minimizing expected loss.
+
+\begin{exmp}[Net Present Value]
+  A net present value (NPV) analysis is the most important practical example of the status quo and project approval case (eq.~\ref{eq:SQPADefNormalization}). The definition of the net present value of the project approval:
+  \begin{align}
+   NPV:=\sum_{t=0}^\infty \frac{b_t - c_t}{(1+\delta)^{t-1}}
+  \end{align}
+  is the discounted sum of the difference between all benefits $b_t$ and costs $c_t$ in period $t$ with discount rate $\delta$. This implies
+  \begin{subequations}
+  \begin{align}
+   W_\PA &= NPV\\
+   W_\SQ &= 0
+  \end{align}
+  \end{subequations}
+    and thus fulfills the defining equation (eq.~\ref{eq:SQPADefNormalization}).
+\end{exmp}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The Expected Value of Information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Meta Decision of Reducing Uncertainty Using the Expected Value of Information}
+The meta problem is how resources shall be allocated to reduce the uncertainty inherent to the underlying decision problem (eq.~\ref{eq:underlyingDecisionProblem})., The uncertainty of the underlying decision problem is represented by the probability distribution $P_X$. Here, we interpret the probability distribution $P_X$ of the characteristics $X$ as the \emph{information that is available of the ecological-economic system} that is to be manipulated by the decision maker.\par
+
+Initially, the decision maker forms an \emph{estimate} to quantify the current information $P_X^{current}$. She is interested on how to increase the current information by a particular investigation on the system, which we call a \emph{measurement}, to improve the underlying decision making process. To this end, she specifies a prospective hypothetical information $P_X^{prospective}$ and assigns a value to this increase in information. The meta problem is solved by comparing this value of information to the prospective costs of the corresponding measurement.\par
+
+Above, it was stated that the optimal decision $d^*$ is the same if expected welfare is maximized or expected loss is minimized. However, the value of information analysis depends on if one focuses on risk management or on welfare maximization. Thus, we consider two different, but related, principles of defining the value of information: reducing minimal expected loss and increasing maximal expected welfare, which will be described in the sequel.
+
+\subsection{Meta decision principle: Focus on Risk Management or Minimization of Expected Opportunity Loss}
+Cor.~\ref{cor:optimalDecision} motivates the following 
+\begin{defn}[Expected Opportunity Loss (EOL)]
+  \label{defn:EOL}
+  The \emph{expected opportunity loss (EOL)} of a given information $P$ is the expected loss of the best decision given this information:
+  \begin{equation}
+   \EOL(P) := \min_{d\in\mathcal{D}} \EL_d
+ \end{equation}
+\end{defn}
+\begin{prop}
+ \begin{equation}
+  \EOL(P) = \min \left\{ \EL_{d_1}, \ENB_{d_1} + \EL_{d_1} \right\}
+	  = \min \left\{ \EL_{d_2}, \ENB_{d_2} + \EL_{d_2} \right\}
+ \end{equation}
+\end{prop}
+\begin{proof}
+ Follows directly from the definition of the expected opportunity loss (defn.~\ref{defn:EOL}) and prop.~\ref{prop:ENB_EL_relation}.
+\end{proof}
+\begin{defn}[Expected Value of Information]
+Let the current information on the characteristics of the system be described by the probability distribution $P^\mathrm{current}$ and the prospective information by a certain investigation on the system which induces the change in information $\Delta P$ of the system be $P^\mathrm{prospective}$. Let the corresponding opportunity losses be denoted by
+\begin{subequations}
+ \begin{align}
+  \EOL[\mathrm{current}] = \min_{d\in\mathcal{D}} \int L_d \d P^\mathrm{current}
+ \end{align}
+ and
+  \begin{align}
+  \EOL[\mathrm{prospective}] = \min_{d\in\mathcal{D}} \int L_d \d P^\mathrm{prospective},
+ \end{align}
+\end{subequations}
+respectively. Then, the \emph{Expected Value of Information} (EVI) of this information change $\Delta P$ is defined as
+\begin{align}
+ \EVI \left(\Delta P \right) := \EOL[\mathrm{current}] - \EOL[\mathrm{prospective}].
+\end{align}
+\end{defn}
+
+\subsubsection{Expected Value of Perfect Information}
+This subsection deals with the cases that the prospective information $P^\mathrm{prospective}$ implies certainty of several or all components of the characteristics $x$ of the system under study. Formally,
+\begin{align}
+ P_X^{\mathrm{prospective}} = P_X^{[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]} 
+      := \delta_{\bar{x}_1} \otimes \ldots \otimes \delta_{\bar{x}_k} \otimes P_{\left(X_j\right)_{j={k+1, \ldots, n}}}^{\mathrm{current}},
+\end{align}
+where, w.l.o.g.%
+  \footnote{%
+    without loss of generality
+  } %
+the first $k$ components of the characteristics $x$ are known with certainty, viz. $\bar{x}_1, \ldots, \bar{x_k}$, $\delta_{\bar{x}_i}$ is the Dirac-distribution%
+  \footnote{%
+    The Dirac distribution is defined as
+    \begin{align*}
+      \delta_{a} (A) := 
+	\begin{cases}
+	  1 	&	a \in A\\
+	  0	&	\textrm{otherwise}.
+        \end{cases}
+      \end{align*}
+      It means that the event $a$ will occur with certainty.
+    } %
+and $P_{\left(X_j\right)_{j={k+1, \ldots, n}}}^{\mathrm{current}}$ is the current probability distribution of the remaining components of $x$, i.e. $x_{k+1}, \ldots, x_n$. In other words, $P_X^{[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]}$ means certainty about the first $k$ characteristics and the same uncertainty as under the current information for the remaining characteristics $x_{k+1}, \ldots, x_n$. 
+\begin{defn}[Expected Value of Perfect Information (EVPI)]
+The EVI is called \emph{Expected Value of Perfect Information (EVPI)} if all characteristics $x_1,\ldots, x_n$ are assumed to be known with their exact values $\bar{x}_1, \ldots, \bar{x}_n$, respectively:
+\begin{align}
+   \EVPI[\bar{x}_1, \ldots, \bar{x}_n] := \EOL[\mathrm{current}] - \EOL[[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]],
+\end{align}
+where 
+\begin{align}
+  \EOL[[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]] := \min_{d\in\mathcal{D}} \E[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]{L_d}
+\end{align}
+and 
+\begin{align}
+   \E[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]{L_d} := \int l_d \d \delta_{\bar{x}_1} \otimes \ldots \otimes \delta_{\bar{x}_n} = l_d \left( \bar{x}_1, \ldots, \bar{x}_n \right).
+\end{align}
+\end{defn}
+\begin{defn}[Clustered EVPI first $k$ characteristics]
+ The EVI is called \emph{Clustered EVPI} of charactersitics $1, \ldots, k$ at the respective values $\bar{x}_1, \ldots, \bar{x}_k$ if $k$ characteristics $x_1,\ldots, x_k$ are assumed to be known with their exact values $\bar{x}_1, \ldots, \bar{x}_k$, respectively:
+\begin{align}
+   \mathrm{Clustered~}\EVPI[\bar{x}_1, \ldots, \bar{x}_k] := \EOL[\mathrm{current}] - \EOL[x_1 =\bar{x}_1, \ldots, x_k = \bar{x}_k],
+\end{align}
+where 
+\begin{align}
+  \EOL[x_1 =\bar{x}_1, \ldots, x_k = \bar{x}_k] := \min_{d\in\mathcal{D}} \E[x_1 =\bar{x}_1, \ldots, x_k = \bar{x}_k]{L_d}
+\end{align}
+and 
+\begin{align}
+   \E[x_1 =\bar{x}_1, \ldots, x_k = \bar{x}_k]{L_d} := \int l_d \d \delta_{\bar{x}_1} \otimes \ldots \otimes \delta_{\bar{x}_k} \otimes P_{\left(X_j\right)_{j={k+1, \ldots, n}}}^{\mathrm{current}} = \int l_d \left( \bar{x}_1, \ldots, \bar{x}_k, x \right) P_{\left(X_j\right)_{j={k+1, \ldots, n}}}^{\mathrm{current}}\left( \d x\right).
+\end{align}
+\end{defn}
+\begin{defn}[Individual EVPI for the first characteristic]
+  The Clustered EVPI is called \emph{Individual EVPI} of characteristic $1$ at the value $\bar{x}_1$ if characteristic $x_1$ is assumed to be known with the exact value $\bar{x}_1$:
+\begin{align}
+   \mathrm{Individual~}\EVPI[\bar{x}_1] := \EOL[\mathrm{current}] - \EOL[x_1 =\bar{x}_1],
+\end{align}
+where 
+\begin{align}
+  \EOL[x_1 =\bar{x}_1] := \min_{d\in\mathcal{D}} \E[x_1 =\bar{x}_1]{L_d}
+\end{align}
+and 
+\begin{align}
+   \E[x_1 =\bar{x}_1]{L_d} := \int l_d \d \delta_{\bar{x}_1} \otimes P_{\left(X_j\right)_{j={2, \ldots, n}}}^{\mathrm{current}} = \int l_d \left( \bar{x}_1, x \right) P_{\left(X_j\right)_{j={2, \ldots, n}}}^{\mathrm{current}}\left( \d x\right).
+\end{align}
+\end{defn}
+\begin{defn}[Clustered EVPI $k$ arbitrary characteristics]
+\begin{align}
+   \mathrm{Clustered~}\EVPI^{i_1, \ldots, i_k}_{\bar{x}_{i_1}, \ldots, \bar{x}_{i_k}} := \EOL[\mathrm{current}] - \EOL[x_{i_1} =\bar{x}_{i_1}, \ldots, x_{i_k} = \bar{x}_{i_k}],
+\end{align}
+where 
+\begin{align}
+  \EOL[x_{i_1} =\bar{x}_{i_1}, \ldots, x_{i_k} = \bar{x}_{i_k}] := \min_{d\in\mathcal{D}} \E[x_{i_1} =\bar{x}_{i_1}, \ldots, x_{i_k} = \bar{x}_{i_k}]{L_d}
+\end{align}
+and 
+\begin{align}
+   \E[x_{i_1} =\bar{x}_{i_1}, \ldots, x_{i_k} = \bar{x}_{i_k}]{L_d} := \int l_d \left(
+										x_1, \ldots, x_{i_1 - 1}, \bar{x}_{i_1}, x_{i_1 + 1}, \ldots, x_{i_k - 1}, \bar{x}_{i_k}, x_{i_k + 1}, \ldots, x_n   
+										\right) \times\nonumber\\
+										P_{\left(X_j\right)_{j={1, \ldots, i_1 - 1, \hat{i_1}, i_1 +1, \ldots, i_k -1, \hat{i_k}, i_k +1, \ldots, n}}}^{\mathrm{current}}\left(\d x\right)
+\end{align}
+\end{defn}
+\begin{defn}[Individual EVPI for an arbitrary characteristic]
+  
+\begin{align}
+   \mathrm{Individual~}\EVPI^i_{\bar{x}_i} := \EOL[\mathrm{current}] - \EOL[x_i =\bar{x}_i],
+\end{align}
+where 
+\begin{align}
+  \EOL[x_i =\bar{x}_i] := \min_{d\in\mathcal{D}} \E[x_i =\bar{x}_i]{L_d}
+\end{align}
+and 
+\begin{align}
+   \E[x_i =\bar{x}_i]{L_d} := \int l_d \left( x_1, \ldots, x_{i - 1}, \bar{x}_i, x_{i + 1}, \ldots,  x_n   \right) 
+					P_{\left(X_j\right)_{j={1, \ldots, i - 1, \hat{i}, i +1, \ldots, n}}}^{\mathrm{current}}\left(\d x\right)
+\end{align}
+\end{defn}
+ Summarizing, if some variables under $P^{prospective}$ are assumed to be known with certainty the $\EVI$ is called the \emph{Clustered Expected Value of Perfect Information} (Clusterd EVPI). If only one variable is assumed to be known with certainty, it is called the Individual EVPI. More precisely, if one assumes under $P^{prospective}$ to perfectly know $(x_{i_1}, \ldots, x_{i_k})$ to equal $(\bar{x}_{i_1}, \ldots, \bar{x}_{i_k})$ then one can specify the notation as $\mathrm{Clustered~}\EVPI[\bar{x}_{i_1}, \ldots, \bar{x}_{i_k}]$. Analogously, $\mathrm{Individual~}\EVPI[x_i = a_i]$. Thus, the EV(P)I depends on the model $w_d$ for valuing  decision $d$, the status quo information, i.e. the current information or estimate $P^\mathrm{current}$, and the specification of a hypothetical improvement in information, i.e. a better estimate which we call $P^\mathrm{prospective}$.
+
+\subsubsection{Special case: Status quo and project approval}
+\begin{align}
+ \EOL = \min\left\{ \EL_\PA, \EL_\PA + \E{W_\PA} \right\}
+\end{align}
+\begin{prop}
+  \label{prop:EOLUnderPerfectInformationForSQPA}
+    For $\mathcal{D} = \left\{ \PA, \SQ \right\}$ and $w_\SQ \equiv 0$ it holds that
+ \begin{align}
+  \EOL[[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]] = 0.
+ \end{align}
+\end{prop}
+\begin{proof}
+Recall 
+ \begin{align*}
+  l_\PA = 
+    \begin{cases} 
+     -  w_\PA&, \textrm{~if~}  w_\PA  < 0\\
+     0 &, \textrm{~otherwise}
+    \end{cases}
+ \end{align*}
+and 
+ \begin{align*}
+  l_\SQ = 
+    \begin{cases} 
+     w_\PA&, \textrm{~if~}  w_\PA  > 0\\
+     0 &, \textrm{~otherwise}.
+    \end{cases}
+ \end{align*}
+ It follows 
+\begin{align*}
+   \E[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]{L_\PA} &=     
+						    \begin{cases} 
+						      -  w_\PA\left( \bar{x}_1, \ldots, \bar{x}_n \right)&, \textrm{~if~}  w_\PA\left( \bar{x}_1, \ldots, \bar{x}_n \right)  < 0\\
+						      0 &, \textrm{~otherwise}
+						    \end{cases} \qquad \mathrm{and}\\
+   \E[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]{L_\SQ} &= 
+						    \begin{cases} 
+						      w_\PA\left( \bar{x}_1, \ldots, \bar{x}_n \right)&, \textrm{~if~}  w_\PA\left( \bar{x}_1, \ldots, \bar{x}_n \right)  > 0\\
+						      0 &, \textrm{~otherwise}.
+						    \end{cases}
+\end{align*}
+And finally
+ \begin{align*}
+  \EOL[[x_1 =\bar{x}_1, \ldots, x_n = \bar{x}_n]] = \min_{d\in\left\{\SQ, \PA \right\}} l_d\left( \bar{x}_1, \ldots, \bar{x}_n \right) = 0.
+\end{align*}
+\end{proof}
+Proposition~\ref{prop:EOLUnderPerfectInformationForSQPA} directly leads to the following 
+\begin{cor}
+  \label{cor:EVPIForSQPA}
+  For $\mathcal{D} = \left\{ \PA, \SQ \right\}$ and $w_\SQ \equiv 0$ it holds that
+ \begin{align}
+   \EVPI[\bar{x}_1, \ldots, \bar{x}_n] = \EOL[\mathrm{current}].
+\end{align}
+\end{cor}
+The defining normalization (eq.~\ref{eq:SQPADefNormalization}), which results in eq.~(\ref{eq:SQPA_W_SQ_0}), has the important consequence that the expected value of perfect information equals the expected opportunity loss under the current information $P_{current}$. 
+\begin{defn}[Approximate EVPI]
+For  $\mathcal{D} = \left\{ \PA, \SQ \right\}$, $w_\SQ \equiv 0$ and $n \geq 2$ we define
+ \begin{align}
+   \mathrm{Approximate~}\EVPI^i := \EOL^i - \EOL[[x_1 =\E{x_1}, \ldots, x_n = \E{x_n}] = \EOL^i,
+\end{align}
+where 
+\begin{align}
+  \EOL^i := \EOL[[x_1 =\E{x_1}, \ldots, x_{i-1} = \E{x_{i-1}}, x_{i+1} = \E{x_{i+1}}, \ldots, x_n = \E{x_n}].
+\end{align}
+\end{defn}
+\begin{exmp}[Bernoulli uncertainty (cf.~{\citet[pp.147, in particular exhibit 7.1]{Hubbard2014}})] 
+Consider a decision between investing in a new advertising campaign (PA) or not investing in it (SQ). Furthermore, we restrict the model to two possible events: Either the campaign works ($x=1$) with probability $p_1$ or the campaign does not work ($x=0$) with probability $p_0$. If the project is approved (PA) and the campaign works it produces a gain $ w_\PA (1) = w_\PA^1 > 0$, if it fails, you lose your investment $w_\PA (0) = w_\PA^0 < 0$. If the project is not approved (SQ) in neither case you neither lose nor gain. On the one hand, if your campaign would not have worked you would not have invested and thus you would not have incurred a loss: $ w_\SQ (0) = 0$. On the other hand, if your campaign would have worked you could not harvest the gain because you rejected the project: $w_\SQ (1) = 0$. Summarizing:
+  \begin{subequations}
+  \begin{align}
+    \Xi := \{0,1\}\\
+    P_X^{current}\left(\left\{ 0\right\}\right) =: p_0\\
+    P_X^{current}\left(\left\{ 1\right\}\right) =: p_1\\
+    w_\PA (0) = w_\PA^0 < 0\\
+    w_\PA (1) = w_\PA^1 > 0\\
+    w_\SQ (0) = 0\\
+    w_\SQ (1) = 0 
+  \end{align}
+  \end{subequations}
+  From this the loss function can be calculated as
+  \begin{subequations}
+  \begin{align}
+    l_\PA(0) = - (w_\PA^0 - 0) = -w_\PA^0 > 0\\
+    l_\PA(1) = 0\\
+    l_\SQ(0) = 0\\
+    l_\SQ(1) = - ( 0 - w_\PA^1) = w_\PA^1 > 0
+  \end{align}
+  \end{subequations}
+  and the expected losses for the two alternatives
+  \begin{subequations}
+  \begin{align}
+   \E{L_\PA} = p_0 l_\PA(0) + p_1 l_\PA(0) = - p_0 w_\PA^0\\
+   \E{L_\SQ} = p_0 l_\SQ(0) + p_1 l_\SQ(0) = p_1 w_\PA^1.
+  \end{align}
+    \end{subequations}
+  Finally, the expected opportunity loss at the current information is
+  \begin{align}
+   \EOL[current] = \min \left\{ - p_0 w_\PA^0, p_1 w_\PA^1 \right \},
+  \end{align}
+  which equals the EVPI (cor.~\ref{cor:EVPIForSQPA}):
+  \begin{align}
+    \EVPI[\bar{x}] = \min \left\{ - p_0 w_\PA^0, p_1 w_\PA^1 \right \}.
+  \end{align}
+  for $\bar{x} = 0,1$.
+\end{exmp}
+
+\subsection{Meta decision principle: Focus on utility maximization or maximization of expected welfare}
+Instead of founding the decision on loss minimization, one can found it on the value maximization (cf. Wikipedia: \url{en.wikipedia.org/wiki/Expected_value_of_perfect_information} ).  The Expected Value is the net benefit of a decision. The Expected Maximum Value (EMV) is the expected value for the best decision, where best, here, refers to the decision that maximizes the Expected Value. Analogously to the EOL case, the EMV is conditional on the available information ($P_X$): $\mathrm{EMV} = \mathrm{EMV}(P_X)$. In this case the Expected Value of Information is the increase in EMV for an information improvement from the status quo ($\rho_X^{current}$) to a better prospective (hypothetical)  information ($P_X^{prospective}$): $\EVI:= \mathrm{EMV}(P_X^{prospective}) – \mathrm{EMV} (P_X^{current}$). Individual and Clustered EVPI are defined as in the other case. 
+NB: Here, both definitions of the EVI deviate from another common definition, which takes the expectation of  the Clustered EVPI over the distribution of the variables assumed to be known with certainty (cf. \citet{JeffreyPannell2013}). However, in practice computing this further expectation value is computationally very expensive. Thus, we will use the procedure described above as an approximation. (-\#LG: check this last paragraph)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}
+\subsection{The Practical Problem of Calculating Expectation Values}
+The decision analysis based on the minimization of the EOL and the quantification of the EVI of a prospective improvement of information require the calculation of expectation values such as the expected loss $\EL_d = \E{L_d}$ or the expected welfare $\E{W_d}$ of a certain decision $d$.  
+Consider the calculation of the expected loss
+\begin{align}
+    \label{eqn:ELdIntPdx}
+  \EL_d = \E{L_d} = \int l_d(x) P_X(\d x).
+\end{align}
+Assume that the probability distribution $P_X$ of $X$ can be described by the probability density $\rho_X$, which means that we have to calculate the integral
+\begin{align}
+  \EL_d =  \int l_d(x) \rho_X(x) \d x.
+\end{align}
+In practice, the problem arises that, this is often a high dimensional integral that is analytically not or only hard to solve. Also numerically, it might be very expensive or impossible to solve. Monte Carlo simulations are a way to tackle this problem.
+
+\subsection{Monte Carlo Simulations}
+A Monte Carlo simulation is a method that solves the following problem. Given a multivariate random variable $X = (X_1,\ldots,X_k)$ with joint probability distribution $P$, i.e.
+\begin{align}
+ X \sim P_X.
+\end{align}
+Then the continuous function 
+\begin{align}
+ f:R^k \rightarrow R^l
+\end{align}
+defines another random variable
+\begin{align}
+ Y := f \circ X
+\end{align}
+with distribution 
+\begin{align}
+ Y \sim f(P_X).
+\end{align}
+Given there is a probability density $\rho_X$ of $X$ that defines $P_X$%
+\footnote{%
+  This requires $P_X$ to be absolutely continuous.
+}:
+\begin{align}
+ P_X(A) = \int_A \rho_X(x) \d x
+\end{align}
+Then, there exists also a probability density $\rho_Y$ for $P_Y=f(P)$:
+\begin{align}
+ P_Y(B) = \int_B \rho_Y(y) \d y 
+\end{align}
+The problem is the determination of the probability density $\rho_y$ from the knowledge of $\rho_x$ and $f$. A Monte Carlo simulation solves this problem approximately. It samples values for $X$ which are plugged into the transformation function $f$, which form a simulated sample of $Y$. From this sample of $Y$  an approximation of the probability density $\rho_Y$ can be easily obtained by counting.\par
+Let's describe this in more detail. We draw $N$ times a realization of $X$ which we call $x_1, \ldots, x_N$, i.e. a we draw a random sample of size $N$ of $X$. From this, we obtain the simulated random sample 
+\begin{align}
+ y_1 := f(x_1), \ldots, y_N := f(x_N).
+\end{align}
+with probability density $\rho_Y^{MC}(N)$. According to the law of large numbers, for large $N$ the probability density obtained by the Monte Carlo simulation converges to the exact probability density:
+\begin{align}
+ \rho_Y^{MC}(N) \xrightarrow[N \rightarrow \infty]{ } \rho_Y.
+\end{align}
+
+\subsection{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}
+The integral for $\EL_d$ (eq.~\ref{eqn:ELdIntPdx}) can transformed using the well known theorem for the transformation of integrals (e.g. cf. \citet{Bauer1992}) to
+\begin{align}
+%  \label{eqn:ELdIntDx}
+  \EL_d =  \int l \cdot l_d(P_X) (\d l) = \int l P_{l_d \circ X} (\d l) = \int l P_{L_d } (\d l) = \int l \rho_{L_d }(l) \d l.
+\end{align}
+This is only a one dimensional integral. However, so far, it requires the knowledge of the distribution of $L_d$. We circumvent the direct calculation of $P_{L_d }$ by its approximation using  a Monte Carlo simulation. First, we sample $N$ values of $X$: $x_1, \ldots, x_N$. Then we calculate the corresponding losses $l_1 := l_d(x_1), \ldots, l_N := l_d(x_N)$. Applying the law of large numbers the sample mean $\bar{l}(N)$ converges to the expectation value:
+\begin{align}
+  \bar{l}(N) := \dfrac{1}{N} \sum_{i=1}^N l_i \xrightarrow[N \rightarrow \infty]{ } \int l \rho_{L_d }(l) \d l
+\end{align}
+or
+\begin{align}
+   \EL_d \approx \dfrac{1}{N} \sum_{i=1}^N l_i
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conclusion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plainnat}
+\bibliography{ValueOfInformationAnalysis}
+\end{document}

@@ -1,112 +1,42 @@
-# file: scratchVia.R
-
-#' Loss function
-#' 
-#' Loss function
-loss<-function(valueFunction){
-	function(x) -valueFunction(x)*(valueFunction(x)<0)
-}
-
-myValueFunction<-function(x) x
-myLossFunction<-loss(myValueFunction)
-myLossFunction(-10:10)
-
-if(0){
-	#' Expectation Value
-	#' 
-	#' Expectation value
-	#' @param f function on R (real numbers)
-		 #' @param rho probability density on R given as a \code{\link[base]{density}}.
-		 E.density <- function (rho, f){
-		 	sum( f(rho$x)*rho$y*diff(rho$x) )
-		 }
-}
-#' Expectation Value
-#' 
-#' Expectation value
-#' @param f function on R (real numbers)
-#' @param rho probability density on R given as a \code{\link[base]{histogram}}.
-E.histogram <- function (rho, f){
-	sum( f(rho$mids)*rho$density*diff(rho$breaks) )
-}
-
-x<-rnorm(n=10000)
-myHist<-hist(x)
-const1 <- function(x) 1
-E.histogram(rho=myHist,f=const1)
-id <- function(x) x
-E.histogram(rho=myHist,f=id)
-square <- function(x) x^2
-E.histogram(rho=myHist,f=square)
+#
+# file: welfareDecisionAnalysis.R
+#
+# R package: decisionSupport
+# 
+# Authors (ToDo order?): 
+#   Lutz Göhring <lutz.goehring@gmx.de>
+#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#
+# Affiliation: World Agroforestry Centre (ICRAF)
+# 
+# License: ToDo
+#
 #######################################################################
-# EOL: the net benefit case
-#######################################################################
-#' Expected net loss of project approvel
-#'
-#' Expected net loss of project approvel
-enlPa <- function(netBenefitSample){
-	- mean( netBenefitSample*(netBenefitSample<0) )
-}
-#' Expected net loss of status quo
-#'
-#' Expected net loss of status quo
-enlSq <- function(netBenefitSample){
-	mean( netBenefitSample*(netBenefitSample>0) )
-}
-#' Expected oportunity loss
-#'
-#' Expected opportunity loss
-eol <- function(netBenefitSample){
-	enlPa_ <- enlPa(netBenefitSample)
-	enlSq_ <- enlSq(netBenefitSample)
-	min(enlPa_,enlSq_)
-}
-#' Optimal choice
+#############################################################
+# welfareDecisionAnalysis(estimate, model, numberOfSimulations, functionSyntax)
+#############################################################
+#' Analysis of the Underlying Welfare Based Decision Problem
 #' 
-#' Optimal choice
-optimalChoice <- function(netBenefitSample){
-	if( eol(netBenefitSample)==enlPa(netBenefitSample) ) "PA"
-	else "SQ"
-}
-#######################################################################
-# Example:
-#############################################################
-# Create the estimate object:
-variable=c("revenue","costs")
-distribution=c("norm","norm")
-lower=c(10000,  5000)
-upper=c(100000, 50000)
-costBenefitEstimate<-estimate(variable, distribution, lower, upper)
-# (a) Define the model function without name for the return value:
-profit1<-function(x){
-	x$revenue-x$costs
-}
-# Perform the Monte Carlo simulation:
-predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
-																 model_function=profit1, 
-																 numberOfSimulations=100000,
-																 functionSyntax="data.frameNames")
-# Show the simulation results:
-print(summary(predictionProfit1))
-hist(predictionProfit1,xlab="Profit")
-
-enlPa(predictionProfit1$y$y)
-apply(X=predictionProfit1$y, MARGIN=2, FUN=enlPa)
-enlSq(predictionProfit1$y$y)
-eol(predictionProfit1$y$y)
-optimalChoice(predictionProfit1$y$y)
-#############################################################
-# Decision Analysis:
-#############################################################
-#' Decision Analysis
-#' 
-#' Decision Analysis
-#' @param estimate \code{\link{estimate} object describing the distribution of the input variables.
+#' The optimal choice between two different opportunities is calculated. This decision is based on minimizing 
+#' the Expected Net Loss (ENL).
+#' @param estimate \code{\link{estimate}} object describing the distribution of the input variables.
 #' @param model either a function or a list with two functions: \code{list(p1,p2)}. In the first case the function is the 
 #' net benefit of project approval vs. the status quo. In the second case the element \code{p1} is the function valuing 
 #' the first project and the element \code{p2} valueing the second project.
 #' @param numberOfSimulations integer; number of simulations to be used in the underlying Monte Carlo analysis
 #' @param functionSyntax function character; function syntax used in the model function(s).
+#' @return An object of class \code{welfareDecisionAnalysis} with the following elements:
+#'  \tabular{ll}{
+#' 			\code{enbPa} \tab Expected Net Loss (ENL) in case of project approval (PA)\cr
+#' 			\code{enbSq} \tab Expected Net Loss (ENL) in case of status quo (SQ)\cr
+#'  		\code{eol}   \tab  Expected Oportunity Loss (EOL)\cr
+#'  		\code{optimalChoice} \tab The optimal choice, i.e. either 
+#'  															project approval (PA) or the status quo (SQ)
+#' }
+#' @details This principle is along the line described in Hubbard (2014). The Expected Opportunity Loss (EOL) is defined as the 
+#' Expected Net Loss (ENL) for the best decision. The best decision minimises the ENL. The EOL is always conditional on the available 
+#' information (I): EOL=EOL(I). Here, the available information is the supplied estimate. One can show that in the case of two 
+#' alternatives, minimization of EOL is equivalent to maximization of the Expected Net Benefit.
 #' @examples
 #' #############################################################
 #' # Example 1 (Creating the estimate from the command line):
@@ -156,7 +86,7 @@ optimalChoice(predictionProfit1$y$y)
 #' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
 welfareDecisionAnalysis <- function(estimate, model, numberOfSimulations, functionSyntax="data.frameNames"){
-	# Auxiliary functions:
+	# Auxiliary functions (ToDo: check!):
 	# Expected net loss of project approval
 	enlPa <- function(netBenefitSample){
 		- mean( netBenefitSample*(netBenefitSample<0) )
@@ -240,7 +170,7 @@ summary.welfareDecisionAnalysis <- function(object,
 #' Print the Summarized Decsion Analysis Results..
 #' 
 #' This function prints the summary of of \code{welfareDecisionAnalysis} obtained by \code{\link{summary.welfareDecisionAnalysis}}.
-#' @param x An object of class \code{welfareDecisionAnalysis}.
+#' @param x An object of class \code{summary.welfareDecisionAnalysis}.
 #' @param ... Further arguments #ToDo
 #' @seealso \code{\link{welfareDecisionAnalysis}}
 #' @export
@@ -250,48 +180,3 @@ print.summary.welfareDecisionAnalysis <- function(x, ...){
 	cat("\nSummary of decision analysis:\n")
 	print(x$summary,...)
 }
-#############################################################
-# Example 1 (Creating the estimate from the command line):
-#############################################################
-# Create the estimate object:
-variable=c("revenue","costs")
-distribution=c("posnorm","posnorm")
-lower=c(10000,  5000)
-upper=c(100000, 50000)
-costBenefitEstimate<-estimate(variable, distribution, lower, upper)
-# (a) Define the model function without name for the return value:
-profit<-function(x){
-	x$revenue-x$costs
-}
-# Perform the decision analysis:
-myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-															model=profit, 
-															numberOfSimulations=100000,
-															functionSyntax="data.frameNames")
-# Show the analysis results:
-print(summary((myAnalysis)))
-#############################################################
-# (b) Define the model function with a name for the return value:
-profit<-function(x){
-	list(Profit=x$revenue-x$costs)
-}
-# Perform the decision analysis:
-myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-															model=profit, 
-															numberOfSimulations=100000,
-															functionSyntax="data.frameNames")
-# Show the analysis results:
-print(summary((myAnalysis)))
-#############################################################
-# (c) Two decsion variables:
-decisionModel<-function(x){
-	list(Profit=x$revenue-x$costs,
-			 Costs=-x$costs)
-}
-# Perform the decision analysis:
-myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-															model=decisionModel, 
-															numberOfSimulations=100000,
-															functionSyntax="data.frameNames")
-# Show the analysis results:
-print(summary((myAnalysis)))

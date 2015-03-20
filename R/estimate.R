@@ -233,6 +233,14 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #' @param method Particular method to be used for random number generation.
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
+#' @details 
+#' 	\subsection{Generation of uncorrelated components}{
+#' 		Implementation: \code{\link{random_estimate_1d}}
+#' 	
+#' 	}
+#' 	\subsection{Generation of correlated components}{
+#' 		Implementation: \code{\link{rmvnorm90ci_exact}}
+#' 	}
 #' @examples
 #'	variable=c("revenue","costs")
 #'	distribution=c("norm","norm")

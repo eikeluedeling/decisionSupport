@@ -52,8 +52,8 @@ print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
 #' @param functionSyntax function character; function syntax used in the model function(s).
 #' @return An object of class \code{eviSimulation} with the following elements:
 #'  \tabular{ll}{
-#' 			\code{current} \tab \code{\link{decisionAnalysis}} object for \code{currentEstimate}\cr
-#' 			\code{prospective} \tab \code{\link{decisionAnalysis}} object  for \code{prospectiveEstimate}\cr
+#' 			\code{current} \tab \code{\link{welfareDecisionAnalysis}} object for \code{currentEstimate}\cr
+#' 			\code{prospective} \tab \code{\link{welfareDecisionAnalysis}} object  for \code{prospectiveEstimate}\cr
 #'  		\code{evi}   \tab  Expected Value of Information (EVI) of gained by the prospective estimate w.r.t. 
 #'  								the current estimate
 #' }
@@ -78,7 +78,7 @@ print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
 #' 																							 functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
-#' @seealso \code{\link{eviSimultion}}, \code{\link{decisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
+#' @seealso \code{\link{eviSimultion}}, \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
 individualEvpiSimulation <- function(model, currentEstimate, 
 																		 perfectProspectiveNames=row.names(currentEstimate),

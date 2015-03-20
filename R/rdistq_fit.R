@@ -28,7 +28,7 @@
 #' @details
 #' The follwing table shows the available distributions and their identification as a character string:
 #'  \tabular{lll}{
-#'  Identification \tab  Distribution\tab Number of quantiles\cr
+#'  \bold{Identification} \tab  \bold{Distribution} \tab \bold{Number of quantiles}\cr
 #'  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab >=2  \cr
 #'  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab ToDo \cr  
 #'  \code{cauchy}     \tab ToDo \tab ToDo\cr

@@ -15,7 +15,7 @@
 ##############################################################################################
 # eviSimulation(model, currentEstimate, prospectiveEstimate, numberOfSimulations, functionSyntax)
 ##############################################################################################
-#' Expected Value of Information Simulation
+#' Expected Value of Information (EVI) Simulation
 #' 
 #' The Expected Value of Information (EVI) is calculated based on a Monte Carlo simulation
 #' of the values of two different decision alternatives.
@@ -29,8 +29,8 @@
 #' @param functionSyntax function character; function syntax used in the model function(s).
 #' @return An object of class \code{eviSimulation} with the following elements:
 #'  \tabular{ll}{
-#' 			\code{current} \tab \code{\link{decisionAnalysis}} object for \code{currentEstimate}\cr
-#' 			\code{prospective} \tab \code{\link{decisionAnalysis}} object  for \code{prospectiveEstimate}\cr
+#' 			\code{current} \tab \code{\link{welfareDecisionAnalysis}} object for \code{currentEstimate}\cr
+#' 			\code{prospective} \tab \code{\link{welfareDecisionAnalysis}} object  for \code{prospectiveEstimate}\cr
 #'  		\code{evi}   \tab  Expected Value of Information (EVI) of gained by the prospective estimate w.r.t. 
 #'  								the current estimate
 #' }
@@ -187,13 +187,13 @@
 #' 																	 functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(eviSimulationResult)),decreasing=TRUE,along="Profit")
- #' @seealso \code{\link{decisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
+ #' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
 eviSimulation<-function(model, currentEstimate, prospectiveEstimate, numberOfSimulations, functionSyntax="data.frameNames"){
 	# Return object:
 	thisAnalysis<-NULL
 	# Perform the current decision analysis:
-	analysisCurrent<-decisionAnalysis( estimate=currentEstimate,
+	analysisCurrent<-welfareDecisionAnalysis( estimate=currentEstimate,
 																		 model=model,
 																		 numberOfSimulations=numberOfSimulations,
 																		 functionSyntax=functionSyntax)
@@ -201,14 +201,14 @@ eviSimulation<-function(model, currentEstimate, prospectiveEstimate, numberOfSim
 	# Perform the prospective decision analysis:
 	if( class(prospectiveEstimate) == "estimate"){
 		# Perform the decision analysis:
-		analysisProspective<-decisionAnalysis( estimate=prospectiveEstimate,
+		analysisProspective<-welfareDecisionAnalysis( estimate=prospectiveEstimate,
 																					 model=model,
 																					 numberOfSimulations=numberOfSimulations,
 																					 functionSyntax=functionSyntax)
 		evi<-analysisCurrent$eol - analysisProspective$eol
 	} else if ( is.list(prospectiveEstimate) ){
 		analysisProspective<-lapply(X=prospectiveEstimate, 
-																FUN=function(estimate) decisionAnalysis(estimate=estimate,
+																FUN=function(estimate) welfareDecisionAnalysis(estimate=estimate,
 																																				model=model,
 																																				numberOfSimulations=numberOfSimulations,
 																																				functionSyntax=functionSyntax)
@@ -244,7 +244,7 @@ summary.eviSimulation <- function(object,
 																	digits = max(3, getOption("digits")-3)){	
 	summaryList<-list(evi=format(x=object$evi, digits=digits),
 										current=summary(object$current, ..., digits=digits),
-										prospective=if( class(object$prospective)=="decisionAnalysis" ){
+										prospective=if( class(object$prospective)=="welfareDecisionAnalysis" ){
 											summary(object$prospective, ..., digits=digits)
 										}else{
 											lapply(X=object$prospective, 

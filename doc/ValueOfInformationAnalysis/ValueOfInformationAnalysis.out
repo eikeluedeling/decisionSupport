@@ -1,0 +1,13 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{The Underlying Decision Making Principle of a Binary Decision Problem}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Special case: Status quo and project approval}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{The Meta Decision of Reducing Uncertainty Using the Expected Value of Information}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Meta decision principle: Focus on Risk Management or Minimization of Expected Opportunity Loss}{section.3}% 5
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Expected Value of Perfect Information}{subsection.3.1}% 6
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Special case: Status quo and project approval}{subsection.3.1}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Meta decision principle: Focus on utility maximization or maximization of expected welfare}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{The Practical Problem of Calculating Expectation Values}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{Monte Carlo Simulations}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{section.4}% 12
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 13
