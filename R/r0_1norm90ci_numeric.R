@@ -1,15 +1,27 @@
 #
 # file: r0_1norm90ci_numeric.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
-# Authors (ToDo order?): 
+# Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation: ToDo
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
 ##############################################################################################
@@ -44,7 +56,7 @@ r0_1norm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
 	# Calculate mean and sd corresponding to confidence interval:
 	param<-paramtnormci(p=c(0.05, 0.95), ci=ci, lowerTrunc=0, upperTrunc=1, relativeTolerance=relativeTolerance, method="numeric")
 	# Generate the random numbers:
-	x<-rtnorm(n=n,
+	x<-msm::rtnorm(n=n,
 						mean=param$mean,
 						sd=param$sd,
 						lower=0,

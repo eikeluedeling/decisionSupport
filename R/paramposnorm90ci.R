@@ -1,15 +1,27 @@
 #
 # file: paramposnorm90ci.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
-# Authors (ToDo order?): 
+# Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation: ToDo
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
 ##############################################################################################
@@ -45,8 +57,8 @@ paramposnorm90ci <- function(lower, upper, relativeTolerance=0.05, method="numer
 		sd_i <- (mean_i - ci[["lower"]])/c_0.95
 		ci_i <- c("lower"=NULL, "upper"=NULL)
 			# Generate the the initial values for mean  and sd:
-		ci_i[["lower"]] <- qtnorm(p=0.05, mean=mean_i, sd=sd_i, lower=0, upper=Inf)
-		ci_i[["upper"]] <- qtnorm(p=0.95, mean=mean_i, sd=sd_i, lower=0, upper=Inf)		
+		ci_i[["lower"]] <- msm::qtnorm(p=0.05, mean=mean_i, sd=sd_i, lower=0, upper=Inf)
+		ci_i[["upper"]] <- msm::qtnorm(p=0.95, mean=mean_i, sd=sd_i, lower=0, upper=Inf)		
 		sd_i <- (ci[["upper"]] - ci[["lower"]])/(ci_i[["upper"]] - ci_i[["lower"]])*sd_i
 		mean_i <-  ci_i[["lower"]]/ci[["lower"]] *  max(ci - ci_i) + mean_i
 		
@@ -54,13 +66,13 @@ paramposnorm90ci <- function(lower, upper, relativeTolerance=0.05, method="numer
 		# (x[1]:=mean, x[2]:=sd): 
 		f <- function(x){
 			y<-numeric(2)
-			y[1]<- qtnorm(p=0.05, mean=x[1], sd=x[2], lower=0, upper=Inf) - ci[["lower"]]
-			y[2]<- qtnorm(p=0.95, mean=x[1], sd=x[2], lower=0, upper=Inf) - ci[["upper"]]
+			y[1]<- msm::qtnorm(p=0.05, mean=x[1], sd=x[2], lower=0, upper=Inf) - ci[["lower"]]
+			y[2]<- msm::qtnorm(p=0.95, mean=x[1], sd=x[2], lower=0, upper=Inf) - ci[["upper"]]
 			y
 		}
 		# The root of f are mean and sd:
-		#	x_0<-nleqslv(x=c(mean_i, sd_i), fn=f, control=list(maxit=10000))
-		x_0<-nleqslv(x=c(mean_i, sd_i), fn=f)	
+		#	x_0<-nleqslv::nleqslv(x=c(mean_i, sd_i), fn=f, control=list(maxit=10000))
+		x_0<-nleqslv::nleqslv(x=c(mean_i, sd_i), fn=f)	
 		mean<-x_0$x[1]
 		sd<-x_0$x[2]
 		
@@ -76,14 +88,14 @@ paramposnorm90ci <- function(lower, upper, relativeTolerance=0.05, method="numer
 		# 		y
 		# 	}
 		# The root of f are mean/sd and sd:
-		#	x_0<-nleqslv(x=c(mean_i/sd_i, sd_i), fn=f)	
+		#	x_0<-nleqslv::nleqslv(x=c(mean_i/sd_i, sd_i), fn=f)	
 		#	sd<-x_0$x[2]
 		#	mean<-x_0$x[1]*sd	
 	} else 
 		stop("Not implemented: method=", method)
 	# Check postcondition:
-	ci_i[["lower"]] <- qtnorm(p=0.05, mean=mean, sd=sd, lower=0, upper=Inf)
-	ci_i[["upper"]] <- qtnorm(p=0.95, mean=mean, sd=sd, lower=0, upper=Inf)
+	ci_i[["lower"]] <- msm::qtnorm(p=0.05, mean=mean, sd=sd, lower=0, upper=Inf)
+	ci_i[["upper"]] <- msm::qtnorm(p=0.95, mean=mean, sd=sd, lower=0, upper=Inf)
 	if( !isTRUE(msg<-all.equal(ci_i, ci, tolerance=relativeTolerance, scale=min(abs(ci)))) )
 		warning(msg)
 	#Return

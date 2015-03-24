@@ -1,15 +1,27 @@
 #
 # file: rdistq_fit.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
-# Authors (ToDo order?): 
+# Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation: ToDo
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
 ##############################################################################################
@@ -62,7 +74,7 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles)
   # Fit the desired distribution until the goodnes of fit is tolerated:
 #  while (maxRelativeDeviation > relativeTolerance){
     # Fit the distribution to the given quantiles:
-    capture.output(dists<-try(rriskFitdist.perc(p=percentiles,
+    capture.output(dists<-try(rriskDistributions::rriskFitdist.perc(p=percentiles,
                                                 q=quantiles,
                                                 show.output=FALSE,
                                                 tolConv=tolConv,
@@ -140,7 +152,7 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles)
                     shape=dists$results[4,"pert"])
     #pert needs 4 quantiles
     else if(distribution=="tnorm") 
-      output<-rtnorm(n=n,
+      output<-msm::rtnorm(n=n,
                      mean=dists$results[1,"tnorm"],
                      sd=dists$results[2,"tnorm"],
                      lower=dists$results[3,"tnorm"],

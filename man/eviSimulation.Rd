@@ -86,7 +86,7 @@ eviSimulationResult<-eviSimulation(model=profit,
 # Show the simulation results:
 print(summary((eviSimulationResult)))
 #############################################################
-# (c) Two decsion variables:
+# (c) Two decision variables:
 decisionModel<-function(x){
 	list(Profit=x$revenue-x$costs,
 			 Costs=-x$costs)
@@ -150,7 +150,7 @@ eviSimulationResult<-eviSimulation(model=profit,
 # Show the simulation results:
 print(summary(eviSimulationResult))
 #############################################################
-# Example 3 A list of prospective estimates and two decsion variables:
+# Example 3 A list of prospective estimates and two decision variables:
 #############################################################
 numberOfSimulations=10000
 # Create the current estimate object:
@@ -176,7 +176,7 @@ perfectInformationCosts$base["costs",]<-data.frame(distribution="const",
 																									 stringsAsFactors=FALSE)
 prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 													perfectInformationCosts=perfectInformationCosts)
-# Define the model function with two decsion variables:
+# Define the model function with two decision variables:
 decisionModel<-function(x){
 	list(Profit=x$revenue-x$costs,
 			 Costs=-x$costs)

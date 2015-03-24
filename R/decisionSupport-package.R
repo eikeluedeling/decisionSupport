@@ -1,18 +1,29 @@
 #
 # file: decisionSupport-package.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation:  World Agroforestry Centre (ICRAF)
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
-
 #' Quantitative Support of Decision Making under Uncertainty
 #' 
 #' The \pkg{decisionSupport} package supports the quantitative analysis of 
@@ -84,9 +95,28 @@
 #' @section Package Options:
 #' 	ToDo
 #' 
+#' @section Copyright (C): 
+#' 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)} 2015
+#' @section License:
+#'    The R-package \pkg{decisionSupport} is free software: you can redistribute it and/or modify
+#'    it under the terms of the GNU General Public License as published by
+#'    the Free Software Foundation, either version 3 of the License, or
+#'    (at your option) any later version: 
+#'    \href{http://www.gnu.org/licenses/gpl-3.0.html}{GNU GENERAL PUBLIC LICENSE, Version 3 (GPL-3)}
+#' 
+#'    The R-package \pkg{decisionSupport} is distributed in the hope that it will be useful,
+#'    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#'    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#'    GNU General Public License for more details.
+#' 
+#'    You should have received a copy of the GNU General Public License
+#'    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 #' @docType package
 #' @name decisionSupport
-#' @references Hubbarrd, Douglas W., How to Measure Anything? - Finding the Value of "Intangibles" in Business,
+#' @author Lutz Göhring \email{lutz.goehring@@gmx.de},
+#'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{E.Luedeling@@cgiar.org}	
+#' @author Maintainer: Lutz Göhring \email{lutz.goehring@@gmx.de}
+#' @references Hubbard, Douglas W., How to Measure Anything? - Finding the Value of "Intangibles" in Business,
 #'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
 #'   
 #'   Hugh Gravelle and Ray Rees, Microeconomics, Pearson Education Limited, 3rd edition, 2004.

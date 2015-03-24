@@ -1,15 +1,27 @@
 #
 # file: eviSimulation.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
-# Authors (ToDo order?): 
+# Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation: World Agroforestry Centre (ICRAF)
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
 ##############################################################################################
@@ -84,7 +96,7 @@
 #' # Show the simulation results:
 #' print(summary((eviSimulationResult)))
 #' #############################################################
-#' # (c) Two decsion variables:
+#' # (c) Two decision variables:
 #' decisionModel<-function(x){
 #' 	list(Profit=x$revenue-x$costs,
 #' 			 Costs=-x$costs)
@@ -148,7 +160,7 @@
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
 #' #############################################################
-#' # Example 3 A list of prospective estimates and two decsion variables:
+#' # Example 3 A list of prospective estimates and two decision variables:
 #' #############################################################
 #' numberOfSimulations=10000
 #' # Create the current estimate object:
@@ -174,7 +186,7 @@
 #' 																									 stringsAsFactors=FALSE)
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 #' 													perfectInformationCosts=perfectInformationCosts)
-#' # Define the model function with two decsion variables:
+#' # Define the model function with two decision variables:
 #' decisionModel<-function(x){
 #' 	list(Profit=x$revenue-x$costs,
 #' 			 Costs=-x$costs)
@@ -293,9 +305,9 @@ sort.summary.eviSimulation <- function(x, decreasing=TRUE, ..., along=row.names(
 print.summary.eviSimulation <- function(x, ...){
 	cat("Call:\n")
 	print(x$call)
-	cat("\nExpeced Value of Information (EVI):\n")
+	cat("\nExpected Value of Information (EVI):\n")
 	print(x$summary$evi,...)
-	cat("\nUnderlying Decision Analysis:\n")
+	cat("\nUnderlying welfare decision analysis:\n")
 	cat("Based on the current estimate:\n")
 	print(x$summary$current, ...)
 	cat("\nBased on the prospective estimate(s):\n")

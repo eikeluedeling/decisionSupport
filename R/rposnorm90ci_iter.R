@@ -1,15 +1,27 @@
 #
 # file: rposnorm90ci_iter.R
 #
-# R package: decisionSupport
+# This file is part of the R-package decisionSupport
 # 
-# Authors (ToDo order?): 
+# Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Affiliation: ToDo
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+#	http://www.worldagroforestry.org
 # 
-# License: ToDo
+# The R-package decisionSupport is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# The R-package decisionSupport is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
 ##############################################################################################
@@ -52,7 +64,7 @@ rposnorm90ci_iter <- function(n, lower, upper,  relativeTolerance=0.05, maxIter=
 	# Generate the random numbers until the generated 90\% - confidence interval is
 	# close enough to the desired value:
 	while( !isTRUE(all.equal(ci_i, ci, tolerance=relativeTolerance, scale=min(abs(ci))  )) && i < maxIter  ){	
-		x<-rtnorm(n=n,
+		x<-msm::rtnorm(n=n,
 							mean=mean_i,
 							sd=sd_i,
 							lower=0,
