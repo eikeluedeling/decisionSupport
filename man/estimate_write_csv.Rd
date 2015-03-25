@@ -8,14 +8,20 @@ estimate_write_csv(estimate, fileName, varNamesAsColumn = TRUE,
   quote = FALSE, ...)
 }
 \arguments{
-\item{estimate}{\code{character}. Ouput file name which must end with \code{.csv}.}
+\item{estimate}{Estimate object to write to file \code{fileName}.}
+
+\item{fileName}{\code{character}. Output file name which must end with \code{.csv}.}
 
 \item{varNamesAsColumn}{\code{logical}; If \code{TRUE} the variable names will be written as a
 separate column, otherwise as row names.}
 
-\item{...}{Further parameters to be passed to \code{\link[utils]{write.csv}}.}
+\item{quote}{a \code{logical} value (TRUE or FALSE) or a numeric vector. If
+TRUE, any character or factor columns will be surrounded by double quotes.
+If a numeric vector, its elements are taken as the indices of columns to
+quote. In both cases, row and column names are quoted if they are written.
+If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.}
 
-\item{estimate}{Estimate object to write to file \code{fileName}.}
+\item{...}{Further parameters to be passed to \code{\link[utils]{write.csv}}.}
 }
 \value{
 An object of type \code{\link{estimate}}.

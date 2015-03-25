@@ -1,24 +1,24 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100.0.9000
+Version: 1.100.0.9001
 Date: 2015-03-24
 Authors@R: c(
-    person("Lutz", "Goehring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
+    person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
     person("Eike", "Luedeling", email = "E.Luedeling@cgiar.org", role = "aut"))
 Copyright: World Agroforestry Centre (ICRAF) 2015
-Description: Supporting the quantitative analysis of binary welfare based 
-    decision making processes using Monte Carlo simulations. Decision support 
-    is given on two levels: (i) The actual decision level is to choose between 
-    two alternatives under probabilistic uncertainty. This package calculates 
-    the optimal decision based on maximizing expected welfare. (ii) The meta 
-    decision level is to allocate resources to reduce the uncertainty in the 
-    underlying decision problem, i.e to increase the current information to 
-    improve the actual decision making process. This problem is dealt with 
-    using the Value of Information Analysis (VIA). The Expected Value of 
-    Information (EVI) for arbitrary prospective estimates can be calculated as 
-    well as Individual and Clustered Expected Value of Perfect Information 
-    (EVPI). The probabilistic calculations are done via Monte Carlo 
+Description: Supporting the quantitative analysis of binary welfare based
+    decision making processes using Monte Carlo simulations. Decision support
+    is given on two levels: (i) The actual decision level is to choose between
+    two alternatives under probabilistic uncertainty. This package calculates
+    the optimal decision based on maximizing expected welfare. (ii) The meta
+    decision level is to allocate resources to reduce the uncertainty in the
+    underlying decision problem, i.e to increase the current information to
+    improve the actual decision making process. This problem is dealt with
+    using the Value of Information Analysis (VIA). The Expected Value of
+    Information (EVI) for arbitrary prospective estimates can be calculated as
+    well as Individual and Clustered Expected Value of Perfect Information
+    (EVPI). The probabilistic calculations are done via Monte Carlo
     simulations. This Monte Carlo functionality can be used on its own.
 License: GPL-3
 Depends:
@@ -29,6 +29,28 @@ Imports:
     nleqslv (>= 2.6),
     rriskDistributions (>= 2.0)
 Suggests:
+    eha (>= 2.4.2),
+    mc2d (>= 0.1.15),
     testthat (>= 0.9.1)
 URL: http://www.worldagroforestry.org/
+Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
+Collate:
+    'rmvnorm90ci_exact.R'
+    'paramposnorm90ci.R'
+    'rposnorm90ci_numeric.R'
+    'rdistq_fit.R'
+    'rdist90ci_exact.R'
+    'paramtnormci.R'
+    'r0_1norm90ci_numeric.R'
+    'random_estimate_1d.R'
+    'random.R'
+    'estimate.R'
+    'mcSimulation.R'
+    'welfareDecisionAnalysis.R'
+    'eviSimulation.R'
+    'individualEvpiSimulation.R'
+    'estimate_read_csv_old.R'
+    'uncertaintyAnalysis.R'
+    'decisionSupport-package.R'
+    'rposnorm90ci_iter.R'

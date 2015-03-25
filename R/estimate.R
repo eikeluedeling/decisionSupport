@@ -24,6 +24,10 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include rmvnorm90ci_exact.R
+#' @include random.R
+#' @include random_estimate_1d.R
+NULL
 ##############################################################################################
 # estimate(..., correlation_matrix)
 # ToDo: review documentation (if pre and postconditions are correct)
@@ -104,16 +108,16 @@ names.estimate<-function(x){
 	names(x$base)
 }
 ##############################################################################################
-# generic: cor(x)
+# generic: corMat(rho)
 ##############################################################################################
 #' Return the Correlation Matrix of x.
 #' 
 #' Return the correlation matrix of x.
-#' @param x a distribution.
+#' @param rho a distribution.
 #' @export
 corMat <- function(rho) UseMethod("corMat")
 ##############################################################################################
-# cor.estimate(x)
+# corMat.estimate(rho)
 ##############################################################################################
 #' Return the correlation matrix of an \code{estimate} object.
 #' 
@@ -208,10 +212,15 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 #' Write an Estimate to CSV - File.
 #' 
 #' This function writes an \code{\link{estimate}} to the specified csv file(s).
-#' @param estimate \code{character}. Ouput file name which must end with \code{.csv}. 
+#' @param fileName \code{character}. Output file name which must end with \code{.csv}. 
 #' @param estimate  Estimate object to write to file \code{fileName}.
 #' @param varNamesAsColumn \code{logical}; If \code{TRUE} the variable names will be written as a
 #' separate column, otherwise as row names.
+#' @param quote a \code{logical} value (TRUE or FALSE) or a numeric vector. If
+#'   TRUE, any character or factor columns will be surrounded by double quotes.
+#'   If a numeric vector, its elements are taken as the indices of columns to
+#'   quote. In both cases, row and column names are quoted if they are written.
+#'   If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.
 #' @param ... Further parameters to be passed to \code{\link[utils]{write.csv}}.
 #' @return An object of type \code{\link{estimate}}.
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}

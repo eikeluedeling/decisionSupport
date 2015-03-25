@@ -55,20 +55,21 @@ This principle is along the line described in Hubbard (2014). The Expected Value
 n=100000
 # Create the current estimate from text:
 estimateText<-"variable,  distribution, lower, upper
-								revenue1,  posnorm,      100,   1000
-								revenue2,	 posnorm,      50,    2000
-								costs1,    posnorm,      50,    2000
+               revenue1,  posnorm,      100,   1000
+               revenue2,  posnorm,      50,    2000
+               costs1,    posnorm,      50,    2000
                costs2,    posnorm,      100,   1000"
-currentEstimate<-estimate(read.csv(header=TRUE,text=estimateText, strip.white=TRUE, stringsAsFactors=FALSE))
+currentEstimate<-estimate(read.csv(header=TRUE, text=estimateText,
+                          strip.white=TRUE, stringsAsFactors=FALSE))
 # The model function:
 profitModel <- function(x){
-	list(Profit=x$revenue1 + x$revenue2 - x$costs1 - x$costs2)
+ list(Profit=x$revenue1 + x$revenue2 - x$costs1 - x$costs2)
 }
 # Calculate the Individual EVPI:
 individualEvpiResult<-individualEvpiSimulation(model=profitModel,
-																							 currentEstimate=currentEstimate,
-																							 numberOfSimulations=n,
-																							 functionSyntax="data.frameNames")
+                                               currentEstimate=currentEstimate,
+                                               numberOfSimulations=n,
+                                               functionSyntax="data.frameNames")
 # Show the simulation results:
 print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
 }

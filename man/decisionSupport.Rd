@@ -105,10 +105,10 @@ Lutz Göhring \email{lutz.goehring@gmx.de},
 Maintainer: Lutz Göhring \email{lutz.goehring@gmx.de}
 }
 \references{
-Hubbard, Douglas W., How to Measure Anything? - Finding the Value of "Intangibles" in Business,
+Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
 
-  Hugh Gravelle and Ray Rees, Microeconomics, Pearson Education Limited, 3rd edition, 2004.
+  Hugh Gravelle and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
 }
 \seealso{
 \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}

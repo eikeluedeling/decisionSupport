@@ -24,6 +24,8 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include mcSimulation.R
+NULL
 #############################################################
 # welfareDecisionAnalysis(estimate, model, numberOfSimulations, functionSyntax)
 #############################################################
@@ -61,41 +63,41 @@
 #' costBenefitEstimate<-estimate(variable, distribution, lower, upper)
 #' # (a) Define the model function without name for the return value:
 #' profit<-function(x){
-#' 	x$revenue-x$costs
+#'  x$revenue-x$costs
 #' }
 #' # Perform the decision analysis:
-#' myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-#' 															model=profit, 
-#' 															numberOfSimulations=100000,
-#' 															functionSyntax="data.frameNames")
+#' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
+#'                                     model=profit, 
+#'                                     numberOfSimulations=100000,
+#'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
 #' #############################################################
 #' # (b) Define the model function with a name for the return value:
 #' profit<-function(x){
-#' 	list(Profit=x$revenue-x$costs)
+#'  list(Profit=x$revenue-x$costs)
 #' }
 #' # Perform the decision analysis:
-#' myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-#' 															model=profit, 
-#' 															numberOfSimulations=100000,
-#' 															functionSyntax="data.frameNames")
+#' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
+#'                                     model=profit, 
+#'                                     numberOfSimulations=100000,
+#'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
 #' #############################################################
 #' # (c) Two decsion variables:
 #' decisionModel<-function(x){
-#' 	list(Profit=x$revenue-x$costs,
-#' 			 Costs=-x$costs)
+#'  list(Profit=x$revenue-x$costs,
+#'    Costs=-x$costs)
 #' }
 #' # Perform the decision analysis:
-#' myAnalysis<-welfareDecisionAnalysis( estimate=costBenefitEstimate, 
-#' 															model=decisionModel, 
-#' 															numberOfSimulations=100000,
-#' 															functionSyntax="data.frameNames")
+#' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
+#'                                     model=decisionModel, 
+#'                                     numberOfSimulations=100000,
+#'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
-#' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}
+#' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{summary.welfareDecisionAnalysis}}
 #' @export
 welfareDecisionAnalysis <- function(estimate, model, numberOfSimulations, functionSyntax="data.frameNames"){
 	# Auxiliary functions (ToDo: check!):
@@ -157,9 +159,10 @@ welfareDecisionAnalysis <- function(estimate, model, numberOfSimulations, functi
 #' summary.welfareDecisionAnalysis produces result summaries of the results of decision analysis
 #'  simulation obtained by the function \code{\link{welfareDecisionAnalysis}}.
 #' @param object An object of class \code{welfareDecisionAnalysis}.
-#' @param ... Further arguments #ToDo
+#' @param ... Further arguments passed to \code{\link{format}}.
+#' @inheritParams base::format
 #' @return An object of class \code{summary.welfareDecisionAnalysis}.
-#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{print.summary.welfareDecisionAnalysis}}
+#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
 #' @export
 summary.welfareDecisionAnalysis <- function(object,
 																		 ...,

@@ -24,6 +24,8 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include welfareDecisionAnalysis.R
+NULL
 ##############################################################################################
 # eviSimulation(model, currentEstimate, prospectiveEstimate, numberOfSimulations, functionSyntax)
 ##############################################################################################
@@ -35,7 +37,7 @@
 #' net benefit of project approval vs. the status quo. In the second case the element \code{p1} is the function valuing 
 #' the first project and the element \code{p2} valueing the second project.
 #' @param currentEstimate \code{\link{estimate}} object describing the distribution of the input variables as currently estmated.
-#' @param prospectiveEstmate \code{\link{estimate}} object describing the prospective distribution of the input variables 
+#' @param prospectiveEstimate \code{\link{estimate}} object describing the prospective distribution of the input variables 
 #' 		which could hypothetically achieved by collecting more information, viz. improving the measurement.
 #' @param numberOfSimulations integer; number of simulations to be used in the underlying Monte Carlo analysis
 #' @param functionSyntax function character; function syntax used in the model function(s).
@@ -63,12 +65,13 @@
 #' upper=c(100000, 50000)
 #' currentEstimate<-estimate(variable, distribution, lower, upper)
 #' prospectiveEstimate<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],currentEstimate$base["revenue","upper"]))
+#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
+#'                      currentEstimate$base["revenue","upper"]))
 #' prospectiveEstimate$base["revenue",]<-data.frame(distribution="const",
-#' 																								 lower=revenueConst, 
-#' 																								 upper=revenueConst, 
-#' 																								 row.names="revenue",
-#' 																								 stringsAsFactors=FALSE)
+#'                                                  lower=revenueConst, 
+#'                                                  upper=revenueConst, 
+#'                                                  row.names="revenue",
+#'                                                  stringsAsFactors=FALSE)
 #' # (a) Define the model function without name for the return value:
 #' profit<-function(x){
 #' 	x$revenue-x$costs
@@ -76,10 +79,10 @@
 #' 
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=profit,
-#' 																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#' 																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
 #' #############################################################
@@ -89,24 +92,24 @@
 #' }
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=profit,
-#'																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#' 																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary((eviSimulationResult)))
 #' #############################################################
 #' # (c) Two decision variables:
 #' decisionModel<-function(x){
-#' 	list(Profit=x$revenue-x$costs,
-#' 			 Costs=-x$costs)
+#'  list(Profit=x$revenue-x$costs,
+#'       Costs=-x$costs)
 #' }
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=decisionModel,
-#' 																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#'																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary((eviSimulationResult)))
 #' #############################################################
@@ -115,7 +118,7 @@
 #' numberOfSimulations=10000
 #' #  Define the model function with a name for the return value:
 #' profit<-function(x){
-#' 	list(Profit=x$revenue-x$costs)
+#'  list(Profit=x$revenue-x$costs)
 #' }
 #' # Create the estimate object:
 #' variable=c("revenue","costs")
@@ -124,39 +127,41 @@
 #' upper=c(100000, 50000)
 #' currentEstimate<-estimate(variable, distribution, lower, upper)
 #' perfectInformationRevenue<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],currentEstimate$base["revenue","upper"]))
+#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
+#'                      currentEstimate$base["revenue","upper"]))
 #' perfectInformationRevenue$base["revenue",]<-data.frame(distribution="const",
-#' 																											 lower=revenueConst, 
-#' 																											 upper=revenueConst, 
-#' 																											 row.names="revenue",
-#' 																											 stringsAsFactors=FALSE)
+#'                                                        lower=revenueConst, 
+#'                                                        upper=revenueConst, 
+#'                                                        row.names="revenue",
+#'                                                        stringsAsFactors=FALSE)
 #' # (a) A list with one element
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue)
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=profit,
-#' 																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#' 																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
 #' #############################################################
 #' # (b) A list with two elements
 #' perfectInformationCosts<-currentEstimate
-#' costsConst<-mean(c(currentEstimate$base["costs","lower"],currentEstimate$base["costs","upper"]))
+#' costsConst<-mean(c(currentEstimate$base["costs","lower"], 
+#'                    currentEstimate$base["costs","upper"]))
 #' perfectInformationCosts$base["costs",]<-data.frame(distribution="const",
-#' 																									 lower=costsConst, 
-#' 																									 upper=costsConst, 
-#' 																									 row.names="costs",
-#' 																									 stringsAsFactors=FALSE)
+#'                                                    lower=costsConst, 
+#'                                                    upper=costsConst, 
+#'                                                    row.names="costs",
+#'                                                    stringsAsFactors=FALSE)
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
-#' 													perfectInformationCosts=perfectInformationCosts)
+#'                           perfectInformationCosts=perfectInformationCosts)
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=profit,
-#' 																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#' 																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
 #' #############################################################
@@ -171,32 +176,33 @@
 #' currentEstimate<-estimate(variable, distribution, lower, upper)
 #' # Create a list of two prospective estimates:
 #' perfectInformationRevenue<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],currentEstimate$base["revenue","upper"]))
+#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
+#'                      currentEstimate$base["revenue","upper"]))
 #' perfectInformationRevenue$base["revenue",]<-data.frame(distribution="const",
-#' 																											 lower=revenueConst, 
-#' 																											 upper=revenueConst, 
-#' 																											 row.names="revenue",
-#' 																											 stringsAsFactors=FALSE)
+#'                                                        lower=revenueConst, 
+#'                                                        upper=revenueConst, 
+#'                                                        row.names="revenue",
+#'                                                        stringsAsFactors=FALSE)
 #' perfectInformationCosts<-currentEstimate
 #' costsConst<-mean(c(currentEstimate$base["costs","lower"],currentEstimate$base["costs","upper"]))
 #' perfectInformationCosts$base["costs",]<-data.frame(distribution="const",
-#' 																									 lower=costsConst, 
-#' 																									 upper=costsConst, 
-#' 																									 row.names="costs",
-#' 																									 stringsAsFactors=FALSE)
+#'                                                    lower=costsConst, 
+#'                                                    upper=costsConst, 
+#'                                                    row.names="costs",
+#'                                                    stringsAsFactors=FALSE)
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
-#' 													perfectInformationCosts=perfectInformationCosts)
+#'                           perfectInformationCosts=perfectInformationCosts)
 #' # Define the model function with two decision variables:
 #' decisionModel<-function(x){
-#' 	list(Profit=x$revenue-x$costs,
-#' 			 Costs=-x$costs)
+#'  list(Profit=x$revenue-x$costs,
+#'       Costs=-x$costs)
 #' }
 #' # Calculate the Expected Value of Information:
 #' eviSimulationResult<-eviSimulation(model=decisionModel,
-#' 																	 currentEstimate=currentEstimate,
-#' 																	 prospectiveEstimate=prospectiveEstimate,
-#' 																	 numberOfSimulations=numberOfSimulations,
-#' 																	 functionSyntax="data.frameNames")
+#'                                    currentEstimate=currentEstimate,
+#'                                    prospectiveEstimate=prospectiveEstimate,
+#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(eviSimulationResult)),decreasing=TRUE,along="Profit")
  #' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
@@ -242,14 +248,15 @@ eviSimulation<-function(model, currentEstimate, prospectiveEstimate, numberOfSim
 ##############################################################################################
 # summary.eviSimulation(object, ...)
 ##############################################################################################
-#' Summarize EVI Simulation Results..
+#' Summarize EVI Simulation Results
 #' 
 #' summary.eviSimulation produces result summaries of the results of Expected Value of 
 #'  Information (EVI) simulation obtained by the function \code{\link{eviSimulation}}.
 #' @param object An object of class \code{eviSimulation}.
 #' @param ... Further arguments #ToDo
+#' @inheritParams summary.welfareDecisionAnalysis
 #' @return An object of class \code{summary.eviSimulation}.
-#' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}
+#' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, \code{\link{summary.welfareDecisionAnalysis}}
 #' @export
 summary.eviSimulation <- function(object,
 																	...,

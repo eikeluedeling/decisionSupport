@@ -24,6 +24,8 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include estimate.R
+NULL
 ##############################################################################################
 # mcSimulation(estimate, model_function, numberOfSimulations, ...)
 ##############################################################################################
@@ -221,9 +223,10 @@ print.mcSimulation <- function(x, ...){
 #' 
 #' summary.mcSimulation produces result summaries of the results of a Monte Carlo simulation obtained by the function \code{\link{mcSimulation}}.
 #' @param object An object of class \code{mcSimulation}.
-#' @param ... Further arguments #ToDo
+#' @param ... Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE}) or \code{\link{format}} (\code{classicView=FALSE}).
+# ToDo: @inheritParams base::summary.data.frame  and base::format
 #' @return An object of class \code{summary.mcSimulation}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}
+#' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
 #' @export
 # summary.mcSimulation <- function(object, ...){
 # 	#ToDo: Review

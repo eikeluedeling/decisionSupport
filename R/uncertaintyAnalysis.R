@@ -24,6 +24,9 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include estimate_read_csv_old.R
+#' @include individualEvpiSimulation.R
+NULL
 ##############################################################################################
 # uncertaintyAnalysis(result_path,input_file,fun,iterations,write_table=TRUE,indicators=FALSE,log_scales=FALSE)
 ##############################################################################################

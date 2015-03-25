@@ -24,6 +24,11 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include rdist90ci_exact.R 
+#' @include rposnorm90ci_numeric.R 
+#' @include r0_1norm90ci_numeric.R 
+#' @include rdistq_fit.R
+NULL
 ##############################################################################################
 # random_estimate_1d(rho,n,method, ...)
 ##############################################################################################

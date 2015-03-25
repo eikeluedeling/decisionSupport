@@ -41,12 +41,11 @@ The follwing table shows the available distributions and their identification as
  \code{lnorm}      \tab ToDo  \tab ToDo\cr
  \code{unif}       \tab ToDo \tab ToDo\cr
  \code{weibull}    \tab ToDo \tab ToDo\cr
- \code{triang}     \tab ToDo \tab ToDo\cr
- \code{gompertz}   \tab ToDo \tab ToDo\cr
- \code{pert}       \tab ToDo \tab ToDo\cr
+ \code{\link[mc2d:triangular]{triang}}   \tab Triangular Distribution, Note: package \code{mc2d} needed. \tab ToDo\cr
+ \code{\link[eha:Gompertz]{gompertz}}   \tab Gompertz distribution, Note: package \code{eha} needed.\tab ToDo\cr
+ \code{\link[mc2d]{pert}}       \tab The (modified) PERT distribution,  Note: package \code{mc2d} needed. \tab ToDo\cr
  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab ToDo
  }
-
 The default for \code{percentiles} is 0.05, 0.5 and 0.95, so for the default,
 the quantiles argument should be a vector with 3 elements. If this is to be longer,
 the percentiles argument has to be adjusted to match the length of quantiles.

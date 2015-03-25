@@ -12,7 +12,7 @@
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}
 
-\item{...}{Further arguments #ToDo}
+\item{...}{Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE}) or \code{\link{format}} (\code{classicView=FALSE}).}
 }
 \value{
 An object of class \code{summary.mcSimulation}.
@@ -21,6 +21,6 @@ An object of class \code{summary.mcSimulation}.
 summary.mcSimulation produces result summaries of the results of a Monte Carlo simulation obtained by the function \code{\link{mcSimulation}}.
 }
 \seealso{
-\code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}
+\code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
 }
 

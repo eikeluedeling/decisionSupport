@@ -24,6 +24,8 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @include estimate.R
+NULL
 ###############################################################################################
 # estimate_read_csv_old(fileName, strip.white=TRUE, ...)
 # ToDo: review documentation (if pre and postconditions are correct)
@@ -33,7 +35,7 @@
 #' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
 #' defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
 #' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
-#' @param filename Name of the file containing the base information of the estimate that should be read.
+#' @param fileName Name of the file containing the base information of the estimate that should be read.
 #' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields 
 #' (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
 #'  remembering that the columns may include the row names.
@@ -87,17 +89,17 @@ estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
 
 	# Read correlation file:
 	if( length(base$distribution[base$distribution=="correlated"]) > 0 ){
-		correlated_variables_coop<-estimate_read_csv_old_correlation(paste(input_path_coop,"_correlations.csv",sep=""))
+		correlated_variables<-estimate_read_csv_old_correlation(paste(fileName,"_correlations.csv",sep=""))
 	}
 
 	# Merge basic information and correlation information (ToDo: check):
-	if( !setequal(intersect(row.names(base), row.names(correlated_variables_coop$base)),
+	if( !setequal(intersect(row.names(base), row.names(correlated_variables$base)),
 					 row.names(subset(x=base,subset=(distribution=="correlated")))) )
 		stop("Variables in base file indicated as correlated are not the same as in correlation file.")
 
 
 	base<-subset(x=base,subset=(distribution!="correlated"))
-	baseCor<-correlated_variables_coop$base
+	baseCor<-correlated_variables$base
 #	mergedBase<-data.frame(merge(base,baseCor,by=c("row.names",intersect(names(base),names(baseCor)))),row.names="Row.names")
 	mergedBase<-data.frame(merge(base,baseCor,by=c("row.names",intersect(names(base),names(baseCor))),all.y=TRUE),row.names="Row.names")
 	base<-rbind(subset(x=base,subset=(distribution!="correlated")),
@@ -110,7 +112,7 @@ estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
 	base$distribution[base$distribution=="normal_0_1"]<-"0_1norm"
 
 	# Return:
-	estimate(base,correlation_matrix=correlated_variables_coop$correlation_matrix)
+	estimate(base,correlation_matrix=correlated_variables$correlation_matrix)
 }
 
 ###############################################################################################

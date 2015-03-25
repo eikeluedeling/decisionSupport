@@ -7,7 +7,7 @@
 corMat(rho)
 }
 \arguments{
-\item{x}{a distribution.}
+\item{rho}{a distribution.}
 }
 \description{
 Return the correlation matrix of x.

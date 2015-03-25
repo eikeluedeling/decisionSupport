@@ -1,0 +1,21 @@
+# file: Collate.note
+
+Collate: 
+    paramtnormci.R
+    paramposnorm90ci.R
+    rposnorm90ci_numeric.R
+    r0_1norm90ci_numeric.R
+    rdist90ci_exact.R
+    rposnorm90ci_iter.R
+    rdistq_fit.R
+    rmvnorm90ci_exact.R
+    random.R
+    random_estimate_1d.R
+    estimate.R
+    estimate_read_csv_old.R
+    mcSimulation.R
+    welfareDecisionAnalysis.R
+    eviSimulation.R
+    individualEvpiSimulation.R
+    uncertaintyAnalysis.R
+    decisionSupport-package.R

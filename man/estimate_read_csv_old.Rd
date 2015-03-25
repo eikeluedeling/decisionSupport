@@ -7,13 +7,13 @@
 estimate_read_csv_old(fileName, strip.white = TRUE, ...)
 }
 \arguments{
+\item{fileName}{Name of the file containing the base information of the estimate that should be read.}
+
 \item{strip.white}{logical. Allows the stripping of leading and trailing white space from unquoted character fields
 (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
  remembering that the columns may include the row names.}
 
 \item{...}{Further parameters to be passed to \code{\link[utils]{read.csv}}.}
-
-\item{filename}{Name of the file containing the base information of the estimate that should be read.}
 }
 \value{
 An object of type \code{\link{estimate}}.

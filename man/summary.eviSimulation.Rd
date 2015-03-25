@@ -2,7 +2,7 @@
 % Please edit documentation in R/eviSimulation.R
 \name{summary.eviSimulation}
 \alias{summary.eviSimulation}
-\title{Summarize EVI Simulation Results..}
+\title{Summarize EVI Simulation Results}
 \usage{
 \method{summary}{eviSimulation}(object, ..., digits = max(3,
   getOption("digits") - 3))
@@ -20,6 +20,6 @@ summary.eviSimulation produces result summaries of the results of Expected Value
  Information (EVI) simulation obtained by the function \code{\link{eviSimulation}}.
 }
 \seealso{
-\code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}
+\code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, \code{\link{summary.welfareDecisionAnalysis}}
 }
 
