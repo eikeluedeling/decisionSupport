@@ -52,7 +52,8 @@ random <- function(rho,n,method, ...) UseMethod("random")
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
 #' @export
-random.default <- function(rho=list(distribution_type,mean,sd),n,method, ...){
+#random.default <- function(rho=list(distribution_type,mean,sd),n,method, ...){
+random.default <- function(rho,n,method, ...){
   #ToDo: implement
   stop("function random.default() not implemented, yet!")
 }

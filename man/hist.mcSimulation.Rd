@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcSimulation.R
 \name{hist.mcSimulation}
 \alias{hist.mcSimulation}
-\title{Plot histogram of results of a Monte Carlo Simulation.}
+\title{Plot Histogram of results of a Monte Carlo Simulation}
 \usage{
 \method{hist}{mcSimulation}(x, breaks = 100, col = NULL, xlab = NULL,
   main = paste("Histogram of ", xlab), ..., colorQuantile = c("GREY",
@@ -13,12 +13,55 @@
 \arguments{
 \item{x}{An object of class \code{mcSimulation}.}
 
-\item{...}{Further arguments #ToDo}
+\item{breaks}{one of:
+    \itemize{
+      \item a vector giving the breakpoints between histogram cells,
+      \item a function to compute the vector of breakpoints,
+      \item a single number giving the number of cells for the histogram,
+      \item a character string naming an algorithm to compute the
+      number of cells (see \sQuote{Details}),
+      \item a function to compute the number of cells.
+    }
+    In the last three cases the number is a suggestion only; the
+     breakpoints will be set to \code{\link{pretty}} values.  If
+     \code{breaks} is a function, the \code{x} vector is supplied to it
+     as the only argument. 
+  }
+
+\item{col}{a colour to be used to fill the bars.
+    The default of \code{NULL} yields unfilled bars.}
+
+\item{xlab}{\code{character}; x label of the histogram. If it is not
+provided, i.e. equals \code{NULL} the name of the chosen variable by
+argument \code{resultName} is used.}
+
+\item{main}{\code{character}; main title of the histogram.}
+
+\item{...}{Further arguments to be passed to \code{\link[graphics]{hist}}.}
+
+\item{colorQuantile}{\code{character} vector encoding the color of the
+quantiles defined in argument \code{colorProbability}.}
+
+\item{colorProbability}{\code{numeric} vector; defines the quantiles that
+shall be distinguished by the colors chosen in argument
+\code{colorQuantile}. Must be of the same length as \code{colorQuantile}.}
+
+\item{resultName}{\code{character}; indicating the name of the component of
+the simulation function (\code{model_function}) which results histogram
+shall be generated. If \code{model_function} is single valued, no name
+needs to be supplied. Otherwise, one valid name has to be specified.
+Defaults to \code{NULL}.}
+}
+\value{
+an object of class "\code{histogram}". For details see
+  \code{\link[graphics]{hist}}.
 }
 \description{
-This function plots the histogram of the results of \code{mcSimulation}.
+This function plots the histograms of the results of
+\code{\link{mcSimulation}}.
 }
 \seealso{
-\code{\link{mcSimulation}}, \code{\link{hist}}
+\code{\link{mcSimulation}}, \code{\link{hist}}. For a list of colors
+  available in R see \code{\link[grDevices]{colors}}.
 }
 

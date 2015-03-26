@@ -28,14 +28,17 @@
 #' @include individualEvpiSimulation.R
 NULL
 ##############################################################################################
-# uncertaintyAnalysis(result_path,input_file,fun,iterations,write_table=TRUE,indicators=FALSE,log_scales=FALSE)
+# uncertaintyAnalysis(inputFilePath, outputDirectory, modelFunction, NumberofSimulations,
+#                     randomMethod="calculate",	functionSyntax="globalNames",
+#                     write_table=TRUE, indicators=FALSE, log_scales=FALSE,
+#                     oldInputStandard=FALSE)
 ##############################################################################################
 #' Uncertainty Analysis Wrapper Function.
 #'
 #' This function performs a Monte Carlo simulation from input files and analyses the results
 #' via Partial Least Squares Regression (PLSR) and calculates the Variable Importance on Projection
 #' (VIP). Results are safed as plots.
-#' @param inputFileName Path to input csv file, which gives the input \code{\link{estimate}}.
+#' @param inputFilePath Path to input csv file, which gives the input \code{\link{estimate}}.
 #' @param outputDirectory Path were the result plots and tables are safed.
 #' @param modelFunction The model function.
 #' @param NumberofSimulations The number of Monte Carlo simulations to be performed.
@@ -49,17 +52,17 @@ NULL
 #' 	(\code{\link{estimate_read_csv_old}}).
 #' 	@seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}
 #' @export
-uncertaintyAnalysis <- function(inputFileName, outputDirectory, modelFunction, NumberofSimulations,
+uncertaintyAnalysis <- function(inputFilePath, outputDirectory, modelFunction, NumberofSimulations,
 																randomMethod="calculate",	functionSyntax="globalNames",
 																write_table=TRUE, indicators=FALSE, log_scales=FALSE,
 																oldInputStandard=FALSE){
 	# Read estimate from file:
 	if(!oldInputStandard){
 		#	print("newInputStandard")
-		estimateObject<-estimate_read_csv(fileName=input_path_coop)
+		estimateObject<-estimate_read_csv(fileName=inputFilePath)
 	}else{
 		#	print("oldInputStandard")
-		estimateObject<-estimate_read_csv_old(fileName=input_path_coop)
+		estimateObject<-estimate_read_csv_old(fileName=inputFilePath)
 	}
 	# Run Monte Carlo simulation:
 	mcResults<-mcSimulation(estimate=estimateObject,

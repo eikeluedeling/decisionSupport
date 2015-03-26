@@ -221,20 +221,34 @@ print.mcSimulation <- function(x, ...){
 ##############################################################################################
 #' Summarize Results from Monte Carlo Simulation.
 #' 
-#' summary.mcSimulation produces result summaries of the results of a Monte Carlo simulation obtained by the function \code{\link{mcSimulation}}.
+#' A summary of the results of a Monte Carlo simulation obtained by the function
+#' \code{\link{mcSimulation}} is produced.
 #' @param object An object of class \code{mcSimulation}.
-#' @param ... Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE}) or \code{\link{format}} (\code{classicView=FALSE}).
-# ToDo: @inheritParams base::summary.data.frame  and base::format
+#' @param ... Further arguments passed to \code{\link{summary.data.frame}}
+#'   (\code{classicView=TRUE}) or \code{\link{format}}
+#'   (\code{classicView=FALSE}).
+#' @inheritParams base::format
+#' @param variables.y \code{character} or \code{character} vector; Names of the 
+#'   components of the simulation function (\code{model_function}) which 
+#'   results shall be displayed. Defaults to all components.
+#' @param variables.x \code{character} or \code{character} vector; Names of the 
+#'   components of the input variables to the simulation function, i.e. the
+#'   names of the variables in the input \code{estimate} which random sampling
+#'   results shall be displayed. Defaults to all components.
+#' @param classicView \code{logical}; if \code{TRUE} the results are summarized
+#'   using summary.data.frame, if \code{FALSE} further output is produced and
+#'   the quantile information can be chosen. Cf. section Value and argument
+#'   \code{probs}. Default is \code{FALSE}.
+#' @param probs \code{numeric} vector of quantiles that shall be displayed if
+#'   \code{classicView=FALSE}.
 #' @return An object of class \code{summary.mcSimulation}.
+#' \tabular{ll}{
+#'  \code{chance_loss}  \tab \cr
+#'  \code{chance_zero}  \tab \cr
+#'  \code{chance_gain}  \tab
+#' }
 #' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
 #' @export
-# summary.mcSimulation <- function(object, ...){
-# 	#ToDo: Review
-# 	res<-list(summary=summary.data.frame(as.data.frame(object),...),
-# 						call=object$call)
-# 	class(res)<-"summary.mcSimulation"
-# 	res
-# }
 summary.mcSimulation <- function(object,
 																 ...,
 																 digits = max(3, getOption("digits")-3),
@@ -302,12 +316,31 @@ print.summary.mcSimulation <- function(x, ...){
 ##############################################################################################
 # hist.mcSimulation(x, ...)
 ##############################################################################################
-#' Plot histogram of results of a Monte Carlo Simulation.
+#' Plot Histogram of results of a Monte Carlo Simulation
 #' 
-#' This function plots the histogram of the results of \code{mcSimulation}.
+#' This function plots the histograms of the results of
+#' \code{\link{mcSimulation}}.
 #' @param x An object of class \code{mcSimulation}.
-#' @param ... Further arguments #ToDo
-#' @seealso \code{\link{mcSimulation}}, \code{\link{hist}}
+#' @param xlab \code{character}; x label of the histogram. If it is not
+#'   provided, i.e. equals \code{NULL} the name of the chosen variable by
+#'   argument \code{resultName} is used.
+#' @param main \code{character}; main title of the histogram.
+#' @inheritParams graphics::hist
+#' @param ... Further arguments to be passed to \code{\link[graphics]{hist}}.
+#' @param colorQuantile \code{character} vector encoding the color of the 
+#'   quantiles defined in argument \code{colorProbability}.
+#' @param colorProbability \code{numeric} vector; defines the quantiles that 
+#'   shall be distinguished by the colors chosen in argument 
+#'   \code{colorQuantile}. Must be of the same length as \code{colorQuantile}.
+#' @param resultName \code{character}; indicating the name of the component of
+#'   the simulation function (\code{model_function}) which results histogram
+#'   shall be generated. If \code{model_function} is single valued, no name
+#'   needs to be supplied. Otherwise, one valid name has to be specified.
+#'   Defaults to \code{NULL}.
+#' @return an object of class "\code{histogram}". For details see 
+#'   \code{\link[graphics]{hist}}.
+#' @seealso \code{\link{mcSimulation}}, \code{\link{hist}}. For a list of colors
+#'   available in R see \code{\link[grDevices]{colors}}.
 #' @export
 hist.mcSimulation <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Histogram of " , xlab), ...,
 															colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
@@ -326,7 +359,7 @@ hist.mcSimulation <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Hi
 					xlab<-names(x$y)[[1]]
 			}
 			else 
-				stop("No element of the model function chosen!")
+				stop("No component of the model function chosen!")
 		}
 		if( main==paste("Histogram of " , xlab))
 			main<-paste("Histogram of " , xlab, " Monte Carlo Simulation")

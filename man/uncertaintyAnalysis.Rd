@@ -4,13 +4,13 @@
 \alias{uncertaintyAnalysis}
 \title{Uncertainty Analysis Wrapper Function.}
 \usage{
-uncertaintyAnalysis(inputFileName, outputDirectory, modelFunction,
+uncertaintyAnalysis(inputFilePath, outputDirectory, modelFunction,
   NumberofSimulations, randomMethod = "calculate",
   functionSyntax = "globalNames", write_table = TRUE, indicators = FALSE,
   log_scales = FALSE, oldInputStandard = FALSE)
 }
 \arguments{
-\item{inputFileName}{Path to input csv file, which gives the input \code{\link{estimate}}.}
+\item{inputFilePath}{Path to input csv file, which gives the input \code{\link{estimate}}.}
 
 \item{outputDirectory}{Path were the result plots and tables are safed.}
 

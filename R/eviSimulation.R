@@ -253,8 +253,8 @@ eviSimulation<-function(model, currentEstimate, prospectiveEstimate, numberOfSim
 #' summary.eviSimulation produces result summaries of the results of Expected Value of 
 #'  Information (EVI) simulation obtained by the function \code{\link{eviSimulation}}.
 #' @param object An object of class \code{eviSimulation}.
-#' @param ... Further arguments #ToDo
-#' @inheritParams summary.welfareDecisionAnalysis
+#' @param ... Further arguments passed to \code{\link{summary.welfareDecisionAnalysis}}.
+#' @inheritParams base::format
 #' @return An object of class \code{summary.eviSimulation}.
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, \code{\link{summary.welfareDecisionAnalysis}}
 #' @export

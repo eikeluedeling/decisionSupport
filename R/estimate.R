@@ -28,6 +28,9 @@
 #' @include random.R
 #' @include random_estimate_1d.R
 NULL
+# Define global variables:
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable", 
+                                                        "distribution"))
 ##############################################################################################
 # estimate(..., correlation_matrix)
 # ToDo: review documentation (if pre and postconditions are correct)

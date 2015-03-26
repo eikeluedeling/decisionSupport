@@ -77,7 +77,7 @@ easy-to-use interface.
 	ToDo
 }
 
-\section{Copyright (C)}{
+\section{Copyright \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}}{
 
 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)} 2015
 }
@@ -99,10 +99,10 @@ easy-to-use interface.
    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 }
 \author{
-Lutz Göhring \email{lutz.goehring@gmx.de},
+Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
 	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{E.Luedeling@cgiar.org}
 
-Maintainer: Lutz Göhring \email{lutz.goehring@gmx.de}
+Maintainer: Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de}
 }
 \references{
 Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},

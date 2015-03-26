@@ -4,8 +4,7 @@
 \alias{random.default}
 \title{Generate random numbers based on the first two moments of a certain probability distribution.}
 \usage{
-\method{random}{default}(rho = list(distribution_type, mean, sd), n, method,
-  ...)
+\method{random}{default}(rho, n, method, ...)
 }
 \arguments{
 \item{rho}{list; Distribution to be randomly sampled.}
