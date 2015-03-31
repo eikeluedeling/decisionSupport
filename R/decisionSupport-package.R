@@ -27,7 +27,7 @@
 #' @include uncertaintyAnalysis.R
 NULL
 ##############################################################################################
-#' Quantitative Support of Decision Making under Uncertainty
+#' Quantitative Support of Decision Making under Uncertainty.
 #' 
 #' The \pkg{decisionSupport} package supports the quantitative analysis of 
 #' welfare based decision making processes using Monte Carlo simulations. This

@@ -32,7 +32,7 @@ An object of class \code{mcSimulation}.
 \description{
 This method solves the following problem. Given a multivariate random variable
 \eqn{x = (x_1,\ldots,x_k)} with joint probability distribution \eqn{P}, i.e.
-\deqn{x ~ \sim P.}{x ~ P} Then the continuous function
+\deqn{x \sim P.}{x ~ P} Then the continuous function
  \deqn{f:R^k \rightarrow R^l, y = f(x)}{f:R^k --> R^l, y = f(x)}
 defines another random variable with distribution
  \deqn{y \sim f(P).}{y ~ f(P).}

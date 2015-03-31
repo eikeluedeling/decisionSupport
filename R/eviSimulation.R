@@ -29,7 +29,7 @@ NULL
 ##############################################################################################
 # eviSimulation(model, currentEstimate, prospectiveEstimate, numberOfSimulations, functionSyntax)
 ##############################################################################################
-#' Expected Value of Information (EVI) Simulation
+#' Expected Value of Information (EVI) Simulation.
 #' 
 #' The Expected Value of Information (EVI) is calculated based on a Monte Carlo simulation
 #' of the values of two different decision alternatives.

@@ -4,7 +4,7 @@
 \name{decisionSupport}
 \alias{decisionSupport}
 \alias{decisionSupport-package}
-\title{Quantitative Support of Decision Making under Uncertainty}
+\title{Quantitative Support of Decision Making under Uncertainty.}
 \description{
 The \pkg{decisionSupport} package supports the quantitative analysis of
 welfare based decision making processes using Monte Carlo simulations. This

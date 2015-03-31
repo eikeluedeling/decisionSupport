@@ -2,7 +2,7 @@
 % Please edit documentation in R/eviSimulation.R
 \name{eviSimulation}
 \alias{eviSimulation}
-\title{Expected Value of Information (EVI) Simulation}
+\title{Expected Value of Information (EVI) Simulation.}
 \usage{
 eviSimulation(model, currentEstimate, prospectiveEstimate, numberOfSimulations,
   functionSyntax = "data.frameNames")

@@ -1,0 +1,174 @@
+
+----------------------------------------------------------------------- 
+Begin fitting distributions...
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' was successful ! 
+$par
+[1]  2485741790  1160670707  -404876870 11360718079
+
+$value
+[1] 0.005288943
+
+$counts
+function gradient 
+     235       NA 
+
+$convergence
+[1] 0
+
+$message
+NULL
+
+Truncated normal distribution has been fitted successfully! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1] 1 1
+
+$value
+[1] 0.005346948
+
+$counts
+function gradient 
+       1        1 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+
+Non-central chi-square distribution has been fitted successfully! 
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' has failed (convergence error occured or specified tolerance not achieved)! 
+Warning: Pert distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' has failed (convergence error occured or specified tolerance not achieved)! 
+Warning: Triangular distribution could not be fitted! 
+Warning: Gompertz distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' was successful ! 
+$par
+[1] 2000060200 1338957344
+
+$value
+[1] 0.007303256
+
+$counts
+function gradient 
+       1        1 
+
+$convergence
+[1] 0
+
+$message
+NULL
+
+Normal distribution has been fitted successfully! 
+Warning: Beta distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1] 4.294621 0.001000
+
+$value
+[1] 0.005346948
+
+$counts
+function gradient 
+      17       17 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
+
+Cauchy distribution has been fitted successfully! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1] 10000
+
+$value
+[1] 2.968804e-05
+
+$counts
+function gradient 
+       1        1 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+
+Chi-square distribution has been fitted successfully! 
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' has failed (convergence error occured or specified tolerance not achieved)! 
+Warning: Logistic distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' has failed (convergence error occured or specified tolerance not achieved)!
+Try another optimization method...
+The fitting procedure 'BFGS' has failed (convergence error occured or specified tolerance not achieved)! 
+Warning: Student's t distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1] 0.001
+
+$value
+[1] 0.002016951
+
+$counts
+function gradient 
+       1        1 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+
+Exponential distribution has been fitted successfully! 
+Warning: F distribution could not be fitted! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1] 1 1
+
+$value
+[1] 0.005346948
+
+$counts
+function gradient 
+       1        1 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL"
+
+Gamma distribution has been fitted successfully! 
+The fitting procedure 'L-BFGS-B' was successful! 
+$par
+[1]    1.507073 7172.696256
+
+$value
+[1] 1.491788e-05
+
+$counts
+function gradient 
+      33       33 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
+
+Weibull distribution has been fitted successfully! 
+Warning: Lognormal distribution could not be fitted! 
+Warning: Uniform distribution could not be fitted! 
+End fitting distributions...
+----------------------------------------------------------------------- 

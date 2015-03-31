@@ -27,5 +27,5 @@
 .PHONY: doc
 
 doc: 
-	R CMD Rd2pdf . --output=doc/decisionSupport-manual.pdf --force
+	R CMD Rd2pdf . --output=doc/decisionSupport-manual.pdf --force 
 

@@ -64,27 +64,31 @@
 #' the percentiles argument has to be adjusted to match the length of quantiles.
 #' @return ToDo
 #' @export
-rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles){
+rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles, tolConv=0.001, fit.weights=rep(1,length(percentiles))){
   # Relative tolerance of the maximum relative deviation of generated quantiles from desired value:
   relativeTolerance = 0.05
   #   # Initialize the loop:
   #   maxRelativeDeviation <- relativeTolerance + 1
-  tolConv=0.001
+  # tolConv=0.001
   # Fit the desired distribution until the goodnes of fit is tolerated:
   #  while (maxRelativeDeviation > relativeTolerance){
   # Fit the distribution to the given quantiles:
+  # ToDo: include namespace check and move rriskDistributions to Suggests in file DESCRIPTION
   capture.output(dists<-try(rriskDistributions::rriskFitdist.perc(p=percentiles,
                                                                   q=quantiles,
-                                                                  show.output=FALSE,
+                                                                  show.output=TRUE,
                                                                   tolConv=tolConv,
-                                                                  fit.weights=rep(1,length(percentiles)))),
+                                                                  fit.weights=fit.weights)),
                  file='NUL')
   
-  #Todo: necessary?:
-  #  dists$results 
+  if(length(dists)==1 && is.na(dists))
+    stop("no distribution could be fitted.")
   possible_dists<-colnames(dists$results[,3:ncol(dists$results)])[which(!is.na(dists$results[1,3:ncol(dists$results)]))]
-  
-  output<-NA
+#ToDo: here implement check, something like this:
+  # if(match(distribution, possible_dists, nomatch=0) )
+  # because e.g. msm::rtnorm() will be in an endless loop for NAs in dists$results!!!
+  if( match(distribution, possible_dists, nomatch=0) ){
+  #output<-NA
   # Generate the random numbers according to the distribution type:
   if(distribution=="norm") 
     output<-rnorm(n=n, 
@@ -105,12 +109,12 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles)
   else if(distribution=="t") 
     output<-rt(n=n,
                df=dists$results[1,"t"])
-  else if(distribution=="chisq") 
+  else if(distribution=="chisq"){ 
     output<-rchisq(n=n,
                    df=dists$results[1,"chisq"])
   #if(distribution=="chisqnc") output<-rchisqnc(n,dists$results[1,"chisqnc"],dists$results[2,"chisqnc"])
   #not sure how chisqnc works
-  else if(distribution=="exp") 
+  } else if(distribution=="exp") 
     output<-rexp(n=n,
                  rate=dists$results[1,"exp"])
   else if(distribution=="f") 
@@ -125,12 +129,12 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles)
     output<-rlnorm(n=n,
                    meanlog=dists$results[1,"lnorm"],
                    sdlog=dists$results[2,"lnorm"])
-  else if(distribution=="unif") 
+  else if(distribution=="unif") {
     output<-runif(n=n,
                   min=dists$results[1,"unif"],
                   max=dists$results[2,"unif"])
   #unif needs 2 quantiles (can't handle 3)
-  else if(distribution=="weibull") 
+  } else if(distribution=="weibull") 
     output<-rweibull(n=n,
                      shape=dists$results[1,"weibull"],
                      scale=dists$results[2,"weibull"])
@@ -165,19 +169,22 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles)
                   max=dists$results[3,"pert"],
                   shape=dists$results[4,"pert"])
   }
-  else if(distribution=="tnorm") 
+  else if(distribution=="tnorm") {
     output<-msm::rtnorm(n=n,
                         mean=dists$results[1,"tnorm"],
                         sd=dists$results[2,"tnorm"],
                         lower=dists$results[3,"tnorm"],
                         upper=dists$results[4,"tnorm"])
   #tnorm needs 4 quantiles
-  else
+  } else
     stop("\"", distribution, "\" is not a valid distribution type.")
-  if(is.na(output[1])) 
+  } else {
+  # if(is.na(output[1])) 
     stop("\"", distribution, "\" distribution could not be fitted. One of the following should work:", 
          paste(possible_dists,collapse=", "))
+  }
   # Maximum relative deviation of generated quantiles from desired value
+  # ToDo: review, in particular catch division by zero or numeric zero
   maxRelativeDeviation <- max ( abs((quantile(x=output, probs=percentiles) - quantiles ) / quantiles ) )
   #     # Increase the absolute tolerance for next loop
   #     tolConv<-tolConv/2

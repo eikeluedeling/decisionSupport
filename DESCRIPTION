@@ -53,4 +53,5 @@ Collate:
     'estimate_read_csv_old.R'
     'uncertaintyAnalysis.R'
     'decisionSupport-package.R'
+    'paramtruncnormci.R'
     'rposnorm90ci_iter.R'

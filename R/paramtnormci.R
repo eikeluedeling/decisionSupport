@@ -27,20 +27,38 @@
 ##############################################################################################
 # paramtnormci(p, ci, lowerTrunc, upperTrunc, relativeTolerance, method)
 ##############################################################################################
-#' Return parameters of truncated normal random distribution based on a confidence interval.
+#' Return parameters of truncated normal distribution based on a confidence interval.
 #' 
-#' This function calculates the distribution parameters of a truncated normal distribution 
+#' This function calculates the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated normal distribution 
 #' from an arbitrary confidence interval. 
-#' @param p numeric vector; probabilities of upper and lower bound of the corresponding 
+#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the corresponding 
 #' confidence interval.
-#' @param ci \code{numeric} vector; lower and upper bound of the  confidence interval.
-#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution.
-#' @param upperTrunc \code{numeric}; upper truncation point of the distribution.
+#' @param ci \code{numeric} 2-dimensional vector; lower and upper bound of the  confidence interval.
+#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}). 
+#' @param upperTrunc \code{numeric}; upper truncation point of the distribution (<= \code{Inf}).
 #' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the generated confidence 
-#' interval from the specified interval.
+#' interval from the specified interval. If this deviation is greater than \code{relativeTolerance} a warning is given.
 #' @param method The method to calculate the parameters. Default is \code{"numeric"}.
+#' @return A list with elements \code{mean} and \code{sd}. 
 #' @details
-#' #ToDo
+#'  For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
+#'  
+#'  p-\% confidence interval: \eqn{[c_l, c_u]}
+#'  \deqn{tN(\mu,\sigma)}
+#'  \deqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}{\ifelse{html}{&int;}{int}}
+#'  \deqn{\int_{-\infty}^{c_u} d tN(\mu,\sigma) = p_u}
+#'  \eqn{p_l - p_u = p} and \eqn{p_l = 1- p_u}
+#'  \if{latex}{\eqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}}\if{html}{\out{<MATH>&int;{{su|b=-&infin;|p=c{{su|b=l}};}};</MATH>}}
+#'  
+#'  \if{html}{\out{&int;</sup><sub>-&infin;</sub><sup>c<sub>l</sub>}}\cr
+#'  
+#'  \if{html}{\out{<math>C_6^4</math>}}\cr
+#'  
+#'  \if{html}{\out{C_6^4}}
+#'  
+#' @section Warning:
+#'   This method has not been tested systematically!
+#' @seealso \code{\link[msm]{tnorm}}
 #' @export
 paramtnormci <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05, method="numeric"){
 	# Constants:
