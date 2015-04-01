@@ -58,31 +58,31 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #' \code{\link{estimate_write_csv}}, \code{\link{random.estimate}}
 #' @export
 estimate<-function(..., correlation_matrix=NULL){
-	base<-data.frame(..., stringsAsFactors=FALSE)
-	if( !is.null(base$variable) ){
-		rownames(base)<-base$variable
-		base<-base[!colnames(base) %in% "variable"]
-	}
-	# Drop rows without variable name:
-	base<-subset(base, row.names(base) != "")
-	if( is.null(base$distribution) )
-		stop("base must be supplied with a distribution column.")
-	# Check preconditions of correlation_matrix:
-	if( !is.null(correlation_matrix)){
-		if( !is.matrix(correlation_matrix) )
-			correlation_matrix<-as.matrix(correlation_matrix)
-		if( !identical( correlation_matrix, t(correlation_matrix) ) ) 
-			stop("correlationMatrix must be a symmetric matrix.")
-		if( !identical( as.vector(diag(correlation_matrix)), rep(1, nrow(correlation_matrix)) ) )
-			stop("All diagonal elements of correlation_matrix must be equal to 1.")
-		#ToDo: check that all elements are between -1 and 1.
-		#ToDo: Check that all rows are named
-		#ToDo: check that rownames(correlation_matrix) is a subset of base names
-	}
-	# Return object:
-	returnObject=list(base=base , correlation_matrix=correlation_matrix)
-	class(returnObject)<-"estimate"
-	returnObject
+  base<-data.frame(..., stringsAsFactors=FALSE)
+  if( !is.null(base$variable) ){
+    rownames(base)<-base$variable
+    base<-base[!colnames(base) %in% "variable"]
+  }
+  # Drop rows without variable name:
+  base<-subset(base, row.names(base) != "")
+  if( is.null(base$distribution) )
+    stop("base must be supplied with a distribution column.")
+  # Check preconditions of correlation_matrix:
+  if( !is.null(correlation_matrix)){
+    if( !is.matrix(correlation_matrix) )
+      correlation_matrix<-as.matrix(correlation_matrix)
+    if( !identical( correlation_matrix, t(correlation_matrix) ) ) 
+      stop("correlationMatrix must be a symmetric matrix.")
+    if( !identical( as.vector(diag(correlation_matrix)), rep(1, nrow(correlation_matrix)) ) )
+      stop("All diagonal elements of correlation_matrix must be equal to 1.")
+    #ToDo: check that all elements are between -1 and 1.
+    #ToDo: Check that all rows are named
+    #ToDo: check that rownames(correlation_matrix) is a subset of base names
+  }
+  # Return object:
+  returnObject=list(base=base , correlation_matrix=correlation_matrix)
+  class(returnObject)<-"estimate"
+  returnObject
 }
 ##############################################################################################
 # row.names.estimate(x)
@@ -95,7 +95,7 @@ estimate<-function(..., correlation_matrix=NULL){
 #' @seealso \code{\link{estimate}}, \code{\link{names.estimate}}, \code{\link{corMat.estimate}}
 #' @export
 row.names.estimate<-function(x){
-	row.names(x$base)
+  row.names(x$base)
 }
 ##############################################################################################
 # names.estimate(x)
@@ -108,7 +108,7 @@ row.names.estimate<-function(x){
 #' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{corMat.estimate}}
 #' @export
 names.estimate<-function(x){
-	names(x$base)
+  names(x$base)
 }
 ##############################################################################################
 # generic: corMat(rho)
@@ -129,14 +129,14 @@ corMat <- function(rho) UseMethod("corMat")
 #' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{names.estimate}}
 #' @export
 corMat.estimate<-function(rho){
-	# Create identity matrix:
-	corMat<-diag(nrow=length(row.names(rho)))
-	dimnames(corMat)<-list(row.names(rho), row.names(rho))
-	# Replace the values for correlated elements:
-	namesCorrelated<-row.names(rho$correlation_matrix)
-	corMat[namesCorrelated, namesCorrelated]<-rho$correlation_matrix[namesCorrelated, namesCorrelated]
-	# Return full correlation matrix:
-	corMat
+  # Create identity matrix:
+  corMat<-diag(nrow=length(row.names(rho)))
+  dimnames(corMat)<-list(row.names(rho), row.names(rho))
+  # Replace the values for correlated elements:
+  namesCorrelated<-row.names(rho$correlation_matrix)
+  corMat[namesCorrelated, namesCorrelated]<-rho$correlation_matrix[namesCorrelated, namesCorrelated]
+  # Return full correlation matrix:
+  corMat
 }
 ###############################################################################################
 # estimate_read_csv(fileName, strip.white=TRUE, ...)
@@ -190,23 +190,24 @@ corMat.estimate<-function(rho){
 #' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 #' @export
 estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
-	base<-NULL
-	correlation_matrix<-NULL
-	baseFilename<-fileName
-	# Read basic data:
-	#base<-read.csv(baseFilename,row.names="variable", strip.white=strip.white, stringsAsFactors=FALSE, ...)
-	base<-read.csv(baseFilename, strip.white=strip.white, stringsAsFactors=FALSE, ...)
-	base<-subset(base,variable!="")
-	base<-data.frame(base,row.names="variable")
-	# Read correlation data:
-	# Generate correlation filename:
-	correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
-	# Read correlation file if it exists:
-	if(file.exists(correlationFilename))
-		correlation_matrix<-data.matrix(read.csv(correlationFilename, row.names=1))
-	
-	# Return object
-	estimate(base, correlation_matrix=correlation_matrix)
+  base<-NULL
+  correlation_matrix<-NULL
+  baseFilename<-fileName
+  # Read basic data:
+  #base<-read.csv(baseFilename,row.names="variable", strip.white=strip.white, stringsAsFactors=FALSE, ...)
+  base<-read.csv(baseFilename, strip.white=strip.white, stringsAsFactors=FALSE, ...)
+  # ToDo: replace subset() such that reference to global variable "variable" becomes obsolete:
+  base<-subset(base,variable!="")
+  base<-data.frame(base,row.names="variable")
+  # Read correlation data:
+  # Generate correlation filename:
+  correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
+  # Read correlation file if it exists:
+  if(file.exists(correlationFilename))
+    correlation_matrix<-data.matrix(read.csv(correlationFilename, row.names=1))
+  
+  # Return object
+  estimate(base, correlation_matrix=correlation_matrix)
 }
 ###############################################################################################
 # estimate_write_csv(estimate, fileName, strip.white=TRUE, ...)
@@ -229,21 +230,21 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
 #' @export
 estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=FALSE, ...){
-	baseFilename=fileName
-	# Write basic data to file:
-	if (varNamesAsColumn){
-		base<-cbind(estimate$base,variable=row.names(estimate))
-		row.names(base)<-NULL
-	} else
-		base<-estimate$base
-	write.csv(x=base, file=baseFilename, row.names=!varNamesAsColumn,  quote=FALSE, ...)
-	# Write correlation data if exists:
-	if( !is.null(estimate$correlation_matrix) ){
-		# Generate correlation filename:
-		correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
-		# Wirte correlation file:
-		write.csv(x=estimate$correlation_matrix, file=correlationFilename, quote=FALSE, ...)
-	}
+  baseFilename=fileName
+  # Write basic data to file:
+  if (varNamesAsColumn){
+    base<-cbind(estimate$base,variable=row.names(estimate))
+    row.names(base)<-NULL
+  } else
+    base<-estimate$base
+  write.csv(x=base, file=baseFilename, row.names=!varNamesAsColumn,  quote=FALSE, ...)
+  # Write correlation data if exists:
+  if( !is.null(estimate$correlation_matrix) ){
+    # Generate correlation filename:
+    correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
+    # Wirte correlation file:
+    write.csv(x=estimate$correlation_matrix, file=correlationFilename, quote=FALSE, ...)
+  }
 }
 ##############################################################################################
 # random.estimate(rho,n,method, ...)
@@ -281,33 +282,33 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #' @seealso \code{\link{estimate}}
 #' @export
 random.estimate <- function(rho,n,method="calculate", ...){
-	#ToDo: implement generation of correlated variables
-	#ToDo: test
-	x<-NULL
-	if ( !is.null(rho$correlation_matrix) ){
-		# Select correlated variables:
-		rhoCorrelated<-list(base=NULL,correlation_matrix=NULL)
-		class(rhoCorrelated)<-"estimateCorrelated"
-		namesCorrelated<-row.names(rho$correlation_matrix)
-		rhoCorrelated$base<-rho$base[namesCorrelated, ]
-		rhoCorrelated$correlation_matrix<-rho$correlation_matrix
-		# Generate correlated variables
-		x<-random(rho=rhoCorrelated,
-							n=n,
-							method=method)
-		# Select uncorrelated variables if there are any:
-		if( length(namesUnCorrelated
-							 <-row.names(rho$base[!(row.names(rho$base) %in% namesCorrelated ),]) ) ){
-			rhoUnCorrelated<-rho$base[namesUnCorrelated, ]
-			class(rhoUnCorrelated)<-c("estimateUnCorrelated", class(rhoUnCorrelated))
-			x<-cbind(x, random(rho=rhoUnCorrelated, n=n, method=method))
-		}
-	} else {
-		class(rho$base)<-c("estimateUnCorrelated", class(rho$base))
-		x<-random(rho=rho$base, n=n, method=method)
-	}
-	# Return the generated random variables:
-	x
+  #ToDo: implement generation of correlated variables
+  #ToDo: test
+  x<-NULL
+  if ( !is.null(rho$correlation_matrix) ){
+    # Select correlated variables:
+    rhoCorrelated<-list(base=NULL,correlation_matrix=NULL)
+    class(rhoCorrelated)<-"estimateCorrelated"
+    namesCorrelated<-row.names(rho$correlation_matrix)
+    rhoCorrelated$base<-rho$base[namesCorrelated, ]
+    rhoCorrelated$correlation_matrix<-rho$correlation_matrix
+    # Generate correlated variables
+    x<-random(rho=rhoCorrelated,
+              n=n,
+              method=method)
+    # Select uncorrelated variables if there are any:
+    if( length(namesUnCorrelated
+               <-row.names(rho$base[!(row.names(rho$base) %in% namesCorrelated ),]) ) ){
+      rhoUnCorrelated<-rho$base[namesUnCorrelated, ]
+      class(rhoUnCorrelated)<-c("estimateUnCorrelated", class(rhoUnCorrelated))
+      x<-cbind(x, random(rho=rhoUnCorrelated, n=n, method=method))
+    }
+  } else {
+    class(rho$base)<-c("estimateUnCorrelated", class(rho$base))
+    x<-random(rho=rho$base, n=n, method=method)
+  }
+  # Return the generated random variables:
+  x
 }
 
 ##############################################################################################
@@ -324,21 +325,21 @@ random.estimate <- function(rho,n,method="calculate", ...){
 # @param ... Optional arguments to be passed to the particular random number
 #  generating function.
 random.estimateCorrelated <- function(rho,n,method, ...){
-	x<-NULL
-	if(method=="calculate"){
-		if( identical( rho$base$distribution, rep("norm", nrow(rho$base)) ) ){
-			x<-rmvnorm90ci_exact(n=n,
-													 lower=data.matrix(rho$base["lower"]),
-													 upper=data.matrix(rho$base["upper"]), 
-													 correlationMatrix=rho$correlation_matrix)
-		}
-		else
-			stop("correlated variables must all be of type \"norm\".")
-	}
-	else 
-		stop ("method must be  \"calculate\".")
-	# Return the generated random numbers:
-	x
+  x<-NULL
+  if(method=="calculate"){
+    if( identical( rho$base$distribution, rep("norm", nrow(rho$base)) ) ){
+      x<-rmvnorm90ci_exact(n=n,
+                           lower=data.matrix(rho$base["lower"]),
+                           upper=data.matrix(rho$base["upper"]), 
+                           correlationMatrix=rho$correlation_matrix)
+    }
+    else
+      stop("correlated variables must all be of type \"norm\".")
+  }
+  else 
+    stop ("method must be  \"calculate\".")
+  # Return the generated random numbers:
+  x
 }
 ##############################################################################################
 # random.estimateUnCorrelated(rho,n,method, ...)
@@ -354,7 +355,22 @@ random.estimateCorrelated <- function(rho,n,method, ...){
 # @param ... Optional arguments to be passed to the particular random number
 #  generating function.
 random.estimateUnCorrelated <- function(rho,n,method, ...){
-	x<-NULL
-	x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
-	x
+  x<-NULL
+  #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
+  if(0){
+    x<-apply(X=rho, MARGIN=1, 
+             FUN=function(rho, n, method, ...) 
+               withCallingHandlers(random_estimate_1d(rho=rho,n=n,method=method,...),
+                                   warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),                                                                                     
+             n=n, method=method)
+  }
+  # if (0){
+  for(i in row.names(rho)){
+    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,],n=n,method=method,...),
+                                   warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, noBreaks. = TRUE)
+    ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
+    )
+  }
+  #  }
+  x
 }

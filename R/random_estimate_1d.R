@@ -108,24 +108,24 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
     #     }  else 
   }  
   if(method=="calculate"){
-  	# ToDo: extract this block as function rdistq_calculate()
+    # ToDo: extract this block as function rdistq_calculate()
     if(match(rho["distribution"], c("const",
-                                 "norm", 
-                                 "unif"), nomatch = 0)){
+                                    "norm", 
+                                    "unif"), nomatch = 0)){
       x <-  rdist90ci_exact(distribution=rho["distribution"],
                             n=n,
                             lower=rho["lower"],
                             upper=rho["upper"])
     }
     else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
-    	x <-  rposnorm90ci_numeric(n=n,
-    												lower=rho["lower"],
-    												upper=rho["upper"])
+        x <-  rposnorm90ci_numeric(n=n,
+                                   lower=rho["lower"],
+                                   upper=rho["upper"])
     }
     else if(match(rho["distribution"], c("0_1norm"), nomatch = 0)){
-    	x <-  r0_1norm90ci_numeric(n=n,
-    														 lower=rho["lower"],
-    														 upper=rho["upper"])
+      x <-  r0_1norm90ci_numeric(n=n,
+                                 lower=rho["lower"],
+                                 upper=rho["upper"])
     }
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
@@ -133,19 +133,19 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
   else if (method=="fit"){
     # The next few lines apply a curve fitting procedure based on given distributions and specified quantiles:
     if(match(rho["distribution"], c("norm", 
-                                 "beta",
-                                 "cauchy",
-                                 "logis",
-                                 "t",
-                                 "chisq",
-                                 "exp",
-                                 "f",
-                                 "gamma",
-                                 "lnorm",
-                                 "unif",    
-                                 "weibull",
-                                 "triang",
-                                 "gompertz"), nomatch = 0)){
+                                    "beta",
+                                    "cauchy",
+                                    "logis",
+                                    "t",
+                                    "chisq",
+                                    "exp",
+                                    "f",
+                                    "gamma",
+                                    "lnorm",
+                                    "unif",    
+                                    "weibull",
+                                    "triang",
+                                    "gompertz"), nomatch = 0)){
       if( rho["distribution"]=="unif" ) { 
         percentiles<-c(0.05,0.95)
         quantiles<-c(rho["lower"], rho["upper"])

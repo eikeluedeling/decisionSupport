@@ -42,31 +42,31 @@ NULL
 #' #ToDo
 #' @export
 rposnorm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
-	# Constants:
+  # Constants:
   p=c(0.05, 0.95)
   lowerTrunc=0
   upperTrunc=Inf
-	# Check preconditions
-	if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
-		stop("lower and upper value of the 90%-confidence intervall must be given.")
-	# Prepare input variable: types
-	ci<-c(lower=as.numeric(lower), upper=as.numeric(upper))
-	if ( ci[["lower"]] >= ci[["upper"]] )
-		stop("lower value must be less than upper value.")
-	if ( ci[["lower"]] <= 0)
-		stop("lower value must be greater than zero.")
-	# Create output vector for the random numbers to be generated
-	x<-vector(length=n)
-	# Calculate mean and sd corresponding to confidence interval:
-	param<-paramtnormci_numeric(p=p, ci=ci, lowerTrunc=lowerTrunc, upperTrunc=upperTrunc, 
-	                            relativeTolerance=relativeTolerance)
-	#param<-paramposnorm90ci(lower=ci[["lower"]], upper=ci[["upper"]], relativeTolerance=relativeTolerance, method="numeric")
-	# Generate the random numbers:
-	x<-msm::rtnorm(n=n,
-						mean=param$mean,
-						sd=param$sd,
-						lower=lowerTrunc,
-						upper=upperTrunc)
-	#Return
-	x
+  # Check preconditions
+  if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
+    stop("lower and upper value of the 90%-confidence intervall must be given.")
+  # Prepare input variable: types
+  ci<-c(lower=as.numeric(lower), upper=as.numeric(upper))
+  if ( ci[["lower"]] >= ci[["upper"]] )
+    stop("lower value must be less than upper value.")
+  if ( ci[["lower"]] <= 0)
+    stop("lower value must be greater than zero.")
+  # Create output vector for the random numbers to be generated
+  x<-vector(length=n)
+  # Calculate mean and sd corresponding to confidence interval:
+  param<-paramtnormci_numeric(p=p, ci=ci, lowerTrunc=lowerTrunc, upperTrunc=upperTrunc, 
+                                                  relativeTolerance=relativeTolerance)
+  #param<-paramposnorm90ci(lower=ci[["lower"]], upper=ci[["upper"]], relativeTolerance=relativeTolerance, method="numeric")
+  # Generate the random numbers:
+  x<-msm::rtnorm(n=n,
+                 mean=param$mean,
+                 sd=param$sd,
+                 lower=lowerTrunc,
+                 upper=upperTrunc)
+  #Return
+  x
 }
