@@ -24,7 +24,7 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
-#' @include paramposnorm90ci.R
+#' @include paramtnormci_numeric.R
 NULL
 ##############################################################################################
 # rposnorm90ci_numeric(n, lower, upper, relativeTolerance)
@@ -43,8 +43,9 @@ NULL
 #' @export
 rposnorm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
 	# Constants:
-	# 95%-critical value of standard normal distribution (c_0.95=1.645):
-#	c_0.95=qnorm(0.95)
+  p=c(0.05, 0.95)
+  lowerTrunc=0
+  upperTrunc=Inf
 	# Check preconditions
 	if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
 		stop("lower and upper value of the 90%-confidence intervall must be given.")
@@ -57,13 +58,15 @@ rposnorm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
 	# Create output vector for the random numbers to be generated
 	x<-vector(length=n)
 	# Calculate mean and sd corresponding to confidence interval:
-	param<-paramposnorm90ci(lower=ci[["lower"]], upper=ci[["upper"]], relativeTolerance=relativeTolerance, method="numeric")
+	param<-paramtnormci_numeric(p=p, ci=ci, lowerTrunc=lowerTrunc, upperTrunc=upperTrunc, 
+	                            relativeTolerance=relativeTolerance)
+	#param<-paramposnorm90ci(lower=ci[["lower"]], upper=ci[["upper"]], relativeTolerance=relativeTolerance, method="numeric")
 	# Generate the random numbers:
 	x<-msm::rtnorm(n=n,
 						mean=param$mean,
 						sd=param$sd,
-						lower=0,
-						upper=Inf)
+						lower=lowerTrunc,
+						upper=upperTrunc)
 	#Return
 	x
 }

@@ -1,5 +1,5 @@
 #
-# file: r0_1norm90ci_numeric.R
+# file: rposnorm90ci_iter.R
 #
 # This file is part of the R-package decisionSupport
 # 
@@ -24,24 +24,27 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
-#' @include paramtnormci_numeric.R
-NULL
 ##############################################################################################
-# r0_1norm90ci_numeric(n, lower, upper, relativeTolerance)
+# rposnorm90ci_iter(n, lower, upper, relativeTolerance, maxIter)
 ##############################################################################################
-#' Generate  normal random numbers truncated to \eqn{[0,1]} based on the 90\%-confidence interval.
+#' Generate positive normal random numbers based on the 90\%-confidence interval.
 #' 
-#' This function generatesnormal random numbers truncated to \eqn{[0,1]} based on the 90\% confidence interval
-#' calculating the distribution parameter numerically from the  90\%-confidence interval. 
+#' This function generates positive normal random numbers based on the 90\% confidence interval
+#' using an iteration algorithm. 
 #' @param n Number of generated observations.
 #' @param lower \code{numeric}; lower bound of the 90\% confidence intervall.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence intervall.
 #' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the generated confidence 
 #' interval from the specified interval.
+#' @param maxIter \code{numeric}; maximum number of iterations.
 #' @details
-#' #ToDo
+#' The generation of random numbers is repeated until the generated 90\% - confidence interval is
+#' close enough to the desired value.
 #' @export
-r0_1norm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
+rposnorm90ci_iter <- function(n, lower, upper,  relativeTolerance=0.05, maxIter=40){
+	# Constants:
+	# 95%-critical value of standard normal distribution (c_0.95=1.645):
+	c_0.95=qnorm(0.95)
 	# Check preconditions
 	if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
 		stop("lower and upper value of the 90%-confidence intervall must be given.")
@@ -49,24 +52,36 @@ r0_1norm90ci_numeric <- function(n, lower, upper, relativeTolerance=0.05){
 	ci<-c(lower=as.numeric(lower), upper=as.numeric(upper))
 	if ( ci[["lower"]] > ci[["upper"]] )
 		stop("lower value must be less than upper value.")
-	if ( ci[["lower"]] <= 0)
+	if ( ci[["lower"]] < 0)
 		stop("lower value must be greater than zero.")
-	if ( 1 <= ci[["upper"]] )
-		stop("upper value must be less than one.")
 	# Create output vector for the random numbers to be generated
 	x<-vector(length=n)
-	# Calculate mean and sd corresponding to confidence interval:
-	param<-paramtnormci_numeric(p=c(0.05, 0.95), ci=ci, lowerTrunc=0, upperTrunc=1, relativeTolerance=relativeTolerance)
-	# Generate the random numbers:
-	x<-msm::rtnorm(n=n,
-						mean=param$mean,
-						sd=param$sd,
-						lower=0,
-						upper=1)
+	# Initialize loop:
+	mean_i <- mean(ci)
+	sd_i <- (mean_i - ci[["lower"]])/c_0.95
+	ci_i <- c(lower=-Inf, upper=Inf)	
+	i<-0	
+	# Generate the random numbers until the generated 90\% - confidence interval is
+	# close enough to the desired value:
+	while( !isTRUE(all.equal(ci_i, ci, tolerance=relativeTolerance, scale=min(abs(ci))  )) && i < maxIter  ){	
+		x<-msm::rtnorm(n=n,
+							mean=mean_i,
+							sd=sd_i,
+							lower=0,
+							upper=Inf)
+		quantiles<- quantile(x=x, probs=c(0.05, 0.95))
+		ci_i[["lower"]] <- quantiles[["5%"]]
+		ci_i[["upper"]] <- quantiles[["95%"]]
+		if( (ci[["lower"]] - ci_i[["lower"]])*( ci_i[["upper"]] - ci[["upper"]]) > 0)
+			sd_i <- (ci[["upper"]] - ci[["lower"]])/(ci_i[["upper"]] - ci_i[["lower"]])*sd_i
+		else
+			mean_i <-  ci_i[["lower"]]/ci[["lower"]] *  mean(ci - ci_i) + mean_i
+		i<-i+1
+	}
 	# Check postcondition:
-	ci_i <- quantile(x=x, probs=c(0.05, 0.95))
-	if( !isTRUE(msg<-all.equal(ci_i, c("5%"=ci[["lower"]], "95%"=ci[["upper"]]), tolerance=relativeTolerance, scale=min(abs(ci)))) )
+	if( !isTRUE(msg<-all.equal(ci_i, ci, tolerance=relativeTolerance, scale=min(abs(ci)))) )
 		warning(msg)
 	#Return
 	x
 }
+

@@ -29,39 +29,30 @@
 ##############################################################################################
 #' Return parameters of truncated normal distribution based on a confidence interval.
 #' 
-#' This function calculates the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated normal distribution 
-#' from an arbitrary confidence interval. 
-#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the corresponding 
-#' confidence interval.
+#' This function calculates the distribution parameters, i.e. \code{mean} and \code{sd}, of a
+#' truncated normal distribution from an arbitrary confidence interval.
+#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the
+#'   corresponding confidence interval.
 #' @param ci \code{numeric} 2-dimensional vector; lower and upper bound of the  confidence interval.
-#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}). 
+#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}).
 #' @param upperTrunc \code{numeric}; upper truncation point of the distribution (<= \code{Inf}).
-#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the generated confidence 
-#' interval from the specified interval. If this deviation is greater than \code{relativeTolerance} a warning is given.
-#' @return A list with elements \code{mean} and \code{sd}. 
-#' @details
-#'  For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
-#'  
-#'  p-\% confidence interval: \eqn{[c_l, c_u]}
-#'  \deqn{tN(\mu,\sigma)}
-#'  \deqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}{\ifelse{html}{&int;}{int}}
-#'  \deqn{\int_{-\infty}^{c_u} d tN(\mu,\sigma) = p_u}
-#'  \eqn{p_l - p_u = p} and \eqn{p_l = 1- p_u}
-#'  \if{latex}{\eqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}}\if{html}{\out{<MATH>&int;{{su|b=-&infin;|p=c{{su|b=l}};}};</MATH>}}
-#'  
-#'  \if{html}{\out{&int;</sup><sub>-&infin;</sub><sup>c<sub>l</sub>}}\cr
-#'  
-#'  \if{html}{\out{<math>C_6^4</math>}}\cr
-#'  
-#'  \if{html}{\out{C_6^4}}
-#'  
+#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
+#' @param rootMethod if \code{"probability"} the equation defining the parameters \code{mean} and 
+#'   \code{sd} is the difference between calculated and correct probabilities of the confidence 
+#'   interval; if \code{"quantile"} the equation defining the parameters is the difference between
+#'   calculated and correct upper and lower value of the confidence interval.
+#' @param ... Further parameters passed to \code{\link[nleqslv]{nleqslv}}.
+#' @return A list with elements \code{mean} and \code{sd}.
+#' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
+#'   
 #' @section Warning:
 #'   This method has not been tested systematically!
-#' @seealso \code{\link[msm]{tnorm}}
+#' @seealso \code{\link[msm]{tnorm}}, \code{\link[nleqslv]{nleqslv}}
 #' @export
-paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05){
-  root<-"quantile"
-  # root<-"probability"
+paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05, 
+                                 rootMethod="probability", ...){
   # Constants:
   # 95%-critical value of standard normal distribution (c_0.95=1.645):
   c_0.95=qnorm(0.95)
@@ -90,104 +81,87 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
   if ( !((lowerTrunc < ci[["lower"]] &&  ci[["upper"]] < upperTrunc))  )
     stop("ci is not a subset of [lowerTrunc, upperTrunc]!")
   
-
-    # Initialize the initialization of the root finding (ToDo: review):
-    mean_i <- mean(ci)
-    sd_i <- (mean_i - ci[["lower"]])/c_0.95
-    ci_i <- c("lower"=NULL, "upper"=NULL)
-    if(0){  
-      # Generate the the initial values for mean  and sd:
-      ci_i[["lower"]] <- msm::qtnorm(p=p[["lower"]], mean=mean_i, sd=sd_i, lower=lowerTrunc, upper=upperTrunc)
-      ci_i[["upper"]] <- msm::qtnorm(p=p[["upper"]], mean=mean_i, sd=sd_i, lower=lowerTrunc, upper=upperTrunc)
-      
-      sd_i <- (ci[["upper"]] - ci[["lower"]])/(ci_i[["upper"]] - ci_i[["lower"]])*sd_i
-      mean_i <-  ci_i[["lower"]]/ci[["lower"]] *  max(ci - ci_i) + mean_i
+  # Initialize the root finding:
+  mean_init <- mean(ci)
+  sd_init<- (mean_init - ci[["lower"]])/c_0.95
+  
+  if ( rootMethod=="quantile"){ 
+    # Function defined by the difference between the target confidence values and the calculated
+    # confidence values for certain values of the parameters mean and sd. Thus this function defines
+    # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd): 
+    f_calc <-function(x){
+      msm::qtnorm(p=p, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - ci
     }
-
-      if ( root=="quantile"){  
-        f_calc <-function(x){
-          y<-numeric(2)
-          y[1] <- msm::qtnorm(p=p[["lower"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - ci[["lower"]]
-          y[2] <- msm::qtnorm(p=p[["upper"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - ci[["upper"]]
-          y
-        }
-        f_sim<-function(x){
-          y<-numeric(2)
-          n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-          r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
-          y[1] <- quantile(x=r,probs=p[["lower"]]) - ci[["lower"]]
-          y[2] <- quantile(x=r,probs=p[["upper"]]) - ci[["upper"]]
-          y
-        }
-        # Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
-        # (x[1]:=mean, x[2]:=sd): 
-        f <- function(x){
-          y<-numeric(2)
-          tryCatch(y <- f_calc(x=x),
-                   error=function(e){ 
-                     y <- f_sim(x=x)
-                   }
-          )
-          y
-        } 
-      } else if( root=="probability"){
-        # Function defined by the difference between confidence probabilities p and the calculated probability 
-        # for certain values of the parameters mean and sd:
-        f_calc <-function(x){
-          y<-numeric(2)
-          y[1] <- msm::ptnorm(q=ci[["lower"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p[["lower"]]
-          y[2] <- msm::ptnorm(q=ci[["upper"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p[["upper"]]
-          if (any(is.na(y))) stop ("NAs produced")
-          y
-        }
-        # Fall back function by random sampling simulation, i.e. function defined by the difference between 
-        # confidence probabilities p and the simulated probability for certain values of the parameters mean and sd:
-        f_sim<-function(x){
-          y<-numeric(2)
-          n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-          r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
-          y[1] <- length(r[ r<= ci[["lower"]] ])/n - p[["lower"]]
-          y[2] <- length(r[ r<= ci[["upper"]] ])/n - p[["upper"]]
-          y
-        }
-        # Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
-        # (x[1]:=mean, x[2]:=sd): 
-        f <- function(x){
-          y<-numeric(2)
-          tryCatch(y <- f_calc(x=x),
-                   error=function(e){
-                     y <- f_sim(x=x)
-                   }
-          )
-          y
-        } 
-      } else
-        stop("No root finding method chosen.")
-      cat("mean_i: ", mean_i, "\n")
-      cat("sd_i: ", sd_i, "\n")
-      # The root of f are mean and sd:
-      #	x_0<-nleqslv::nleqslv(x=c(mean_i, sd_i), fn=f, control=list(maxit=10000))
-      x_0<-nleqslv::nleqslv(x=c(mean_i, sd_i), fn=f)	
-      mean<-x_0$x[1]
-      sd<-x_0$x[2]
-
+    # Fall back function for f_calc by random sampling simulation, i.e. function defined by the 
+    # difference between the target confidence values and the simulated confidence values for
+    # certain values of the parameters mean and sd. Thus this function defines mean and sd by
+    # f_calc(x) = 0, (x[1]:=mean, x[2]:=sd):
+    f_sim<-function(x){
+      n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
+      r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
+      
+      quantile(x=r,probs=p) - ci
+    }
     
+  } else if( rootMethod=="probability"){
+    # Function defined by the difference between confidence probabilities p and the calculated
+    # probability for certain values of the parameters mean and sd. Thus this function defines
+    # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd): 
+    f_calc <-function(x){
+      y <- msm::ptnorm(q=ci, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p
+      # Produce error in case on NAs such that the function can be caught
+      if (any(is.na(y))) stop ("NAs produced")
+      y
+    }
+    # Fall back function for f_calc by random sampling simulation, i.e. function defined by the
+    # difference between confidence probabilities p and the simulated probability for certain values
+    # of the parameters mean and sd. Thus this function defines
+    # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd):
+    f_sim<-function(x){
+      n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
+      r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
+      
+      length(r[ r<= ci ])/n - p
+    }
+    
+  } else
+    stop("No root finding method chosen.")
+  # Function wrapping f_calc and f_sim and thus defining mean and sd by f(x) = 0 
+  # (x[1]:=mean, x[2]:=sd): 
+  f <- function(x){
+    tryCatch(f_calc(x=x),
+             error=function(e) f_sim(x=x)
+    )
+  } 
+  
+  # The root of f are mean and sd:
+  #	x_0<-nleqslv::nleqslv(x=c(mean_init, sd_init), fn=f, control=list(maxit=10000))
+  x_0<-nleqslv::nleqslv(x=c(mean_init, sd_init), fn=f, ...)	
+  mean<-x_0$x[1]
+  sd<-x_0$x[2]
+  
+  
   # Check postcondition:
-  tryCatch({
-    ci_i[["lower"]] <- msm::qtnorm(p=p[["lower"]], mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-    ci_i[["upper"]] <- msm::qtnorm(p=p[["upper"]], mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-  }, error=function(e){
-    n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-    r<- msm::rtnorm(n=n, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc) 
-    ci_i[["lower"]] <- quantile(x=r,probs=p[["lower"]])
-    ci_i[["upper"]] <- quantile(x=r,probs=p[["upper"]]) - ci[["upper"]]
-  }
+  tryCatch( ci_calc<- msm::qtnorm(p=p, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc),
+            error=function(e){
+              n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
+              r<- msm::rtnorm(n=n, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc) 
+              ci_calc<- quantile(x=r,probs=p)
+            }
   )
-  print("ci_i: \n")
-  print(ci_i)
-  if( !isTRUE(msg<-all.equal(ci_i, ci, tolerance=relativeTolerance, scale=min(abs(ci)))) )
-    warning(msg)
-  #Return
+  p_calc<-msm::ptnorm(q=ci, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
+  for( j in seq(along=p) ){
+    scale <- if( p[[j]] > 0 ) p[[j]] else NULL
+    if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
+      warning("Calculated value of ", 100*p[[j]], "%-quantile: ", ci_calc[[j]], "\n  ",
+              "Target value of ", 100*p[[j]], "%-quantile:     ", ci[[j]],   "\n  ",
+              "Calculated cumulative probability at value ", ci[[j]], " : ", p_calc[[j]], "\n  ",
+              "Target  cumulative probability at value ", ci[[j]], " : ", p[[j]], "\n  ",
+              msg)
+    }
+  }
+  
+  #Return the calculated parameters:
   list(mean=mean, sd=sd)
 }
 

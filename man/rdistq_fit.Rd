@@ -4,7 +4,8 @@
 \alias{rdistq_fit}
 \title{Generate univariate random numbers based on quantiles.}
 \usage{
-rdistq_fit(distribution, n, percentiles = c(0.05, 0.5, 0.95), quantiles)
+rdistq_fit(distribution, n, percentiles = c(0.05, 0.5, 0.95), quantiles,
+  tolConv = 0.001, fit.weights = rep(1, length(percentiles)))
 }
 \arguments{
 \item{distribution}{A character string that defines the univariate distribution
@@ -15,6 +16,15 @@ to be randomly sampled.}
 \item{percentiles}{Numeric vector giving the percentiles.}
 
 \item{quantiles}{Numeric vector giving the quantiles.}
+
+\item{tolConv}{positive numerical value, the absolute
+  convergence tolerance for reaching zero by fitting
+  distributions \code{get.norm.par} will be shown.}
+
+\item{fit.weights}{numerical vector of the same length as
+  a probabilities vector \code{p} containing positive
+  values for weighting quantiles. By default all quantiles
+  will be weighted by 1.}
 }
 \value{
 ToDo

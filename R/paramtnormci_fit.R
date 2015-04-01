@@ -27,45 +27,59 @@
 ##############################################################################################
 # paramtnormci_fit(p, ci, median, lowerTrunc, upperTrunc, relativeTolerance)
 ##############################################################################################
-#' Return fitted parameters of truncated normal distribution based on a confidence interval.
+#' Fit parameters of truncated normal distribution based on a confidence interval.
 #' 
-#' This function fits the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated normal distribution 
-#' from an arbitrary confidence interval and, facultatively, the median. 
-#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the corresponding 
-#' confidence interval.
-#' @param ci \code{numeric} 2-dimensional vector; lower and upper bound of the  confidence interval.
-#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}). 
+#' This function fits the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated 
+#' normal distribution from an arbitrary confidence interval and, facultatively, the median.
+#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the 
+#'   corresponding confidence interval.
+#' @param ci \code{numeric} 2-dimensional vector; lower, i.e \code{ci[[1]]}, and upper bound, i.e
+#'   \code{ci[[2]]}, of the  confidence interval.
+#' @param  median if \code{NULL}: truncated normal is fitted only to lower and upper value of the 
+#'   confidence interval; if \code{numeric}: truncated normal is fitted on the confidence interval 
+#'   and the median simultaneously. For details cf. below.
+#' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}).
 #' @param upperTrunc \code{numeric}; upper truncation point of the distribution (<= \code{Inf}).
-#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the generated confidence 
-#' interval from the specified interval. If this deviation is greater than \code{relativeTolerance} a warning is given.
-#' @return A list with elements \code{mean} and \code{sd}. 
-#' @details
-#'  For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
-#'  
-#'  The cummulative distribution \eqn{F}
-#'  
-#'  p-\% confidence interval: \eqn{[c_l, c_u]}
-#'  \deqn{tN(\mu,\sigma)}
-#'  \deqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}{\ifelse{html}{&int;}{int}}
-#'  \deqn{\int_{-\infty}^{c_u} d tN(\mu,\sigma) = p_u}
-#'  \eqn{p_l - p_u = p} and \eqn{p_l = 1- p_u}
-#'  \if{latex}{\eqn{\int_{-\infty}^{c_l} d tN(\mu,\sigma) = p_l}}\if{html}{\out{<MATH>&int;{{su|b=-&infin;|p=c{{su|b=l}};}};</MATH>}}
-#'  
-#'  \if{html}{\out{&int;</sup><sub>-&infin;</sub><sup>c<sub>l</sub>}}\cr
-#'  
-#'  \if{html}{\out{<math>C_6^4</math>}}\cr
-#'  
-#'  \if{html}{\out{C_6^4}}
+#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the 
+#'   generated probability levels from the specified confidence interval. If the relative deviation 
+#'   is greater than \code{relativeTolerance} a warning is given.
+#' @param fitMethod optimization method used in \code{\link[stats]{constrOptim}}.
+#' @param ... further parameters to be passed to \code{\link[stats]{constrOptim}}.
+#' @return A list with elements \code{mean} and \code{sd}.
+#' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
+#' 
+#'   The cummulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the 
+#'   probability that a sampled value is less than \eqn{x}. This is equivalent to saying that for 
+#'   the vector of quantiles \ifelse{latex}{\eqn{q=(q_{p_1}, \ldots, q_{p_k})}}{\eqn{q=(q(p_1), 
+#'   \ldots, q(p_k))}} at the corresponding probabilities \eqn{p=(p_1, \ldots, p_k)} it holds that
+#'     \deqn{p_i = F_{\mu, \sigma}(q_{p_i}),~i = 1, \ldots, k}{p_i = F_{\mu, \sigma}(q(p_i)), i = 1, \ldots k.}
+#'   In the case of arbitrary postulated quantiles this system of equations might not have a
+#'   solution in \eqn{\mu} and \eqn{\sigma}. A least squares fit leads to an approximate solution:
+#'     \deqn{\sum_{i=1}^k (p_i - F_{\mu, \sigma}(q_{p_i}))^2 = \min}{ \sum_{i=1}^k (p_i - F_{\mu, \sigma}(q(p_i)))^2 = min}
+#'   defines the parameters \eqn{\mu} and \eqn{\sigma} of the underlying normal distribution. This
+#'   method solves this minimization problem for two cases:
+#'    \enumerate{
+#'      \item \code{ci[[1]] < median < ci[[2]]}: The parameters are fitted on the lower and upper value
+#'        of the confidence interval and the median, formally:\cr
+#'        \eqn{p_1}=\code{p[[1]]}, \eqn{p_2}=\code{0.5} and \eqn{p_3}=\code{p[[2]]};\cr 
+#'        \ifelse{latex}{\eqn{q_{p_1}}}{\eqn{q(p_1)}}=\code{ci[[1]]}, 
+#'        \ifelse{latex}{\eqn{q_{0.5}}}{\eqn{q(0.5)}}=\code{median} and
+#'        \ifelse{latex}{\eqn{q_{p_3}}}{\eqn{q(p_3)}}=\code{ci[[2]]}
+#'      \item \code{median=NULL}: The parameters are fitted on the lower and upper value of the
+#'        confidence interval only, formally:\cr
+#'        \eqn{p_1}=\code{p[[1]]}, \eqn{p_2}=\code{p[[2]]};\cr 
+#'        \ifelse{latex}{\eqn{q_{p_1}}}{\eqn{q(p_1)}}=\code{ci[[1]]}, 
+#'        \ifelse{latex}{\eqn{q_{p_2}}}{\eqn{q(p_2)}}=\code{ci[[2]]}
+#'    }
+#'    The \code{(p[[2]]-p[[1]])} - confidence interval must be symmetric in the sense that 
+#'    \code{p[[1]] + p[[2]] = 1}.
 #'  
 #' @section Warning:
 #'   This method has not been tested systematically!
-#' @seealso \code{\link[msm]{tnorm}}
+#' @seealso \code{\link[msm]{tnorm}}, \code{\link[stats]{constrOptim}}
 #' @export
-# median: if NULL: truncated normal is fitted only on lower and upper (ToDo: remove corresponding constraints in this case); 
-#     otherwise truncated is fitted on lower, median and upper quantiles simultaneously.
-paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05){
-  #  root<-"quantile"
-  root<-"probability"
+paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05, 
+                             fitMethod="Nelder-Mead", ...){
   # Constants:
   # 95%-critical value of standard normal distribution (c_0.95=1.645):
   c_0.95=qnorm(0.95)
@@ -101,183 +115,80 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
       stop("ci does not contain the median!")
     q<-c(ci[["lower"]], median, ci[["upper"]])
     p<-c(p[["lower"]], 0.5, p[["upper"]])
+  } else {
+    q<-c(ci[["lower"]], ci[["upper"]])
+    p<-c(p[["lower"]],  p[["upper"]])
   }
-  # Initialize the initialization of the root finding (ToDo: review):
-  mean_i <- mean(ci)
-  sd_i <- (mean(ci) - ci[["lower"]])/c_0.95
-  cat("mean_i: ", mean_i, "\n")
-  cat("sd_i: ", sd_i, "\n")
-  #ci_i <- c("lower"=NULL, "upper"=NULL)
-  if ( root=="quantile"){  
-    f_calc <-function(x){
-      y<-numeric(length(q))
-      y <- msm::qtnorm(p=p, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - q
-      #y[1] <- msm::qtnorm(p=p[["lower"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - ci[["lower"]]
-      #y[2] <- msm::qtnorm(p=p[["upper"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - ci[["upper"]]
-      if (any(is.na(y))) stop ("NAs produced")
-      y
-    }
-    f_sim<-function(x){
-      y<-numeric(length(q))
-      n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-      r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
-      y <- quantile(x=r,probs=p) - q
-      #y[1] <- quantile(x=r,probs=p[["lower"]]) - ci[["lower"]]
-      #y[2] <- quantile(x=r,probs=p[["upper"]]) - ci[["upper"]]
-      y
-    }
-    # Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
-    # (x[1]:=mean, x[2]:=sd): 
-    f <- function(x){
-      y<-numeric(2)
-      tryCatch(y <- f_calc(x=x),
-               error=function(e){ 
-                 y <- f_sim(x=x)
-               }
-      )
-      y
-    } 
-  } else if( root=="probability"){
-    # Function defined by the difference between confidence probabilities p and the calculated probability 
-    # for certain values of the parameters mean and sd:
-    f_calc <-function(x){
-      y<-numeric(length(q))
-      y <- msm::ptnorm(q=q, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p
-      #y[1] <- msm::ptnorm(q=ci[["lower"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p[["lower"]]
-      #y[2] <- msm::ptnorm(q=ci[["upper"]], mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p[["upper"]]
-      if (any(is.na(y))) stop ("NAs produced")
-      y
-    }
-    # Fall back function by random sampling simulation, i.e. function defined by the difference between 
-    # confidence probabilities p and the simulated probability for certain values of the parameters mean and sd:
-    f_sim<-function(x){
-      y<-numeric(length(q))
-      n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-      r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
-      y <- length(r[ r<= q ])/n - p
-      #y[1] <- length(r[ r<= ci[["lower"]] ])/n - p[["lower"]]
-      #y[2] <- length(r[ r<= ci[["upper"]] ])/n - p[["upper"]]
-      y
-    }
-    # Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
-    # (x[1]:=mean, x[2]:=sd): 
-    f <- function(x){
-      y<-numeric(2)
-      tryCatch(y <- f_calc(x=x),
-               error=function(e){
-                 y <- f_sim(x=x)
-               }
-      )
-      y
-    } 
-  } else
-    stop("No root finding method chosen.")
-  #  g <- function(x) -max(abs(f(x)))
-  g <- function(x) -sum(f(x)*f(x))
-  # g <- function(x) -sum(abs(f(x)))
-  #  g <- function(x) -(1/f(x))%*%(1/f(x))
-  # The optimization constraints:
-  # (1) lowerTrunc < mean < upperTrunc, ToDo: necessary???
-  # (2) sd > 0
-  # are implemented as follows:
+  # Initialize the fit:
+  mean_init <- if( !is.null(median) ) median else mean(ci)
+  sd_init <- (mean(ci) - ci[["lower"]])/c_0.95
+  
+  # Function defined by the difference between confidence probabilities p and the calculated
+  # probability for certain values of the parameters mean and sd. Thus this function defines
+  # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd): 
+  f_calc <-function(x){
+    y <- msm::ptnorm(q=q, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p
+    # Produce error in case on NAs such that the function can be caught
+    if (any(is.na(y))) stop ("NAs produced")
+    y
+  }
+  # Fall back function for f_calc by random sampling simulation, i.e. function defined by the
+  # difference between confidence probabilities p and the simulated probability for certain values
+  # of the parameters mean and sd. Thus this function defines
+  # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd):
+  f_sim<-function(x){
+    n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
+    r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) 
+    y <- length(r[ r<= q ])/n - p
+    y
+  }
+  # Function wrapping f_calc and f_sim and thus defining mean and sd by f(x) = 0 
+  # (x[1]:=mean, x[2]:=sd): 
+  f <- function(x){
+    tryCatch(y <- f_calc(x=x),
+             error=function(e){
+               y <- f_sim(x=x)
+             }
+    )
+    y
+  } 
+  # The squared euclidean norm of the function f:
+  g <- function(x) sum(f(x)*f(x))
+  
+  # The optimization constraint:
+  # sd > 0 (for numerical stability)
+  # is implemented as follows:
   # Constraints A x + B > 0
-  # A_1 = ( 1  0 )
-  # A_2 = (-1  0 ) 
-  # A_3 = ( 0  1 )
+  # A_1 = ( 0  1 )
   # x_1 = mean
   # x_2 = sd
-  # B_1 = - lowerTrunc
-  # B_2 = upperTrunc
-  # B_3 = 0
-  if (upperTrunc < Inf){
-    A <- rbind(c( 1, 0), # , ToDo: necessary???
-               c(-1, 0), # , ToDo: necessary???
-               c( 0, 1))
-    B <- rbind(c(-lowerTrunc), # , ToDo: necessary???
-               c( upperTrunc), # , ToDo: necessary???
-               c(          0))
-  } else {
-    A <- rbind(c( 1, 0), # , ToDo: necessary???
-               c( 0, 1))
-    B <- rbind(c(-lowerTrunc), # , ToDo: necessary???
-               c(          0))
-  }
+  # B_1 = 0
+  A <- rbind(c( 0, 1))
+  B <- rbind(c(  0 ))
   constraints<-list(ineqA=A, ineqB=B)
-  print("A%*%c(mean_i, sd_i) + B:")
-  print(A%*%c(mean_i, sd_i) + B)
-  print(A%*%c(mean_i, sd_i) + B > 0)
-  ##################################
-  # using stats:
-  if (0){
-    optimizationResult<-stats::constrOptim(theta=c(mean_i, sd_i), 
-                                           f=g,
-                                           grad=NULL,
-                                           ui=A,
-                                           ci=-B,
-                                           method="SANN",
-                                           control = list(
-                                             fnscale=-1,
-                                             parscale=c(ci[["lower"]],1),
-                                             reltol=1e-15
-                                           )
-    )
-    mean<-optimizationResult$par[1]
-    sd<-optimizationResult$par[2]
-  }
-  ##############
-  # usning maxLik:
-  # ToDo: options
-  #  -constraints: lowerTrunc <= mean <= upperTrunc or c[["lower"]] <= mean <= c[["upper"]]
-  #  -gradtol=1e-06*1e-02:
-  # optimizationResult<-maxLik::maxSANN(fn=g, start=c(mean_i, sd_i), iterlim=1e+05, 
-  #                                     constraints=constraints, 
-  #                                     parscale=c(ci[["lower"]],sd_i*ci[["lower"]]/(ci[["upper"]]-ci[["lower"]]))) #temp=1e+08, tmax=1000)
-  # )
-  #optimizationResult<-maxLik::maxSANN(fn=g, start=c(mean_i, sd_i), iterlim=1e+05, constraints=constraints, tmax=1)
   
-  # optimizationResult<-maxLik::maxBFGS(fn=g, start=c(mean_i, sd_i), constraints=constraints, reltol=1e-20)
-  #  optimizationResult<-maxLik::maxCG(fn=g, start=c(mean_i, sd_i), tol=1e-20)
-   optimizationResult<-maxLik::maxNM(fn=g, start=c(mean_i, sd_i), constraints=constraints)
-  #  optimizationResult<-maxLik::maxNM(fn=g, start=c(mean_i, sd_i), constraints=constraints, parscale=c(1,10000))
-  #  optimizationResult<-maxLik::maxNR(fn=g, start=c(mean_i, sd_i),  gradtol=1e-12, tol=1e-20)
-  #  optimizationResult<-maxLik::maxBFGSR(fn=g, start=c(mean_i, sd_i))
-  # does not work adhoc:
-  #optimizationResult<-maxLik::maxBHHH(fn=g, start=c(mean_i, sd_i))
-  
-  mean<-optimizationResult$estimate[1]
-  sd<-optimizationResult$estimate[2]
-  
-  ####################
-  cat("mean: ", mean, "\n")
-  cat("sd: ", sd, "\n")
-  print("p: ")
-  print(p)
+  # Fit the paramteters mean and sd:
+  optimizationResult<-stats::constrOptim(theta=c(mean_init, sd_init), 
+                                         f=g,
+                                         grad=NULL,
+                                         ui=A,
+                                         ci=-B,
+                                         method=fitMethod, ...)
+  # Save the fitted target parameters:
+  mean<-optimizationResult$par[1]
+  sd<-optimizationResult$par[2]
   # Check postcondition:
-  q_calc<-numeric(length(q))
-  tryCatch({
-    q_calc <- msm::qtnorm(p, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-    #ci_i[["lower"]] <- msm::qtnorm(p=p[["lower"]], mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-    #ci_i[["upper"]] <- msm::qtnorm(p=p[["upper"]], mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-  }, error=function(e){
-    n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-    r<- msm::rtnorm(n=n, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc) 
-    q_calc <- quantile(x=r,probs=p)
-  }
+  tryCatch(q_calc <- msm::qtnorm(p, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc),
+           error=function(e){
+             n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
+             r<- msm::rtnorm(n=n, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc) 
+             q_calc <- quantile(x=r,probs=p)
+           }
   )
-  print("q_calc: \n")
-  print(q_calc)
-  p_calc<-numeric(length(p))
   p_calc<-msm::ptnorm(q=q, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-
-  print("p_calc:")
-  print(p_calc)
-  
   for( j in seq(along=p) ){
-    if( p[[j]] > 0 )
-      scale=p[[j]]
-    else scale=NULL
+    scale <- if( p[[j]] > 0 ) p[[j]] else NULL
     if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
-      #ToDo: add details of parameters
       warning("Calculated value of ", 100*p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
               "Target value of ", 100*p[[j]], "%-quantile:     ", q[[j]],   "\n  ",
               "Calculated cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
@@ -285,70 +196,8 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
               msg)
     }
   }
-  
-  optimizationResult
+  # Return the fitted parameters:
+  list(mean=mean, sd=sd)
 }
 
-if (0){
-  ci=c("lower"=1, "upper"=2e+05)
-  median=mean(ci)
-  q=c(ci[["lower"]], median, ci[["upper"]])
-  p=c(0.05, 0.5, 0.95)
-  
-  lowerTrunc=0
-  upperTrunc=Inf
-  relativeTolerance=0.05
-  
-  # Function defined by the difference between confidence probabilities p and the calculated probability 
-  # for certain values of the parameters mean and sd:
-  f_calc <-function(x_1, x_2){
-    y<-numeric(length(p))
-    y <- msm::ptnorm(q=q, mean=x_1, sd=x_2, lower=lowerTrunc, upper=upperTrunc) - p
-    #y[1] <- msm::ptnorm(q=ci[["lower"]], mean=x_1, sd=x_2, lower=lowerTrunc, upper=upperTrunc) - p[["lower"]]
-    #y[2] <- msm::ptnorm(q=ci[["upper"]], mean=x_1, sd=x_2, lower=lowerTrunc, upper=upperTrunc) - p[["upper"]]
-    if (any(is.na(y))) stop ("NAs produced")
-    y
-  }
-  # Fall back function by random sampling simulation, i.e. function defined by the difference between 
-  # confidence probabilities p and the simulated probability for certain values of the parameters mean and sd:
-  f_sim<-function(x_1, x_2){
-    # y<-numeric(2)
-    y<-numeric(length(p))
-    n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-    r<- msm::rtnorm(n=n, mean=x_1, sd=x_2, lower=lowerTrunc, upper=upperTrunc) 
-    y <- length(r[ r<= q ])/n - p
-    #y[1] <- length(r[ r<= ci[["lower"]] ])/n - p[["lower"]]
-    #y[2] <- length(r[ r<= ci[["upper"]] ])/n - p[["upper"]]
-    y
-  }
-  # Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
-  # (x[1]:=mean, x[2]:=sd): 
-  f <- function(x_1, x_2){
-    y<-numeric(2)
-    tryCatch(y <- f_calc(x_1=x_1, x_2=x_2),
-             error=function(e){
-               y <- f_sim(x_1=x_1, x_2=x_2)
-             }
-    )
-    y
-  } 
-  #g <- function(x_1, x_2) - max(abs(f(x_1=x_1,x_2=x_2)))
-  #g <- function(x_1, x_2) - sum(abs(f(x_1=x_1,x_2=x_2)))
-  g <- function(x_1, x_2) -sum(f(x_1, x_2)*f(x_1, x_2))
-  
-  mean<-seq(from=ci[["lower"]],to=ci[["upper"]], length=100)
-  sd<-seq(from=ci[["lower"]],to=ci[["upper"]], length=100)
-  
-  library(lattice)
-  #mean%*%sd
-  #outer(mean, sd)
-  #g_num<-outer(X=mean, Y=sd, FUN=g)
-  g_num<-matrix(nrow=length(mean), ncol=length(sd))
-  for (i in seq(along=mean))
-    for(j in seq(along=sd))
-      g_num[i,j]<-g(mean[[i]],sd[[j]])
-    print(persp(mean, sd, g_num, theta = 90, phi = 0, expand = 0.5, col = "lightblue", ticktype="detailed", zlim = c(-0.06, 0.0)))
-    
-    max(g_num)
-    arrayInd(which.max(g_num),dim(g_num)) 
-}
+
