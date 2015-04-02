@@ -367,7 +367,7 @@ random.estimateUnCorrelated <- function(rho,n,method, ...){
   # if (0){
   for(i in row.names(rho)){
     x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,],n=n,method=method,...),
-                                   warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, noBreaks. = TRUE)
+                                   warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
     ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
     )
   }
