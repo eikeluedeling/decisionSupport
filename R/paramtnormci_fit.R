@@ -110,15 +110,18 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
   if( sum(p) != 1)
     stop( "sum(p) != 1 " )
   # Quantile definition:
-  if(!is.null(median)){
+  if(!is.null(median) && !is.na(as.numeric(median))){
+    median<-as.numeric(median)
     if ( !(( ci[["lower"]] < median &&  median < ci[["upper"]] ))  )
       stop("ci does not contain the median!")
     q<-c(ci[["lower"]], median, ci[["upper"]])
     p<-c(p[["lower"]], 0.5, p[["upper"]])
   } else {
+    warning("median is not supplied; fitting the paramaters of a truncated normal distribution only 
+            on the confidence interval might not lead to the desired distributions shape.")
     q<-c(ci[["lower"]], ci[["upper"]])
     p<-c(p[["lower"]],  p[["upper"]])
-  }
+  } 
   # Initialize the fit:
   mean_init <- if( !is.null(median) ) median else mean(ci)
   sd_init <- (mean(ci) - ci[["lower"]])/c_0.95
@@ -145,12 +148,9 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
   # Function wrapping f_calc and f_sim and thus defining mean and sd by f(x) = 0 
   # (x[1]:=mean, x[2]:=sd): 
   f <- function(x){
-    tryCatch(y <- f_calc(x=x),
-             error=function(e){
-               y <- f_sim(x=x)
-             }
+    tryCatch(f_calc(x=x),
+             error=function(e) f_sim(x=x)
     )
-    y
   } 
   # The squared euclidean norm of the function f:
   g <- function(x) sum(f(x)*f(x))
@@ -189,9 +189,9 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
   for( j in seq(along=p) ){
     scale <- if( p[[j]] > 0 ) p[[j]] else NULL
     if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
-      warning("Calculated value of ", 100*p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
+      warning("Fitted value of ", 100*p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
               "Target value of ", 100*p[[j]], "%-quantile:     ", q[[j]],   "\n  ",
-              "Calculated cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
+              "Fitted cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
               "Target  cumulative probability at value ", q[[j]], " : ", p[[j]], "\n  ",
               msg)
     }

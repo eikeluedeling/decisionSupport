@@ -1,5 +1,5 @@
 #
-# file: test_rposnorm90ci_numeric.R
+# file: test_rposnorm90ci.R.R
 #
 # R package: decisionSupport
 # 
@@ -16,9 +16,9 @@
 library(decisionSupport)
 
 ##############################################################################################
-# Test rposnorm90ci_numeric(n, lower, upper)
+# Test rposnorm90ci.R(n, lower, upper)
 ##############################################################################################
-context("Checking rposnorm90ci_numeric()")
+context("Checking rposnorm90ci.R(method=\"numeric\")")
 
 set.seed(100)
 n=10000
@@ -28,7 +28,7 @@ test_that("A positiv normal distribution is generated correctly from the 0.05 an
 	lower=20000
 	upper=100000
 	percentiles=c(0.05, 0.95)
-	x<-rposnorm90ci_numeric(n=n, lower=lower, upper=upper, relativeTolerance=tolerance)
+	x<-rposnorm90ci(n=n, lower=lower, upper=upper, relativeTolerance=tolerance, method="numeric")
 	expect_equal(quantile(x=x, probs=c(0.05, 0.95)), c("5%"=lower, "95%"=upper), tolerance=tolerance, scale=min(abs(c(lower,upper))))
 })
 
@@ -36,7 +36,7 @@ test_that("A positiv normal distribution is generated correctly from the 0.05 an
 	lower=10000
 	upper=100000
 	percentiles=c(0.05, 0.95)
-	x<-rposnorm90ci_numeric(n=n, lower=lower, upper=upper, relativeTolerance=tolerance)
+	x<-rposnorm90ci(n=n, lower=lower, upper=upper, relativeTolerance=tolerance, method="numeric")
 	expect_equal(quantile(x=x, probs=c(0.05, 0.95)), c("5%"=lower, "95%"=upper), tolerance=tolerance, scale=min(abs(c(lower,upper))))
 })
 
@@ -44,7 +44,8 @@ test_that("A positiv normal distribution is generated correctly from the 0.05 an
 	lower=1000
 	upper=100000
 	percentiles=c(0.05, 0.95)
-	if( inherits(try(expr=expect_warning(x<-rposnorm90ci_numeric(n=n, lower=lower, upper=upper, relativeTolerance=tolerance))),
+	if( inherits(try(expr=expect_warning(x<-rposnorm90ci(n=n, lower=lower, upper=upper, relativeTolerance=tolerance,
+	                                                              method="numeric"))),
 																			 "try-error")){																		 
 	expect_equal(quantile(x=x, probs=c(0.05, 0.95)), c("5%"=lower, "95%"=upper), tolerance=tolerance, scale=min(abs(c(lower,upper))))
 	}

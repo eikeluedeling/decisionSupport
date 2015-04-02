@@ -25,7 +25,7 @@
 #
 ##############################################################################################
 #' @include rdist90ci_exact.R 
-#' @include rposnorm90ci_numeric.R 
+#' @include rposnorm90ci.R 
 #' @include r0_1norm90ci_numeric.R 
 #' @include rdistq_fit.R
 NULL
@@ -68,16 +68,11 @@ NULL
 #'  \code{pert}       \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab \code{\link[=rdistq_fit]{fit}} 
 #'  }
-#' @seealso For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, 
-#' 	\code{\link{rposnorm90ci_numeric}} and \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}  
+#' @seealso For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, and
+#'   \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
+#'   methods: \code{\link{rposnorm90ci}}
 #' @export
 random_estimate_1d<-function(rho,n,method="calculate", ...){
-  if(0){
-    # Rename variables for convenience:
-    distribution<-rho["distribution"]
-    lower<-rho["lower"]
-    upper<-rho["upper"]
-  }  
   # Create output vector for the random numbers to be generated
   x<-vector(length=n)
   # Generate the random numbers according to the distribution type:
@@ -118,9 +113,10 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
                             upper=rho["upper"])
     }
     else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
-        x <-  rposnorm90ci_numeric(n=n,
-                                   lower=rho["lower"],
-                                   upper=rho["upper"])
+      x <-  rposnorm90ci(n=n,
+                         lower=rho["lower"],
+                         upper=rho["upper"],
+                         method="numeric")
     }
     else if(match(rho["distribution"], c("0_1norm"), nomatch = 0)){
       x <-  r0_1norm90ci_numeric(n=n,
@@ -149,11 +145,7 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
       if( rho["distribution"]=="unif" ) { 
         percentiles<-c(0.05,0.95)
         quantiles<-c(rho["lower"], rho["upper"])
-      } else if( is.null(rho["median"]) ){
-        #      print("isnull(rho["median"]==TRUE)")
-        percentiles<-c(0.05,0.95)
-        quantiles<-c(rho["lower"], rho["upper"])
-      } else if ( is.na(rho["median"]) ){
+      } else if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"]))){
         percentiles<-c(0.05,0.95)
         quantiles<-c(rho["lower"], rho["upper"])
       }  else {
@@ -165,6 +157,17 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
                     percentiles=percentiles, 
                     quantiles=quantiles) 
     }  
+    else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
+      if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"])))
+        median<-NULL 
+      else 
+        median<-rho["median"]
+      x <-  rposnorm90ci(n=n,
+                         lower=rho["lower"],
+                         median=median,
+                         upper=rho["upper"],
+                         method="fit")
+    } 
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
   }

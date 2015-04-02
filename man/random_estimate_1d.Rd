@@ -49,7 +49,8 @@ The follwing table shows the available distributions and the implemented generat
  }
 }
 \seealso{
-For \code{method="calculate"}: \code{\link{rdist90ci_exact}},
-	\code{\link{rposnorm90ci_numeric}} and \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}
+For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, and
+  \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
+  methods: \code{\link{rposnorm90ci}}
 }
 

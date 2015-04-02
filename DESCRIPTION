@@ -1,7 +1,7 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100.0.9003
+Version: 1.100.0.9004
 Date: 2015-03-24
 Authors@R: c(
     person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
@@ -39,7 +39,8 @@ Classification/JEL: I38, O16, O21, O22, O23
 Collate:
     'rmvnorm90ci_exact.R'
     'paramtnormci_numeric.R'
-    'rposnorm90ci_numeric.R'
+    'paramtnormci_fit.R'
+    'rposnorm90ci.R'
     'rdistq_fit.R'
     'rdist90ci_exact.R'
     'r0_1norm90ci_numeric.R'
@@ -53,4 +54,3 @@ Collate:
     'estimate_read_csv_old.R'
     'uncertaintyAnalysis.R'
     'decisionSupport-package.R'
-    'paramtnormci_fit.R'

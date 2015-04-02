@@ -2,24 +2,24 @@
 # file: estimate.R
 #
 # This file is part of the R-package decisionSupport
-# 
-# Authors: 
+#
+# Authors:
 #   Lutz Göhring <lutz.goehring@gmx.de>
 #   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
 #
-# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
+# Copyright (C) 2015 World Agroforestry Centre (ICRAF)
 #	http://www.worldagroforestry.org
-# 
+#
 # The R-package decisionSupport is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # The R-package decisionSupport is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -29,14 +29,14 @@
 #' @include random_estimate_1d.R
 NULL
 # Define global variables:
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable", 
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
                                                         "distribution"))
 ##############################################################################################
 # estimate(..., correlation_matrix)
 # ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Create an Estimate Object
-#' 
+#'
 #' This function creates an object of class \code{estimate}. #ToDo: detailed description
 #' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
 #' @param ... arguments that can be coerced to a data frame comprising the base of the estimate.
@@ -45,16 +45,16 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #' \subsection{The structure of the estimate base information (mandatory)}{
 #'    Mandatory columns:
 #'    \tabular{lll}{
-#'      Column name         \tab  R-type    \tab Explanation\cr 
+#'      Column name         \tab  R-type    \tab Explanation\cr
 #'      \code{distribution} \tab  \code{character} \tab  Distribution types \cr
-#'      \code{variable}     \tab  \code{character} \tab  Variable names 
+#'      \code{variable}     \tab  \code{character} \tab  Variable names
 #'    }
 #' }
-#' @return An object of type \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}. 
-#' \code{base} is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the 
-#' names of the variables. \code{correlation_matrix} is a symmetric matrix with row and column names being the subset of 
-#' the variables supplied in \code{base} which are correlated. Its elements are the corresponding correlations. 
-#' @seealso \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, \code{\link{estimate_read_csv}}, 
+#' @return An object of type \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}.
+#' \code{base} is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
+#' names of the variables. \code{correlation_matrix} is a symmetric matrix with row and column names being the subset of
+#' the variables supplied in \code{base} which are correlated. Its elements are the corresponding correlations.
+#' @seealso \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, \code{\link{estimate_read_csv}},
 #' \code{\link{estimate_write_csv}}, \code{\link{random.estimate}}
 #' @export
 estimate<-function(..., correlation_matrix=NULL){
@@ -71,7 +71,7 @@ estimate<-function(..., correlation_matrix=NULL){
   if( !is.null(correlation_matrix)){
     if( !is.matrix(correlation_matrix) )
       correlation_matrix<-as.matrix(correlation_matrix)
-    if( !identical( correlation_matrix, t(correlation_matrix) ) ) 
+    if( !identical( correlation_matrix, t(correlation_matrix) ) )
       stop("correlationMatrix must be a symmetric matrix.")
     if( !identical( as.vector(diag(correlation_matrix)), rep(1, nrow(correlation_matrix)) ) )
       stop("All diagonal elements of correlation_matrix must be equal to 1.")
@@ -88,8 +88,8 @@ estimate<-function(..., correlation_matrix=NULL){
 # row.names.estimate(x)
 ##############################################################################################
 #' Return the variable names of an \code{estimate} object.
-#' 
-#' This function returns the variable names of an \code{\link{estimate}} object which is identical to 
+#'
+#' This function returns the variable names of an \code{\link{estimate}} object which is identical to
 #' \code{row.names(x$base)}.
 #' @param x an \code{\link{estimate}} object.
 #' @seealso \code{\link{estimate}}, \code{\link{names.estimate}}, \code{\link{corMat.estimate}}
@@ -101,8 +101,8 @@ row.names.estimate<-function(x){
 # names.estimate(x)
 ##############################################################################################
 #' Return the column names of an \code{estimate} object.
-#' 
-#' This function returns the column names of an \code{\link{estimate}} object which is identical to 
+#'
+#' This function returns the column names of an \code{\link{estimate}} object which is identical to
 #' \code{names(x$base)}.
 #' @param x an \code{\link{estimate}} object.
 #' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{corMat.estimate}}
@@ -114,7 +114,7 @@ names.estimate<-function(x){
 # generic: corMat(rho)
 ##############################################################################################
 #' Return the Correlation Matrix of x.
-#' 
+#'
 #' Return the correlation matrix of x.
 #' @param rho a distribution.
 #' @export
@@ -123,7 +123,7 @@ corMat <- function(rho) UseMethod("corMat")
 # corMat.estimate(rho)
 ##############################################################################################
 #' Return the correlation matrix of an \code{estimate} object.
-#' 
+#'
 #' This function returns the full correlation matrix of an \code{\link{estimate}} object.
 #' @param rho an \code{\link{estimate}} object.
 #' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{names.estimate}}
@@ -143,36 +143,36 @@ corMat.estimate<-function(rho){
 # ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Read an Estimate from CSV - File.
-#' 
+#'
 #' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
 #' defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
 #' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
 #' @param fileName Name of the file containing the base information of the estimate that should be read.
-#' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields 
+#' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields
 #' (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
 #'  remembering that the columns may include the row names.
 #'  @param ... Further parameters to be passed to \code{\link[utils]{read.csv}}.
 #' @return An object of type \code{\link{estimate}}.
-#' @details An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which 
+#' @details An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
 #' is described in the following.
 #' @section CSV input file structures:
 #' The estimate is read from one or two csv files: the basic csv file which is mandatory and the correlation csv file which is optional.
-#' The basic csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv 
+#' The basic csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
 #' file only defines correlations.
 #' \subsection{The structure of the basic input file (mandatory)}{
 #'    File name structure: \code{<basic-filename>.csv}\cr
 #'    Mandatory columns:
 #'    \tabular{lll}{
-#'      Column name         \tab  R-type    \tab Explanation\cr 
+#'      Column name         \tab  R-type    \tab Explanation\cr
 #'      \code{lower}        \tab  \code{numeric}   \tab  ToDo \cr
 #'      \code{upper}        \tab  \code{numeric}   \tab  ToDo \cr
 #'      \code{distribution} \tab  \code{character} \tab  ToDo \cr
-#'      \code{variable}     \tab  \code{character} \tab  ToDo 
+#'      \code{variable}     \tab  \code{character} \tab  ToDo
 #'    }
 #'    Optional columns:
 #'    \tabular{lll}{
 #'      Column name         \tab  R-type  \tab  Explanation \cr
-#'      \code{description}  \tab  \code{character}  \tab  ToDo\cr 
+#'      \code{description}  \tab  \code{character}  \tab  ToDo\cr
 #'      \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
 #'      \code{start}        \tab  \code{integer}    \tab  ToDo\cr
 #'      \code{end}          \tab  \code{integer}    \tab  ToDo\cr
@@ -183,9 +183,9 @@ corMat.estimate<-function(rho){
 #' \subsection{The structure of the correlation file (optional)}{
 #'    File name structure: \code{<basic-filename>_cor.csv}\cr
 #'    Columns and rows are named by the corresponding variables. Only those variables need to be present which are correlated with others.
-#'    The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}. 
-#'    Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be 
-#'    set to \code{1}. The matrix must be given in symmetric form. 
+#'    The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}.
+#'    Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be
+#'    set to \code{1}. The matrix must be given in symmetric form.
 #' }
 #' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 #' @export
@@ -214,9 +214,9 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 # ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Write an Estimate to CSV - File.
-#' 
+#'
 #' This function writes an \code{\link{estimate}} to the specified csv file(s).
-#' @param fileName \code{character}. Output file name which must end with \code{.csv}. 
+#' @param fileName \code{character}. Output file name which must end with \code{.csv}.
 #' @param estimate  Estimate object to write to file \code{fileName}.
 #' @param varNamesAsColumn \code{logical}; If \code{TRUE} the variable names will be written as a
 #' separate column, otherwise as row names.
@@ -250,18 +250,18 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 # random.estimate(rho,n,method, ...)
 ##############################################################################################
 #' Generate Random Numbers for an Estimate.
-#' 
-#' This function generates random numbers for general multivariate 
-#' distributions that are defined as an \code{\link{estimate}}. 
-#' @param rho \code{estimate} object; Multivariate distribution to be randomly sampled. 
+#'
+#' This function generates random numbers for general multivariate
+#' distributions that are defined as an \code{\link{estimate}}.
+#' @param rho \code{estimate} object; Multivariate distribution to be randomly sampled.
 #' @param n Number of generated observations
 #' @param method Particular method to be used for random number generation.
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
-#' @details 
+#' @details
 #' 	\subsection{Generation of uncorrelated components}{
 #' 		Implementation: \code{\link{random_estimate_1d}}
-#' 	
+#'
 #' 	}
 #' 	\subsection{Generation of correlated components}{
 #' 		Implementation: \code{\link{rmvnorm90ci_exact}}
@@ -315,11 +315,11 @@ random.estimate <- function(rho,n,method="calculate", ...){
 # random.estimateCorrelated(rho,n,method, ...)
 ##############################################################################################
 # Generate random numbers based on the first two moments of a certain probability distribution.
-# 
-# This function generates random numbers for general multivariate 
-# distributions that can be characterized by the joint first two moments, viz. 
-# the mean and covariance. 
-# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled. 
+#
+# This function generates random numbers for general multivariate
+# distributions that can be characterized by the joint first two moments, viz.
+# the mean and covariance.
+# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
 # @param n Number of generated observations
 # @param method Particular method to be used for random number generation.
 # @param ... Optional arguments to be passed to the particular random number
@@ -330,13 +330,13 @@ random.estimateCorrelated <- function(rho,n,method, ...){
     if( identical( rho$base$distribution, rep("norm", nrow(rho$base)) ) ){
       x<-rmvnorm90ci_exact(n=n,
                            lower=data.matrix(rho$base["lower"]),
-                           upper=data.matrix(rho$base["upper"]), 
+                           upper=data.matrix(rho$base["upper"]),
                            correlationMatrix=rho$correlation_matrix)
     }
     else
       stop("correlated variables must all be of type \"norm\".")
   }
-  else 
+  else
     stop ("method must be  \"calculate\".")
   # Return the generated random numbers:
   x
@@ -345,32 +345,40 @@ random.estimateCorrelated <- function(rho,n,method, ...){
 # random.estimateUnCorrelated(rho,n,method, ...)
 ##############################################################################################
 # Generate random numbers based on the first two moments of a uncorrelated probability distribution.
-# 
-# This function generates random numbers for uncorrelated general multivariate 
-# distributions that can be characterized by the joint first two moments, viz. 
-# the mean and covariance. 
-# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled. 
+#
+# This function generates random numbers for uncorrelated general multivariate
+# distributions that can be characterized by the joint first two moments, viz.
+# the mean and covariance.
+# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
 # @param n Number of generated observations
 # @param method Particular method to be used for random number generation.
 # @param ... Optional arguments to be passed to the particular random number
 #  generating function.
-random.estimateUnCorrelated <- function(rho,n,method, ...){
+random.estimateUnCorrelated <- function(rho,n,method="calculate", ...){
+  defaultMethod<-method
   x<-NULL
   #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
   if(0){
-    x<-apply(X=rho, MARGIN=1, 
-             FUN=function(rho, n, method, ...) 
+    x<-apply(X=rho, MARGIN=1,
+             FUN=function(rho, n, method, ...)
                withCallingHandlers(random_estimate_1d(rho=rho,n=n,method=method,...),
-                                   warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),                                                                                     
+                                   warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
              n=n, method=method)
   }
-  # if (0){
+  # Check if the estimates variables are supplied with individual methods, if yes, use them,
+  # i.e. overwrite the option set with the function call:
+  method<-rep(defaultMethod,length=length(row.names(rho)))
+  names(method)<-row.names(rho)
+  if( match("method", names(rho), nomatch = 0) ){
+    indexOverwriteMethod<-!is.null(rho[,"method"]) & is.character(as.character(rho[,"method"])) & rho[,"method"]!=""
+    method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
+  }
   for(i in row.names(rho)){
-    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,],n=n,method=method,...),
-                                   warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
+    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,],n=n,method=method[i],...),
+                                          warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
     ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
     )
   }
-  #  }
+  #  Return the sampled multivariate values:
   x
 }
