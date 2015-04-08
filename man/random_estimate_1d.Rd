@@ -2,9 +2,10 @@
 % Please edit documentation in R/random_estimate_1d.R
 \name{random_estimate_1d}
 \alias{random_estimate_1d}
-\title{Generate univariate random numbers based on an estimate.}
+\title{Generate univariate random numbers based on a 1-d estimate.}
 \usage{
-random_estimate_1d(rho, n, method = "calculate", ...)
+random_estimate_1d(rho, n, method = "calculate", relativeTolerance = 0.05,
+  ...)
 }
 \arguments{
 \item{rho}{\code{estimate} object; Univariate distribution to be randomly sampled.}
@@ -13,12 +14,16 @@ random_estimate_1d(rho, n, method = "calculate", ...)
 
 \item{method}{Particular method to be used for random number generation.}
 
+\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
+
 \item{...}{Optional arguments to be passed to the particular random number
 generating function.}
 }
 \description{
-This function generates random numbers for general univariate
-distributions.
+This function generates random numbers for general univariate parametric distributions, which
+parameters are determined by a one dimensional \code{\link{estimate}}.
 }
 \details{
 \code{method} can be either \code{"calculate"} (the default) or \code{"fit"}.
@@ -26,10 +31,10 @@ distributions.
 The follwing table shows the available distributions and the implemented generation method:
  \tabular{lll}{
  \bold{Identification} \tab  \bold{Distribution} \tab \bold{\code{method}} \cr
- \code{const}  \tab ToDo \tab \code{calculate} \cr
- \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{calculate}, \code{\link[=rdistq_fit]{fit}}  \cr
- \code{posnorm} \tab ToDo \tab \code{calculate} \cr
- \code{0_1norm} \tab ToDo \tab \code{calculate} \cr
+ \code{const}  \tab ToDo \tab not applicable because there is nothing to be calculated or fitted\cr
+ \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+ \code{\link[=rposnorm90ci]{posnorm}}\tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+ \code{\link[=r0_1norm90ci_numeric]{0_1norm}} \tab ToDo \tab \code{\link[=r0_1norm90ci_numeric]{calculate}} \cr
  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{cauchy}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{logis}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
@@ -40,12 +45,11 @@ The follwing table shows the available distributions and the implemented generat
  \code{f}          \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{gamma}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{lnorm}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{unif}       \tab ToDo \tab \code{calculate}, \code{\link[=rdistq_fit]{fit}}  \cr
+ \code{unif}       \tab ToDo \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
  \code{weibull}    \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{triang}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{gompertz}   \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{pert}       \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab \code{\link[=rdistq_fit]{fit}}
+ \code{pert}       \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}
  }
 }
 \seealso{

@@ -15,6 +15,6 @@
 This function prints the summary of of \code{mcSimulation} obtained by \code{\link{summary.mcSimulation}}.
 }
 \seealso{
-\code{\link{mcSimulation}}
+\code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}}
 }
 

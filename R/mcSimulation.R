@@ -305,7 +305,7 @@ summary.mcSimulation <- function(object,
 #' This function prints the summary of of \code{mcSimulation} obtained by \code{\link{summary.mcSimulation}}.
 #' @param x An object of class \code{mcSimulation}.
 #' @param ... Further arguments #ToDo
-#' @seealso \code{\link{mcSimulation}}
+#' @seealso \code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}}
 #' @export
 print.summary.mcSimulation <- function(x, ...){
 	cat("Call:\n")

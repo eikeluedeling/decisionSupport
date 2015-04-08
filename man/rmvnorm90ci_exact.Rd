@@ -2,22 +2,26 @@
 % Please edit documentation in R/rmvnorm90ci_exact.R
 \name{rmvnorm90ci_exact}
 \alias{rmvnorm90ci_exact}
-\title{Generate normal distributed multivariate random numbers based on the 90\%-confidence interval.}
+\title{90\%-confidence interval multivariate normal random number generation.}
 \usage{
 rmvnorm90ci_exact(n, lower, upper, correlationMatrix)
 }
 \arguments{
-\item{n}{Number of generated observations.}
+\item{n}{\code{integer} Number of observations to be generated.}
 
 \item{lower}{\code{numeric} vector; lower bound of the 90\% confidence intervall.}
 
 \item{upper}{\code{numeric} vector; upper bound of the 90\% confidence intervall.}
 
-\item{correlationMatrix}{\code{numeric} symmetric matrix; correlation matrix;
-In particular, all diagonal elements must be equal to 1.}
+\item{correlationMatrix}{\code{numeric} symmetric matrix which is the correlation matrix of the
+multivariate normal distribution. In particular, all diagonal elements must be equal to 1.}
 }
 \description{
-This function generates normal distributed multivariate random numbers
-based on the 90\%-confidence interval.
+This function generates normal distributed multivariate random numbers which parameters are
+determined by the 90\%-confidence interval. The calculation of \code{mean} and \code{sd} is
+exact.
+}
+\seealso{
+\code{\link{random}}, \code{\link[mvtnorm]{rmvnorm}}
 }
 

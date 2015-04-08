@@ -32,13 +32,16 @@ NULL
 ##############################################################################################
 # random_estimate_1d(rho,n,method, ...)
 ##############################################################################################
-#' Generate univariate random numbers based on an estimate.
+#' Generate univariate random numbers based on a 1-d estimate.
 #' 
-#' This function generates random numbers for general univariate
-#' distributions. 
+#' This function generates random numbers for general univariate parametric distributions, which 
+#' parameters are determined by a one dimensional \code{\link{estimate}}.
 #' @param rho \code{estimate} object; Univariate distribution to be randomly sampled. 
 #' @param n Number of generated observations
 #' @param method Particular method to be used for random number generation.
+#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
 #'  @details
@@ -47,10 +50,10 @@ NULL
 #' The follwing table shows the available distributions and the implemented generation method:
 #'  \tabular{lll}{
 #'  \bold{Identification} \tab  \bold{Distribution} \tab \bold{\code{method}} \cr
-#'  \code{const}  \tab ToDo \tab \code{calculate} \cr
-#'  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{calculate}, \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{posnorm} \tab ToDo \tab \code{calculate} \cr
-#'  \code{0_1norm} \tab ToDo \tab \code{calculate} \cr
+#'  \code{const}  \tab ToDo \tab not applicable because there is nothing to be calculated or fitted\cr
+#'  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+#'  \code{\link[=rposnorm90ci]{posnorm}}\tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+#'  \code{\link[=r0_1norm90ci_numeric]{0_1norm}} \tab ToDo \tab \code{\link[=r0_1norm90ci_numeric]{calculate}} \cr
 #'  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{cauchy}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{logis}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
@@ -61,18 +64,19 @@ NULL
 #'  \code{f}          \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{gamma}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{lnorm}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{unif}       \tab ToDo \tab \code{calculate}, \code{\link[=rdistq_fit]{fit}}  \cr
+#'  \code{unif}       \tab ToDo \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{weibull}    \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{triang}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{gompertz}   \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{pert}       \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab \code{\link[=rdistq_fit]{fit}} 
+#'  \code{pert}       \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  
+#  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab \code{\link[=rdistq_fit]{fit}} 
 #'  }
+#'  
 #' @seealso For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, and
 #'   \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
 #'   methods: \code{\link{rposnorm90ci}}
 #' @export
-random_estimate_1d<-function(rho,n,method="calculate", ...){
+random_estimate_1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ...){
   # Create output vector for the random numbers to be generated
   x<-vector(length=n)
   # Generate the random numbers according to the distribution type:
@@ -101,11 +105,17 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
     #            i.e. lower and upper value, or with the mean and standard deviation (sd)!")
     #       
     #     }  else 
-  }  
-  if(method=="calculate"){
+  } 
+  # Constants are neither calculated nor fitted, i.e. the procedure is the same for all methods as they are constant:
+  if(match(rho["distribution"], "const", nomatch = 0)){
+    x <-  rdist90ci_exact(distribution="const",
+                          n=n,
+                          lower=rho["lower"],
+                          upper=rho["upper"])
+  } 
+  else if(method=="calculate"){
     # ToDo: extract this block as function rdistq_calculate()
-    if(match(rho["distribution"], c("const",
-                                    "norm", 
+    if(match(rho["distribution"], c("norm", 
                                     "unif"), nomatch = 0)){
       x <-  rdist90ci_exact(distribution=rho["distribution"],
                             n=n,
@@ -116,12 +126,14 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
       x <-  rposnorm90ci(n=n,
                          lower=rho["lower"],
                          upper=rho["upper"],
-                         method="numeric")
-    }
+                         method="numeric",
+                         relativeTolerance = relativeTolerance)
+    } 
     else if(match(rho["distribution"], c("0_1norm"), nomatch = 0)){
       x <-  r0_1norm90ci_numeric(n=n,
                                  lower=rho["lower"],
-                                 upper=rho["upper"])
+                                 upper=rho["upper"],
+                                 relativeTolerance = relativeTolerance)
     }
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
@@ -155,7 +167,9 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
       x<-rdistq_fit(distribution=rho["distribution"], 
                     n=n, 
                     percentiles=percentiles, 
-                    quantiles=quantiles) 
+                    quantiles=as.numeric(quantiles), 
+                    relativeTolerance=relativeTolerance,
+                    ...) 
     }  
     else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
       if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"])))
@@ -166,12 +180,13 @@ random_estimate_1d<-function(rho,n,method="calculate", ...){
                          lower=rho["lower"],
                          median=median,
                          upper=rho["upper"],
-                         method="fit")
+                         method="fit",
+                         relativeTolerance=relativeTolerance)
     } 
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
   }
-  else 
+  else
     stop ("method must be either \"calculate\" or \"fit\".")
   # Return generated random numbers:
   x

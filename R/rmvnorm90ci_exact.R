@@ -27,15 +27,17 @@
 ##############################################################################################
 # rmvnorm90ci_exact( n, lower, upper, correlationMatrix)
 ##############################################################################################
-#' Generate normal distributed multivariate random numbers based on the 90\%-confidence interval.
+#' 90\%-confidence interval multivariate normal random number generation. 
 #' 
-#' This function generates normal distributed multivariate random numbers 
-#' based on the 90\%-confidence interval.
-#' @param n Number of generated observations.
+#' This function generates normal distributed multivariate random numbers which parameters are 
+#' determined by the 90\%-confidence interval. The calculation of \code{mean} and \code{sd} is 
+#' exact.
+#' @param n \code{integer} Number of observations to be generated.
 #' @param lower \code{numeric} vector; lower bound of the 90\% confidence intervall.
 #' @param upper \code{numeric} vector; upper bound of the 90\% confidence intervall.
-#' @param correlationMatrix \code{numeric} symmetric matrix; correlation matrix; 
-#'   In particular, all diagonal elements must be equal to 1. 
+#' @param correlationMatrix \code{numeric} symmetric matrix which is the correlation matrix of the 
+#'   multivariate normal distribution. In particular, all diagonal elements must be equal to 1. 
+#' @seealso \code{\link{random}}, \code{\link[mvtnorm]{rmvnorm}}
 #' @export
 rmvnorm90ci_exact <- function(n, lower, upper, correlationMatrix){
   correlationMatrix<-as.matrix(correlationMatrix)
@@ -67,5 +69,6 @@ rmvnorm90ci_exact <- function(n, lower, upper, correlationMatrix){
   x<-mvtnorm::rmvnorm(n=n,
              mean=mean,
              sigma=sigma)
+  # Return the generated random numbers:
   x
 }

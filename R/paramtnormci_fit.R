@@ -45,7 +45,8 @@
 #'   is greater than \code{relativeTolerance} a warning is given.
 #' @param fitMethod optimization method used in \code{\link[stats]{constrOptim}}.
 #' @param ... further parameters to be passed to \code{\link[stats]{constrOptim}}.
-#' @return A list with elements \code{mean} and \code{sd}.
+#' @return A list with elements \code{mean} and \code{sd}, i.e. the parameters of the underlying 
+#'   normal distribution.
 #' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
 #' 
 #'   The cummulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the 
@@ -61,12 +62,14 @@
 #'    \enumerate{
 #'      \item \code{ci[[1]] < median < ci[[2]]}: The parameters are fitted on the lower and upper value
 #'        of the confidence interval and the median, formally:\cr
+#'        \eqn{k=3}\cr
 #'        \eqn{p_1}=\code{p[[1]]}, \eqn{p_2}=\code{0.5} and \eqn{p_3}=\code{p[[2]]};\cr 
 #'        \ifelse{latex}{\eqn{q_{p_1}}}{\eqn{q(p_1)}}=\code{ci[[1]]}, 
 #'        \ifelse{latex}{\eqn{q_{0.5}}}{\eqn{q(0.5)}}=\code{median} and
 #'        \ifelse{latex}{\eqn{q_{p_3}}}{\eqn{q(p_3)}}=\code{ci[[2]]}
 #'      \item \code{median=NULL}: The parameters are fitted on the lower and upper value of the
 #'        confidence interval only, formally:\cr
+#'        \eqn{k=2}\cr
 #'        \eqn{p_1}=\code{p[[1]]}, \eqn{p_2}=\code{p[[2]]};\cr 
 #'        \ifelse{latex}{\eqn{q_{p_1}}}{\eqn{q(p_1)}}=\code{ci[[1]]}, 
 #'        \ifelse{latex}{\eqn{q_{p_2}}}{\eqn{q(p_2)}}=\code{ci[[2]]}
@@ -74,8 +77,6 @@
 #'    The \code{(p[[2]]-p[[1]])} - confidence interval must be symmetric in the sense that 
 #'    \code{p[[1]] + p[[2]] = 1}.
 #'  
-#' @section Warning:
-#'   This method has not been tested systematically!
 #' @seealso \code{\link[msm]{tnorm}}, \code{\link[stats]{constrOptim}}
 #' @export
 paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05, 
@@ -190,9 +191,9 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
     scale <- if( p[[j]] > 0 ) p[[j]] else NULL
     if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
       warning("Fitted value of ", 100*p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
-              "Target value of ", 100*p[[j]], "%-quantile:     ", q[[j]],   "\n  ",
+              "Target value of ", 100*p[[j]], "%-quantile: ", q[[j]],   "\n  ",
               "Fitted cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
-              "Target  cumulative probability at value ", q[[j]], " : ", p[[j]], "\n  ",
+              "Target cumulative probability at value ", q[[j]], " : ", p[[j]], "\n  ",
               msg)
     }
   }

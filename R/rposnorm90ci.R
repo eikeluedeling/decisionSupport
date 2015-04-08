@@ -42,18 +42,20 @@ NULL
 #'   and the median simultaneously. For details cf. below. This option is only relevant if 
 #'   \code{method="fit"}.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence intervall.
-#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the 
-#'   generated confidence interval from the specified interval.
 #' @param method method used to determine the parameters of the positive normal; possible methods 
 #'   are \code{"numeric"} (the default) and \code{"fit"}.
+#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
 #' @param ... further parameters to be passed to \code{\link{paramtnormci_numeric}} or 
 #'   \code{\link{paramtnormci_fit}}, respectively.
 #' @details
-#' #ToDo
+#' For the implementation of \code{method="numeric"}: \code{\link{paramtnormci_numeric}}; 
+#'  for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}.
 #' @seealso For the implementation of \code{method="numeric"}: \code{\link{paramtnormci_numeric}}; 
-#'  for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}
+#'  for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}.
 #' @export
-rposnorm90ci <- function(n, lower, median=mean(c(lower,upper)), upper, relativeTolerance=0.05, method="numeric", ...){
+rposnorm90ci <- function(n, lower, median=mean(c(lower,upper)), upper, method="numeric", relativeTolerance=0.05,...){
   # Constants:
   p=c(0.05, 0.95)
   lowerTrunc=0

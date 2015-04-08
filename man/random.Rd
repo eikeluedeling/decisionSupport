@@ -2,22 +2,66 @@
 % Please edit documentation in R/random.R
 \name{random}
 \alias{random}
-\title{Generate random numbers for a certain probability distribution.}
+\alias{random.default}
+\title{Quantiles based generic random number generation.}
 \usage{
-random(rho, n, method, ...)
+random(rho, n, method, relativeTolerance, ...)
+
+\method{random}{default}(rho = list(distribution = "norm", probabilities =
+  c(0.05, 0.95), quantiles = c(-qnorm(0.95), qnorm(0.95))), n, method = "fit",
+  relativeTolerance = 0.05, ...)
 }
 \arguments{
-\item{rho}{Distribution to be randomly sampled.}
+\item{rho}{\code{list} Distribution to be randomly sampled. The list elements are
+\code{distribution}, \code{probabilities} and \code{quantiles}. For details cf. below.}
 
-\item{n}{Number of generated observations.}
+\item{n}{\code{integer} Number of observations to be generated}
 
-\item{method}{Particular method to be used for random number generation.}
+\item{method}{\code{character} Particular method to be used for random number generation.
+Currently only method \code{\link{rdistq_fit}{fit}} is implemented which is the default.}
+
+\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 
 \item{...}{Optional arguments to be passed to the particular random number
-generating function.}
+generating function, i.e. \code{\link{rdistq_fit}}.}
+}
+\value{
+A numeric vector of length \code{n} containing the generated random numbers.
 }
 \description{
-This function generates multivariate random numbers for general multivariate
-distributions.
+This function generates random numbers for parametric distributions, parameters of which are
+determined by given quantiles.
+
+The default method generates univariate random numbers specified by arbitrary quantiles.
+}
+\details{
+The distribution family is determined by \code{rho[["distribution"]]}. For the possibilities
+  cf. \code{\link{rdistq_fit}}.
+
+  \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same
+  length. The first defines the probabilites of the quantiles, the second defines the quantiles
+  values which determine the parametric distribution.
+}
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: Univariate random number generation.
+}}
+\examples{
+x<-random(n=10000)
+ hist(x,breaks=100)
+ mean(x)
+ sd(x)
+
+ rho<-list(distribution="norm",
+           probabilities=c(0.05,0.4,0.8),
+           quantiles=c(-4, 20, 100))
+ x<-random(rho=rho, n=10000, tolConv=0.01)
+ hist(x,breaks=100)
+ quantile(x,p=rho[["probabilities"]])
+}
+\seealso{
+\code{\link{rdistq_fit}}
 }
 

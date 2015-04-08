@@ -256,6 +256,9 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #' @param rho \code{estimate} object; Multivariate distribution to be randomly sampled.
 #' @param n Number of generated observations
 #' @param method Particular method to be used for random number generation.
+#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
 #' @details
@@ -281,7 +284,7 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #'  hist(x[,"costs"])
 #' @seealso \code{\link{estimate}}
 #' @export
-random.estimate <- function(rho,n,method="calculate", ...){
+random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ...){
   #ToDo: implement generation of correlated variables
   #ToDo: test
   x<-NULL
@@ -295,24 +298,34 @@ random.estimate <- function(rho,n,method="calculate", ...){
     # Generate correlated variables
     x<-random(rho=rhoCorrelated,
               n=n,
-              method=method)
+              method=method,
+              relativeTolerance=relativeTolerance,
+              ...)
     # Select uncorrelated variables if there are any:
     if( length(namesUnCorrelated
                <-row.names(rho$base[!(row.names(rho$base) %in% namesCorrelated ),]) ) ){
       rhoUnCorrelated<-rho$base[namesUnCorrelated, ]
       class(rhoUnCorrelated)<-c("estimateUnCorrelated", class(rhoUnCorrelated))
-      x<-cbind(x, random(rho=rhoUnCorrelated, n=n, method=method))
+      x<-cbind(x, random(rho=rhoUnCorrelated, 
+                         n=n, 
+                         method=method,
+                         relativeTolerance=relativeTolerance,
+                         ...))
     }
   } else {
     class(rho$base)<-c("estimateUnCorrelated", class(rho$base))
-    x<-random(rho=rho$base, n=n, method=method)
+    x<-random(rho=rho$base, 
+              n=n, 
+              method=method, 
+              relativeTolerance=relativeTolerance,
+              ...)
   }
   # Return the generated random variables:
   x
 }
 
 ##############################################################################################
-# random.estimateCorrelated(rho,n,method, ...)
+# random.estimateCorrelated(rho,n,method, relativeTolerance, ...)
 ##############################################################################################
 # Generate random numbers based on the first two moments of a certain probability distribution.
 #
@@ -322,9 +335,12 @@ random.estimate <- function(rho,n,method="calculate", ...){
 # @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
 # @param n Number of generated observations
 # @param method Particular method to be used for random number generation.
+# @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#   generated confidence interval from the specified interval. If this deviation is greater than
+#   \code{relativeTolerance} a warning is given.
 # @param ... Optional arguments to be passed to the particular random number
 #  generating function.
-random.estimateCorrelated <- function(rho,n,method, ...){
+random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ...){
   x<-NULL
   if(method=="calculate"){
     if( identical( rho$base$distribution, rep("norm", nrow(rho$base)) ) ){
@@ -342,7 +358,7 @@ random.estimateCorrelated <- function(rho,n,method, ...){
   x
 }
 ##############################################################################################
-# random.estimateUnCorrelated(rho,n,method, ...)
+# random.estimateUnCorrelated(rho , n,method, relativeTolerance, ...)
 ##############################################################################################
 # Generate random numbers based on the first two moments of a uncorrelated probability distribution.
 #
@@ -352,16 +368,19 @@ random.estimateCorrelated <- function(rho,n,method, ...){
 # @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
 # @param n Number of generated observations
 # @param method Particular method to be used for random number generation.
+# @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#   generated confidence interval from the specified interval. If this deviation is greater than
+#   \code{relativeTolerance} a warning is given.
 # @param ... Optional arguments to be passed to the particular random number
 #  generating function.
-random.estimateUnCorrelated <- function(rho,n,method="calculate", ...){
+random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTolerance=0.05, ...){
   defaultMethod<-method
   x<-NULL
   #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
   if(0){
     x<-apply(X=rho, MARGIN=1,
              FUN=function(rho, n, method, ...)
-               withCallingHandlers(random_estimate_1d(rho=rho,n=n,method=method,...),
+               withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
                                    warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
              n=n, method=method)
   }
@@ -374,7 +393,7 @@ random.estimateUnCorrelated <- function(rho,n,method="calculate", ...){
     method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
   }
   for(i in row.names(rho)){
-    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,],n=n,method=method[i],...),
+    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
                                           warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
     ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
     )

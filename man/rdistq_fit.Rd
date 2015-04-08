@@ -5,7 +5,8 @@
 \title{Generate univariate random numbers based on quantiles.}
 \usage{
 rdistq_fit(distribution, n, percentiles = c(0.05, 0.5, 0.95), quantiles,
-  tolConv = 0.001, fit.weights = rep(1, length(percentiles)))
+  relativeTolerance = 0.05, tolConv = 0.001, fit.weights = rep(1,
+  length(percentiles)), verbosity = 1)
 }
 \arguments{
 \item{distribution}{A character string that defines the univariate distribution
@@ -17,6 +18,10 @@ to be randomly sampled.}
 
 \item{quantiles}{Numeric vector giving the quantiles.}
 
+\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
+
 \item{tolConv}{positive numerical value, the absolute
   convergence tolerance for reaching zero by fitting
   distributions \code{get.norm.par} will be shown.}
@@ -25,9 +30,13 @@ to be randomly sampled.}
   a probabilities vector \code{p} containing positive
   values for weighting quantiles. By default all quantiles
   will be weighted by 1.}
+
+\item{verbosity}{\code{integer}; if \code{0} the function is silent; the larger the value the
+more verbose is output information.}
 }
 \value{
-ToDo
+A numeric vector of lenght \code{n} with the sampled values according to the chosen
+  distribution.
 }
 \description{
 This function generates random numbers for a set of univariate distributions based on the
@@ -35,29 +44,33 @@ distribution quantiles. Internally, this is achieved by fitting the distribution
 to the given quantiles using \code{\link[rriskDistributions]{rriskFitdist.perc}}.
 }
 \details{
-The follwing table shows the available distributions and their identification as a character string:
- \tabular{lll}{
- \bold{Identification} \tab  \bold{Distribution} \tab \bold{Number of quantiles}\cr
- \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab >=2  \cr
- \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab ToDo \cr
- \code{cauchy}     \tab ToDo \tab ToDo\cr
- \code{logis}      \tab ToDo \tab ToDo\cr
- \code{t}          \tab ToDo \tab ToDo\cr
- \code{chisq}      \tab ToDo \tab ToDo\cr
- \code{chisqnc}    \tab ToDo: implement? \tab ToDo\cr
- \code{exp}        \tab ToDo \tab ToDo\cr
- \code{f}          \tab ToDo \tab ToDo\cr
- \code{gamma}      \tab ToDo \tab ToDo\cr
- \code{lnorm}      \tab ToDo  \tab ToDo\cr
- \code{unif}       \tab ToDo \tab ToDo\cr
- \code{weibull}    \tab ToDo \tab ToDo\cr
- \code{\link[mc2d:triangular]{triang}}   \tab Triangular Distribution, Note: package \code{mc2d} needed. \tab ToDo\cr
- \code{\link[eha:Gompertz]{gompertz}}   \tab Gompertz distribution, Note: package \code{eha} needed.\tab ToDo\cr
- \code{\link[mc2d]{pert}}       \tab The (modified) PERT distribution,  Note: package \code{mc2d} needed. \tab ToDo\cr
- \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab ToDo
+The follwing table shows the available distributions and their identification
+ (option: \code{distribution}) as a character string:
+ \tabular{llll}{
+ \bold{Identification}             \tab  \bold{Distribution}              \tab \bold{Number of quantiles} \tab \bold{Necessary Package}\cr
+ \code{"norm"}       \tab  \link{Normal}                                    \tab >=2    \tab \cr
+ \code{"beta"}       \tab  \link{Beta}                                      \tab >=2    \tab \cr
+ \code{"cauchy"}     \tab  \link{Cauchy}                                    \tab >=2    \tab \cr
+ \code{"logis"}      \tab  \link{Logistic}                                  \tab >=2    \tab \cr
+ \code{"t"}          \tab  \link[=TDist]{Student t}                         \tab >=1    \tab \cr
+ \code{"chisq"}      \tab  \link[=Chisquare]{Central Chi-Squared}           \tab >=1    \tab \cr
+ \code{"chisqnc"}    \tab  \link[=Chisquare]{Non-central Chi-Squared}       \tab >=2    \tab \cr
+ \code{"exp"}        \tab  \link{Exponential}                               \tab >=1    \tab \cr
+ \code{"f"}          \tab  \link[=FDist]{Central F}                         \tab >=2    \tab \cr
+ \code{"gamma"}      \tab  \link[=GammaDist]{Gamma} with \code{scale=1/rate}\tab >=2    \tab \cr
+ \code{"lnorm"}      \tab  \link[=Lognormal]{Log Normal}                    \tab >=2    \tab \cr
+ \code{"unif"}       \tab  \link{Uniform}                                   \tab ==2    \tab \cr
+ \code{"weibull"}    \tab  \link{Weibull}                                   \tab >=2    \tab \cr
+ \code{"triang"}     \tab  \link[mc2d:triangular]{Triangular}               \tab >=3    \tab \pkg{mc2d}\cr
+ \code{"gompertz"}   \tab  \link[eha:Gompertz]{Gompertz}                    \tab >=2    \tab \pkg{eha} \cr
+ \code{"pert"}       \tab  \link[mc2d:pert]{(Modified) PERT}                \tab >=4    \tab \pkg{mc2d}\cr
+ \code{"tnorm"}      \tab  \link[msm:tnorm]{Truncated Normal}               \tab >=4    \tab \pkg{msm}
  }
 The default for \code{percentiles} is 0.05, 0.5 and 0.95, so for the default,
 the quantiles argument should be a vector with 3 elements. If this is to be longer,
 the percentiles argument has to be adjusted to match the length of quantiles.
+}
+\seealso{
+\code{\link[rriskDistributions]{rriskFitdist.perc}}
 }
 

@@ -1,0 +1,44 @@
+---
+title: "Value of Information Analysis Using Monte Carlo Simulations"
+author: "Lutz Goehring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Value of Information Analysis Using Monte Carlo Simulations}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+Decision making processes can be categorized in two levels of decision making.
+
+1. The actual problem of interest of a policy maker which we call the underlying decision on how to influence an ecological-economic system based on a particular information on the system available to the decision maker and
+1. the meta decision on how to allocate resources to reduce uncertainty, i.e to increase the current information to improve the underlying decision making process.
+
+Value of Information Analysis deals with the meta decision problem 2.
+
+## The underlying decision problem and its notational framework
+We are considering a decision maker who can influence an ecological-economic system having two alternative decisions $d_1$ and $d_2$ at hand. We assume, that the system can be characterized by the $n-$dimensional vector $X$. The characteristics $X$, are not necessarily known exactly to the decision maker. However, we assume furthermore that she is able to quantify this uncertainty which we call an \emph{estimate} of the characteristics. Mathematically, an estimate is a random variable with probability density $\rho_X$.\par
+
+Furthermore, the characteristics $X$ determine the welfare $W_d$ according to the welfare function $w_d$:
+\[
+ W_d = w_d (X)
+\]
+Thus, the welfare of decision $d$ is also a random variable which probability distribution we call $\rho_{W_d}$. The welfare function $w_d$ values the decision $d$ given a certain state $X$ of the system. In other words, decision $d_2$ is preferred over decision $d_1$, if and only if, the expected welfare of decision $d_2$ is greater than the expected welfare^[
+  For a comprehensive discussion of the concept of social preference ordering and its representation by a welfare function cf. \citet{GravelleRees2004}.
+] of decsion $d_1$, formally
+\[
+ d_1 \prec d_2 \Leftrightarrow E[W_{d_1}] < E[W_{d_2}].
+\]
+This means the best decision $d^*$ is the one which maximizes welfare:
+\[
+ d^* := \arg \max_{d=d_1,d_2} E[W_d]
+\]
+This maximization principle has a dual minimization principle. We define the net benefit $NB_{d_1} := W_{d_1} - W_{d_2}$ as the difference between the welfare of the two decision alternatives. A loss $L_d$ is characterized if a decision $d$ produces a negative net benefit. No loss occurs if the decision produces a positive net benefit. This is reflected in the formal definition 
+\[
+  L_d := 
+    \begin{cases} 
+     - NB_d &, \textrm{ if } NB_d  < 0\\
+     0 &, \textrm{ otherwise}.
+    \end{cases}
+\]
+Using this notion it can be shown that the maximization of expected welfare is equivalent to the minimization of the expected loss $EL_d := E[L_d]$.

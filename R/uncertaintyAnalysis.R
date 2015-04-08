@@ -50,12 +50,15 @@ NULL
 #' @param log_scales \code{logical}; If the scales in the pls plots should be logarithmic.
 #' @param oldInputStandard \code{logical}; If the old input standard should be used
 #' 	(\code{\link{estimate_read_csv_old}}).
+#' @param verbosity \code{integer}; if \code{0} the function is silent; the larger the value the
+#'   more verbose is output information.
 #' 	@seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}
 #' @export
 uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, numberOfSimulations,
 																randomMethod="calculate",	functionSyntax="globalNames",
 																write_table=TRUE, indicators=FALSE, log_scales=FALSE,
-																oldInputStandard=FALSE){
+																oldInputStandard=FALSE,
+																verbosity=1){
 	# Read estimate from file:
 	if(!oldInputStandard){
 		#	print("newInputStandard")
@@ -64,14 +67,20 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, number
 		#	print("oldInputStandard")
 		estimateObject<-estimate_read_csv_old(fileName=inputFilePath)
 	}
+	if(verbosity > 0)
+		cat("Estimate read from file: ",inputFilePath, "\n")
+	if(verbosity > 1)
+		print(estimateObject)
 	# Run Monte Carlo simulation:
 	mcResults<-mcSimulation(estimate=estimateObject,
 													model_function=modelFunction,
 													numberOfSimulations=numberOfSimulations,
 													randomMethod=randomMethod,
 													functionSyntax=functionSyntax)
-
-
+	if(verbosity > 0)
+		cat("Monte Carlo Simulation done.\n")
+	if(verbosity > 1)
+		print(summary(mcResults))
 	# Write histogram of results to png files:
 	if ( !file.exists(outputPath) )
 		dir.create(outputPath, recursive=TRUE)
@@ -84,4 +93,6 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, number
 	# Write the summary of the resulting distributions to file:
 	mcSummary<-summary(mcResults, digits=2)
 	write.csv(mcSummary$summary,file.path(outputPath,"summary_cooperation.csv"))
+	if (verbosity > 0)
+		cat("Results written into directory: ", outputPath, "\n")
 }

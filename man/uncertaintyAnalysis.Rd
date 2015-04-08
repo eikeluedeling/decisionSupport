@@ -7,7 +7,7 @@
 uncertaintyAnalysis(inputFilePath, outputPath, modelFunction,
   numberOfSimulations, randomMethod = "calculate",
   functionSyntax = "globalNames", write_table = TRUE, indicators = FALSE,
-  log_scales = FALSE, oldInputStandard = FALSE)
+  log_scales = FALSE, oldInputStandard = FALSE, verbosity = 1)
 }
 \arguments{
 \item{inputFilePath}{Path to input csv file, which gives the input \code{\link{estimate}}.}
@@ -31,6 +31,9 @@ written to file.}
 
 \item{oldInputStandard}{\code{logical}; If the old input standard should be used
 (\code{\link{estimate_read_csv_old}}).}
+
+\item{verbosity}{\code{integer}; if \code{0} the function is silent; the larger the value the
+more verbose is output information.}
 }
 \description{
 This function performs a Monte Carlo simulation from input files and analyses the results

@@ -5,7 +5,7 @@
 \title{Generate positive normal random numbers based on the 90\%-confidence interval.}
 \usage{
 rposnorm90ci(n, lower, median = mean(c(lower, upper)), upper,
-  relativeTolerance = 0.05, method = "numeric", ...)
+  method = "numeric", relativeTolerance = 0.05, ...)
 }
 \arguments{
 \item{n}{Number of generated observations.}
@@ -19,11 +19,12 @@ and the median simultaneously. For details cf. below. This option is only releva
 
 \item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall.}
 
-\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
-generated confidence interval from the specified interval.}
-
 \item{method}{method used to determine the parameters of the positive normal; possible methods
 are \code{"numeric"} (the default) and \code{"fit"}.}
+
+\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 
 \item{...}{further parameters to be passed to \code{\link{paramtnormci_numeric}} or
 \code{\link{paramtnormci_fit}}, respectively.}
@@ -34,10 +35,11 @@ calculating the distribution parameter numerically from the  90\%-confidence int
 fit on the 90\%-confidence interval. The fit might include the median or not.
 }
 \details{
-#ToDo
+For the implementation of \code{method="numeric"}: \code{\link{paramtnormci_numeric}};
+ for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}.
 }
 \seealso{
 For the implementation of \code{method="numeric"}: \code{\link{paramtnormci_numeric}};
- for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}
+ for the implementation of \code{method="fit"}: \code{\link{paramtnormci_fit}}.
 }
 

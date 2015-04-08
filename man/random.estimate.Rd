@@ -4,7 +4,8 @@
 \alias{random.estimate}
 \title{Generate Random Numbers for an Estimate.}
 \usage{
-\method{random}{estimate}(rho, n, method = "calculate", ...)
+\method{random}{estimate}(rho, n, method = "calculate",
+  relativeTolerance = 0.05, ...)
 }
 \arguments{
 \item{rho}{\code{estimate} object; Multivariate distribution to be randomly sampled.}
@@ -12,6 +13,10 @@
 \item{n}{Number of generated observations}
 
 \item{method}{Particular method to be used for random number generation.}
+
+\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 
 \item{...}{Optional arguments to be passed to the particular random number
 generating function.}

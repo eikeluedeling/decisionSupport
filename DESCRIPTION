@@ -1,7 +1,7 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100.0.9004
+Version: 1.100.0.9005
 Date: 2015-03-24
 Authors@R: c(
     person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
@@ -32,7 +32,8 @@ Imports:
 Suggests:
     eha (>= 2.4.2),
     mc2d (>= 0.1.15),
-    testthat (>= 0.9.1)
+    testthat (>= 0.9.1),
+    knitr
 URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
@@ -54,3 +55,5 @@ Collate:
     'estimate_read_csv_old.R'
     'uncertaintyAnalysis.R'
     'decisionSupport-package.R'
+    'globalNames2data.frameNames.R'
+VignetteBuilder: knitr

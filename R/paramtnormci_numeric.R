@@ -31,24 +31,24 @@
 #' 
 #' This function calculates the distribution parameters, i.e. \code{mean} and \code{sd}, of a
 #' truncated normal distribution from an arbitrary confidence interval.
-#' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the
+#' @param p \code{numeric} 2-dimensional vector; probabilities of lower and upper bound of the
 #'   corresponding confidence interval.
-#' @param ci \code{numeric} 2-dimensional vector; lower and upper bound of the  confidence interval.
+#' @param ci \code{numeric} 2-dimensional vector; lower, i.e \code{ci[[1]]}, and upper bound, i.e
+#'   \code{ci[[2]]}, of the  confidence interval.
 #' @param lowerTrunc \code{numeric}; lower truncation point of the distribution (>= \code{-Inf}).
 #' @param upperTrunc \code{numeric}; upper truncation point of the distribution (<= \code{Inf}).
 #' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
-#' @param rootMethod if \code{"probability"} the equation defining the parameters \code{mean} and 
-#'   \code{sd} is the difference between calculated and correct probabilities of the confidence 
-#'   interval; if \code{"quantile"} the equation defining the parameters is the difference between
-#'   calculated and correct upper and lower value of the confidence interval.
+#' @param rootMethod \code{character}; if \code{="probability"} the equation defining the parameters \code{mean} and 
+#'   \code{sd} is the difference between calculated and given probabilities of the confidence 
+#'   interval; if \code{="quantile"} the equation defining the parameters is the difference between
+#'   calculated and given upper and lower value of the confidence interval.
 #' @param ... Further parameters passed to \code{\link[nleqslv]{nleqslv}}.
-#' @return A list with elements \code{mean} and \code{sd}.
+#' @return A list with elements \code{mean} and \code{sd}, i.e. the parameters of the underlying 
+#'   normal distribution.
 #' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
 #'   
-#' @section Warning:
-#'   This method has not been tested systematically!
 #' @seealso \code{\link[msm]{tnorm}}, \code{\link[nleqslv]{nleqslv}}
 #' @export
 paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05, 
