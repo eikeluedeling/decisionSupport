@@ -27,41 +27,80 @@
 ##############################################################################################
 # rdist90ci_exact(distribution, n, lower, upper)
 ##############################################################################################
-#' Generate univariate random numbers based on the 90\%-confidence interval.
+#' 90\%-confidence interval based univariate random number generation (by exact parameter 
+#' calculation).
 #' 
-#' This function generates random numbers for general univariate
-#' distributions based on the 90\% confidence interval. 
+#' This function generates random numbers for a set of univariate parametric distributions from  
+#' given 90\% confidence interval.  Internally, this is achieved by exact, i.e. analytic, 
+#' of the parameters of the individual distribution from the given 90\% confidence interval.
 #' @param distribution \code{character}; A character string that defines the univariate distribution
 #'  to be randomly sampled. 
 #' @param n Number of generated observations.
 #' @param lower \code{numeric}; lower bound of the 90\% confidence intervall.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence intervall.
 #' @details
-#' The follwing table shows the available distributions and their identification as a character string:
-#'  \tabular{ll}{
-#'  Distribution encoding \tab  Distribution\cr
-#'  \code{const}       \tab ToDo \cr
-#'  \code{norm}         \tab ToDo \cr
-#'  \code{pos_norm}     \tab ToDo \cr 
-#'  \code{norm_0_1}     \tab ToDo \cr 
-#'  \code{pois}        \tab ToDo \cr 
-#'  \code{binom}       \tab ToDo \cr 
-#'  \code{unif}        \tab ToDo \cr 
-#'  \code{lnorm}        \tab ToDo \cr
-#'  \code{lnorm_lim2}   \tab ToDo  
+#'   The follwing table shows the available distributions and their identification 
+#'  (option: \code{distribution}) as a character string:
+#'  \tabular{lll}{
+#'  \bold{\code{distribution}} \tab \bold{Distribution Name}      \tab \bold{Requirements}\cr
+#'  \code{"const"}             \tab Deterministic case            \tab \code{lower == upper}\cr
+#'  \code{"norm"}              \tab \link{Normal}                 \tab \code{lower < upper} \cr
+#  \code{"pois"}              \tab ToDo \cr 
+#  \code{"binom"}             \tab ToDo \cr 
+#'  \code{"lnorm"}             \tab \link[=Lognormal]{Log Normal} \tab \code{0 < lower < upper} \cr
+#  \code{"lnorm_lim2"}        \tab ToDo \cr
+#'  \code{"unif"}              \tab \link{Uniform}                \tab \code{lower < upper}
 #'  }
+#'  \subsection{Parameter formulae}{
+#'    We use the notation: \eqn{c_{0.05}}{c_0.05}\code{=lower} and \eqn{c_{0.95}}{c_0.95}=\code{upper}; 
+#'    \eqn{\Phi} is the cummulative distribution function of the standard normal distribution.
+#'    \describe{
+#'      \item{\code{distribution="norm":}}{The formulae for \eqn{\mu} and \eqn{\sigma}, viz. the 
+#'      mean and standard deviation, respectively, of the normal distribution are
+#'      \eqn{\mu=\frac{c_{0.05}+c_{0.95}}{2}}{\mu=(c_0.05+c_0.95)/2} and
+#'      \eqn{\sigma=\frac{\mu - c_{0.05}}{\Phi^{-1}(0.95)}}{\sigma=(\mu - c_0.05)/\Phi^{-1}(0.95)}.
+#'      }
+#'      \item{\code{distribution="unif":}}{For the minimum \eqn{a} and 
+#'    maximum \eqn{b} of the uniform distribution \eqn{U_{[a,b]}}{U([a,b])} it holds that
+#'                                          \eqn{a = c_{0.05} - 0.05 (c_{0.95} - c_{0.05})
+#'                                              }{a = c_0.05 - 0.05 (c_0.95 - c_0.05)} and 
+#'                                          \eqn{b= c_{0.95} + 0.05 (c_{0.95} - c_{0.05})
+#'                                              }{b = c_0.95 + 0.05 (c_0.95 - c_0.05)}.
+#'      }
+#'       \item{\code{distribution="lnorm":}}{The density of the log normal distribution is 
+#'             \eqn{ f(x) = \frac{1}{ \sqrt{2 \pi} \sigma x } \exp( - \frac{( \ln(x) - \mu )^2 }{2 \sigma^2}) }{f(x) = 1/( (2 \pi)^{1/2} \sigma x ) exp( -(( ln(x) - \mu )^2 / (2 \sigma^2)) )} for \eqn{x > 0} and \eqn{f(x) = 0} otherwise.
+#'             Its parameters are determined by the confidence interval via 
+#'             \eqn{\sigma = \frac{\ln( c_{0.05} ) - \ln( c_{0.95} )}{\Phi^{-1}(0.05) - \Phi^{-1}(0.95)}}{\sigma = ( ln(c_0.05) - ln(c_0.95) )/( \Phi^{-1}(0.05) - \Phi^{-1}(0.95) )} 
+#'             and \eqn{\mu = \ln(c_{0.05}) - \sigma  \Phi^{-1}(0.05)}{\mu = ln(c_0.05) - \sigma  \Phi^{-1}(0.05)}.
+#'       }
+#'    }
+#'  }
+#' @return A numeric vector of length \code{n} with the sampled values according to the chosen 
+#'   distribution.
+#'   
+#'   In case of \code{distribution="const"}, viz. the deterministic case, the function returns: 
+#'   \code{rep(lower, n).}
+#' @examples
+#' # Generate uniformly distributed random numbers:
+#' lower=3
+#' upper=6
+#' hist(r<-rdist90ci_exact(distribution="unif", n=10000, lower=lower, upper=upper),breaks=100)
+#' print(quantile(x=r, probs=c(0.05,0.95)))
+#' print(summary(r))
+#' 
+#' # Generate log normal distributed random numbers:
+#' hist(r<-rdist90ci_exact(distribution="lnorm", n=10000, lower=lower, upper=upper),breaks=100)
+#' print(quantile(x=r, probs=c(0.05,0.95)))
+#' print(summary(r))
 #' @export
 rdist90ci_exact <- function(distribution, n, lower, upper){
-  # Constants:
-  # 95%-critical value of standard normal distribution (c_0.95=1.645):
-  c_0.95=qnorm(0.95)
   # Check preconditions
   if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
-  	stop("lower and upper value of the 90%-confidence intervall must be given.")
+    stop("lower and upper value of the 90%-confidence intervall must be given.")
   # Prepare input variable: types
   lower<-as.numeric(lower)
   upper<-as.numeric(upper)
-
+  
   # Create output vector for the random numbers to be generated
   x<-vector(length=n)
   # Generate the random numbers according to the distribution type:
@@ -71,34 +110,42 @@ rdist90ci_exact <- function(distribution, n, lower, upper){
     else
       stop("lower: ", lower, " is not equal to upper: ", upper)
   }
-  else if(distribution=="norm")     
+  else if (lower >= upper)
+    stop("lower >= upper")
+  else if(distribution=="norm") {    
+    # 95%-critical value of standard normal distribution (c_0.95=1.645):
+    c_0.95=qnorm(0.95)
     x<-rnorm(n=n,
              mean=mean(c(lower,upper)),
              sd=(mean(c(lower,upper))-lower)/c_0.95)
-  #   else if(distribution=="pos_norm") {
-  #     x<-rnorm(n,mean=mean(c(lower,upper)),sd=(mean(c(lower,upper))-lower)/c_0.95)
-  #     # ToDo: check this:
-  #     x[which(x<0)]<-0
-  #   }
-  #   else if(distribution=="norm_0_1") {
-  #     x<-rnorm(n,mean=mean(c(lower,upper)),sd=(mean(c(lower,upper))-lower)/c_0.95)
-  #     # ToDo: check this:
-  #     x[which(x<0)]<-0
-  #     x[which(x>1)]<-1
-  #   }
+  }
   #   else if(distribution=="pois")    
-  #     x<-rpois(n, mean(c(lower,upper)))
+  #     x<-rpois(n, mean(c(lower,upper))) 
   #   else if(distribution=="binom")   
   #     x<-rbinom(n,1,lower)  # ToDo: Why size=1? Why prob=lower?
   else if(distribution=="unif"){ 
     x<-runif(n=n, 
              min=lower-(upper-lower)*0.05, 
              max=upper+(upper-lower)*0.05)
-    #old:    x<-runif(n,lower,upper)
+    #old (wrong):    x<-runif(n,lower,upper)
   }
-  #   else if(distribution=="lnorm")    
-  #     #ToDo: this produces a wrong result
-  #     x<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95) 
+  else if(distribution=="lnorm"){ 
+    if ( lower <= 0 )
+      stop("lower <= 0")
+    # 5%-critical value of standard normal distribution (c_0.05=-1.645):
+    c_0.05=qnorm(0.05)
+    # 95%-critical value of standard normal distribution (c_0.95=1.645):
+    c_0.95=qnorm(0.95)
+    # Standard deviation of defining normal distribution:
+    sdlog<-log(lower/upper) / ( c_0.05 - c_0.95 )  
+    # Mean of defining normal distribution:
+    meanlog<-log(lower) - sdlog*c_0.05
+    # Generate the random numbers:
+    x<-rlnorm(n=n,
+              meanlog = meanlog, 
+              sdlog = sdlog)
+    #     #old (wrong): x<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95) 
+  }
   #   else if(distribution=="lnorm_lim2") {
   #     temp<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95)
   #     temp[which(temp>2*upper)]<-2*upper

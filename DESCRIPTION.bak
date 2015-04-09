@@ -24,14 +24,14 @@ License: GPL-3
 Depends:
     R (>= 3.1.3)
 Imports:
+    msm (>= 1.5),
     mvtnorm (>= 1.0.2),
+    nleqslv (>= 2.6),
+    rriskDistributions (>= 2.0),
     stats (>= 3.1.3)
 Suggests:
     eha (>= 2.4.2),
     mc2d (>= 0.1.15),
-    msm (>= 1.5),
-    nleqslv (>= 2.6),
-    rriskDistributions (>= 2.0),
     testthat (>= 0.9.1),
     knitr
 URL: http://www.worldagroforestry.org/

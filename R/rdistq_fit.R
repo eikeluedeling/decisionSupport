@@ -27,27 +27,27 @@
 ##############################################################################################
 # rdistq_fit(distribution, n, percentiles, quantiles)
 ##############################################################################################
-#' Generate univariate random numbers based on quantiles.
+#' Quantiles based univariate random number generation (by parameter fitting).
 #' 
-#' This function generates random numbers for a set of univariate distributions based on the 
-#' distribution quantiles. Internally, this is achieved by fitting the distribution function
-#' to the given quantiles using \code{\link[rriskDistributions]{rriskFitdist.perc}}. 
+#' This function generates random numbers for a set of univariate parametric distributions from  
+#' given quantiles. Internally, this is achieved by fitting the distribution function
+#' to the given quantiles. 
 #' @param distribution A character string that defines the univariate distribution
 #'  to be randomly sampled. 
 #' @param n Number of generated observations.
 #' @param percentiles Numeric vector giving the percentiles. 
 #' @param quantiles Numeric vector giving the quantiles. 
 #' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
-#'   generated confidence interval from the specified interval. If this deviation is greater than
-#'   \code{relativeTolerance} a warning is given.
+#'   generated individual percentiles from the specified percentiles. If any deviation is greater 
+#'   than \code{relativeTolerance} a warning is given.
 #' @inheritParams rriskDistributions::rriskFitdist.perc
 #' @param verbosity \code{integer}; if \code{0} the function is silent; the larger the value the
-#'   more verbose is output information.
+#'   more verbose is the output information.
 #' @details
 #'   The follwing table shows the available distributions and their identification 
 #'  (option: \code{distribution}) as a character string:
 #'  \tabular{llll}{
-#'  \bold{Identification}             \tab  \bold{Distribution}              \tab \bold{Number of quantiles} \tab \bold{Necessary Package}\cr
+#'  \bold{\code{distribution}}  \tab  \bold{Distribution Name}                 \tab \bold{\code{length(quantiles)}} \tab \bold{Necessary Package}\cr
 #'  \code{"norm"}       \tab  \link{Normal}                                    \tab >=2    \tab \cr
 #'  \code{"beta"}       \tab  \link{Beta}                                      \tab >=2    \tab \cr  
 #'  \code{"cauchy"}     \tab  \link{Cauchy}                                    \tab >=2    \tab \cr
@@ -61,60 +61,90 @@
 #'  \code{"lnorm"}      \tab  \link[=Lognormal]{Log Normal}                    \tab >=2    \tab \cr
 #'  \code{"unif"}       \tab  \link{Uniform}                                   \tab ==2    \tab \cr
 #'  \code{"weibull"}    \tab  \link{Weibull}                                   \tab >=2    \tab \cr
-#'  \code{"triang"}     \tab  \link[mc2d:triangular]{Triangular}               \tab >=3    \tab \pkg{mc2d}\cr
-#'  \code{"gompertz"}   \tab  \link[eha:Gompertz]{Gompertz}                    \tab >=2    \tab \pkg{eha} \cr
-#'  \code{"pert"}       \tab  \link[mc2d:pert]{(Modified) PERT}                \tab >=4    \tab \pkg{mc2d}\cr
-#'  \code{"tnorm"}      \tab  \link[msm:tnorm]{Truncated Normal}               \tab >=4    \tab \pkg{msm}
+#'  \code{"triang"}     \tab  \link[mc2d:triangular]{Triangular}               \tab >=3    \tab \pkg{\code{mc2d}}\cr
+#'  \code{"gompertz"}   \tab  \link[eha:Gompertz]{Gompertz}                    \tab >=2    \tab \pkg{\code{eha}} \cr
+#'  \code{"pert"}       \tab  \link[mc2d:pert]{(Modified) PERT}                \tab >=4    \tab \pkg{\code{mc2d}}\cr
+#'  \code{"tnorm"}      \tab  \link[msm:tnorm]{Truncated Normal}               \tab >=4    \tab \pkg{\code{msm}}
 #'  }
+#'  
+#'  \code{percentiles} and \code{quantiles} must be of the same length. \code{percentiles} must be 
+#'  \code{>=0} and \code{<=1}.
+#'  
+#'  
 #' The default for \code{percentiles} is 0.05, 0.5 and 0.95, so for the default, 
 #' the quantiles argument should be a vector with 3 elements. If this is to be longer,
 #' the percentiles argument has to be adjusted to match the length of quantiles.
-#' @return A numeric vector of lenght \code{n} with the sampled values according to the chosen 
+#' 
+#'  The fitting of the distribution parameters is done using 
+#'  \code{\link[rriskDistributions]{rriskFitdist.perc}}.
+#' @return A numeric vector of length \code{n} with the sampled values according to the chosen 
 #'   distribution.
 #' @seealso \code{\link[rriskDistributions]{rriskFitdist.perc}}
+#' @examples
+#' # Fit a log normal distribution to 3 quantiles:
+#' percentiles<-c(0.05, 0.5, 0.95)
+#' quantiles=c(1,3,15)
+#' hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
+#' print(quantile(x=r, probs=percentiles))
 #' @export
 rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles, 
                        relativeTolerance=0.05, tolConv=0.001, fit.weights=rep(1,length(percentiles)),
                        verbosity=1){
   # Check preconditions:
-  if(distribution=="triang" && !requireNamespace("mc2d", quietly = TRUE)) 
-      stop("Package \"mc2d\" needed for option distribution=", distribution, ". Please install it.",
-           call. = FALSE)
-  if(distribution=="gompertz" && !requireNamespace("eha", quietly = TRUE)) 
-    stop("Package \"eha\" needed for option distribution=", distribution, ". Please install it.",
-         call. = FALSE)
-  if(distribution=="pert" && !requireNamespace("mc2d", quietly = TRUE)) 
-    stop("Package \"mc2d\" needed for option distribution=", distribution, ". Please install it.",
-         call. = FALSE)
-  if(distribution=="tnorm" && !requireNamespace("msm", quietly = TRUE)) 
-    stop("Package \"msm\" needed for option distribution=", distribution, ". Please install it.",
-         call. = FALSE)
-  #   # Initialize the loop:
-  #   maxRelativeDeviation <- relativeTolerance + 1
-  # Fit the desired distribution until the goodnes of fit is tolerated:
-  #  while (maxRelativeDeviation > relativeTolerance){
-  # Fit the distribution to the given quantiles:
-  # ToDo: include namespace check and move rriskDistributions to Suggests in file DESCRIPTION
-  if (!requireNamespace("rriskDistributions", quietly = TRUE)) {
+  ## Namespace requirements:
+  if (!requireNamespace("rriskDistributions", quietly = TRUE)) 
     stop("Package \"rriskDistributions\" needed. Please install it.",
          call. = FALSE)
-  } else 
-    capture.output(dists<-try(rriskDistributions::rriskFitdist.perc(p=percentiles,
-                                                                    q=quantiles,
-                                                                    show.output=TRUE,
-                                                                    tolConv=tolConv,
-                                                                    fit.weights=fit.weights)),
-                   file=if(verbosity>1) stdout() else NULL)
+  if(distribution=="triang"){
+    requiredPackage<-"mc2d"
+    if( !requireNamespace(requiredPackage, quietly = TRUE) ) 
+      stop("Package \"",requiredPackage,"\" needed for option distribution=", distribution, ". Please install it.",
+           call. = FALSE)
+    else
+      if( !paste("package",requiredPackage, sep=":") %in% search() ) attachNamespace(requiredPackage)
+  }
+  if(distribution=="gompertz"){
+    requiredPackage<-"eha"
+    if( !requireNamespace(requiredPackage, quietly = TRUE) ) 
+      stop("Package \"",requiredPackage,"\" needed for option distribution=", distribution, ". Please install it.",
+           call. = FALSE)
+    else
+      if( !paste("package",requiredPackage, sep=":") %in% search() ) attachNamespace(requiredPackage)
+  }
+  if(distribution=="pert"){
+    requiredPackage<-"mc2d"
+    if( !requireNamespace(requiredPackage, quietly = TRUE) ) 
+      stop("Package \"",requiredPackage,"\" needed for option distribution=", distribution, ". Please install it.",
+           call. = FALSE)
+    else
+      if( !paste("package",requiredPackage, sep=":") %in% search() ) attachNamespace(requiredPackage)
+  }
+  if(distribution=="tnorm"){
+    requiredPackage<-"msm"
+    if( !requireNamespace(requiredPackage, quietly = TRUE) ) 
+      stop("Package \"",requiredPackage,"\" needed for option distribution=", distribution, ". Please install it.",
+           call. = FALSE)
+    else
+      if( !paste("package",requiredPackage, sep=":") %in% search() ) attachNamespace(requiredPackage)
+  }
+  ## Consistency of arguments:
+  if ( length(percentiles) != length(quantiles) )
+    stop("length(percentiles) != length(quantiles)" )
+  if( any( percentiles < 0 || percentiles > 1 ) )
+    stop( "All elements of \"percentiles\" must lie between 0 and 1!")
+  # Fit the distribution to the given quantiles:
+  capture.output(dists<-try(rriskDistributions::rriskFitdist.perc(p=percentiles,
+                                                                  q=quantiles,
+                                                                  show.output=TRUE,
+                                                                  tolConv=tolConv,
+                                                                  fit.weights=fit.weights)),
+                 file=if(verbosity>1) stdout() else NULL)
   if( inherits(dists, "try-error") )
     stop(dists$message)
   if(length(dists)==1 && is.na(dists))
     stop("No distribution could be fitted at absolute convergence tolerance tolConv=", tolConv, ".")
-  # Get the types of distributions that could be fitted:
+  ## Get the types of distributions that could be fitted:
   possible_dists<-colnames(dists$results[,3:ncol(dists$results)])[which(!is.na(dists$results[1,3:ncol(dists$results)]))]
-  #ToDo: here implement check, something like this:
-  # if(match(distribution, possible_dists, nomatch=0) )
-  # because e.g. msm::rtnorm() will be in an endless loop for NAs in dists$results!!!
-  
   # Generate the random numbers according to the distribution type:
   if( match(distribution, possible_dists, nomatch=0) ){
     if(distribution=="norm") 
@@ -159,44 +189,30 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
                 meanlog=dists$results[1,"lnorm"],
                 sdlog=dists$results[2,"lnorm"])
     else if(distribution=="unif") {
+      #unif needs exactly 2 quantiles (can't handle 3 or more)
       x<-runif(n=n,
                min=dists$results[1,"unif"],
                max=dists$results[2,"unif"])
-      #unif needs exactly 2 quantiles (can't handle 3 or more)
     } else if(distribution=="weibull") 
       x<-rweibull(n=n,
                   shape=dists$results[1,"weibull"],
                   scale=dists$results[2,"weibull"])
-    else if(distribution=="triang"){ 
-      if (!requireNamespace("mc2d", quietly = TRUE)) {
-        stop("Package mc2d needed for option distribution=", distribution, ". Please install it.",
-             call. = FALSE)
-      } else
-        x<-mc2d::rtriang(n=n,
-                         min=dists$results[1,"triang"],
-                         mode=dists$results[2,"triang"],
-                         max=dists$results[3,"triang"])
-    }
-    else if(distribution=="gompertz") { 
-      if (!requireNamespace("eha", quietly = TRUE)) {
-        stop("Package eha needed for option distribution=", distribution, ". Please install it.",
-             call. = FALSE)
-      } else
-        x<-eha::rgompertz(n=n,
-                          shape=dists$results[1,"gompertz"],
-                          scale=dists$results[2,"gompertz"])
-    }
+    else if(distribution=="triang")
+      x<-mc2d::rtriang(n=n,
+                       min=dists$results[1,"triang"],
+                       mode=dists$results[2,"triang"],
+                       max=dists$results[3,"triang"])
+    else if(distribution=="gompertz") 
+      x<-eha::rgompertz(n=n,
+                        shape=dists$results[1,"gompertz"],
+                        scale=dists$results[2,"gompertz"])
     else if(distribution=="pert"){
       #pert needs 4 or more quantiles
-      if (!requireNamespace("mc2d", quietly = TRUE)) {
-        stop("Package mc2d needed for option distribution=", distribution, ". Please install it.",
-             call. = FALSE)
-      } else 
-        x<-mc2d::rpert(n=n,
-                       min=dists$results[1,"pert"],
-                       mode=dists$results[2,"pert"],
-                       max=dists$results[3,"pert"],
-                       shape=dists$results[4,"pert"])
+      x<-mc2d::rpert(n=n,
+                     min=dists$results[1,"pert"],
+                     mode=dists$results[2,"pert"],
+                     max=dists$results[3,"pert"],
+                     shape=dists$results[4,"pert"])
     }
     else if(distribution=="tnorm") {
       #tnorm needs 4 or more quantiles
@@ -211,27 +227,12 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
     stop("\"", distribution, "\" distribution could not be fitted. One of the following should work:", 
          paste(possible_dists,collapse=", "))
   }
-  
-  # Maximum relative deviation of generated quantiles from desired value
-  # ToDo: review, in particular catch division by zero or numeric zero
-  maxRelativeDeviation <- max ( abs((quantile(x=x, probs=percentiles) - quantiles ) / quantiles ) )
-  #     # Increase the absolute tolerance for next loop
-  #     tolConv<-tolConv/2
-  #   }
-  
   # Check postcondition (i.e. goodness of fit):
-  # Save the number of significant digits:
-  #digitsBefore<-getOption("digits")
-  # Set the number of significant digits to the significant digits in relativeTolerance:
-  #options(digits=match(TRUE, round(relativeTolerance, 1:20) == relativeTolerance, nomatch=20))
   quantiles_calc <- quantile(x=x, probs=percentiles)
-  print("quantiles_calc:"); print(quantiles_calc)
-  #percentiles_calc<-sum(x[x<=quantiles])
   percentiles_calc<-vapply(X=quantiles, 
                            FUN.VALUE=percentiles[[1]],
                            FUN=function(x_) length(x[x<=x_])/n
   )
-  print("percentiles_calc:"); print(percentiles_calc)
   for( j in seq(along=percentiles) ){
     scale <- if( percentiles[[j]] > 0 ) percentiles[[j]] else NULL
     if( !isTRUE( msg<-all.equal(percentiles[[j]], percentiles_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
@@ -242,8 +243,6 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
               msg)
     }
   }
-  # Reset digits:
-  #options(digits=digitsBefore) 
   # Return sampeled distribution if it could be achieved, NA otherwise:
-  return(x)
+  x
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/rdist90ci_exact.R
 \name{rdist90ci_exact}
 \alias{rdist90ci_exact}
-\title{Generate univariate random numbers based on the 90\%-confidence interval.}
+\title{90\%-confidence interval based univariate random number generation (by exact parameter
+calculation).}
 \usage{
 rdist90ci_exact(distribution, n, lower, upper)
 }
@@ -16,23 +17,64 @@ to be randomly sampled.}
 
 \item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall.}
 }
+\value{
+A numeric vector of length \code{n} with the sampled values according to the chosen
+  distribution.
+
+  In case of \code{distribution="const"}, viz. the deterministic case, the function returns:
+  \code{rep(lower, n).}
+}
 \description{
-This function generates random numbers for general univariate
-distributions based on the 90\% confidence interval.
+This function generates random numbers for a set of univariate parametric distributions from
+given 90\% confidence interval.  Internally, this is achieved by exact, i.e. analytic,
+of the parameters of the individual distribution from the given 90\% confidence interval.
 }
 \details{
-The follwing table shows the available distributions and their identification as a character string:
- \tabular{ll}{
- Distribution encoding \tab  Distribution\cr
- \code{const}       \tab ToDo \cr
- \code{norm}         \tab ToDo \cr
- \code{pos_norm}     \tab ToDo \cr
- \code{norm_0_1}     \tab ToDo \cr
- \code{pois}        \tab ToDo \cr
- \code{binom}       \tab ToDo \cr
- \code{unif}        \tab ToDo \cr
- \code{lnorm}        \tab ToDo \cr
- \code{lnorm_lim2}   \tab ToDo
+The follwing table shows the available distributions and their identification
+ (option: \code{distribution}) as a character string:
+ \tabular{lll}{
+ \bold{\code{distribution}} \tab \bold{Distribution Name}      \tab \bold{Requirements}\cr
+ \code{"const"}             \tab Deterministic case            \tab \code{lower == upper}\cr
+ \code{"norm"}              \tab \link{Normal}                 \tab \code{lower < upper} \cr
+ \code{"lnorm"}             \tab \link[=Lognormal]{Log Normal} \tab \code{0 < lower < upper} \cr
+ \code{"unif"}              \tab \link{Uniform}                \tab \code{lower < upper}
  }
+ \subsection{Parameter formulae}{
+   We use the notation: \eqn{c_{0.05}}{c_0.05}\code{=lower} and \eqn{c_{0.95}}{c_0.95}=\code{upper};
+   \eqn{\Phi} is the cummulative distribution function of the standard normal distribution.
+   \describe{
+     \item{\code{distribution="norm":}}{The formulae for \eqn{\mu} and \eqn{\sigma}, viz. the
+     mean and standard deviation, respectively, of the normal distribution are
+     \eqn{\mu=\frac{c_{0.05}+c_{0.95}}{2}}{\mu=(c_0.05+c_0.95)/2} and
+     \eqn{\sigma=\frac{\mu - c_{0.05}}{\Phi^{-1}(0.95)}}{\sigma=(\mu - c_0.05)/\Phi^{-1}(0.95)}.
+     }
+     \item{\code{distribution="unif":}}{For the minimum \eqn{a} and
+   maximum \eqn{b} of the uniform distribution \eqn{U_{[a,b]}}{U([a,b])} it holds that
+                                         \eqn{a = c_{0.05} - 0.05 (c_{0.95} - c_{0.05})
+                                             }{a = c_0.05 - 0.05 (c_0.95 - c_0.05)} and
+                                         \eqn{b= c_{0.95} + 0.05 (c_{0.95} - c_{0.05})
+                                             }{b = c_0.95 + 0.05 (c_0.95 - c_0.05)}.
+     }
+      \item{\code{distribution="lnorm":}}{The density of the log normal distribution is
+            \eqn{ f(x) = \frac{1}{ \sqrt{2 \pi} \sigma x } \exp( - \frac{( \ln(x) - \mu )^2 }{2 \sigma^2}) }{f(x) = 1/( (2 \pi)^{1/2} \sigma x ) exp( -(( ln(x) - \mu )^2 / (2 \sigma^2)) )} for \eqn{x > 0} and \eqn{f(x) = 0} otherwise.
+            Its parameters are determined by the confidence interval via
+            \eqn{\sigma = \frac{\ln( c_{0.05} ) - \ln( c_{0.95} )}{\Phi^{-1}(0.05) - \Phi^{-1}(0.95)}}{\sigma = ( ln(c_0.05) - ln(c_0.95) )/( \Phi^{-1}(0.05) - \Phi^{-1}(0.95) )}
+            and \eqn{\mu = \ln(c_{0.05}) - \sigma  \Phi^{-1}(0.05)}{\mu = ln(c_0.05) - \sigma  \Phi^{-1}(0.05)}.
+      }
+   }
+ }
+}
+\examples{
+# Generate uniformly distributed random numbers:
+lower=3
+upper=6
+hist(r<-rdist90ci_exact(distribution="unif", n=10000, lower=lower, upper=upper),breaks=100)
+print(quantile(x=r, probs=c(0.05,0.95)))
+print(summary(r))
+
+# Generate log normal distributed random numbers:
+hist(r<-rdist90ci_exact(distribution="lnorm", n=10000, lower=lower, upper=upper),breaks=100)
+print(quantile(x=r, probs=c(0.05,0.95)))
+print(summary(r))
 }
 

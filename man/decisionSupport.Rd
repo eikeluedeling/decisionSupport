@@ -6,7 +6,7 @@
 \alias{decisionSupport-package}
 \title{Quantitative Support of Decision Making under Uncertainty.}
 \description{
-The \pkg{decisionSupport} package supports the quantitative analysis of
+The \pkg{\code{decisionSupport}} package supports the quantitative analysis of
 welfare based decision making processes using Monte Carlo simulations. This
 is an important part of the Applied Information Economics (AIE) approach
 developed in Hubbard (2014). These decision making processes can be

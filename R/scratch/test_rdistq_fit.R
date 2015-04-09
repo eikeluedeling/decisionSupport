@@ -36,7 +36,7 @@ r<-rdistq_fit(distribution=distribution,
            percentiles=percentiles, 
            quantiles=quantiles, 
            relativeTolerance=relativeTolerance, 
-           tolConv=0.01, 
+           tolConv=0.1, 
            fit.weights=rep(1,length(percentiles)),
            verbosity=verbosity)
 

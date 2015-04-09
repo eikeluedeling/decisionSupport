@@ -2,7 +2,7 @@
 % Please edit documentation in R/rdistq_fit.R
 \name{rdistq_fit}
 \alias{rdistq_fit}
-\title{Generate univariate random numbers based on quantiles.}
+\title{Quantiles based univariate random number generation (by parameter fitting).}
 \usage{
 rdistq_fit(distribution, n, percentiles = c(0.05, 0.5, 0.95), quantiles,
   relativeTolerance = 0.05, tolConv = 0.001, fit.weights = rep(1,
@@ -19,8 +19,8 @@ to be randomly sampled.}
 \item{quantiles}{Numeric vector giving the quantiles.}
 
 \item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
-generated confidence interval from the specified interval. If this deviation is greater than
-\code{relativeTolerance} a warning is given.}
+generated individual percentiles from the specified percentiles. If any deviation is greater
+than \code{relativeTolerance} a warning is given.}
 
 \item{tolConv}{positive numerical value, the absolute
   convergence tolerance for reaching zero by fitting
@@ -32,22 +32,22 @@ generated confidence interval from the specified interval. If this deviation is 
   will be weighted by 1.}
 
 \item{verbosity}{\code{integer}; if \code{0} the function is silent; the larger the value the
-more verbose is output information.}
+more verbose is the output information.}
 }
 \value{
-A numeric vector of lenght \code{n} with the sampled values according to the chosen
+A numeric vector of length \code{n} with the sampled values according to the chosen
   distribution.
 }
 \description{
-This function generates random numbers for a set of univariate distributions based on the
-distribution quantiles. Internally, this is achieved by fitting the distribution function
-to the given quantiles using \code{\link[rriskDistributions]{rriskFitdist.perc}}.
+This function generates random numbers for a set of univariate parametric distributions from
+given quantiles. Internally, this is achieved by fitting the distribution function
+to the given quantiles.
 }
 \details{
 The follwing table shows the available distributions and their identification
  (option: \code{distribution}) as a character string:
  \tabular{llll}{
- \bold{Identification}             \tab  \bold{Distribution}              \tab \bold{Number of quantiles} \tab \bold{Necessary Package}\cr
+ \bold{\code{distribution}}  \tab  \bold{Distribution Name}                 \tab \bold{\code{length(quantiles)}} \tab \bold{Necessary Package}\cr
  \code{"norm"}       \tab  \link{Normal}                                    \tab >=2    \tab \cr
  \code{"beta"}       \tab  \link{Beta}                                      \tab >=2    \tab \cr
  \code{"cauchy"}     \tab  \link{Cauchy}                                    \tab >=2    \tab \cr
@@ -61,14 +61,29 @@ The follwing table shows the available distributions and their identification
  \code{"lnorm"}      \tab  \link[=Lognormal]{Log Normal}                    \tab >=2    \tab \cr
  \code{"unif"}       \tab  \link{Uniform}                                   \tab ==2    \tab \cr
  \code{"weibull"}    \tab  \link{Weibull}                                   \tab >=2    \tab \cr
- \code{"triang"}     \tab  \link[mc2d:triangular]{Triangular}               \tab >=3    \tab \pkg{mc2d}\cr
- \code{"gompertz"}   \tab  \link[eha:Gompertz]{Gompertz}                    \tab >=2    \tab \pkg{eha} \cr
- \code{"pert"}       \tab  \link[mc2d:pert]{(Modified) PERT}                \tab >=4    \tab \pkg{mc2d}\cr
- \code{"tnorm"}      \tab  \link[msm:tnorm]{Truncated Normal}               \tab >=4    \tab \pkg{msm}
+ \code{"triang"}     \tab  \link[mc2d:triangular]{Triangular}               \tab >=3    \tab \pkg{\code{mc2d}}\cr
+ \code{"gompertz"}   \tab  \link[eha:Gompertz]{Gompertz}                    \tab >=2    \tab \pkg{\code{eha}} \cr
+ \code{"pert"}       \tab  \link[mc2d:pert]{(Modified) PERT}                \tab >=4    \tab \pkg{\code{mc2d}}\cr
+ \code{"tnorm"}      \tab  \link[msm:tnorm]{Truncated Normal}               \tab >=4    \tab \pkg{\code{msm}}
  }
+
+ \code{percentiles} and \code{quantiles} must be of the same length. \code{percentiles} must be
+ \code{>=0} and \code{<=1}.
+
+
 The default for \code{percentiles} is 0.05, 0.5 and 0.95, so for the default,
 the quantiles argument should be a vector with 3 elements. If this is to be longer,
 the percentiles argument has to be adjusted to match the length of quantiles.
+
+ The fitting of the distribution parameters is done using
+ \code{\link[rriskDistributions]{rriskFitdist.perc}}.
+}
+\examples{
+# Fit a log normal distribution to 3 quantiles:
+percentiles<-c(0.05, 0.5, 0.95)
+quantiles=c(1,3,15)
+hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
+print(quantile(x=r, probs=percentiles))
 }
 \seealso{
 \code{\link[rriskDistributions]{rriskFitdist.perc}}
