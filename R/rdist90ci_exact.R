@@ -31,10 +31,10 @@
 #' calculation).
 #' 
 #' This function generates random numbers for a set of univariate parametric distributions from  
-#' given 90\% confidence interval.  Internally, this is achieved by exact, i.e. analytic, 
-#' of the parameters of the individual distribution from the given 90\% confidence interval.
+#' given 90\% confidence interval.  Internally, this is achieved by exact, i.e. analytic, calculation
+#' of the parameters for the individual distribution from the given 90\% confidence interval.
 #' @param distribution \code{character}; A character string that defines the univariate distribution
-#'  to be randomly sampled. 
+#'  to be randomly sampled. For possible options cf. section Details.
 #' @param n Number of generated observations.
 #' @param lower \code{numeric}; lower bound of the 90\% confidence intervall.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence intervall.
@@ -52,26 +52,37 @@
 #'  \code{"unif"}              \tab \link{Uniform}                \tab \code{lower < upper}
 #'  }
 #'  \subsection{Parameter formulae}{
-#'    We use the notation: \eqn{c_{0.05}}{c_0.05}\code{=lower} and \eqn{c_{0.95}}{c_0.95}=\code{upper}; 
-#'    \eqn{\Phi} is the cummulative distribution function of the standard normal distribution.
+#'    We use the notation: \eqn{l}\code{=lower} and \eqn{u}=\code{upper}; 
+#'    \eqn{\Phi} is the cummulative distribution function of the standard normal distribution and 
+#'    \eqn{\Phi^{-1}}{\Phi^(-1)} its inverse, which is the quantile function of the standard normal 
+#'    distribution.
 #'    \describe{
 #'      \item{\code{distribution="norm":}}{The formulae for \eqn{\mu} and \eqn{\sigma}, viz. the 
 #'      mean and standard deviation, respectively, of the normal distribution are
-#'      \eqn{\mu=\frac{c_{0.05}+c_{0.95}}{2}}{\mu=(c_0.05+c_0.95)/2} and
-#'      \eqn{\sigma=\frac{\mu - c_{0.05}}{\Phi^{-1}(0.95)}}{\sigma=(\mu - c_0.05)/\Phi^{-1}(0.95)}.
+#'      \eqn{\mu=\frac{l+u}{2}}{\mu=(l+u)/2} and
+#'      \eqn{\sigma=\frac{\mu - l}{\Phi^{-1}(0.95)}}{\sigma=(\mu - l)/\Phi^(-1)(0.95)}.
 #'      }
 #'      \item{\code{distribution="unif":}}{For the minimum \eqn{a} and 
 #'    maximum \eqn{b} of the uniform distribution \eqn{U_{[a,b]}}{U([a,b])} it holds that
-#'                                          \eqn{a = c_{0.05} - 0.05 (c_{0.95} - c_{0.05})
-#'                                              }{a = c_0.05 - 0.05 (c_0.95 - c_0.05)} and 
-#'                                          \eqn{b= c_{0.95} + 0.05 (c_{0.95} - c_{0.05})
-#'                                              }{b = c_0.95 + 0.05 (c_0.95 - c_0.05)}.
+#'                                          \eqn{a = l - 0.05 (u - l)
+#'                                              }{a = l - 0.05 (u - l)} and 
+#'                                          \eqn{b= u + 0.05 (u - l)
+#'                                              }{b = u + 0.05 (u - l)}.
 #'      }
 #'       \item{\code{distribution="lnorm":}}{The density of the log normal distribution is 
-#'             \eqn{ f(x) = \frac{1}{ \sqrt{2 \pi} \sigma x } \exp( - \frac{( \ln(x) - \mu )^2 }{2 \sigma^2}) }{f(x) = 1/( (2 \pi)^{1/2} \sigma x ) exp( -(( ln(x) - \mu )^2 / (2 \sigma^2)) )} for \eqn{x > 0} and \eqn{f(x) = 0} otherwise.
+#'             \eqn{ f(x) = \frac{1}{ \sqrt{2 \pi} \sigma x } \exp( - \frac{( \ln(x) - \mu )^2 %
+#'             }{
+#'             2 \sigma^2}) }{f(x)=1/((2 \pi)^(1/2)\sigma x) exp(-1/2(((ln(x)-\mu)/\sigma)^2))
+#'             } for \eqn{x > 0} and \eqn{f(x) = 0} otherwise.
 #'             Its parameters are determined by the confidence interval via 
-#'             \eqn{\sigma = \frac{\ln( c_{0.05} ) - \ln( c_{0.95} )}{\Phi^{-1}(0.05) - \Phi^{-1}(0.95)}}{\sigma = ( ln(c_0.05) - ln(c_0.95) )/( \Phi^{-1}(0.05) - \Phi^{-1}(0.95) )} 
-#'             and \eqn{\mu = \ln(c_{0.05}) - \sigma  \Phi^{-1}(0.05)}{\mu = ln(c_0.05) - \sigma  \Phi^{-1}(0.05)}.
+#'             \eqn{\mu = \frac{\ln(l) + \ln(u)}{2}
+#'             }{
+#'             \mu = (ln(l)+ln(u))/2
+#'             } and 
+#'             \eqn{\sigma = \frac{1}{\Phi^{-1}(0.95)} ( \mu - \ln(l) )
+#'             }{
+#'             \sigma =  (\mu-ln(l))/\Phi^(-1)(0.95)
+#'             }. Note the correspondence to the formula for the normal distribution.
 #'       }
 #'    }
 #'  }
@@ -132,19 +143,20 @@ rdist90ci_exact <- function(distribution, n, lower, upper){
   else if(distribution=="lnorm"){ 
     if ( lower <= 0 )
       stop("lower <= 0")
-    # 5%-critical value of standard normal distribution (c_0.05=-1.645):
-    c_0.05=qnorm(0.05)
     # 95%-critical value of standard normal distribution (c_0.95=1.645):
     c_0.95=qnorm(0.95)
-    # Standard deviation of defining normal distribution:
-    sdlog<-log(lower/upper) / ( c_0.05 - c_0.95 )  
     # Mean of defining normal distribution:
-    meanlog<-log(lower) - sdlog*c_0.05
+    meanlog<-mean( c(log(lower),log(upper)) )
+    # Standard deviation of defining normal distribution:
+    sdlog<-( meanlog - log(lower) )/c_0.95
     # Generate the random numbers:
     x<-rlnorm(n=n,
               meanlog = meanlog, 
               sdlog = sdlog)
-    #     #old (wrong): x<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95) 
+    #     #old (wrong): 
+    #x<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95) 
+    # this is right (it was a typing error) and is the same as the new implementation:
+    #x<-rlnorm(n,meanlog=mean(c(log(upper),log(lower))),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95) 
   }
   #   else if(distribution=="lnorm_lim2") {
   #     temp<-rlnorm(n,meanlog=mean(log(upper),log(lower)),sdlog=(mean(c(log(upper),log(lower)))-log(lower))/c_0.95)
