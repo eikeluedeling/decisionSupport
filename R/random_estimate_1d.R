@@ -25,9 +25,8 @@
 #
 ##############################################################################################
 #' @include rdist90ci_exact.R 
-#' @include rposnorm90ci.R 
-#' @include r0_1norm90ci_numeric.R 
 #' @include rdistq_fit.R
+#' @include rtnorm90ci.R 
 NULL
 ##############################################################################################
 # random_estimate_1d(rho,n,method, ...)
@@ -53,7 +52,7 @@ NULL
 #'  \code{const}  \tab ToDo \tab not applicable because there is nothing to be calculated or fitted\cr
 #'  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{\link[=rposnorm90ci]{posnorm}}\tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
-#'  \code{\link[=r0_1norm90ci_numeric]{0_1norm}} \tab ToDo \tab \code{\link[=r0_1norm90ci_numeric]{calculate}} \cr
+#'  \code{\link[=rtnorm_0_1_90ci]{tnorm_0_1}} \tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
 #'  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{cauchy}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{logis}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
@@ -72,9 +71,8 @@ NULL
 #  \code{\link[msm]{tnorm}}      \tab Truncated normal distribution \tab \code{\link[=rdistq_fit]{fit}} 
 #'  }
 #'  
-#' @seealso For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, and
-#'   \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
-#'   methods: \code{\link{rposnorm90ci}}
+#' @seealso For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
+#'   methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}.
 #' @export
 random_estimate_1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ...){
   # Create output vector for the random numbers to be generated
@@ -129,11 +127,12 @@ random_estimate_1d<-function(rho,n,method="calculate", relativeTolerance=0.05, .
                          method="numeric",
                          relativeTolerance = relativeTolerance)
     } 
-    else if(match(rho["distribution"], c("0_1norm"), nomatch = 0)){
-      x <-  r0_1norm90ci_numeric(n=n,
-                                 lower=rho["lower"],
-                                 upper=rho["upper"],
-                                 relativeTolerance = relativeTolerance)
+    else if(match(rho["distribution"], c("tnorm_0_1"), nomatch = 0)){
+      x <-  rtnorm_0_1_90ci(n=n,
+                            lower=rho["lower"],
+                            upper=rho["upper"],
+                            method="numeric",
+                            relativeTolerance = relativeTolerance)
     }
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
@@ -182,6 +181,18 @@ random_estimate_1d<-function(rho,n,method="calculate", relativeTolerance=0.05, .
                          upper=rho["upper"],
                          method="fit",
                          relativeTolerance=relativeTolerance)
+    } 
+    else if(match(rho["distribution"], c("tnorm_0_1"), nomatch = 0)){
+      if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"])))
+        median<-NULL 
+      else 
+        median<-rho["median"]
+      x <-  rtnorm_0_1_90ci(n=n,
+                            lower=rho["lower"],
+                            median=median,
+                            upper=rho["upper"],
+                            method="fit",
+                            relativeTolerance=relativeTolerance)
     } 
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")

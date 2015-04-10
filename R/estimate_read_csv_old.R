@@ -109,7 +109,7 @@ estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
 	base$distribution[base$distribution=="constant"]<-"const"
 	base$distribution[base$distribution=="normal"]<-"norm"
 	base$distribution[base$distribution=="pos_normal"]<-"posnorm"
-	base$distribution[base$distribution=="normal_0_1"]<-"0_1norm"
+	base$distribution[base$distribution=="normal_0_1"]<-"tnorm_0_1"
 
 	# Return:
 	estimate(base,correlation_matrix=correlated_variables$correlation_matrix)

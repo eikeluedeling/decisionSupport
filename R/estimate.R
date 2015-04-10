@@ -385,7 +385,7 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
              n=n, method=method)
   }
   # Check if the estimates variables are supplied with individual methods, if yes, use them,
-  # i.e. overwrite the option set with the function call:
+  # i.e. overwrite the option set with the function call (ToDo: move into random.estimate1d()):
   method<-rep(defaultMethod,length=length(row.names(rho)))
   names(method)<-row.names(rho)
   if( match("method", names(rho), nomatch = 0) ){

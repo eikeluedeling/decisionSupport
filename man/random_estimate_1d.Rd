@@ -34,7 +34,7 @@ The follwing table shows the available distributions and the implemented generat
  \code{const}  \tab ToDo \tab not applicable because there is nothing to be calculated or fitted\cr
  \code{\link[=Normal]{norm}}       \tab Normal distribution  \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
  \code{\link[=rposnorm90ci]{posnorm}}\tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
- \code{\link[=r0_1norm90ci_numeric]{0_1norm}} \tab ToDo \tab \code{\link[=r0_1norm90ci_numeric]{calculate}} \cr
+ \code{\link[=rtnorm_0_1_90ci]{tnorm_0_1}} \tab ToDo \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
  \code{\link[=Beta]{beta}}         \tab Beta distribution    \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{cauchy}     \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{logis}      \tab ToDo \tab \code{\link[=rdistq_fit]{fit}}  \cr
@@ -53,8 +53,7 @@ The follwing table shows the available distributions and the implemented generat
  }
 }
 \seealso{
-For \code{method="calculate"}: \code{\link{rdist90ci_exact}}, and
-  \code{\link{r0_1norm90ci_numeric}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
-  methods: \code{\link{rposnorm90ci}}
+For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
+  methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}.
 }
 

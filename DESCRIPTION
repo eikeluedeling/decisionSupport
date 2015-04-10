@@ -41,10 +41,9 @@ Collate:
     'rmvnorm90ci_exact.R'
     'paramtnormci_numeric.R'
     'paramtnormci_fit.R'
-    'rposnorm90ci.R'
+    'rtnorm90ci.R'
     'rdistq_fit.R'
     'rdist90ci_exact.R'
-    'r0_1norm90ci_numeric.R'
     'random_estimate_1d.R'
     'random.R'
     'estimate.R'
@@ -55,5 +54,6 @@ Collate:
     'estimate_read_csv_old.R'
     'uncertaintyAnalysis.R'
     'decisionSupport-package.R'
+    'estimate1d.R'
     'globalNames2data.frameNames.R'
 VignetteBuilder: knitr

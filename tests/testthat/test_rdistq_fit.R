@@ -35,7 +35,7 @@ set.seed(100)
 n=10000
 tolerance=2/sqrt(n)
 ##############################################################################################
-# test distribution="norm"
+## test distribution="norm"
 test_that("Standard normal distribution is generated correctly from the 0.05 and 0.95 quantiles", {
   mean=0
   sd=1
