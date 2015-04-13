@@ -170,53 +170,83 @@ as.estimate1d<-function(x, ...){
 ##############################################################################################
 # random.estimate1d(rho,n,method, ...)
 ##############################################################################################
-#' Generate univariate random numbers based on a 1-d estimate.
+#' Generate univariate random numbers defined by a 1-d estimate.
 #' 
-#' This function generates random numbers for general univariate parametric distributions, which 
-#' parameters are determined by a one dimensional \code{\link{estimate1d}}.
-#' @param rho \code{estimate1d} object; Univariate distribution to be randomly sampled. 
-#' @param n Number of generated observations
-#' @param method Particular method to be used for random number generation.
-#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#' This function generates random numbers for univariate parametric distributions, which 
+#' parameters are determined by a one dimensional estimate (\code{\link{estimate1d}}).
+#' @param rho \code{estimate1d}: Univariate distribution to be randomly sampled. 
+#' @param n \code{integer}: Number of observations to be generated
+#' @param method \code{character}: Particular method to be used for random number generation. It 
+#'    can be either \code{"calculate"} (the default) or \code{"fit"}. Details below.
+#' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
 #' @param ... Optional arguments to be passed to the particular random number
-#'  generating function.
+#'  generating function (cf. below).
 #'  @details
-#'  \code{method} can be either \code{"calculate"} (the default) or \code{"fit"}.
-#'  
-#' The follwing table shows the available distributions and the implemented generation method:
-#'  \tabular{lll}{
-#'  \bold{\code{distribution}}  \tab\bold{Distribution Name}                         \tab \bold{\code{method}} \cr
-#'  \code{"const"}                \tab Deterministic case                            \tab not applicable\cr
-#'  \code{"norm"}                 \tab \link{Normal}                                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"posnorm"}              \tab \link[=rposnorm90ci]{Positive normal}         \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
-#'  \code{"tnorm_0_1"}            \tab \link[=rtnorm_0_1_90ci]{0-1-truncated normal} \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
-#'  \code{"beta"}                 \tab \link{Beta}                                   \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"cauchy"}               \tab \link{Cauchy}                                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"logis"}                \tab \link{Logistic}                               \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"t"}                    \tab \link[=TDist]{Student t}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"chisq"}                \tab \link[=Chisquare]{Central Chi-Squared}        \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"chisqnc"}              \tab \link[=Chisquare]{Non-central Chi-Squared}    \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"exp"}                  \tab \link{Exponential}                            \tab \code{\link[=rdistq_fit]{fit}}  \cr  
-#'  \code{"f"}                    \tab \link[=FDist]{Central F}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"gamma"}                \tab \link[=GammaDist]{Gamma} with \code{scale=1/rate} \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"lnorm"}                \tab \link[=Lognormal]{Log Normal}                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"unif"}                 \tab \link{Uniform}                                \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"weibull"}              \tab \link{Weibull}                                \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#  \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}} 
-#'  }
-#'  
-#'  For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
-#'  fitted nor calculated.
-#'  \subsection{Only applicable to \code{method="fit"}}{
-#'  Given that \code{rho["median"]==NULL} the distribution is fitted only to \code{lower} and \code{upper};
-#'   if \code{is.numeric(rho["median"])} the distribution is fitted to \code{lower}, \code{upper} 
-#'   and \code{median}. 
-#'   }
+#'  \describe{
+#'    \item{\code{rho[["distribution"]]}:}{
+#'    The follwing table shows the available distributions and the implemented generation method:
+#'    \tabular{lll}{
+#'    \bold{\code{rho[["distribution"]]}}  \tab\bold{Distribution Name}                         \tab \bold{\code{method}} \cr
+#'    \code{"const"}                \tab Deterministic case                            \tab not applicable\cr
+#'    \code{"norm"}                 \tab \link{Normal}                                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"posnorm"}              \tab \link[=rposnorm90ci]{Positive normal}         \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+#'    \code{"tnorm_0_1"}            \tab \link[=rtnorm_0_1_90ci]{0-1-truncated normal} \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+#'    \code{"beta"}                 \tab \link{Beta}                                   \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"cauchy"}               \tab \link{Cauchy}                                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"logis"}                \tab \link{Logistic}                               \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"t"}                    \tab \link[=TDist]{Student t}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"chisq"}                \tab \link[=Chisquare]{Central Chi-Squared}        \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"chisqnc"}              \tab \link[=Chisquare]{Non-central Chi-Squared}    \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"exp"}                  \tab \link{Exponential}                            \tab \code{\link[=rdistq_fit]{fit}}  \cr  
+#'    \code{"f"}                    \tab \link[=FDist]{Central F}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"gamma"}                \tab \link[=GammaDist]{Gamma} with \code{scale=1/rate} \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"lnorm"}                \tab \link[=Lognormal]{Log Normal}                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"unif"}                 \tab \link{Uniform}                                \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"weibull"}              \tab \link{Weibull}                                \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#'    \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+#    \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}} 
+#'    }
+#'    For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
+#'    fitted nor calculated.  
+#'    }
+#'    \item{\code{rho[["method"]]}}{
+#'    If supplied, i.e. \code{!is.null(rho[["method"]])}, this value overwrites the function 
+#'    argument \code{method}. 
+#'    }
+#'    \item{\code{method}}{
+#'    This parameter defines, how the parameters of the distribution to be sample are derived from 
+#'    \code{rho[["lower"]]}, \code{rho[["upper"]]} and possibly \code{rho[["median"]]}.
+#'    Possibilities are \code{"calculate"} (the default) or \code{"fit"}:
+#'    \describe{
+#'      \item{\code{method="calculate"}}{
+#'      The parameters are calculated if possible using the exact (analytical) formula or, otherwise,
+#'      numerically. This calculation of the distribution parameters is independent of 
+#'      \code{rho[["median"]]} being  supplied or not. For the implemented distributions, it only 
+#'      depends on \code{rho[["lower"]]} and \code{rho[["upper"]]}. However, if it is supplied, i.e. 
+#'      \code{is.numeric(rho[["median"]])}, a check is performed, if the relative deviation of the 
+#'      generated median from\code{rho[["median"]]} is greater than \code{relativeTolerance}. In 
+#'      this case a warning is given.
+#'      }
+#'      \item{\code{method="fit"}}{
+#'      The parameters are obtained by fitting the distribution on the supplied quantiles.
+#'      Given that \code{rho[["median"]]==NULL} the distribution is fitted only to \code{lower} and 
+#'      \code{upper} and a warning is given; due to the used numerical procedure, the calculated 
+#'      parameters might define a distribution which strongly deviates from the intended one. There is 
+#'      larger control on the shape of the distribution to be generated by supplying the estimate of the 
+#'      median. If \code{is.numeric(rho[["median"]])} the distribution is fitted to \code{lower}, 
+#'      \code{upper} and \code{median}. 
+#'      }   
+#'    }
+#'    }
+#'    \item{\code{...}}{
+#'      For passing further parameters to the function which generates the random numbers, cf. 
+#'      the above table and follow the link in the column \code{method}.
+#'    }
+#'  } 
 #'  
 #' @seealso \code{\link{estimate1d}}; For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
 #'   methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}. For the default method: \code{\link{random}}.
@@ -226,44 +256,47 @@ as.estimate1d<-function(x, ...){
 #' quantile(x, probs=c(0.05, 0.95))
 #' hist(x, breaks=100)
 #' @export
-random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ...){
-  # Create output vector for the random numbers to be generated
+random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05, ...){
+  # Overwrite argument "method" if rho[["method"]] is supplied:
+  if ( !is.null(rho[["method"]]) )
+    method<-rho[["method"]]
+  # Create output vector for the random numbers to be generated:
   x<-vector(length=n)
   # Generate the random numbers according to the distribution type:
   ## Constants are neither calculated nor fitted, i.e. the procedure is the same for all methods as they are constant:
-  if(match(rho["distribution"], "const", nomatch = 0)){
+  if(match(rho[["distribution"]], "const", nomatch = 0)){
     x <-  rdist90ci_exact(distribution="const",
                           n=n,
-                          lower=rho["lower"],
-                          upper=rho["upper"])
+                          lower=rho[["lower"]],
+                          upper=rho[["upper"]])
   } 
   ## Generate the random numbers by calculating the distribution parameters from lower and upper:
   else if(method=="calculate"){
     # ToDo: extract this block as function rdist90ci_calculate()?
-    if(match(rho["distribution"], c("norm", 
+    if(match(rho[["distribution"]], c("norm", 
                                     "lnorm",
                                     "unif"), nomatch = 0)){
-      x <-  rdist90ci_exact(distribution=rho["distribution"],
+      x <-  rdist90ci_exact(distribution=rho[["distribution"]],
                             n=n,
-                            lower=rho["lower"],
-                            upper=rho["upper"])
+                            lower=rho[["lower"]],
+                            upper=rho[["upper"]])
     }
-    else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
+    else if(match(rho[["distribution"]], c("posnorm"), nomatch = 0)){
       x <-  rposnorm90ci(n=n,
-                         lower=rho["lower"],
-                         upper=rho["upper"],
+                         lower=rho[["lower"]],
+                         upper=rho[["upper"]],
                          method="numeric",
                          relativeTolerance = relativeTolerance)
     } 
-    else if(match(rho["distribution"], c("tnorm_0_1"), nomatch = 0)){
+    else if(match(rho[["distribution"]], c("tnorm_0_1"), nomatch = 0)){
       x <-  rtnorm_0_1_90ci(n=n,
-                            lower=rho["lower"],
-                            upper=rho["upper"],
+                            lower=rho[["lower"]],
+                            upper=rho[["upper"]],
                             method="numeric",
                             relativeTolerance = relativeTolerance)
     }
     else
-      stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
+      stop("\"", rho[["distribution"]], "\" is not a valid distribution type for method=\"", method, "\".")
     ### Generate warning if relative deviation from median (if provided) is greater than 
     ### relativeTolerance:
     if ( !is.null(median<-rho[["median"]]) ){
@@ -280,78 +313,57 @@ random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ..
   ## Generate the random numbers by fitting the distribution parameters on lower and upper, and 
   ##  (if provided) on the median:
   else if (method=="fit"){
-    if(match(rho["distribution"], c("norm", 
-                                    "beta",
-                                    "cauchy",
-                                    "logis",
-                                    "t",
-                                    "chisq",
-                                    "chisqnc",
-                                    "exp",
-                                    "f",
-                                    "gamma",
-                                    "lnorm",
-                                    "unif",    
-                                    "weibull",
-                                    "triang",
-                                    "gompertz"), nomatch = 0)){
-      if( rho["distribution"]=="unif" ) { 
-        percentiles<-c(0.05,0.95)
-        quantiles<-c(rho["lower"], rho["upper"])
-      } else if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"]))){
-        percentiles<-c(0.05,0.95)
-        quantiles<-c(rho["lower"], rho["upper"])
-      }  else {
-        percentiles<-c(0.05,0.5,0.95)
-        quantiles<-c(rho["lower"], rho["median"], rho["upper"])
-      }   
-      x<-rdistq_fit(distribution=rho["distribution"], 
+    if ( is.null(rho[["median"]]) || rho[["distribution"]]=="unif"){
+      percentiles<-c(0.05,0.95)
+      quantiles<-c(rho[["lower"]], rho[["upper"]])
+    } else {
+      percentiles<-c(0.05,0.5,0.95)
+      quantiles<-c(rho[["lower"]], rho[["median"]], rho[["upper"]])
+    }
+    if(match(rho[["distribution"]], c("norm", 
+                                      "beta",
+                                      "cauchy",
+                                      "logis",
+                                      "t",
+                                      "chisq",
+                                      "chisqnc",
+                                      "exp",
+                                      "f",
+                                      "gamma",
+                                      "lnorm",
+                                      "unif",    
+                                      "weibull",
+                                      "triang",
+                                      "gompertz"), nomatch = 0)){
+      x<-rdistq_fit(distribution=rho[["distribution"]], 
                     n=n, 
                     percentiles=percentiles, 
                     quantiles=as.numeric(quantiles), 
                     relativeTolerance=relativeTolerance,
                     ...) 
     }  
-    else if(match(rho["distribution"], c("posnorm"), nomatch = 0)){
-      if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"])))
-        median<-NULL 
-      else 
-        median<-rho["median"]
+    else if(match(rho[["distribution"]], c("posnorm"), nomatch = 0)){
       x <-  rposnorm90ci(n=n,
-                         lower=rho["lower"],
-                         median=median,
-                         upper=rho["upper"],
+                         lower=rho[["lower"]],
+                         median=rho[["median"]],
+                         upper=rho[["upper"]],
                          method="fit",
                          relativeTolerance=relativeTolerance)
     } 
-    else if(match(rho["distribution"], c("tnorm_0_1"), nomatch = 0)){
-      if( !match("median", names(rho), nomatch = 0) || is.null(rho["median"]) || is.na(as.numeric(rho["median"])))
-        median<-NULL 
-      else 
-        median<-rho["median"]
+    else if(match(rho[["distribution"]], c("tnorm_0_1"), nomatch = 0)){
       x <-  rtnorm_0_1_90ci(n=n,
-                            lower=rho["lower"],
-                            median=median,
-                            upper=rho["upper"],
+                            lower=rho[["lower"]],
+                            median=rho[["median"]],
+                            upper=rho[["upper"]],
                             method="fit",
                             relativeTolerance=relativeTolerance)
     } 
     else
-      stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
-    if(0){
-      ### Generate warning if median is not provided or if relative deviation from median (if provided)  
-      ### is greater than relativeTolerance:
-      if ( !is.null(median<-rho[["median"]]) ){
-        median_calc<- quantile(x=x,probs=0.50)[["50%"]]
-        scale <- if( median > 0 ) median else NULL
-        if( !isTRUE( msg<-all.equal(median, median_calc,  scale=scale, tolerance=relativeTolerance) ) ){
-          warning("For method=\"calculate\": deviation of calculated \"median\" from supplied target value:\n",
-                  "  Calculated value: ", median_calc, "\n  ",
-                  "Target value:     ", median,   "\n  ",
-                  msg)
-        }
-      }
-    }
+      stop("\"", rho[["distribution"]], "\" is not a valid distribution type for method=\"", method, "\".")
+    ### Generate warning if median is not provided:
+    if ( is.null(rho[["median"]]) )
+      warning("For method=\"fit\": no \"median\" supplied. Sometimes, this might not lead to the the desired
+                  distributions shape. Advise: check it.")
   }
   else
     stop ("method must be either \"calculate\" or \"fit\".")

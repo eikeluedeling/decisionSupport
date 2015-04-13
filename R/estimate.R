@@ -35,12 +35,14 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 # estimate(..., correlation_matrix)
 # ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
-#' Create an Estimate Object
+#' Create a multivariate estimate object
 #'
-#' This function creates an object of class \code{estimate}. #ToDo: detailed description
-#' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
-#' @param ... arguments that can be coerced to a data frame comprising the base of the estimate.
-#' @param correlation_matrix numeric matrix containing the correlations of the variables.
+#' This function creates an object of class \code{estimate}. It extends the univariate estimate
+#' \code{\link{estimate1d}} to the multivariate case. This includes the description of correlations
+#' between the different variables.
+#' @param ... arguments that can be coerced to a data frame comprising the base of the estimate. 
+#'   Mandatory columns are \code{distribution}, \code{lower} and \code{upper}.
+#' @param correlation_matrix \code{numeric matrix}: containing the correlations of the variables.
 #' @details The parameters in \code{...} provide the base information of an estimate.
 #' \subsection{The structure of the estimate base information (mandatory)}{
 #'    Mandatory columns:
@@ -50,12 +52,19 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #'      \code{variable}     \tab  \code{character} \tab  Variable names
 #'    }
 #' }
-#' @return An object of type \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}.
-#' \code{base} is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
-#' names of the variables. \code{correlation_matrix} is a symmetric matrix with row and column names being the subset of
-#' the variables supplied in \code{base} which are correlated. Its elements are the corresponding correlations.
+#' @return An object of class \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}:
+#'   \describe{
+#'     \item{\code{$base}}{
+#'     is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
+#'     names of the variables. Each row has the properties of an \code{\link{estimate1d}}.
+#'     }
+#'     \item{\code{$correlation_matrix}}{
+#'      is a symmetric matrix with row and column names being the subset oft he variables supplied 
+#'      in \code{base} which are correlated. Its elements are the corresponding correlations.
+#'      }
+#'   }
 #' @seealso \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, \code{\link{estimate_read_csv}},
-#' \code{\link{estimate_write_csv}}, \code{\link{random.estimate}}
+#' \code{\link{estimate_write_csv}}, \code{\link{random.estimate}}, \code{\link{estimate1d}}
 #' @export
 estimate<-function(..., correlation_matrix=NULL){
   base<-data.frame(..., stringsAsFactors=FALSE)
@@ -282,7 +291,7 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #'  summary(x)
 #'  hist(x[,"revenue"])
 #'  hist(x[,"costs"])
-#' @seealso \code{\link{estimate}}
+#' @seealso \code{\link{estimate}}, \code{\link{random.estimate1d}}, \code{\link{random}}
 #' @export
 random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ...){
   #ToDo: implement generation of correlated variables
@@ -378,11 +387,11 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
   x<-NULL
   #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
   if(0){
-#     x<-apply(X=rho, MARGIN=1,
-#              FUN=function(rho, n, method, ...)
-#                withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
-#                                    warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
-#              n=n, method=method)
+    #     x<-apply(X=rho, MARGIN=1,
+    #              FUN=function(rho, n, method, ...)
+    #                withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
+    #                                    warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
+    #              n=n, method=method)
   }
   # Check if the estimates variables are supplied with individual methods, if yes, use them,
   # i.e. overwrite the option set with the function call (ToDo: move into random.estimate1d()):
@@ -394,15 +403,27 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
   }
   for(i in row.names(rho)){
     if(0){
-#       x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
-#                                             warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
-#       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
-#       )
+      #       x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+      #                                             warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
+      #       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
+      #       )
     }
-    x<-cbind(x,matrix(withCallingHandlers(random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
-                                          warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE),
-                                          error=function(e) stop("Variable: ", i, "\n", e$message)
-    ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
+    if(0){
+      x<-cbind(x,matrix(withCallingHandlers(
+        random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+        warning=function(w) warning("Variable: ", i, "\t distribution: ", rho[i,"distribution"], "\n", 
+                                    w$message, call. = FALSE, immediate.=TRUE),
+        error=function(e) stop("Variable: ", i, "\n", e$message)
+      ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
+      )
+    }
+    x<-withCallingHandlers(cbind(x,matrix(
+      random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+      nrow=n, ncol=1, dimnames=list(NULL,i)), 
+      deparse.level=1),
+      warning=function(w) warning("Variable: ", i, "\t distribution: ", rho[i,"distribution"], "\n", 
+                                  w$message, call. = FALSE, immediate.=TRUE),
+      error=function(e) stop("Variable: ", i, "\n", e$message)
     )
   }
   #  Return the sampled multivariate values:

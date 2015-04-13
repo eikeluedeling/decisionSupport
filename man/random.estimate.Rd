@@ -49,6 +49,6 @@ variable=c("revenue","costs")
  hist(x[,"costs"])
 }
 \seealso{
-\code{\link{estimate}}
+\code{\link{estimate}}, \code{\link{random.estimate1d}}, \code{\link{random}}
 }
 

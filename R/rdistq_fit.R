@@ -233,15 +233,15 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
                            FUN.VALUE=percentiles[[1]],
                            FUN=function(x_) length(x[x<=x_])/n
   )
-  for( j in seq(along=percentiles) ){
-    scale <- if( percentiles[[j]] > 0 ) percentiles[[j]] else NULL
-    if( !isTRUE( msg<-all.equal(percentiles[[j]], percentiles_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
-      warning("Fitted value of ", 100*percentiles[[j]], "%-quantile: ", quantiles_calc[[j]], "\n  ",
-              "Target value of ", 100*percentiles[[j]], "%-quantile: ", quantiles[[j]],   "\n  ",
-              "Fitted cumulative probability at value ", quantiles[[j]], " : ", percentiles_calc[[j]], "\n  ",
-              "Target cumulative probability at value ", quantiles[[j]], " : ", percentiles[[j]], "\n  ",
-              msg)
-    }
+  for( j in seq(along=quantiles) ){
+        scale <- if( abs(quantiles[[j]]) > 0 ) quantiles[[j]] else NULL
+        if( !isTRUE( msg<-all.equal(quantiles[[j]], quantiles_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
+          warning("Fitted value of ", 100*percentiles[[j]], "%-quantile: ", quantiles_calc[[j]], "\n  ",
+                  "Target value of ", 100*percentiles[[j]], "%-quantile: ", quantiles[[j]],   "\n  ",
+                  "Fitted cumulative probability at value ", quantiles[[j]], " : ", percentiles_calc[[j]], "\n  ",
+                  "Target cumulative probability at value ", quantiles[[j]], " : ", percentiles[[j]], "\n  ",
+                  msg)
+        }    
   }
   # Return sampeled distribution if it could be achieved, NA otherwise:
   x

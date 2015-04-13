@@ -6,8 +6,9 @@
 \usage{
 uncertaintyAnalysis(inputFilePath, outputPath, modelFunction,
   numberOfSimulations, randomMethod = "calculate",
-  functionSyntax = "globalNames", write_table = TRUE, indicators = FALSE,
-  log_scales = FALSE, oldInputStandard = FALSE, verbosity = 1)
+  functionSyntax = "globalNames", write_table = TRUE,
+  plsrVipAnalysis = TRUE, indicators = FALSE, log_scales = FALSE,
+  oldInputStandard = FALSE, verbosity = 1)
 }
 \arguments{
 \item{inputFilePath}{Path to input csv file, which gives the input \code{\link{estimate}}.}
@@ -22,17 +23,19 @@ uncertaintyAnalysis(inputFilePath, outputPath, modelFunction,
 
 \item{functionSyntax}{ToDo}
 
-\item{write_table}{\code{logical}; If the full Monte Carlo simulation results and PLSR results should be
+\item{write_table}{\code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 written to file.}
 
-\item{indicators}{\code{logical}; If indicator variables should be respected specially.}
+\item{plsrVipAnalysis}{\code{logical}: If PLSR-VIP analysis shall be performed.}
 
-\item{log_scales}{\code{logical}; If the scales in the pls plots should be logarithmic.}
+\item{indicators}{\code{logical}: If indicator variables should be respected specially.}
 
-\item{oldInputStandard}{\code{logical}; If the old input standard should be used
+\item{log_scales}{\code{logical}: If the scales in the pls plots should be logarithmic.}
+
+\item{oldInputStandard}{\code{logical}: If the old input standard should be used
 (\code{\link{estimate_read_csv_old}}).}
 
-\item{verbosity}{\code{integer}; if \code{0} the function is silent; the larger the value the
+\item{verbosity}{\code{integer}: if \code{0} the function is silent; the larger the value the
 more verbose is output information.}
 }
 \description{
@@ -41,6 +44,7 @@ via Partial Least Squares Regression (PLSR) and calculates the Variable Importan
 (VIP). Results are safed as plots.
 }
 \seealso{
-\code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}
+\code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}},
+	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}
 }
 

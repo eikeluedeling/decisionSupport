@@ -24,6 +24,8 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+# method: random.estimate1d()
+##############################################################################################
 context("Testing random.estimate1d()")
 
 set.seed(100)
@@ -32,15 +34,30 @@ n= 1000
 tolerance=3/sqrt(n)
 
 test_that("method=\"calculate\": Warning is generated for deviation from median if supplied", {
+  method="calculate"
   lower<-5
   upper<-20
   c_0.95=qnorm(0.95)
   meanlog<-mean( c(log(lower),log(upper)) )
   sdlog<-( meanlog - log(lower) )/c_0.95
   median_exact<-qlnorm(p=0.50,meanlog = meanlog, sdlog = sdlog)
-  x<-random(estimate1d("lnorm", lower,upper),n=n, relativeTolerance=tolerance)  
-  x<-random(estimate1d("lnorm", lower,upper, median=NULL),n=n, relativeTolerance=tolerance)
-  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median="mean"),  n=n, relativeTolerance=tolerance), tolerance=tolerance)
-  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median=upper-1), n=n, relativeTolerance=tolerance), tolerance=tolerance)
-  x<-random(estimate1d("lnorm", lower,upper, median=median_exact, relativeTolerance=tolerance),n=n)
+  x<-random(estimate1d("lnorm", lower,upper),n=n, method=method, relativeTolerance=tolerance)  
+  x<-random(estimate1d("lnorm", lower,upper, median=NULL),n=n, method=method, relativeTolerance=tolerance)
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median="mean"),  n=n, method=method, relativeTolerance=tolerance))
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median=upper-1), n=n, method=method, relativeTolerance=tolerance))
+  x<-random(estimate1d("lnorm", lower,upper, median=median_exact), n=n, method=method, relativeTolerance=tolerance)
+})
+test_that("method=\"fit\": Warning is generated if no median is supplied or for deviation from median (if supplied)", {
+  method="fit"
+  lower<-5
+  upper<-20
+  c_0.95=qnorm(0.95)
+  meanlog<-mean( c(log(lower),log(upper)) )
+  sdlog<-( meanlog - log(lower) )/c_0.95
+  median_exact<-qlnorm(p=0.50,meanlog = meanlog, sdlog = sdlog)
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper),n=n, method=method, relativeTolerance=tolerance)) 
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median=NULL),n=n, method=method, relativeTolerance=tolerance))
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median="mean"),  n=n, method=method, relativeTolerance=tolerance))
+  expect_warning(x<-random(estimate1d("lnorm", lower,upper, median=upper-1), n=n, method=method, relativeTolerance=tolerance))
+  x<-random(estimate1d("lnorm", lower,upper, median=median_exact), n=n, method=method, relativeTolerance=tolerance)
 })

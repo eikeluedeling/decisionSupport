@@ -2,24 +2,33 @@
 % Please edit documentation in R/estimate.R
 \name{estimate}
 \alias{estimate}
-\title{Create an Estimate Object}
+\title{Create a multivariate estimate object}
 \usage{
 estimate(..., correlation_matrix = NULL)
 }
 \arguments{
-\item{...}{arguments that can be coerced to a data frame comprising the base of the estimate.}
+\item{...}{arguments that can be coerced to a data frame comprising the base of the estimate.
+Mandatory columns are \code{distribution}, \code{lower} and \code{upper}.}
 
-\item{correlation_matrix}{numeric matrix containing the correlations of the variables.}
+\item{correlation_matrix}{\code{numeric matrix}: containing the correlations of the variables.}
 }
 \value{
-An object of type \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}.
-\code{base} is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
-names of the variables. \code{correlation_matrix} is a symmetric matrix with row and column names being the subset of
-the variables supplied in \code{base} which are correlated. Its elements are the corresponding correlations.
+An object of class \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}:
+  \describe{
+    \item{\code{$base}}{
+    is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
+    names of the variables. Each row has the properties of an \code{\link{estimate1d}}.
+    }
+    \item{\code{$correlation_matrix}}{
+     is a symmetric matrix with row and column names being the subset oft he variables supplied
+     in \code{base} which are correlated. Its elements are the corresponding correlations.
+     }
+  }
 }
 \description{
-This function creates an object of class \code{estimate}. #ToDo: detailed description
-#ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
+This function creates an object of class \code{estimate}. It extends the univariate estimate
+\code{\link{estimate1d}} to the multivariate case. This includes the description of correlations
+between the different variables.
 }
 \details{
 The parameters in \code{...} provide the base information of an estimate.
@@ -34,6 +43,6 @@ The parameters in \code{...} provide the base information of an estimate.
 }
 \seealso{
 \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, \code{\link{estimate_read_csv}},
-\code{\link{estimate_write_csv}}, \code{\link{random.estimate}}
+\code{\link{estimate_write_csv}}, \code{\link{random.estimate}}, \code{\link{estimate1d}}
 }
 

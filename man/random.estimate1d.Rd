@@ -2,63 +2,93 @@
 % Please edit documentation in R/estimate1d.R
 \name{random.estimate1d}
 \alias{random.estimate1d}
-\title{Generate univariate random numbers based on a 1-d estimate.}
+\title{Generate univariate random numbers defined by a 1-d estimate.}
 \usage{
 \method{random}{estimate1d}(rho, n, method = "calculate",
   relativeTolerance = 0.05, ...)
 }
 \arguments{
-\item{rho}{\code{estimate1d} object; Univariate distribution to be randomly sampled.}
+\item{rho}{\code{estimate1d}: Univariate distribution to be randomly sampled.}
 
-\item{n}{Number of generated observations}
+\item{n}{\code{integer}: Number of observations to be generated}
 
-\item{method}{Particular method to be used for random number generation.}
+\item{method}{\code{character}: Particular method to be used for random number generation. It
+can be either \code{"calculate"} (the default) or \code{"fit"}. Details below.}
 
-\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
 
 \item{...}{Optional arguments to be passed to the particular random number
-generating function.}
+generating function (cf. below).}
 }
 \description{
-This function generates random numbers for general univariate parametric distributions, which
-parameters are determined by a one dimensional \code{\link{estimate1d}}.
+This function generates random numbers for univariate parametric distributions, which
+parameters are determined by a one dimensional estimate (\code{\link{estimate1d}}).
 }
 \details{
-\code{method} can be either \code{"calculate"} (the default) or \code{"fit"}.
-
-The follwing table shows the available distributions and the implemented generation method:
- \tabular{lll}{
- \bold{\code{distribution}}  \tab\bold{Distribution Name}                         \tab \bold{\code{method}} \cr
- \code{"const"}                \tab Deterministic case                            \tab not applicable\cr
- \code{"norm"}                 \tab \link{Normal}                                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"posnorm"}              \tab \link[=rposnorm90ci]{Positive normal}         \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
- \code{"tnorm_0_1"}            \tab \link[=rtnorm_0_1_90ci]{0-1-truncated normal} \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
- \code{"beta"}                 \tab \link{Beta}                                   \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"cauchy"}               \tab \link{Cauchy}                                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"logis"}                \tab \link{Logistic}                               \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"t"}                    \tab \link[=TDist]{Student t}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"chisq"}                \tab \link[=Chisquare]{Central Chi-Squared}        \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"chisqnc"}              \tab \link[=Chisquare]{Non-central Chi-Squared}    \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"exp"}                  \tab \link{Exponential}                            \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"f"}                    \tab \link[=FDist]{Central F}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"gamma"}                \tab \link[=GammaDist]{Gamma} with \code{scale=1/rate} \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"lnorm"}                \tab \link[=Lognormal]{Log Normal}                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"unif"}                 \tab \link{Uniform}                                \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"weibull"}              \tab \link{Weibull}                                \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+\describe{
+   \item{\code{rho[["distribution"]]}:}{
+   The follwing table shows the available distributions and the implemented generation method:
+   \tabular{lll}{
+   \bold{\code{rho[["distribution"]]}}  \tab\bold{Distribution Name}                         \tab \bold{\code{method}} \cr
+   \code{"const"}                \tab Deterministic case                            \tab not applicable\cr
+   \code{"norm"}                 \tab \link{Normal}                                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"posnorm"}              \tab \link[=rposnorm90ci]{Positive normal}         \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+   \code{"tnorm_0_1"}            \tab \link[=rtnorm_0_1_90ci]{0-1-truncated normal} \tab \code{\link[=paramtnormci_numeric]{calculate}}, \code{\link[=paramtnormci_fit]{fit}} \cr
+   \code{"beta"}                 \tab \link{Beta}                                   \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"cauchy"}               \tab \link{Cauchy}                                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"logis"}                \tab \link{Logistic}                               \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"t"}                    \tab \link[=TDist]{Student t}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"chisq"}                \tab \link[=Chisquare]{Central Chi-Squared}        \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"chisqnc"}              \tab \link[=Chisquare]{Non-central Chi-Squared}    \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"exp"}                  \tab \link{Exponential}                            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"f"}                    \tab \link[=FDist]{Central F}                      \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"gamma"}                \tab \link[=GammaDist]{Gamma} with \code{scale=1/rate} \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"lnorm"}                \tab \link[=Lognormal]{Log Normal}                 \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"unif"}                 \tab \link{Uniform}                                \tab \code{\link[=rdist90ci_exact]{calculate}}, \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"weibull"}              \tab \link{Weibull}                                \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+   }
+   For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
+   fitted nor calculated.
+   }
+   \item{\code{rho[["method"]]}}{
+   If supplied, i.e. \code{!is.null(rho[["method"]])}, this value overwrites the function
+   argument \code{method}.
+   }
+   \item{\code{method}}{
+   This parameter defines, how the parameters of the distribution to be sample are derived from
+   \code{rho[["lower"]]}, \code{rho[["upper"]]} and possibly \code{rho[["median"]]}.
+   Possibilities are \code{"calculate"} (the default) or \code{"fit"}:
+   \describe{
+     \item{\code{method="calculate"}}{
+     The parameters are calculated if possible using the exact (analytical) formula or, otherwise,
+     numerically. This calculation of the distribution parameters is independent of
+     \code{rho[["median"]]} being  supplied or not. For the implemented distributions, it only
+     depends on \code{rho[["lower"]]} and \code{rho[["upper"]]}. However, if it is supplied, i.e.
+     \code{is.numeric(rho[["median"]])}, a check is performed, if the relative deviation of the
+     generated median from\code{rho[["median"]]} is greater than \code{relativeTolerance}. In
+     this case a warning is given.
+     }
+     \item{\code{method="fit"}}{
+     The parameters are obtained by fitting the distribution on the supplied quantiles.
+     Given that \code{rho[["median"]]==NULL} the distribution is fitted only to \code{lower} and
+     \code{upper} and a warning is given; due to the used numerical procedure, the calculated
+     parameters might define a distribution which strongly deviates from the intended one. There is
+     larger control on the shape of the distribution to be generated by supplying the estimate of the
+     median. If \code{is.numeric(rho[["median"]])} the distribution is fitted to \code{lower},
+     \code{upper} and \code{median}.
+     }
+   }
+   }
+   \item{\code{...}}{
+     For passing further parameters to the function which generates the random numbers, cf.
+     the above table and follow the link in the column \code{method}.
+   }
  }
-
- For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
- fitted nor calculated.
- \subsection{Only applicable to \code{method="fit"}}{
- Given that \code{rho["median"]==NULL} the distribution is fitted only to \code{lower} and \code{upper};
-  if \code{is.numeric(rho["median"])} the distribution is fitted to \code{lower}, \code{upper}
-  and \code{median}.
-  }
 }
 \examples{
 # Generate log normal distributed random numbers:
