@@ -26,7 +26,7 @@
 ##############################################################################################
 #' @include rmvnorm90ci_exact.R
 #' @include random.R
-#' @include random_estimate_1d.R
+#' @include estimate1d.R
 NULL
 # Define global variables:
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
@@ -263,7 +263,7 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #'  generating function.
 #' @details
 #' 	\subsection{Generation of uncorrelated components}{
-#' 		Implementation: \code{\link{random_estimate_1d}}
+#' 		Implementation: \code{\link{random.estimate1d}}
 #'
 #' 	}
 #' 	\subsection{Generation of correlated components}{
@@ -378,11 +378,11 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
   x<-NULL
   #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
   if(0){
-    x<-apply(X=rho, MARGIN=1,
-             FUN=function(rho, n, method, ...)
-               withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
-                                   warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
-             n=n, method=method)
+#     x<-apply(X=rho, MARGIN=1,
+#              FUN=function(rho, n, method, ...)
+#                withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
+#                                    warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
+#              n=n, method=method)
   }
   # Check if the estimates variables are supplied with individual methods, if yes, use them,
   # i.e. overwrite the option set with the function call (ToDo: move into random.estimate1d()):
@@ -393,8 +393,15 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
     method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
   }
   for(i in row.names(rho)){
-    x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
-                                          warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
+    if(0){
+#       x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+#                                             warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
+#       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
+#       )
+    }
+    x<-cbind(x,matrix(withCallingHandlers(random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+                                          warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE),
+                                          error=function(e) stop("Variable: ", i, "\n", e$message)
     ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
     )
   }

@@ -3,7 +3,7 @@
 \name{estimate1d}
 \alias{as.estimate1d}
 \alias{estimate1d}
-\title{Create an 1-dimensional estimate object}
+\title{Create a 1-dimensional estimate object.}
 \usage{
 estimate1d(distribution, lower, upper, ...)
 
@@ -19,47 +19,59 @@ of this estimate.}
 \item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall, i.e the 95\%-quantile
 of this estimate.}
 
-\item{...}{arguments that can be coerced to a data frame (ToDo: or list?) comprising the base of the estimate.}
+\item{...}{arguments that can be coerced to a list comprising further elements of the 1-d
+estimate (for details cf. below). Each element must be atomic and of length 1 (1-d property).}
 
 \item{x}{an object to be transformed to class \code{estimate1d}.}
 }
 \value{
-An object of type \code{estimate1d} which is a list with at least (!) the elements:
+An object of class \code{estimate1d} and \code{list} with at least (!) the elements:
    \tabular{lll}{
-     \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-     \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
-     \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
-     \code{median}       \tab  \code{numeric}   \tab  50\%-quantile of the estimate\cr
-     \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
+     \bold{Element}      \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+     \code{distribution} \tab  \code{character}              \tab  Distribution type of the estimate \cr
+     \code{lower}        \tab  \code{numeric}                \tab   5\%-quantile of the estimate\cr
+     \code{median}       \tab  \code{numeric} or \code{NULL} \tab  50\%-quantile of the estimate\cr
+     \code{upper}        \tab  \code{numeric}                \tab  95\%-quantile of the estimate
    }
-   \subsection{The \code{median}}{
-     Note that the \emph{\code{median}} is a mandatory element of an \code{estimate1d}, although it
-     is not necessary as input. In case that no element \code{median} is provided, the default is
-     \code{median=mean(c(lower, upper))}. If no median shall be available it has to be set actively
-     to \code{NULL}!
-   }
+   Note that the \emph{\code{median}} is a mandatory element of an \code{estimate1d}, although it
+    is not necessary as input. If \code{median} is numeric it holds that:
+   \code{lower <= median <= upper}. In any case an \code{estimate1d} object has the property
+   \code{lower <= upper}.
 }
 \description{
-This function creates an object of class \code{estimate1d}.
+\code{estimate1d} creates an object of class \code{estimate1d}. A one dimensional estimate is
+at minimum characterized by the type of a univariate parametric distribution, the 5\% - and 95\%
+quantiles. Optionally, the median can be supplied.
 
-This function tries to transform an object to class \code{estimate1d}.
+\code{as.estimate1d} tries to transform an object to class \code{estimate1d}.
 }
 \details{
-The parameters in \code{...} provide the base information of an estimate.
-\subsection{The structure of the estimate}{ \cr
-   Mandatory elements:
-   \tabular{lll}{
-     \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-     \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
-     \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
-     \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
-   }
-Optional elements:
+It must hold that \code{lower <= upper}.
+  \subsection{The structure of the input arguments}{
+    \subsection{Mandatory input elements:}{
     \tabular{lll}{
-     \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-     \code{variable}     \tab  \code{character} \tab  Variable name\cr
-     \code{median}       \tab  \code{numeric}   \tab  50\%-quantile of the estimate\cr
-     \code{method}       \tab  \code{character} \tab  Method for calculation of distribution parameters
+      \bold{Argument}    \tab  \bold{R-type}     \tab \bold{Explanation}\cr
+      \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
+      \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
+      \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
+    }
+    }
+    \subsection{Optional input elements:}{
+    The optional parameters in \code{...} provide additional characteristics of the 1-d estimate.
+    Frequent optional elements are:
+    \tabular{lll}{
+      \bold{Argument}     \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+      \code{variable}     \tab  \code{character}              \tab  Variable name\cr
+      \code{median}       \tab  cf. below                     \tab  50\%-quantile of the estimate\cr
+      \code{method}       \tab  \code{character}              \tab  Method for calculation of distribution parameters
+   }
+   \subsection{The \code{median}}{
+     If supplied as input, \code{median} can be either \code{NULL},  \code{numeric} or the
+     character string \code{"mean"}. If it is \code{NA} it is set to \code{NULL}; if it equals
+     \code{"mean"} it is set to \code{mean(c(lower, upper))}; if it is \code{numeric} it must
+     hold that \code{lower <= median <= upper}.
+     In case that no element \code{median} is provided, the default is \code{median=NULL}.
+   }
    }
  }
 }

@@ -175,6 +175,8 @@ mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, ran
 	#	returnObject<-list(y=y, x=x)
 	returnObject<-list(y=data.frame(y), x=data.frame(x))
 	returnObject$call<-match.call()
+	# ToDo: is this better?:
+	# class(returnObject)<-c("mcSimulation", class(returnObject))
 	class(returnObject)<-cbind("mcSimulation", class(returnObject))
 	
 	return(returnObject)

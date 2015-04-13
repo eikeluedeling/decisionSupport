@@ -29,85 +29,130 @@
 #' @include rtnorm90ci.R 
 NULL
 ##############################################################################################
-# estimate1d(...)
-# ToDo: review documentation (if pre and postconditions are correct)
+# estimate1d(distribution, lower, upper,...)
 ##############################################################################################
-#' Create an 1-dimensional estimate object
+#' Create a 1-dimensional estimate object.
 #'
-#' This function creates an object of class \code{estimate1d}. 
+#' \code{estimate1d} creates an object of class \code{estimate1d}. A one dimensional estimate is
+#' at minimum characterized by the type of a univariate parametric distribution, the 5\% - and 95\% 
+#' quantiles. Optionally, the median can be supplied.
 #' @param distribution \code{character}; A character string that defines the type of the univariate
 #'   parametric distribution. 
 #' @param lower \code{numeric}; lower bound of the 90\% confidence intervall, i.e the 5\%-quantile 
 #'   of this estimate.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence intervall, i.e the 95\%-quantile 
 #'   of this estimate.
-#' @param ... arguments that can be coerced to a data frame (ToDo: or list?) comprising the base of the estimate.
-#' @details The parameters in \code{...} provide the base information of an estimate.
-#' \subsection{The structure of the estimate}{ \cr
-#'    Mandatory elements:
-#'    \tabular{lll}{
-#'      \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-#'      \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
-#'      \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
-#'      \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
-#'    }
-#' Optional elements:
+#' @param ... arguments that can be coerced to a list comprising further elements of the 1-d 
+#'   estimate (for details cf. below). Each element must be atomic and of length 1 (1-d property).
+#' @details 
+#'   It must hold that \code{lower <= upper}.
+#'   \subsection{The structure of the input arguments}{
+#'     \subsection{Mandatory input elements:}{
 #'     \tabular{lll}{
-#'      \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-#'      \code{variable}     \tab  \code{character} \tab  Variable name\cr
-#'      \code{median}       \tab  \code{numeric}   \tab  50\%-quantile of the estimate\cr
-#'      \code{method}       \tab  \code{character} \tab  Method for calculation of distribution parameters
-#'    }
-#'  }
-#' @return An object of type \code{estimate1d} which is a list with at least (!) the elements:
-#'    \tabular{lll}{
-#'      \bold{Element}      \tab  \bold{R-type}    \tab \bold{Explanation}\cr
-#'      \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
-#'      \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
-#'      \code{median}       \tab  \code{numeric}   \tab  50\%-quantile of the estimate\cr
-#'      \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
+#'       \bold{Argument}    \tab  \bold{R-type}     \tab \bold{Explanation}\cr
+#'       \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
+#'       \code{lower}        \tab  \code{numeric}   \tab   5\%-quantile of the estimate\cr
+#'       \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
+#'     }
+#'     }
+#'     \subsection{Optional input elements:}{
+#'     The optional parameters in \code{...} provide additional characteristics of the 1-d estimate. 
+#'     Frequent optional elements are:
+#'     \tabular{lll}{
+#'       \bold{Argument}     \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+#'       \code{variable}     \tab  \code{character}              \tab  Variable name\cr
+#'       \code{median}       \tab  cf. below                     \tab  50\%-quantile of the estimate\cr
+#'       \code{method}       \tab  \code{character}              \tab  Method for calculation of distribution parameters
 #'    }
 #'    \subsection{The \code{median}}{
-#'      Note that the \emph{\code{median}} is a mandatory element of an \code{estimate1d}, although it
-#'      is not necessary as input. In case that no element \code{median} is provided, the default is
-#'      \code{median=mean(c(lower, upper))}. If no median shall be available it has to be set actively
-#'      to \code{NULL}!
+#'      If supplied as input, \code{median} can be either \code{NULL},  \code{numeric} or the
+#'      character string \code{"mean"}. If it is \code{NA} it is set to \code{NULL}; if it equals
+#'      \code{"mean"} it is set to \code{mean(c(lower, upper))}; if it is \code{numeric} it must 
+#'      hold that \code{lower <= median <= upper}. 
+#'      In case that no element \code{median} is provided, the default is \code{median=NULL}. 
+#'    }    
 #'    }
+#'  }
+#' @return An object of class \code{estimate1d} and \code{list} with at least (!) the elements:
+#'    \tabular{lll}{
+#'      \bold{Element}      \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+#'      \code{distribution} \tab  \code{character}              \tab  Distribution type of the estimate \cr
+#'      \code{lower}        \tab  \code{numeric}                \tab   5\%-quantile of the estimate\cr
+#'      \code{median}       \tab  \code{numeric} or \code{NULL} \tab  50\%-quantile of the estimate\cr
+#'      \code{upper}        \tab  \code{numeric}                \tab  95\%-quantile of the estimate
+#'    }
+#'    Note that the \emph{\code{median}} is a mandatory element of an \code{estimate1d}, although it
+#'     is not necessary as input. If \code{median} is numeric it holds that:
+#'    \code{lower <= median <= upper}. In any case an \code{estimate1d} object has the property 
+#'    \code{lower <= upper}.
 #' @seealso  \code{\link{random.estimate1d}}
 #' @export
 estimate1d<-function(distribution, lower, upper, ...){
-  estimate1dObject<-list(distribution=distribution, lower=lower, upper=upper)
-  # ToDo check 1-d property
-  # ToDo: process "..."
-  if(0){
-    estimate1dObject<-data.frame(..., stringsAsFactors=FALSE)
-    if( is.null(estimate1dObject$variable) ){
-      rownames(estimate1dObject)<-estimate1dObject$variable
-      estimate1dObject<-estimate1dObject[!colnames(estimate1dObject) %in% "variable"]
+  # Check preconditions:
+  ## Mandatory arguments:
+  ### Check argument types:
+  if ( is.null(distribution) || !is.character(distribution))
+    stop("\"distribution\" must be supplied as character string.")
+  if ( is.null(lower) || is.na(lower<-as.numeric(lower)) )
+    stop("\"lower\" must be supplied as numeric.")
+  if ( is.null(upper) || is.na(upper<-as.numeric(upper)) )
+    stop("\"upper\" must be supplied as numeric.")
+  #### Check 1-d property:
+  if ( length(distribution) > 1 || length(lower) > 1 || length(upper) > 1)
+    stop("Input dimension is larger than 1. All input elements must be 1 dimensional.")
+  ### Check input semantics:
+  if ( lower > upper )
+    stop("\"lower > upper\"")
+  ## Mandatory arguments:
+  #optionalArguments<-if(missing(...)) NULL else list(...)
+  optionalArguments<-list(...)
+  median<-NULL
+  if( !is.null(optionalArguments) )
+    for ( i in names(optionalArguments) ){
+      ### Check argument types:
+      if (i == "variable" && !is.character(optionalArguments[[i]]))
+        stop("Optional argument \"", i, "\" is not character.")
+      if (i == "method" && !is.character(optionalArguments[[i]]))
+        stop("Optional argument \"", i, "\" is not character.")
+      #Process median:
+      if (i == "median"){
+        median<-optionalArguments[[i]]
+        optionalArguments<-optionalArguments[!names(optionalArguments) %in% "median"]
+        if ( !is.null(median) ){
+          if( is.na(median) )
+            median<-NULL
+          else if( is.character(median) && median=="mean")
+            median<-mean(c(lower, upper))
+          else if( is.numeric(median) && (lower > median || median > upper) )
+            stop("It must hold: \"lower <= median <= upper\"")
+          else if ( !is.numeric(median) ) stop("\"median=", median, "\" is not allowed!")
+        }
+      }
+      ### Check 1-d property:
+      if ( !is.atomic(optionalArguments[[i]]) )
+        stop("Optional argument \"", i, "\" is not atomic.")
+      if ( length(optionalArguments[[i]]) > 1 )
+        stop("Optional argument \"", i, "\" is not 1 dimensional.")
     }
-    # Drop rows without variable name:
-    estimate1dObject<-subset(estimate1dObject, row.names(estimate1dObject) != "")
-    if( is.null(estimate1dObject$distribution) )
-      stop("estimate1dObject must be supplied with a distribution column.")
-  }
+  # Create the estimate1d:
+  if( length(optionalArguments) )
+    estimate1dObject<-as.list( c(distribution=distribution, lower=lower, median=median, upper=upper, optionalArguments) )
+  else
+    estimate1dObject<-list(distribution=distribution, lower=lower, median=median, upper=upper )    
   # Return object:
-  class(estimate1dObject)<-"estimate1d"
+  class(estimate1dObject)<-c("estimate1d", class(estimate1dObject))
   estimate1dObject
 }
 ##############################################################################################
-# as.estimate1d(...)
-# ToDo: review documentation (if pre and postconditions are correct)
+# as.estimate1d(x, ...)
 ##############################################################################################
 #' Transform to an 1-dimensional estimate object
 #'
-#' This function tries to transform an object to class \code{estimate1d}.
+#' \code{as.estimate1d} tries to transform an object to class \code{estimate1d}.
 #' @param x an object to be transformed to class \code{estimate1d}. 
 #' @rdname estimate1d
 #' @export
 as.estimate1d<-function(x, ...){
-  # ToDo check 1-d property
-  # ToDo: check correct element types: distribution is character etc.
-  # ToDo: process "..."
   x_vec<-unlist(x)
   if ( !"distribution" %in% names(x_vec) )
     stop( "no distribution element!")
@@ -115,11 +160,11 @@ as.estimate1d<-function(x, ...){
     stop( "no lower element!")
   if ( !"upper" %in% names(x_vec) )
     stop( "no upper element!")
-  estimate1dObject<-list(distribution=x_vec[["distribution"]], 
-                         lower=x_vec[["lower"]],
-                         upper=x_vec[["upper"]])
+  estimate1dObject<-estimate1d(distribution=x_vec[["distribution"]], 
+                               lower=x_vec[["lower"]],
+                               upper=x_vec[["upper"]],
+                               x_vec[!names(x_vec) %in% c("distribution", "lower", "upper")])
   # Return object:
-  class(estimate1dObject)<-"estimate1d"
   estimate1dObject
 }
 ##############################################################################################
@@ -162,7 +207,7 @@ as.estimate1d<-function(x, ...){
 #'  \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'  \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
-#'  \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}} 
+#  \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}} 
 #'  }
 #'  
 #'  For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
@@ -175,6 +220,11 @@ as.estimate1d<-function(x, ...){
 #'  
 #' @seealso \code{\link{estimate1d}}; For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
 #'   methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}. For the default method: \code{\link{random}}.
+#' @examples
+#' # Generate log normal distributed random numbers:
+#' x<-random(estimate1d("lnorm",50,100), n=100000)
+#' quantile(x, probs=c(0.05, 0.95))
+#' hist(x, breaks=100)
 #' @export
 random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ...){
   # Create output vector for the random numbers to be generated
@@ -187,9 +237,11 @@ random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ..
                           lower=rho["lower"],
                           upper=rho["upper"])
   } 
+  ## Generate the random numbers by calculating the distribution parameters from lower and upper:
   else if(method=="calculate"){
     # ToDo: extract this block as function rdist90ci_calculate()?
     if(match(rho["distribution"], c("norm", 
+                                    "lnorm",
                                     "unif"), nomatch = 0)){
       x <-  rdist90ci_exact(distribution=rho["distribution"],
                             n=n,
@@ -212,15 +264,29 @@ random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ..
     }
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
+    ### Generate warning if relative deviation from median (if provided) is greater than 
+    ### relativeTolerance:
+    if ( !is.null(median<-rho[["median"]]) ){
+      median_calc<- quantile(x=x,probs=0.50)[["50%"]]
+      scale <- if( median > 0 ) median else NULL
+      if( !isTRUE( msg<-all.equal(median, median_calc,  scale=scale, tolerance=relativeTolerance) ) ){
+        warning("For method=\"calculate\": deviation of calculated \"median\" from supplied target value:\n",
+                "  Calculated value: ", median_calc, "\n  ",
+                "Target value:     ", median,   "\n  ",
+                msg)
+      }
+    }
   }
+  ## Generate the random numbers by fitting the distribution parameters on lower and upper, and 
+  ##  (if provided) on the median:
   else if (method=="fit"){
-    # The next few lines apply a curve fitting procedure based on given distributions and specified quantiles:
     if(match(rho["distribution"], c("norm", 
                                     "beta",
                                     "cauchy",
                                     "logis",
                                     "t",
                                     "chisq",
+                                    "chisqnc",
                                     "exp",
                                     "f",
                                     "gamma",
@@ -272,9 +338,24 @@ random.estimate1d<-function(rho,n,method="calculate", relativeTolerance=0.05, ..
     } 
     else
       stop("\"", rho["distribution"], "\" is not a valid distribution type for method=\"", method, "\".")
+    if(0){
+      ### Generate warning if median is not provided or if relative deviation from median (if provided)  
+      ### is greater than relativeTolerance:
+      if ( !is.null(median<-rho[["median"]]) ){
+        median_calc<- quantile(x=x,probs=0.50)[["50%"]]
+        scale <- if( median > 0 ) median else NULL
+        if( !isTRUE( msg<-all.equal(median, median_calc,  scale=scale, tolerance=relativeTolerance) ) ){
+          warning("For method=\"calculate\": deviation of calculated \"median\" from supplied target value:\n",
+                  "  Calculated value: ", median_calc, "\n  ",
+                  "Target value:     ", median,   "\n  ",
+                  msg)
+        }
+      }
+    }
   }
   else
     stop ("method must be either \"calculate\" or \"fit\".")
   # Return generated random numbers:
   x
 }
+

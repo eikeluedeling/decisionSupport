@@ -50,7 +50,6 @@ The follwing table shows the available distributions and the implemented generat
  \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
  \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
- \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}}
  }
 
  For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
@@ -60,6 +59,12 @@ The follwing table shows the available distributions and the implemented generat
   if \code{is.numeric(rho["median"])} the distribution is fitted to \code{lower}, \code{upper}
   and \code{median}.
   }
+}
+\examples{
+# Generate log normal distributed random numbers:
+x<-random(estimate1d("lnorm",50,100), n=100000)
+quantile(x, probs=c(0.05, 0.95))
+hist(x, breaks=100)
 }
 \seealso{
 \code{\link{estimate1d}}; For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both

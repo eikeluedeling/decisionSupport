@@ -27,7 +27,7 @@ distributions that are defined as an \code{\link{estimate}}.
 }
 \details{
 \subsection{Generation of uncorrelated components}{
-		Implementation: \code{\link{random_estimate_1d}}
+		Implementation: \code{\link{random.estimate1d}}
 
 	}
 	\subsection{Generation of correlated components}{
