@@ -9,12 +9,12 @@
 \arguments{
 \item{x}{An object of class \code{mcSimulation}.}
 
-\item{...}{Further arguments #ToDo}
+\item{...}{Further arguments to be passed to \code{\link{print.data.frame}}.}
 }
 \description{
 This function prints basic results from Monte Carlo simulation  and returns it invisible.
 }
 \seealso{
-\code{\link{mcSimulation}}
+\code{\link{mcSimulation}}, \code{\link{print.data.frame}}
 }
 

@@ -2,51 +2,172 @@
 % Please edit documentation in R/random.R
 \name{random}
 \alias{random}
+\alias{random.data.frame}
 \alias{random.default}
-\title{Quantiles based generic random number generation.}
+\alias{random.vector}
+\title{Quantiles or empirical based generic random number generation.}
 \usage{
 random(rho, n, method, relativeTolerance, ...)
 
 \method{random}{default}(rho = list(distribution = "norm", probabilities =
   c(0.05, 0.95), quantiles = c(-qnorm(0.95), qnorm(0.95))), n, method = "fit",
   relativeTolerance = 0.05, ...)
+
+\method{random}{vector}(rho = runif(n = n), n, method = NULL,
+  relativeTolerance = NULL, ...)
+
+\method{random}{data.frame}(rho = data.frame(uniform = runif(n = n)), n,
+  method = NULL, relativeTolerance = NULL, ...)
 }
 \arguments{
-\item{rho}{\code{list} Distribution to be randomly sampled. The list elements are
-\code{distribution}, \code{probabilities} and \code{quantiles}. For details cf. below.}
+\item{rho}{Distribution to be randomly sampled.}
 
-\item{n}{\code{integer} Number of observations to be generated}
+\item{n}{\code{integer}: Number of observations to be generated}
 
-\item{method}{\code{character} Particular method to be used for random number generation.
-Currently only method \code{\link{rdistq_fit}{fit}} is implemented which is the default.}
+\item{method}{\code{character}: Particular method to be used for random number generation.}
 
-\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
 
 \item{...}{Optional arguments to be passed to the particular random number
-generating function, i.e. \code{\link{rdistq_fit}}.}
-}
-\value{
-A numeric vector of length \code{n} containing the generated random numbers.
+generating function.}
 }
 \description{
-This function generates random numbers for parametric distributions, parameters of which are
-determined by given quantiles.
+These functions generate random numbers for parametric distributions, parameters of which are
+determined by given quantiles or for purely empirical defined distributions.
 
 The default method generates univariate random numbers specified by arbitrary quantiles.
-}
-\details{
-The distribution family is determined by \code{rho[["distribution"]]}. For the possibilities
-  cf. \code{\link{rdistq_fit}}.
 
-  \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same
-  length. The first defines the probabilites of the quantiles, the second defines the quantiles
-  values which determine the parametric distribution.
+\code{random.vector} generates univariate random numbers drawn from a distribution purely defined
+empirically.
+
+\code{random.data.frame} generates multivariate random numbers drawn from a distribution
+purely defined empirically.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Univariate random number generation.
+\item \code{default}: Quantiles based univariate random number generation.
+\describe{
+  \item{\bold{Arguments}}{
+     \describe{
+     \item{\code{rho} }{
+       rho \code{list}: Distribution to be randomly sampled. The list elements are
+        \code{$distribution}, \code{$probabilities} and \code{$quantiles}. For details cf. below.
+     }
+     \item{\code{method} }{
+       \code{character}: Particular method to be used for random number
+       generation. Currently only method \code{\link{rdistq_fit}{fit}} is implemented which is the
+       default.
+     }
+     \item{\code{relativeTolerance}}{
+       \code{numeric}: the relative tolerance level of deviation of the generated confidence
+       interval from the specified interval. If this deviation is greater than
+       \code{relativeTolerance} a warning is given.
+     }
+      \item{\code{...}}{
+        Optional arguments to be passed to the particular random number
+        generating function, i.e. \code{\link{rdistq_fit}}.
+      }
+    }
+  }
+  \item{\bold{Details}}{
+    \describe{
+      \item{ }{
+        The distribution family is determined by \code{rho[["distribution"]]}. For the
+        possibilities cf. \code{\link{rdistq_fit}}.
+      }
+      \item{ }{
+        \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same
+        length. The first defines the probabilites of the quantiles, the second defines the quantiles
+        values which determine the parametric distribution.
+      }
+    }
+  }
+  \item{\bold{Value}}{
+    \describe{
+      \item{ }{
+        A numeric vector of length \code{n} containing the generated random numbers.
+      }
+    }
+  }
+  \item{\bold{See Also}}{
+    \describe{
+      \item{ }{
+        \code{\link{rdistq_fit}}
+      }
+    }
+  }
+}
+
+\item \code{vector}: Univariate random number generation by drawing from a given
+empirical sample.
+\describe{
+   \item{\bold{Arguments}}{
+     \describe{
+       \item{\code{rho} }{
+         \code{vector}: Univariate empirical sample to be sampled from.
+        }
+        \item{\code{method} }{
+           for this class no impact
+        }
+        \item{\code{relativeTolerance}}{
+          for this class no impact
+         }
+        \item{\code{...}}{
+          for this class no impact
+        }
+     }
+  }
+  \item{\bold{Value}}{
+    \describe{
+      \item{ }{
+         A \code{numeric vector} of length \code{n} containing the generated random numbers.
+      }
+    }
+  }
+  \item{\bold{See Also}}{
+    \describe{
+       \item{ }{
+         \code{\link{sample}}
+       }
+    }
+  }
+}
+
+\item \code{data.frame}: Multivariate random number generation by drawing from a given empirical sample.
+\describe{
+  \item{\bold{Arguments}}{
+    \describe{
+      \item{\code{rho} }{
+        \code{data.frame}: Multivariate empirical sample to be sampled from.
+      }
+      \item{\code{method} }{
+        for this class no impact
+      }
+      \item{\code{relativeTolerance}}{
+        for this class no impact
+      }
+       \item{\code{...}}{
+         for this class no impact
+      }
+    }
+  }
+  \item{\bold{Value}}{
+    \describe{
+      \item{ }{
+         A \code{data.frame} with \code{n} rows containing the generated random numbers.
+       }
+     }
+   }
+   \item{\bold{See Also}}{
+     \describe{
+       \item{ }{
+         \code{\link{sample}}
+       }
+     }
+   }
+ }
 }}
 \examples{
 x<-random(n=10000)
@@ -60,8 +181,5 @@ x<-random(n=10000)
  x<-random(rho=rho, n=10000, tolConv=0.01)
  hist(x,breaks=100)
  quantile(x,p=rho[["probabilities"]])
-}
-\seealso{
-\code{\link{rdistq_fit}}
 }
 

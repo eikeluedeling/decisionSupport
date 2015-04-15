@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcSimulation.R
 \name{summary.mcSimulation}
 \alias{summary.mcSimulation}
-\title{Summarize Results from Monte Carlo Simulation.}
+\title{Summarize results from Monte Carlo simulation.}
 \usage{
 \method{summary}{mcSimulation}(object, ..., digits = max(3,
   getOption("digits") - 3), variables.y = names(object$y), variables.x = if
@@ -12,9 +12,8 @@
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}
 
-\item{...}{Further arguments passed to \code{\link{summary.data.frame}}
-(\code{classicView=TRUE}) or \code{\link{format}}
-(\code{classicView=FALSE}).}
+\item{...}{Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE})
+or \code{\link{format}} (\code{classicView=FALSE}).}
 
 \item{digits}{how many significant digits are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
@@ -23,30 +22,24 @@
     this many significant digits, and also to satisfy \code{nsmall}.
     (For the interpretation for complex numbers see \code{\link{signif}}.)}
 
-\item{variables.y}{\code{character} or \code{character} vector; Names of the
-components of the simulation function (\code{model_function}) which
-results shall be displayed. Defaults to all components.}
+\item{variables.y}{\code{character} or \code{character vector}: Names of the components of the
+simulation function (\code{model_function}) which results shall be displayed. Defaults to all
+components.}
 
-\item{variables.x}{\code{character} or \code{character} vector; Names of the
-components of the input variables to the simulation function, i.e. the
-names of the variables in the input \code{estimate} which random sampling
-results shall be displayed. Defaults to all components.}
+\item{variables.x}{\code{character} or \code{character vector}: Names of the components of the
+input variables to the simulation function, i.e. the names of the variables in the input
+\code{estimate} which random sampling results shall be displayed. Defaults to all components.}
 
-\item{classicView}{\code{logical}; if \code{TRUE} the results are summarized
-using summary.data.frame, if \code{FALSE} further output is produced and
-the quantile information can be chosen. Cf. section Value and argument
-\code{probs}. Default is \code{FALSE}.}
+\item{classicView}{\code{logical}: if \code{TRUE} the results are summarized using
+\code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile
+information can be chosen. Cf. section Value and argument \code{probs}. Default is
+\code{FALSE}.}
 
-\item{probs}{\code{numeric} vector of quantiles that shall be displayed if
+\item{probs}{\code{numeric vector}: quantiles that shall be displayed if
 \code{classicView=FALSE}.}
 }
 \value{
 An object of class \code{summary.mcSimulation}.
-\tabular{ll}{
- \code{chance_loss}  \tab \cr
- \code{chance_zero}  \tab \cr
- \code{chance_gain}  \tab
-}
 }
 \description{
 A summary of the results of a Monte Carlo simulation obtained by the function

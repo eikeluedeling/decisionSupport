@@ -2,19 +2,20 @@
 % Please edit documentation in R/mcSimulation.R
 \name{print.summary.mcSimulation}
 \alias{print.summary.mcSimulation}
-\title{Print the Summary of a Monte Carlo Simulation.}
+\title{Print the summary of a Monte Carlo simulation.}
 \usage{
 \method{print}{summary.mcSimulation}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{mcSimulation}.}
 
-\item{...}{Further arguments #ToDo}
+\item{...}{Further arguments to be passed to \code{\link{print.data.frame}}.}
 }
 \description{
 This function prints the summary of of \code{mcSimulation} obtained by \code{\link{summary.mcSimulation}}.
 }
 \seealso{
-\code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}}
+\code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}},
+  \code{\link{print.data.frame}}
 }
 

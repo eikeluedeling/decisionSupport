@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcSimulation.R
 \name{as.data.frame.mcSimulation}
 \alias{as.data.frame.mcSimulation}
-\title{Coerce to a Data Frame.}
+\title{Coerce Monte Carlo simutlation results to a data frame.}
 \usage{
 \method{as.data.frame}{mcSimulation}(x, row.names = NULL, optional = FALSE,
   ..., stringsAsFactors = default.stringsAsFactors())
@@ -10,18 +10,20 @@
 \arguments{
 \item{x}{An object of class \code{mcSimulation}.}
 
-\item{row.names}{\code{NULL} or a character vector giving the row names for the data frame.
-Missing values are not allowed.}
+\item{row.names}{\code{NULL} or a character vector giving the row
+    names for the data frame.  Missing values are not allowed.}
 
-\item{optional}{logical. If \code{TRUE}, setting row names and converting column names
-(to syntactic names: see \code{\link{make.names}}) is optional.}
+\item{optional}{logical. If \code{TRUE}, setting row names and
+    converting column names (to syntactic names: see
+    \code{\link{make.names}}) is optional.}
 
 \item{...}{additional arguments to be passed to or from methods.}
 
-\item{stringsAsFactors}{logical: should the character vector be converted to a factor?}
+\item{stringsAsFactors}{logical: should the character vector be converted
+    to a factor?}
 }
 \description{
-Functions to check if an object is a data frame, or coerce it if possible.
+Coerces Monte Carlo simutlation results to a data frame.
 }
 \seealso{
 \code{\link{as.data.frame}}

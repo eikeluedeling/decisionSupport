@@ -640,35 +640,16 @@ random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ..
 # Generate the random numbers for the uncorrelated subset of an estimate
 #
 random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTolerance=0.05, ...){
-  #defaultMethod<-method
   x<-NULL
-  # Check if the estimates variables are supplied with individual methods, if yes, use them,
-  # i.e. overwrite the option set with the function call (ToDo: move into random.estimate1d()):
-  #method<-rep(defaultMethod,length=length(row.names(rho)))
-  #names(method)<-row.names(rho)
-  #if( match("method", names(rho), nomatch = 0) ){
-  #  indexOverwriteMethod<-!is.null(rho[,"method"]) & is.character(as.character(rho[,"method"])) & rho[,"method"]!=""
-  #  method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
-  #}
   for(i in row.names(rho)){
     if(0){
       x<-cbind(x,matrix(withCallingHandlers(
-        random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
+        random(rho=as.estimate1d(rho[i,]), n=n, method=method, relativeTolerance=relativeTolerance, ...),
         warning=function(w) warning("Variable: ", i, "\t distribution: ", rho[i,"distribution"], "\n", 
                                     w$message, call. = FALSE, immediate.=TRUE),
         error=function(e) stop("Variable: ", i, "\n", e$message)
       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
       )
-    }
-    if(0){
-    x<-withCallingHandlers(cbind(x,matrix(
-      random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
-      nrow=n, ncol=1, dimnames=list(NULL,i)), 
-      deparse.level=1),
-      warning=function(w) warning("Variable: ", i, "\t distribution: ", rho[i,"distribution"], "\n", 
-                                  w$message, call. = FALSE, immediate.=TRUE),
-      error=function(e) stop("Variable: ", i, "\n", e$message)
-    )
     }
     x<-withCallingHandlers(cbind(x,matrix(
       random(rho=as.estimate1d(rho[i,]), n=n, method=method, relativeTolerance=relativeTolerance, ...),

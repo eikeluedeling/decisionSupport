@@ -7,13 +7,13 @@
 rmvnorm90ci_exact(n, lower, upper, correlationMatrix)
 }
 \arguments{
-\item{n}{\code{integer} Number of observations to be generated.}
+\item{n}{\code{integer}: Number of observations to be generated.}
 
-\item{lower}{\code{numeric} vector; lower bound of the 90\% confidence intervall.}
+\item{lower}{\code{numeric vector}: lower bound of the 90\% confidence interval.}
 
-\item{upper}{\code{numeric} vector; upper bound of the 90\% confidence intervall.}
+\item{upper}{\code{numeric vector}: upper bound of the 90\% confidence interval.}
 
-\item{correlationMatrix}{\code{numeric} symmetric matrix which is the correlation matrix of the
+\item{correlationMatrix}{\code{numeric matrix}: symmetric matrix which is the correlation matrix of the
 multivariate normal distribution. In particular, all diagonal elements must be equal to 1.}
 }
 \description{

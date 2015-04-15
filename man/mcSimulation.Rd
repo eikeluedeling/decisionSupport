@@ -2,65 +2,97 @@
 % Please edit documentation in R/mcSimulation.R
 \name{mcSimulation}
 \alias{mcSimulation}
-\title{Perform a Monte Carlo Simulation.}
+\title{Perform a Monte Carlo simulation.}
 \usage{
 mcSimulation(estimate, model_function, ..., numberOfSimulations,
   randomMethod = "calculate", functionSyntax = "data.frameNames")
 }
 \arguments{
-\item{estimate}{Filename or  estimate object representing the joint probability distribution of the input variables.}
+\item{estimate}{\code{estimate}: estimate of the joint probability distribution of
+the input variables.}
 
-\item{model_function}{A numeric function; The function that describes the value of a certain project.}
+\item{model_function}{\code{function}: The function that transforms the input distribution. It
+has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.}
 
 \item{...}{Optional arguments of \code{model_function}.}
 
 \item{numberOfSimulations}{The number of Monte Carlo simulations to be run.}
 
-\item{randomMethod}{\code{character}. The method to be used to sample the distribution representing the input estimate.}
+\item{randomMethod}{\code{character}: The method to be used to sample the distribution
+representing the input estimate. For details see option \code{method} in}
 
-\item{functionSyntax}{\code{character}. The syntax which has to be used to implement the model function. Possible
-values are \code{globalNames}, \code{data.frameNames} or \code{matrixNames}. Details are given below.}
+\item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
+function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or
+\code{"matrixNames"}. Details are given below.}
 }
 \value{
-An object of class \code{mcSimulation}.
-\tabular{ll}{
- \code{phi} \tab an l-variate probability distribution\cr
- \code{x}   \tab a dataframe containing the sampled \eqn{x -} values\cr
- \code{y}   \tab a dataframe containing the simulated \eqn{y -} values
-}
+An object of \code{class mcSimulation}, which is a \code{list} with elements:
+  \describe{
+     \item{\code{$x}}{
+        \code{data.frame} containing the sampled \eqn{x -} (input) values which are generated
+        from \code{estimate}.
+     }
+     \item{\code{$y}}{
+       \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model
+       function values for \code{x}.
+     }
+  }
 }
 \description{
-This method solves the following problem. Given a multivariate random variable
-\eqn{x = (x_1,\ldots,x_k)} with joint probability distribution \eqn{P}, i.e.
-\deqn{x \sim P.}{x ~ P} Then the continuous function
- \deqn{f:R^k \rightarrow R^l, y = f(x)}{f:R^k --> R^l, y = f(x)}
-defines another random variable with distribution
- \deqn{y \sim f(P).}{y ~ f(P).}
-Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination of the
-probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the probability density \eqn{\phi}
-of \eqn{y} by Monte Carlo simulation.
+This function generates a random sample of an output distribution defined as the transformation
+of an input distribution by a mathematical model, i.e. a mathematical function. This is called a
+Monte Carlo simulation. For details cf. below.
 }
 \details{
-If \code{functionSyntax="globalNames"}, the variable names used in the definition of \code{model_function} have
- to be defined globally. \code{model_function} has to be of the form \code{function(x,varnames)}. If
- \code{functionSyntax="data.frameNames"}, the model function is constructed, e.g. like this:\cr
- \code{
-   profit<-function(x){
-     x[["revenue"]]-x[["costs"]]
+This method solves the following problem. Given a multivariate random variable \eqn{x =
+(x_1,\ldots,x_k)} with joint probability distribution \eqn{P}, i.e.
+  \deqn{x \sim P.}{x ~ P}
+Then the continuous function
+  \deqn{f:R^k \rightarrow R^l, y = f(x)}{f:R^k --> R^l, y = f(x)}
+defines another random variable with distribution
+  \deqn{y \sim f(P).}{y ~ f(P).}
+Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination
+of the probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the
+probability density \eqn{\phi} of \eqn{y} as follows: The input distribution \eqn{P} is provided
+as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfSimulations} is
+generated using \code{\link{random.estimate}}. Then the function values \eqn{y=f(x)} are
+calculated, where \eqn{f} is \code{model_function}.
+
+\code{functionSyntax} defines the syntax of \code{model_function}, which has to be used, as
+follows:
+\describe{
+  \item{\code{"globalNames"}}{
+    \code{model_function} is constructed, e.g. like this:
+       \preformatted{
+         profit<-function(){
+           revenue-costs
+         }
+       }
+       \emph{CAVE}: this implementation is currently slow!
+  }
+  \item{\code{"data.frameNames"}}{
+     The model function is constructed, e.g. like this:
+       \preformatted{
+         profit<-function(x){
+           x[["revenue"]]-x[["costs"]]
+         }
+       }
+       or like this:
+       \preformatted{
+         profit<-function(x){
+           x$revenue-x$costs
+         }
+       }
+     }
+     \item{\code{"matrixNames"}}{
+        The model function is constructed, e.g. like this:
+        \preformatted{
+           profit<-function(x){
+             x[,"revenue"]-x[,"costs"]
+           }
+        }
+     }
    }
- }
- or like this:
- \code{
-   profit<-function(x){
-     x$revenue-x$costs
-   }
- }
- If \code{functionSyntax="matrixNames"}, the model function is constructed, e.g. like this:\cr
- \code{
-   profit<-function(x){
-     x[,"revenue"]-x[,"costs"]
-   }
- }
 }
 \examples{
 #############################################################
