@@ -7,55 +7,68 @@
 estimate_read_csv(fileName, strip.white = TRUE, ...)
 }
 \arguments{
-\item{fileName}{Name of the file containing the marginal information of the estimate that should be read.}
+\item{fileName}{Name of the file containing the marginal information of the estimate that
+should be read.}
 
-\item{strip.white}{logical. Allows the stripping of leading and trailing white space from unquoted character fields
-(numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
- remembering that the columns may include the row names.}
+\item{strip.white}{logical. Used only when \code{sep} has
+    been specified, and allows the stripping of leading and trailing
+    white space from unquoted \code{character} fields (\code{numeric} fields
+    are always stripped).  See \code{\link{scan}} for further details
+    (including the exact meaning of \sQuote{white space}),
+    remembering that the columns may include the row names.}
 
 \item{...}{Further parameters to be passed to \code{\link[utils]{read.csv}}.}
 }
 \value{
-An object of type \code{\link{estimate}}.
+An object of type \code{\link{estimate}} which element \code{$marginal} is read from
+ file \code{fileName} and which element \code{$correlation_matrix} is read from file
+ \code{gsub(".csv","_cor.csv",fileName)}.
 }
 \description{
-This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
-defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
-#ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
+This function reads an \code{\link{estimate}} from the specified csv files. In this context, an
+estimate of several variables is defined by its marginal distribution types, its marginal 90\%-confidence
+intervals \code{[lower,upper]} and, optionally, its correlations.
 }
 \details{
 An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
-is described in the following.
-}
-\section{CSV input file structures}{
+  is described in the following.
+  \subsection{ CSV input file structures}{
+  The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
+  The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
+  file only defines correlations.
+  \subsection{The structure of the marginal distributions input file (mandatory)}{
+    File name structure: \code{<marginal-filename>.csv}
 
-The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
-The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
-file only defines correlations.
-\subsection{The structure of the marginal distributions input file (mandatory)}{
-   File name structure: \code{<marginal-filename>.csv}\cr
-   Mandatory columns:
-   \tabular{lll}{
-     Column name         \tab  R-type    \tab Explanation\cr
-     \code{lower}        \tab  \code{numeric}   \tab  ToDo \cr
-     \code{upper}        \tab  \code{numeric}   \tab  ToDo \cr
-     \code{distribution} \tab  \code{character} \tab  ToDo \cr
-     \code{variable}     \tab  \code{character} \tab  ToDo
-   }
-   Optional columns:
-   \tabular{lll}{
-     Column name         \tab  R-type  \tab  Explanation \cr
-     \code{description}  \tab  \code{character}  \tab  ToDo\cr
-     \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
-   }
-   Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
-}
-\subsection{The structure of the correlation file (optional)}{
-   File name structure: \code{<marginal-filename>_cor.csv}\cr
-   Columns and rows are named by the corresponding variables. Only those variables need to be present which are correlated with others.
-   The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}.
-   Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be
-   set to \code{1}. The matrix must be given in symmetric form.
+    Mandatory columns:
+     \tabular{lll}{
+      \bold{Column name}       \tab  \bold{R-type}    \tab \bold{Explanation}\cr
+      \code{variable}          \tab  \code{character vector}       \tab  Variable names\cr
+      \code{distribution}      \tab  \code{character vector} \tab  Marginal distribution types \cr
+      \code{lower}             \tab  \code{numeric vector}   \tab  Marginal 5\%-quantiles \cr
+      \code{upper}             \tab  \code{numeric vector}   \tab  Marginal 95\%-quantiles
+     }
+     Frequent optional columns are:
+     \tabular{lll}{
+       \bold{Column name}       \tab  \bold{R-type}              \tab \bold{Explanation}\cr
+       \code{description}       \tab  \code{character}           \tab  Short description of the variable.\cr
+       \code{median}            \tab  cf. \code{\link{estimate}} \tab  Marginal 50\%-quantiles \cr
+       \code{method}            \tab  \code{character vector}    \tab  Methods for calculation of marginal distribution parameters
+     }
+     Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
+  }
+  \subsection{The structure of the correlation file (optional)}{
+     File name structure: \code{<marginal-filename>_cor.csv}
+
+     Columns and rows are named by the corresponding variables. Only those variables need to be
+     present which are correlated with others.
+
+     The element \code{["rowname","columnname"]} contains the correlation between the variables
+     \code{rowname} and \code{columnname}. Uncorrelated elements can be left empty, i.e. as
+     \code{NA}, or defined as \code{0}. The diagonal element \code{["name","name"]} has to be
+     set to \code{1}.
+
+     The matrix must be given in symmetric form.
+  }
 }
 }
 \examples{
@@ -64,7 +77,7 @@ file only defines correlations.
  ## Get the path to the file with the marginal information:
  marginalFilePath=system.file("extdata","profit-4.csv",package="decisionSupport")
  ## Read the marginal information from file "profit-4.csv" and print it to the screen as
- ## for illustration:
+ ## illustration:
  read.csv(marginalFilePath, strip.white=TRUE)
  ## Read the correlation information from file "profit-4_cor.csv" and print it to the screen as
  ## illustration:

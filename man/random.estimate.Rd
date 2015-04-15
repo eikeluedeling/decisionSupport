@@ -2,19 +2,19 @@
 % Please edit documentation in R/estimate.R
 \name{random.estimate}
 \alias{random.estimate}
-\title{Generate Random Numbers for an Estimate.}
+\title{Generate random numbers for an estimate.}
 \usage{
 \method{random}{estimate}(rho, n, method = "calculate",
   relativeTolerance = 0.05, ...)
 }
 \arguments{
-\item{rho}{\code{estimate} object; Multivariate distribution to be randomly sampled.}
+\item{rho}{\code{estimate}: multivariate distribution to be randomly sampled.}
 
-\item{n}{Number of generated observations}
+\item{n}{\code{integer}:Number of observations to be generated.}
 
-\item{method}{Particular method to be used for random number generation.}
+\item{method}{\code{character}: Particular method to be used for random number generation.}
 
-\item{relativeTolerance}{\code{numeric}; the relative tolerance level of deviation of the
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
 

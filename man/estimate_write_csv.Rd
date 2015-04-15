@@ -8,11 +8,12 @@ estimate_write_csv(estimate, fileName, varNamesAsColumn = TRUE,
   quote = FALSE, ...)
 }
 \arguments{
-\item{estimate}{Estimate object to write to file \code{fileName}.}
+\item{estimate}{\code{estimate}: Estimate object to write to file.}
 
-\item{fileName}{\code{character}. Output file name which must end with \code{.csv}.}
+\item{fileName}{\code{character}: File name for the output of the marginal information of the
+estimate. It must end with \code{.csv}.}
 
-\item{varNamesAsColumn}{\code{logical}; If \code{TRUE} the variable names will be written as a
+\item{varNamesAsColumn}{\code{logical}: If \code{TRUE} the variable names will be written as a
 separate column, otherwise as row names.}
 
 \item{quote}{a \code{logical} value (TRUE or FALSE) or a numeric vector. If
@@ -23,11 +24,13 @@ If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.}
 
 \item{...}{Further parameters to be passed to \code{\link[utils]{write.csv}}.}
 }
-\value{
-An object of type \code{\link{estimate}}.
-}
 \description{
 This function writes an \code{\link{estimate}} to the specified csv file(s).
+}
+\details{
+The marginal information of the \code{estimate} is written to file \code{fileName=<marginal-filename>.csv}. If
+  the estimate contains correlated variables, the correlation matrix is written to the separate
+  file \code{<marginal-filename>_cor.csv}.
 }
 \seealso{
 \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}

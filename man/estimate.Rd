@@ -94,7 +94,7 @@ The input arguments inform the estimate about its marginal distributions and joi
     }
     \subsection{Optional input columns:}{
     The optional parameters in \code{...} provide additional characteristics of the marginal
-    distributions of the estimate. Frequent optional elements are:
+    distributions of the estimate. Frequent optional columns are:
     \tabular{lll}{
       \bold{Column}       \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
       \code{variable}     \tab  \code{character vector}       \tab  Variable names\cr

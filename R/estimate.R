@@ -84,7 +84,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #'     }
 #'     \subsection{Optional input columns:}{
 #'     The optional parameters in \code{...} provide additional characteristics of the marginal 
-#'     distributions of the estimate. Frequent optional elements are:
+#'     distributions of the estimate. Frequent optional columns are:
 #'     \tabular{lll}{
 #'       \bold{Column}       \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
 #'       \code{variable}     \tab  \code{character vector}       \tab  Variable names\cr
@@ -390,49 +390,58 @@ corMat.estimate<-function(rho){
 }
 ###############################################################################################
 # estimate_read_csv(fileName, strip.white=TRUE, ...)
-# ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Read an Estimate from CSV - File.
 #'
-#' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
-#' defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
-#' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
-#' @param fileName Name of the file containing the marginal information of the estimate that should be read.
-#' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields
-#' (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
-#'  remembering that the columns may include the row names.
-#'  @param ... Further parameters to be passed to \code{\link[utils]{read.csv}}.
-#' @return An object of type \code{\link{estimate}}.
+#' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an 
+#' estimate of several variables is defined by its marginal distribution types, its marginal 90\%-confidence
+#' intervals \code{[lower,upper]} and, optionally, its correlations.
+#' @param fileName Name of the file containing the marginal information of the estimate that 
+#' should be read.
+#' @inheritParams utils::read.csv
+#' @param ... Further parameters to be passed to \code{\link[utils]{read.csv}}.
+#' @return An object of type \code{\link{estimate}} which element \code{$marginal} is read from 
+#'  file \code{fileName} and which element \code{$correlation_matrix} is read from file
+#'  \code{gsub(".csv","_cor.csv",fileName)}.
 #' @details An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
-#' is described in the following.
-#' @section CSV input file structures:
-#' The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
-#' The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
-#' file only defines correlations.
-#' \subsection{The structure of the marginal distributions input file (mandatory)}{
-#'    File name structure: \code{<marginal-filename>.csv}\cr
-#'    Mandatory columns:
-#'    \tabular{lll}{
-#'      Column name         \tab  R-type    \tab Explanation\cr
-#'      \code{lower}        \tab  \code{numeric}   \tab  ToDo \cr
-#'      \code{upper}        \tab  \code{numeric}   \tab  ToDo \cr
-#'      \code{distribution} \tab  \code{character} \tab  ToDo \cr
-#'      \code{variable}     \tab  \code{character} \tab  ToDo
-#'    }
-#'    Optional columns:
-#'    \tabular{lll}{
-#'      Column name         \tab  R-type  \tab  Explanation \cr
-#'      \code{description}  \tab  \code{character}  \tab  ToDo\cr
-#'      \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
-#'    }
-#'    Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
-#' }
-#' \subsection{The structure of the correlation file (optional)}{
-#'    File name structure: \code{<marginal-filename>_cor.csv}\cr
-#'    Columns and rows are named by the corresponding variables. Only those variables need to be present which are correlated with others.
-#'    The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}.
-#'    Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be
-#'    set to \code{1}. The matrix must be given in symmetric form.
+#'   is described in the following.
+#'   \subsection{ CSV input file structures}{
+#'   The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
+#'   The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
+#'   file only defines correlations.
+#'   \subsection{The structure of the marginal distributions input file (mandatory)}{
+#'     File name structure: \code{<marginal-filename>.csv}
+#'     
+#'     Mandatory columns:
+#'      \tabular{lll}{
+#'       \bold{Column name}       \tab  \bold{R-type}    \tab \bold{Explanation}\cr
+#'       \code{variable}          \tab  \code{character vector}       \tab  Variable names\cr
+#'       \code{distribution}      \tab  \code{character vector} \tab  Marginal distribution types \cr
+#'       \code{lower}             \tab  \code{numeric vector}   \tab  Marginal 5\%-quantiles \cr
+#'       \code{upper}             \tab  \code{numeric vector}   \tab  Marginal 95\%-quantiles 
+#'      }
+#'      Frequent optional columns are:
+#'      \tabular{lll}{
+#'        \bold{Column name}       \tab  \bold{R-type}              \tab \bold{Explanation}\cr
+#'        \code{description}       \tab  \code{character}           \tab  Short description of the variable.\cr
+#'        \code{median}            \tab  cf. \code{\link{estimate}} \tab  Marginal 50\%-quantiles \cr
+#'        \code{method}            \tab  \code{character vector}    \tab  Methods for calculation of marginal distribution parameters
+#'      }
+#'      Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
+#'   }
+#'   \subsection{The structure of the correlation file (optional)}{
+#'      File name structure: \code{<marginal-filename>_cor.csv}
+#'      
+#'      Columns and rows are named by the corresponding variables. Only those variables need to be 
+#'      present which are correlated with others.
+#'      
+#'      The element \code{["rowname","columnname"]} contains the correlation between the variables 
+#'      \code{rowname} and \code{columnname}. Uncorrelated elements can be left empty, i.e. as 
+#'      \code{NA}, or defined as \code{0}. The diagonal element \code{["name","name"]} has to be
+#'      set to \code{1}. 
+#'      
+#'      The matrix must be given in symmetric form.
+#'   }
 #' }
 #' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 #' @examples
@@ -440,8 +449,8 @@ corMat.estimate<-function(rho){
 #'  # "costprice" from file:
 #'  ## Get the path to the file with the marginal information:
 #'  marginalFilePath=system.file("extdata","profit-4.csv",package="decisionSupport")
-#'  ## Read the marginal information from file "profit-4.csv" and print it to the screen as 
-#'  ## for illustration:
+#'  ## Read the marginal information from file "profit-4.csv" and print it to the screen as
+#'  ## illustration:
 #'  read.csv(marginalFilePath, strip.white=TRUE)
 #'  ## Read the correlation information from file "profit-4_cor.csv" and print it to the screen as
 #'  ## illustration: 
@@ -472,14 +481,14 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 }
 ###############################################################################################
 # estimate_write_csv(estimate, fileName, strip.white=TRUE, ...)
-# ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Write an Estimate to CSV - File.
 #'
 #' This function writes an \code{\link{estimate}} to the specified csv file(s).
-#' @param fileName \code{character}. Output file name which must end with \code{.csv}.
-#' @param estimate  Estimate object to write to file \code{fileName}.
-#' @param varNamesAsColumn \code{logical}; If \code{TRUE} the variable names will be written as a
+#' @param fileName \code{character}: File name for the output of the marginal information of the 
+#'   estimate. It must end with \code{.csv}.
+#' @param estimate  \code{estimate}: Estimate object to write to file.
+#' @param varNamesAsColumn \code{logical}: If \code{TRUE} the variable names will be written as a
 #' separate column, otherwise as row names.
 #' @param quote a \code{logical} value (TRUE or FALSE) or a numeric vector. If
 #'   TRUE, any character or factor columns will be surrounded by double quotes.
@@ -487,7 +496,10 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 #'   quote. In both cases, row and column names are quoted if they are written.
 #'   If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.
 #' @param ... Further parameters to be passed to \code{\link[utils]{write.csv}}.
-#' @return An object of type \code{\link{estimate}}.
+#' @details
+#'   The marginal information of the \code{estimate} is written to file \code{fileName=<marginal-filename>.csv}. If 
+#'   the estimate contains correlated variables, the correlation matrix is written to the separate
+#'   file \code{<marginal-filename>_cor.csv}.
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
 #' @export
 estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=FALSE, ...){
@@ -510,14 +522,14 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 ##############################################################################################
 # random.estimate(rho,n,method, ...)
 ##############################################################################################
-#' Generate Random Numbers for an Estimate.
+#' Generate random numbers for an estimate.
 #'
 #' This function generates random numbers for general multivariate
 #' distributions that are defined as an \code{\link{estimate}}.
-#' @param rho \code{estimate} object; Multivariate distribution to be randomly sampled.
-#' @param n Number of generated observations
-#' @param method Particular method to be used for random number generation.
-#' @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
+#' @param rho \code{estimate}: multivariate distribution to be randomly sampled.
+#' @param n \code{integer}:Number of observations to be generated. 
+#' @param method \code{character}: Particular method to be used for random number generation.
+#' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
 #' @param ... Optional arguments to be passed to the particular random number
@@ -562,7 +574,6 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #' @seealso \code{\link{estimate}}, \code{\link{random.estimate1d}}, \code{\link{random}}
 #' @export
 random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ...){
-  #ToDo: implement generation of correlated variables
   #ToDo: test
   x<-NULL
   if ( !is.null(rho$correlation_matrix) ){
@@ -604,19 +615,8 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
 ##############################################################################################
 # random.estimateCorrelated(rho,n,method, relativeTolerance, ...)
 ##############################################################################################
-# Generate random numbers based on the first two moments of a certain probability distribution.
+# Generate the random numbers for the correlated subset of an estimate
 #
-# This function generates random numbers for general multivariate
-# distributions that can be characterized by the joint first two moments, viz.
-# the mean and covariance.
-# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
-# @param n Number of generated observations
-# @param method Particular method to be used for random number generation.
-# @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
-#   generated confidence interval from the specified interval. If this deviation is greater than
-#   \code{relativeTolerance} a warning is given.
-# @param ... Optional arguments to be passed to the particular random number
-#  generating function.
 random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ...){
   x<-NULL
   if(method=="calculate"){
@@ -637,45 +637,20 @@ random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ..
 ##############################################################################################
 # random.estimateUnCorrelated(rho , n,method, relativeTolerance, ...)
 ##############################################################################################
-# Generate random numbers based on the first two moments of a uncorrelated probability distribution.
+# Generate the random numbers for the uncorrelated subset of an estimate
 #
-# This function generates random numbers for uncorrelated general multivariate
-# distributions that can be characterized by the joint first two moments, viz.
-# the mean and covariance.
-# @param rho \code{estimateCorrelated} object; Multivariate distribution to be randomly sampled.
-# @param n Number of generated observations
-# @param method Particular method to be used for random number generation.
-# @param relativeTolerance \code{numeric}; the relative tolerance level of deviation of the
-#   generated confidence interval from the specified interval. If this deviation is greater than
-#   \code{relativeTolerance} a warning is given.
-# @param ... Optional arguments to be passed to the particular random number
-#  generating function.
 random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTolerance=0.05, ...){
-  defaultMethod<-method
+  #defaultMethod<-method
   x<-NULL
-  #x<-apply(X=rho, MARGIN=1, FUN=random_estimate_1d, n=n, method=method)
-  if(0){
-    #     x<-apply(X=rho, MARGIN=1,
-    #              FUN=function(rho, n, method, ...)
-    #                withCallingHandlers(random_estimate_1d(rho=rho, n=n, method=method, relativeTolerance=relativeTolerance, ...),
-    #                                    warning=function(w) {warning("Variable: ", print(rho), print(row.names(rho)), "\n", w$message, noBreaks. = TRUE)}),
-    #              n=n, method=method)
-  }
   # Check if the estimates variables are supplied with individual methods, if yes, use them,
   # i.e. overwrite the option set with the function call (ToDo: move into random.estimate1d()):
-  method<-rep(defaultMethod,length=length(row.names(rho)))
-  names(method)<-row.names(rho)
-  if( match("method", names(rho), nomatch = 0) ){
-    indexOverwriteMethod<-!is.null(rho[,"method"]) & is.character(as.character(rho[,"method"])) & rho[,"method"]!=""
-    method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
-  }
+  #method<-rep(defaultMethod,length=length(row.names(rho)))
+  #names(method)<-row.names(rho)
+  #if( match("method", names(rho), nomatch = 0) ){
+  #  indexOverwriteMethod<-!is.null(rho[,"method"]) & is.character(as.character(rho[,"method"])) & rho[,"method"]!=""
+  #  method[indexOverwriteMethod] <- rho[indexOverwriteMethod,"method"]
+  #}
   for(i in row.names(rho)){
-    if(0){
-      #       x<-cbind(x,matrix(withCallingHandlers(random_estimate_1d(rho=rho[i,], n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
-      #                                             warning=function(w) warning("Variable: ", i, "\n", w$message, call. = FALSE, immediate.=TRUE)
-      #       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
-      #       )
-    }
     if(0){
       x<-cbind(x,matrix(withCallingHandlers(
         random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
@@ -685,6 +660,7 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
       ), nrow=n, ncol=1, dimnames=list(NULL,i)), deparse.level=1
       )
     }
+    if(0){
     x<-withCallingHandlers(cbind(x,matrix(
       random(rho=as.estimate1d(rho[i,]), n=n, method=method[i], relativeTolerance=relativeTolerance, ...),
       nrow=n, ncol=1, dimnames=list(NULL,i)), 
@@ -693,6 +669,15 @@ random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTole
                                   w$message, call. = FALSE, immediate.=TRUE),
       error=function(e) stop("Variable: ", i, "\n", e$message)
     )
+    }
+    x<-withCallingHandlers(cbind(x,matrix(
+      random(rho=as.estimate1d(rho[i,]), n=n, method=method, relativeTolerance=relativeTolerance, ...),
+      nrow=n, ncol=1, dimnames=list(NULL,i)), 
+      deparse.level=1),
+      warning=function(w) warning("Variable: ", i, "\t distribution: ", rho[i,"distribution"], "\n", 
+                                  w$message, call. = FALSE, immediate.=TRUE),
+      error=function(e) stop("Variable: ", i, "\n", e$message)
+    )    
   }
   #  Return the sampled multivariate values:
   x
