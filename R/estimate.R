@@ -28,96 +28,334 @@
 #' @include random.R
 #' @include estimate1d.R
 NULL
-# Define global variables:
+# Define global variables (ToDo: make local if possible):
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
                                                         "distribution"))
 ##############################################################################################
-# estimate(..., correlation_matrix)
-# ToDo: review documentation (if pre and postconditions are correct)
+# estimate(distribution, lower, upper,..., correlation_matrix)
 ##############################################################################################
-#' Create a multivariate estimate object
-#'
-#' This function creates an object of class \code{estimate}. It extends the univariate estimate
-#' \code{\link{estimate1d}} to the multivariate case. This includes the description of correlations
-#' between the different variables.
-#' @param ... arguments that can be coerced to a data frame comprising the base of the estimate. 
-#'   Mandatory columns are \code{distribution}, \code{lower} and \code{upper}.
-#' @param correlation_matrix \code{numeric matrix}: containing the correlations of the variables.
-#' @details The parameters in \code{...} provide the base information of an estimate.
-#' \subsection{The structure of the estimate base information (mandatory)}{
-#'    Mandatory columns:
-#'    \tabular{lll}{
-#'      Column name         \tab  R-type    \tab Explanation\cr
-#'      \code{distribution} \tab  \code{character} \tab  Distribution types \cr
-#'      \code{variable}     \tab  \code{character} \tab  Variable names
+#' Create a multivariate estimate object.
+#' 
+#' \code{estimate} creates an object of \code{class estimate}. The concept of an estimate is 
+#' extended from the 1-dimensional (cf. \code{\link{estimate1d}}) to the multivariate case. This 
+#' includes the description of correlations between the different variables. An estimate of an 
+#' n-dimensional variable is at minimum defined by each component being a 1-dimensional estimate. 
+#' This means, that for each component, at minimum, the  type of its univariate parametric 
+#' distribution, its 5\% - and 95\% quantiles must be provided. In probability theoretic terms, 
+#' these are the marginal distributions of the components. Optionally, the individual median 
+#' and the correlations between the components can be supplied.
+#' @param distribution \code{character vector}: defining the types of the univariate parametric 
+#' distributions. 
+#' @param lower \code{numeric vector}: lower bounds of the 90\% confidence intervals, i.e the 5\%-quantiles 
+#'   of this estimates components.
+#' @param upper \code{numeric vector}: upper bounds of the 90\% confidence intervals, i.e the 95\%-quantiles
+#'   of this estimates components.
+#' @param ... in \code{estimate}: optional arguments that can be coerced to a data frame comprising
+#'   further columns of the estimate (for details cf. below).\cr
+#'           in \code{as.estimate}: arguments that can be coerced to a data frame comprising the 
+#'           marginal distributions of the estimate components. Mandatory columns are \code{distribution}, \code{lower} and 
+#'           \code{upper}. 
+#' @param correlation_matrix \code{numeric matrix}: containing the correlations of the variables 
+#'   (optional).
+#' @details
+#'   The input arguments inform the estimate about its marginal distributions and joint distribution, i.e.
+#'    the correlation matrix.
+#'   \subsection{The structure of the estimates marginal input information}{
+#'     \describe{
+#'       \item{in \code{estimate}}{
+#'       The marginal distributions are defined by the arguments \code{distribution}, \code{lower}
+#'       and \code{upper} and, optionally, by further columns supplied in \code{...} that can be 
+#'       coerced to a \code{\link{data.frame}} with the same length as the mandatory arguments.
+#'       }
+#'       \item{in \code{as.estimate}}{
+#'         The marginal distributions are completely defined in \code{...}. These arguments must be 
+#'         coercible to a data.frame, all having the same length. Mandatory columns are 
+#'        \code{distribution}, \code{lower} and  \code{upper}. 
+#'       }
+#'     }
+#'     \subsection{Mandatory input columns:}{
+#'     \tabular{lll}{
+#'       \bold{Column}       \tab  \bold{R-type}    \tab \bold{Explanation}\cr
+#'       \code{distribution} \tab  \code{character vector} \tab  Marginal distribution types \cr
+#'       \code{lower}        \tab  \code{numeric vector}   \tab  Marginal 5\%-quantiles \cr
+#'       \code{upper}        \tab  \code{numeric vector}   \tab  Marginal 95\%-quantiles 
+#'     }
+#'     It must hold that \code{lower <= upper} for every component of the estimate.  
+#'     }
+#'     \subsection{Optional input columns:}{
+#'     The optional parameters in \code{...} provide additional characteristics of the marginal 
+#'     distributions of the estimate. Frequent optional elements are:
+#'     \tabular{lll}{
+#'       \bold{Column}       \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+#'       \code{variable}     \tab  \code{character vector}       \tab  Variable names\cr
+#'       \code{median}       \tab  cf. below                     \tab  Marginal 50\%-quantiles \cr
+#'       \code{method}       \tab  \code{character vector}       \tab  Methods for calculation of marginal distribution parameters
 #'    }
-#' }
-#' @return An object of class \code{estimate} which is a list whith components \code{base} and \code{correlation_matrix}:
+#'    \subsection{The \code{median} column}{ 
+#'      If supplied as input, any component of \code{median} can be either \code{NA}, \code{numeric}
+#'      (and not \code{NA}) or the character string \code{"mean"}. If it equals \code{"mean"} it is
+#'      set to \code{rowMeans(cbind(lower, upper))} of this component; if it is \code{numeric} it must
+#'      hold that \code{lower <= median <= upper} for this component. In case that no element 
+#'      \code{median} is provided, the default is \code{median=rep(NA, length(distribution))}.\cr
+#'      The \code{median} is important for the different methods possible in generating the random 
+#'      numbers (cf. \code{\link{random.estimate}}).
+#'    } 
+#'    }
+#'  }
+#'  \subsection{The structure of the estimates correlation input information}{
+#'    The argument \code{correlation_matrix} is the sub matrix of the full correlation matrix of 
+#'    the estimate conaining all correlated elements. Thus, its row and column names must be a 
+#'    subset of the variable names of the marginal distributions. This means, that the information  
+#'    which variables are uncorrelated does not need to be provided explicitly.
+#'    
+#'    \code{correlation_matrix} must have all the porperties of a correlation matrix, viz. symmetry, 
+#'    all diagonal elements equal 1 and all of diagonal elements are between -1 and 1. 
+#'  }
+#'  
+#' @return  An object of class \code{estimate} which is a list with components \code{$marginal} and 
+#' \code{$correlation_matrix}:
 #'   \describe{
-#'     \item{\code{$base}}{
-#'     is a \code{\link{data.frame}} with mandatory column \code{distribution}. The \code{\link{row.names}} are the
-#'     names of the variables. Each row has the properties of an \code{\link{estimate1d}}.
+#'     \item{\code{$marginal}}{
+#'     is a \code{\link{data.frame}} with mandatory columns:  
+#'     \tabular{lll}{
+#'       \bold{Mandatory column}      \tab  \bold{R-type}                 \tab \bold{Explanation}\cr
+#'       \code{distribution} \tab  \code{character vector} \tab  Distribution types \cr
+#'       \code{lower}        \tab  \code{numeric vector}   \tab   5\%-quantiles\cr
+#'       \code{median}       \tab  \code{numeric vector}   \tab  50\%-quantiles or \code{NA}\cr 
+#'       \code{upper}        \tab  \code{numeric vector}   \tab  95\%-quantiles 
+#'     }
+#'     The \code{\link{row.names}} are the names of the variables. Each row has the properties of 
+#'     an \code{\link{estimate1d}}. 
+#'     
+#'     Note that the \emph{\code{median}} is a mandatory element of an \code{estimate}, although it
+#'     is not necessary as input. If a component of \code{median} is numeric and not \code{NA} it 
+#'     holds that: \code{lower <= median <= upper}. In any case an \code{estimate} object has the
+#'     property \code{any(lower <= upper)}.     
 #'     }
 #'     \item{\code{$correlation_matrix}}{
-#'      is a symmetric matrix with row and column names being the subset oft he variables supplied 
-#'      in \code{base} which are correlated. Its elements are the corresponding correlations.
+#'      is a symmetric matrix with row and column names being the subset of the variables supplied 
+#'      in \code{$marginal} which are correlated. Its elements are the corresponding correlations.
 #'      }
 #'   }
-#' @seealso \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, \code{\link{estimate_read_csv}},
-#' \code{\link{estimate_write_csv}}, \code{\link{random.estimate}}, \code{\link{estimate1d}}
+#'   
+#' @seealso  \code{\link{estimate1d}}, \code{\link{random.estimate}}, 
+#' \code{\link{row.names.estimate}}, \code{\link{names.estimate}}, \code{\link{corMat}}, 
+#' \code{\link{estimate_read_csv}} and \code{\link{estimate_write_csv}}.
+#' @examples
+#' # Create a minimum estimate (only mandatory marginal information supplied):
+#' estimateMin<-estimate(c("posnorm", "lnorm"),
+#'                       c(        4,       4),
+#'                       c(       50,      10))
+#' print(estimateMin) 
+#' 
+#' # Create an estimate with optional columns (only marginal information supplied):
+#' estimateMarg<-estimate(           c("posnorm", "lnorm"),
+#'                                   c(        4,       4),
+#'                                   c(       50,      10),
+#'                          variable=c("revenue", "costs"),
+#'                          median = c(   "mean",      NA),
+#'                          method = c(    "fit",      ""))
+#' print(estimateMarg)
+#' print(corMat(estimateMarg))
+#' 
 #' @export
-estimate<-function(..., correlation_matrix=NULL){
-  base<-data.frame(..., stringsAsFactors=FALSE)
-  if( !is.null(base$variable) ){
-    rownames(base)<-base$variable
-    base<-base[!colnames(base) %in% "variable"]
-  }
-  # Drop rows without variable name:
-  base<-subset(base, row.names(base) != "")
-  if( is.null(base$distribution) )
-    stop("base must be supplied with a distribution column.")
-  # Check preconditions of correlation_matrix:
+estimate<-function(distribution, lower, upper, ..., correlation_matrix=NULL){
+  # Check preconditions:
+  ## Marginal mandatory arguments:
+  ### Check argument types:
+  if ( any(is.null(distribution) || !is.character(distribution)) )
+    stop("\"distribution\" must be supplied as character string.")
+  if ( any(is.null(lower) || is.na(lower<-as.numeric(lower))) )
+    stop("\"lower\" must be supplied as numeric.")
+  if ( any(is.null(upper) || is.na(upper<-as.numeric(upper))) )
+    stop("\"upper\" must be supplied as numeric.")
+  #### Check equality of dimension:
+  if ( length(distribution) != length(lower)  || length(distribution) != length(upper) )
+    stop("All input dimensions must be equal.")
+  ### Check input semantics:
+  if ( any(lower > upper) )
+    stop("\"lower > upper\" for some variables")
+  ## Marginal optional arguments:
+  marginalOptional<-if(missing(...)) NULL else data.frame(..., stringsAsFactors=FALSE)
+  median<-NULL
+  if( !is.null(marginalOptional) )
+    for ( i in names(marginalOptional) ){
+      ### Check argument types:
+      if (i == "variable" && any(!is.character(marginalOptional[[i]]))) 
+        stop("Optional argument \"", i, "\" is not character for all entries.")
+      if (i == "method" && any(!is.character(marginalOptional[[i]]))) 
+        stop("Optional argument \"", i, "\" is not character for all entries.")
+      #Process median:
+      if (i == "median"){
+        median<-marginalOptional[[i]]
+        marginalOptional<-marginalOptional[!names(marginalOptional) %in% "median"]
+        if ( !is.null(median) ){
+          if ( length(distribution) != length(median))
+            stop("\"median\" is not of the right length.")
+          median[!is.na(median) & is.character(median) & median=="mean"]<-rowMeans(
+            cbind(lower, upper))[!is.na(median) & is.character(median) & median=="mean"]
+          #### Replace empty character with NA
+          median[!is.na(median) & is.character(median) & median==""]<-
+            rep(NA, length(distribution))[!is.na(median) & is.character(median) & median==""]
+          #if( any(!is.na(median) & is.numeric(median) & (lower > median | median > upper)) )
+          if ( any(is.na(median) & !is.na(median<-as.numeric(median))) ) 
+            stop("\"median\": all values must be one of the following: \"numeric\", \"character\" 
+                 with value \"mean\", \"NA\" or \"\".")
+          else if( any(!is.na(median) & (lower > median | median > upper)) )
+            stop("It must hold: \"lower <= median <= upper\" for all entries")
+        }
+        else 
+          median<-rep(NA, length(distribution))
+      }
+    }
+  if (is.null(median)) median<-rep(NA, length(distribution))
+  ## Correlation matrix precondition check:
   if( !is.null(correlation_matrix)){
     if( !is.matrix(correlation_matrix) )
       correlation_matrix<-as.matrix(correlation_matrix)
     if( !identical( correlation_matrix, t(correlation_matrix) ) )
       stop("correlationMatrix must be a symmetric matrix.")
     if( !identical( as.vector(diag(correlation_matrix)), rep(1, nrow(correlation_matrix)) ) )
-      stop("All diagonal elements of correlation_matrix must be equal to 1.")
-    #ToDo: check that all elements are between -1 and 1.
+      stop("All diagonal elements of \"correlation_matrix\"  must be equal to 1.")
+    # Check that all elements are between -1 and 1.
+    if( any(abs(correlation_matrix) > 1 ) )
+      stop("All values of \"correlation_matrix\" must be  >= -1 and <= 1.")
     #ToDo: Check that all rows are named
-    #ToDo: check that rownames(correlation_matrix) is a subset of base names
+    #ToDo: check that rownames(correlation_matrix) is a subset of marginal names
   }
+  
+  # Create the marginal estimate:
+  if( as.logical(length(marginalOptional)) )
+    marginal<-data.frame(distribution=distribution, 
+                         lower=lower, 
+                         median=median, 
+                         upper=upper, 
+                         marginalOptional,
+                         row.names=row.names(marginalOptional),
+                         stringsAsFactors=FALSE) 
+  else
+    marginal<-data.frame(distribution=distribution, 
+                         lower=lower, 
+                         median=median, 
+                         upper=upper, 
+                         row.names=row.names(marginalOptional),
+                         stringsAsFactors=FALSE) 
+  if( !is.null(marginal$variable) ){
+    rownames(marginal)<-marginal$variable
+    marginal<-marginal[!colnames(marginal) %in% "variable"]
+  }
+  # Drop rows without variable name:
+  marginal<-subset(marginal, row.names(marginal) != "")
+  if( is.null(marginal$distribution) )
+    stop("marginal must be supplied with a distribution column.")
+  
   # Return object:
-  returnObject=list(base=base , correlation_matrix=correlation_matrix)
+  returnObject=list(marginal=marginal , correlation_matrix=correlation_matrix)
+  #ToDo: or  class(estimateObject)<-c("estimate", "data.frame") ???
   class(returnObject)<-"estimate"
   returnObject
 }
 ##############################################################################################
+# as.estimate( ..., correlation_matrix)
+##############################################################################################
+#' Coerce and transform to a multivariate estimate object.
+#'
+#' \code{as.estimate} tries to coerce a set of objects and transform them to \code{class estimate}.
+#' @rdname estimate
+#' @examples
+#' # Create a minimum estimate from text (only mandatory marginal information supplied):
+#' estimateTextMin<-"distribution, lower, upper
+#'                   posnorm,      100,   1000
+#'                   posnorm,      50,    2000
+#'                   posnorm,      50,    2000
+#'                   posnorm,      100,   1000"
+#' estimateMin<-as.estimate(read.csv(header=TRUE, text=estimateTextMin, 
+#'                           strip.white=TRUE, stringsAsFactors=FALSE))
+#' print(estimateMin) 
+#' 
+#' # Create an estimate from text (only marginal information supplied):
+#' estimateText<-"variable,  distribution, lower, upper, median, method
+#'                revenue1,  posnorm,      100,   1000,  NA,        
+#'                revenue2,  posnorm,      50,    2000,    ,     fit
+#'                costs1,    posnorm,      50,    2000,  70,     calculate
+#'                costs2,    posnorm,      100,   1000,  mean,             "
+#' estimateMarg<-as.estimate(read.csv(header=TRUE, text=estimateText, 
+#'                           strip.white=TRUE, stringsAsFactors=FALSE))
+#' print(estimateMarg)
+#' print(corMat(estimateMarg))
+#' 
+#' # Create an estimate from text (with correlated components): 
+#' estimateTextMarg<-"variable,  distribution, lower, upper
+#'                    revenue1,  posnorm,      100,   1000
+#'                    revenue2,  posnorm,      50,    2000
+#'                    costs1,    posnorm,      50,    2000
+#'                    costs2,    posnorm,      100,   1000"
+#' estimateTextCor<-",         revenue1, costs2
+#'                   revenue1,        1,   -0.3
+#'                   costs2,       -0.3,      1"
+#' estimateCor<-as.estimate(read.csv(header=TRUE, text=estimateTextMarg, 
+#'                           strip.white=TRUE, stringsAsFactors=FALSE),
+#'                           correlation_matrix=data.matrix(read.csv(text=estimateTextCor, 
+#'                                                                   row.names=1,
+#'                                                                   strip.white=TRUE)))
+#' print(estimateCor)
+#' print(corMat(estimateCor))
+#' @export
+as.estimate<-function(..., correlation_matrix=NULL){
+  # Coerce the marginal data.frame:
+  marginal<-data.frame(..., stringsAsFactors=FALSE)
+  # Check preconditions:
+  if (  is.null(marginal$distribution) )
+    stop( "no \"distribution\" column!")
+  if (  is.null(marginal$lower) )
+    stop( "no \"lower\" column!")
+  if (  is.null(marginal$upper)  )
+    stop( "no \"upper\" column!")
+  # Create and return the estimate:
+  estimate(distribution=marginal[["distribution"]], 
+           lower=marginal[["lower"]],
+           upper=marginal[["upper"]],
+           marginal[!names(marginal) %in% c("distribution", "lower", "upper")],
+           correlation_matrix=correlation_matrix)
+}
+##############################################################################################
 # row.names.estimate(x)
 ##############################################################################################
-#' Return the variable names of an \code{estimate} object.
+#' Get the variable names, column names and correlation matrix of an \code{estimate} object.
 #'
-#' This function returns the variable names of an \code{\link{estimate}} object which is identical to
-#' \code{row.names(x$base)}.
+#' \code{row.names.estimate} returns the variable names of an \code{\link{estimate}} object which 
+#' is identical to \code{row.names(x$marginal)}.
 #' @param x an \code{\link{estimate}} object.
-#' @seealso \code{\link{estimate}}, \code{\link{names.estimate}}, \code{\link{corMat.estimate}}
+#' @seealso \code{\link{estimate}}, \code{\link{names.estimate}}, \code{\link{corMat.estimate}}, 
+#'   \code{\link{corMat}}
+#' @examples
+#'  # Read the joint estimate information for the variables "sales", "productprice" and 
+#'  # "costprice" from file:
+#'  ## Get the path to the file with the marginal information:
+#'  marginalFilePath=system.file("extdata","profit-4.csv",package="decisionSupport")
+#'  ## Read marginal and correlation file into an estimate:
+#'  parameterEstimate<-estimate_read_csv(fileName=marginalFilePath)
+#'  print(parameterEstimate)
+#'  ## Print the names of the variables of this estimate
+#'  print(row.names(parameterEstimate))
 #' @export
 row.names.estimate<-function(x){
-  row.names(x$base)
+  row.names(x$marginal)
 }
 ##############################################################################################
 # names.estimate(x)
 ##############################################################################################
 #' Return the column names of an \code{estimate} object.
 #'
-#' This function returns the column names of an \code{\link{estimate}} object which is identical to
-#' \code{names(x$base)}.
-#' @param x an \code{\link{estimate}} object.
-#' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{corMat.estimate}}
+#' \code{names.estimate} returns the column names of an \code{\link{estimate}} object which is identical to
+#' \code{names(x$marginal)}.
+#' @rdname row.names.estimate
+#' @examples
+#'  ## Print the names of the columns of this estimate
+#'   print(names(parameterEstimate))
 #' @export
 names.estimate<-function(x){
-  names(x$base)
+  names(x$marginal)
 }
 ##############################################################################################
 # generic: corMat(rho)
@@ -133,9 +371,12 @@ corMat <- function(rho) UseMethod("corMat")
 ##############################################################################################
 #' Return the correlation matrix of an \code{estimate} object.
 #'
-#' This function returns the full correlation matrix of an \code{\link{estimate}} object.
+#' \code{corMat.estimate} returns the full correlation matrix of an \code{\link{estimate}} object.
 #' @param rho an \code{\link{estimate}} object.
-#' @seealso \code{\link{estimate}}, \code{\link{row.names.estimate}}, \code{\link{names.estimate}}
+#' @rdname row.names.estimate
+#' @examples
+#'  ## Print the full correlation matrix of this estimate
+#'   print(corMat(parameterEstimate))
 #' @export
 corMat.estimate<-function(rho){
   # Create identity matrix:
@@ -156,7 +397,7 @@ corMat.estimate<-function(rho){
 #' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
 #' defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
 #' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
-#' @param fileName Name of the file containing the base information of the estimate that should be read.
+#' @param fileName Name of the file containing the marginal information of the estimate that should be read.
 #' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields
 #' (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
 #'  remembering that the columns may include the row names.
@@ -165,11 +406,11 @@ corMat.estimate<-function(rho){
 #' @details An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
 #' is described in the following.
 #' @section CSV input file structures:
-#' The estimate is read from one or two csv files: the basic csv file which is mandatory and the correlation csv file which is optional.
-#' The basic csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
+#' The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
+#' The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
 #' file only defines correlations.
-#' \subsection{The structure of the basic input file (mandatory)}{
-#'    File name structure: \code{<basic-filename>.csv}\cr
+#' \subsection{The structure of the marginal distributions input file (mandatory)}{
+#'    File name structure: \code{<marginal-filename>.csv}\cr
 #'    Mandatory columns:
 #'    \tabular{lll}{
 #'      Column name         \tab  R-type    \tab Explanation\cr
@@ -183,40 +424,51 @@ corMat.estimate<-function(rho){
 #'      Column name         \tab  R-type  \tab  Explanation \cr
 #'      \code{description}  \tab  \code{character}  \tab  ToDo\cr
 #'      \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
-#'      \code{start}        \tab  \code{integer}    \tab  ToDo\cr
-#'      \code{end}          \tab  \code{integer}    \tab  ToDo\cr
-#'      \code{indicator}    \tab  \code{logical}    \tab  ToDo
 #'    }
 #'    Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
 #' }
 #' \subsection{The structure of the correlation file (optional)}{
-#'    File name structure: \code{<basic-filename>_cor.csv}\cr
+#'    File name structure: \code{<marginal-filename>_cor.csv}\cr
 #'    Columns and rows are named by the corresponding variables. Only those variables need to be present which are correlated with others.
 #'    The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}.
 #'    Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be
 #'    set to \code{1}. The matrix must be given in symmetric form.
 #' }
 #' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
+#' @examples
+#'  # Read the joint estimate information for the variables "sales", "productprice" and 
+#'  # "costprice" from file:
+#'  ## Get the path to the file with the marginal information:
+#'  marginalFilePath=system.file("extdata","profit-4.csv",package="decisionSupport")
+#'  ## Read the marginal information from file "profit-4.csv" and print it to the screen as 
+#'  ## for illustration:
+#'  read.csv(marginalFilePath, strip.white=TRUE)
+#'  ## Read the correlation information from file "profit-4_cor.csv" and print it to the screen as
+#'  ## illustration: 
+#'  read.csv(gsub(".csv","_cor.csv",marginalFilePath), row.names=1)
+#'  ## Now read marginal and correlation file straight into an estimate:
+#'  parameterEstimate<-estimate_read_csv(fileName=marginalFilePath)
+#'  print(parameterEstimate)
 #' @export
 estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
-  base<-NULL
+  marginal<-NULL
   correlation_matrix<-NULL
-  baseFilename<-fileName
-  # Read basic data:
-  #base<-read.csv(baseFilename,row.names="variable", strip.white=strip.white, stringsAsFactors=FALSE, ...)
-  base<-read.csv(baseFilename, strip.white=strip.white, stringsAsFactors=FALSE, ...)
+  marginalFilename<-fileName
+  # Read marginal data:
+  #marginal<-read.csv(marginalFilename,row.names="variable", strip.white=strip.white, stringsAsFactors=FALSE, ...)
+  marginal<-read.csv(marginalFilename, strip.white=strip.white, stringsAsFactors=FALSE, ...)
   # ToDo: replace subset() such that reference to global variable "variable" becomes obsolete:
-  base<-subset(base,variable!="")
-  base<-data.frame(base,row.names="variable")
+  marginal<-subset(marginal,variable!="")
+  marginal<-data.frame(marginal,row.names="variable")
   # Read correlation data:
   # Generate correlation filename:
-  correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
+  correlationFilename<-gsub(".csv","_cor.csv",marginalFilename)
   # Read correlation file if it exists:
   if(file.exists(correlationFilename))
     correlation_matrix<-data.matrix(read.csv(correlationFilename, row.names=1))
   
   # Return object
-  estimate(base, correlation_matrix=correlation_matrix)
+  as.estimate(marginal, correlation_matrix=correlation_matrix)
 }
 ###############################################################################################
 # estimate_write_csv(estimate, fileName, strip.white=TRUE, ...)
@@ -239,18 +491,18 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
 #' @export
 estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=FALSE, ...){
-  baseFilename=fileName
-  # Write basic data to file:
+  marginalFilename=fileName
+  # Write marginal data to file:
   if (varNamesAsColumn){
-    base<-cbind(estimate$base,variable=row.names(estimate))
-    row.names(base)<-NULL
+    marginal<-cbind(estimate$marginal,variable=row.names(estimate))
+    row.names(marginal)<-NULL
   } else
-    base<-estimate$base
-  write.csv(x=base, file=baseFilename, row.names=!varNamesAsColumn,  quote=FALSE, ...)
+    marginal<-estimate$marginal
+  write.csv(x=marginal, file=marginalFilename, row.names=!varNamesAsColumn,  quote=FALSE, ...)
   # Write correlation data if exists:
   if( !is.null(estimate$correlation_matrix) ){
     # Generate correlation filename:
-    correlationFilename<-gsub(".csv","_cor.csv",baseFilename)
+    correlationFilename<-gsub(".csv","_cor.csv",marginalFilename)
     # Wirte correlation file:
     write.csv(x=estimate$correlation_matrix, file=correlationFilename, quote=FALSE, ...)
   }
@@ -283,7 +535,7 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #'	distribution=c("norm","norm")
 #'  lower=c(10000,  5000)
 #'  upper=c(100000, 50000)
-#'  estimateObject<-estimate(variable, distribution, lower, upper)
+#'  estimateObject<-as.estimate(variable, distribution, lower, upper)
 #'  x<-random(rho=estimateObject, n=10000)
 #'  apply(X=x, MARGIN=2, FUN=quantile, probs=c(0.05, 0.95))
 #'  cor(x)
@@ -291,6 +543,22 @@ estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=
 #'  summary(x)
 #'  hist(x[,"revenue"])
 #'  hist(x[,"costs"])
+#'  
+#'  # Create an estimate with median and method information:
+#'  estimateObject<-estimate(         c("posnorm", "lnorm"),
+#'                                    c(        4,       4),
+#'                                    c(       50,      10),
+#'                           variable=c("revenue", "costs"),
+#'                           median = c(   "mean",      NA),
+#'                           method = c(    "fit",      ""))
+#'  # Sample random values for this estimate:
+#'  x<-random(rho=estimateObject, n=10000)
+#'  # Check the results 
+#'  apply(X=x, MARGIN=2, FUN=quantile, probs=c(0.05, 0.95))
+#'  summary(x)
+#'  hist(x[,"revenue"], breaks=100)
+#'  hist(x[,"costs"], breaks=100)
+#'  
 #' @seealso \code{\link{estimate}}, \code{\link{random.estimate1d}}, \code{\link{random}}
 #' @export
 random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ...){
@@ -299,10 +567,10 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
   x<-NULL
   if ( !is.null(rho$correlation_matrix) ){
     # Select correlated variables:
-    rhoCorrelated<-list(base=NULL,correlation_matrix=NULL)
+    rhoCorrelated<-list(marginal=NULL,correlation_matrix=NULL)
     class(rhoCorrelated)<-"estimateCorrelated"
     namesCorrelated<-row.names(rho$correlation_matrix)
-    rhoCorrelated$base<-rho$base[namesCorrelated, ]
+    rhoCorrelated$marginal<-rho$marginal[namesCorrelated, ]
     rhoCorrelated$correlation_matrix<-rho$correlation_matrix
     # Generate correlated variables
     x<-random(rho=rhoCorrelated,
@@ -312,8 +580,8 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
               ...)
     # Select uncorrelated variables if there are any:
     if( length(namesUnCorrelated
-               <-row.names(rho$base[!(row.names(rho$base) %in% namesCorrelated ),]) ) ){
-      rhoUnCorrelated<-rho$base[namesUnCorrelated, ]
+               <-row.names(rho$marginal[!(row.names(rho$marginal) %in% namesCorrelated ),]) ) ){
+      rhoUnCorrelated<-rho$marginal[namesUnCorrelated, ]
       class(rhoUnCorrelated)<-c("estimateUnCorrelated", class(rhoUnCorrelated))
       x<-cbind(x, random(rho=rhoUnCorrelated, 
                          n=n, 
@@ -322,8 +590,8 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
                          ...))
     }
   } else {
-    class(rho$base)<-c("estimateUnCorrelated", class(rho$base))
-    x<-random(rho=rho$base, 
+    class(rho$marginal)<-c("estimateUnCorrelated", class(rho$marginal))
+    x<-random(rho=rho$marginal, 
               n=n, 
               method=method, 
               relativeTolerance=relativeTolerance,
@@ -352,10 +620,10 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
 random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ...){
   x<-NULL
   if(method=="calculate"){
-    if( identical( rho$base$distribution, rep("norm", nrow(rho$base)) ) ){
+    if( identical( rho$marginal$distribution, rep("norm", nrow(rho$marginal)) ) ){
       x<-rmvnorm90ci_exact(n=n,
-                           lower=data.matrix(rho$base["lower"]),
-                           upper=data.matrix(rho$base["upper"]),
+                           lower=data.matrix(rho$marginal["lower"]),
+                           upper=data.matrix(rho$marginal["upper"]),
                            correlationMatrix=rho$correlation_matrix)
     }
     else

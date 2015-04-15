@@ -38,8 +38,8 @@ distribution=c("norm","norm")
 # Characterize standard normal distributions by confidence intervals: 
 lower=c(-c_0.95,  -c_0.95)
 upper=c(c_0.95, c_0.95)
-estimate<-estimate(distribution=distribution,lower=lower,upper=upper,row.names=variable)
-#estimate=list(base=base, correlation_matrix="" )
+estimate<-as.estimate(distribution=distribution,lower=lower,upper=upper,row.names=variable)
+#estimate=list(marginal=marginal, correlation_matrix="" )
 #class(estimate)<-"estimate"
 
 microbenchmark(

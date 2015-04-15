@@ -85,7 +85,7 @@ NULL
 #'  distribution=c("norm","norm")
 #'  lower=c(10000,  5000)
 #'  upper=c(100000, 50000)
-#'  costBenefitEstimate<-estimate(variable, distribution, lower, upper)
+#'  costBenefitEstimate<-as.estimate(variable, distribution, lower, upper)
 #'  # (a) Define the model function without name for the return value:
 #'  profit1<-function(x){
 #'    x$revenue-x$costs

@@ -7,7 +7,7 @@
 estimate_read_csv(fileName, strip.white = TRUE, ...)
 }
 \arguments{
-\item{fileName}{Name of the file containing the base information of the estimate that should be read.}
+\item{fileName}{Name of the file containing the marginal information of the estimate that should be read.}
 
 \item{strip.white}{logical. Allows the stripping of leading and trailing white space from unquoted character fields
 (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
@@ -29,11 +29,11 @@ is described in the following.
 }
 \section{CSV input file structures}{
 
-The estimate is read from one or two csv files: the basic csv file which is mandatory and the correlation csv file which is optional.
-The basic csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
+The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
+The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
 file only defines correlations.
-\subsection{The structure of the basic input file (mandatory)}{
-   File name structure: \code{<basic-filename>.csv}\cr
+\subsection{The structure of the marginal distributions input file (mandatory)}{
+   File name structure: \code{<marginal-filename>.csv}\cr
    Mandatory columns:
    \tabular{lll}{
      Column name         \tab  R-type    \tab Explanation\cr
@@ -47,19 +47,31 @@ file only defines correlations.
      Column name         \tab  R-type  \tab  Explanation \cr
      \code{description}  \tab  \code{character}  \tab  ToDo\cr
      \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
-     \code{start}        \tab  \code{integer}    \tab  ToDo\cr
-     \code{end}          \tab  \code{integer}    \tab  ToDo\cr
-     \code{indicator}    \tab  \code{logical}    \tab  ToDo
    }
    Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
 }
 \subsection{The structure of the correlation file (optional)}{
-   File name structure: \code{<basic-filename>_cor.csv}\cr
+   File name structure: \code{<marginal-filename>_cor.csv}\cr
    Columns and rows are named by the corresponding variables. Only those variables need to be present which are correlated with others.
    The element \code{["rowname","columnname"]} contains the correlation between the variables \code{rowname} and \code{columnname}.
    Uncorrelated elements can be left empty, i.e. as \code{NA}, or defined as \code{0}. The element \code{["name","name"]} has to be
    set to \code{1}. The matrix must be given in symmetric form.
 }
+}
+\examples{
+# Read the joint estimate information for the variables "sales", "productprice" and
+ # "costprice" from file:
+ ## Get the path to the file with the marginal information:
+ marginalFilePath=system.file("extdata","profit-4.csv",package="decisionSupport")
+ ## Read the marginal information from file "profit-4.csv" and print it to the screen as
+ ## for illustration:
+ read.csv(marginalFilePath, strip.white=TRUE)
+ ## Read the correlation information from file "profit-4_cor.csv" and print it to the screen as
+ ## illustration:
+ read.csv(gsub(".csv","_cor.csv",marginalFilePath), row.names=1)
+ ## Now read marginal and correlation file straight into an estimate:
+ parameterEstimate<-estimate_read_csv(fileName=marginalFilePath)
+ print(parameterEstimate)
 }
 \seealso{
 \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}

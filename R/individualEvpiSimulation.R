@@ -68,7 +68,7 @@ NULL
 #'                revenue2,  posnorm,      50,    2000
 #'                costs1,    posnorm,      50,    2000
 #'                costs2,    posnorm,      100,   1000"
-#' currentEstimate<-estimate(read.csv(header=TRUE, text=estimateText, 
+#' currentEstimate<-as.estimate(read.csv(header=TRUE, text=estimateText, 
 #'                           strip.white=TRUE, stringsAsFactors=FALSE))
 #' # The model function:
 #' profitModel <- function(x){
@@ -92,9 +92,9 @@ individualEvpiSimulation <- function(model, currentEstimate,
 	print(perfectProspectiveValues)
 	for( i in perfectProspectiveNames){
 		prospectiveEstimate[[i]]<-currentEstimate
-		prospectiveEstimate[[i]]$base[i,"distribution"]<-"const"
-		prospectiveEstimate[[i]]$base[i,"lower"]<-perfectProspectiveValues[[i]]
-		prospectiveEstimate[[i]]$base[i,"upper"]<-perfectProspectiveValues[[i]]
+		prospectiveEstimate[[i]]$marginal[i,"distribution"]<-"const"
+		prospectiveEstimate[[i]]$marginal[i,"lower"]<-perfectProspectiveValues[[i]]
+		prospectiveEstimate[[i]]$marginal[i,"upper"]<-perfectProspectiveValues[[i]]
 	}
 	
 	# Calculate the Expected Value of Perfect Information:

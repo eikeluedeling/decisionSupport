@@ -10,13 +10,13 @@ estimate1d(distribution, lower, upper, ...)
 as.estimate1d(x, ...)
 }
 \arguments{
-\item{distribution}{\code{character}; A character string that defines the type of the univariate
+\item{distribution}{\code{character}: A character string that defines the type of the univariate
 parametric distribution.}
 
-\item{lower}{\code{numeric}; lower bound of the 90\% confidence intervall, i.e the 5\%-quantile
+\item{lower}{\code{numeric}: lower bound of the 90\% confidence intervall, i.e the 5\%-quantile
 of this estimate.}
 
-\item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall, i.e the 95\%-quantile
+\item{upper}{\code{numeric}: upper bound of the 90\% confidence intervall, i.e the 95\%-quantile
 of this estimate.}
 
 \item{...}{arguments that can be coerced to a list comprising further elements of the 1-d
@@ -39,9 +39,9 @@ An object of class \code{estimate1d} and \code{list} with at least (!) the eleme
    \code{lower <= upper}.
 }
 \description{
-\code{estimate1d} creates an object of class \code{estimate1d}. A one dimensional estimate is
-at minimum characterized by the type of a univariate parametric distribution, the 5\% - and 95\%
-quantiles. Optionally, the median can be supplied.
+\code{estimate1d} creates an object of class \code{estimate1d}. The estimate of a one dimensional
+variable is at minimum defined by the type of a univariate parametric distribution, the 5\% - and
+95\% quantiles. Optionally, the median can be supplied.
 
 \code{as.estimate1d} tries to transform an object to class \code{estimate1d}.
 }

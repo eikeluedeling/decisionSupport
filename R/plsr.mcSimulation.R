@@ -31,8 +31,7 @@ NULL
 ##############################################################################################
 #' Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.
 #' 
-#' A summary of the results of a Monte Carlo simulation obtained by the function
-#' \code{\link{mcSimulation}} is produced.
+#' Perform a Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.
 #' @param object An object of class \code{mcSimulation}.
 #' @param resultName \code{character}; indicating the name of the component of
 #'   the simulation function (\code{model_function}) which results histogram

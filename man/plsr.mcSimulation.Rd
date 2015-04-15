@@ -39,8 +39,7 @@ results shall be displayed. Defaults to all components.}
 An object of class \code{\link[pls:mvr]{mvr}}.
 }
 \description{
-A summary of the results of a Monte Carlo simulation obtained by the function
-\code{\link{mcSimulation}} is produced.
+Perform a Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.
 }
 \seealso{
 \code{\link{mcSimulation}}, \code{\link[pls:plsr]{plsr}},

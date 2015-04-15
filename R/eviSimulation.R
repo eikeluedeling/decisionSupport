@@ -63,15 +63,13 @@ NULL
 #' distribution=c("posnorm","posnorm")
 #' lower=c(10000,  5000)
 #' upper=c(100000, 50000)
-#' currentEstimate<-estimate(variable, distribution, lower, upper)
+#' currentEstimate<-as.estimate(variable, distribution, lower, upper)
 #' prospectiveEstimate<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
-#'                      currentEstimate$base["revenue","upper"]))
-#' prospectiveEstimate$base["revenue",]<-data.frame(distribution="const",
-#'                                                  lower=revenueConst, 
-#'                                                  upper=revenueConst, 
-#'                                                  row.names="revenue",
-#'                                                  stringsAsFactors=FALSE)
+#' revenueConst<-mean(c(currentEstimate$marginal["revenue","lower"],
+#'                      currentEstimate$marginal["revenue","upper"]))
+#' prospectiveEstimate$marginal["revenue","distribution"]<-"const"
+#' prospectiveEstimate$marginal["revenue","lower"]<-revenueConst 
+#' prospectiveEstimate$marginal["revenue","upper"]<-revenueConst 
 #' # (a) Define the model function without name for the return value:
 #' profit<-function(x){
 #' 	x$revenue-x$costs
@@ -125,15 +123,14 @@ NULL
 #' distribution=c("posnorm","posnorm")
 #' lower=c(10000,  5000)
 #' upper=c(100000, 50000)
-#' currentEstimate<-estimate(variable, distribution, lower, upper)
+#' currentEstimate<-as.estimate(variable, distribution, lower, upper)
 #' perfectInformationRevenue<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
-#'                      currentEstimate$base["revenue","upper"]))
-#' perfectInformationRevenue$base["revenue",]<-data.frame(distribution="const",
-#'                                                        lower=revenueConst, 
-#'                                                        upper=revenueConst, 
-#'                                                        row.names="revenue",
-#'                                                        stringsAsFactors=FALSE)
+#' revenueConst<-mean(c(currentEstimate$marginal["revenue","lower"],
+#'                      currentEstimate$marginal["revenue","upper"]))
+#' perfectInformationRevenue$marginal["revenue","distribution"]<-"const"
+#' perfectInformationRevenue$marginal["revenue","lower"]<-revenueConst 
+#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst 
+#'                                                        
 #' # (a) A list with one element
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue)
 #' # Calculate the Expected Value of Information:
@@ -147,13 +144,11 @@ NULL
 #' #############################################################
 #' # (b) A list with two elements
 #' perfectInformationCosts<-currentEstimate
-#' costsConst<-mean(c(currentEstimate$base["costs","lower"], 
-#'                    currentEstimate$base["costs","upper"]))
-#' perfectInformationCosts$base["costs",]<-data.frame(distribution="const",
-#'                                                    lower=costsConst, 
-#'                                                    upper=costsConst, 
-#'                                                    row.names="costs",
-#'                                                    stringsAsFactors=FALSE)
+#' costsConst<-mean(c(currentEstimate$marginal["costs","lower"], 
+#'                    currentEstimate$marginal["costs","upper"]))
+#' perfectInformationCosts$marginal["costs","distribution"]<-"const"
+#' perfectInformationCosts$marginal["costs","lower"]<-costsConst 
+#' perfectInformationCosts$marginal["costs","upper"]<-costsConst                                                  
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 #'                           perfectInformationCosts=perfectInformationCosts)
 #' # Calculate the Expected Value of Information:
@@ -173,23 +168,20 @@ NULL
 #' distribution=c("posnorm","posnorm")
 #' lower=c(10000,  5000)
 #' upper=c(100000, 50000)
-#' currentEstimate<-estimate(variable, distribution, lower, upper)
+#' currentEstimate<-as.estimate(variable, distribution, lower, upper)
 #' # Create a list of two prospective estimates:
 #' perfectInformationRevenue<-currentEstimate
-#' revenueConst<-mean(c(currentEstimate$base["revenue","lower"],
-#'                      currentEstimate$base["revenue","upper"]))
-#' perfectInformationRevenue$base["revenue",]<-data.frame(distribution="const",
-#'                                                        lower=revenueConst, 
-#'                                                        upper=revenueConst, 
-#'                                                        row.names="revenue",
-#'                                                        stringsAsFactors=FALSE)
+#' revenueConst<-mean(c(currentEstimate$marginal["revenue","lower"],
+#'                      currentEstimate$marginal["revenue","upper"]))
+#' perfectInformationRevenue$marginal["revenue","distribution"]<-"const"
+#' perfectInformationRevenue$marginal["revenue","lower"]<-revenueConst 
+#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst                                                      
 #' perfectInformationCosts<-currentEstimate
-#' costsConst<-mean(c(currentEstimate$base["costs","lower"],currentEstimate$base["costs","upper"]))
-#' perfectInformationCosts$base["costs",]<-data.frame(distribution="const",
-#'                                                    lower=costsConst, 
-#'                                                    upper=costsConst, 
-#'                                                    row.names="costs",
-#'                                                    stringsAsFactors=FALSE)
+#' costsConst<-mean(c(currentEstimate$marginal["costs","lower"], 
+#'                    currentEstimate$marginal["costs","upper"]))
+#' perfectInformationCosts$marginal["costs","distribution"]<-"const"
+#' perfectInformationCosts$marginal["costs","lower"]<-costsConst 
+#' perfectInformationCosts$marginal["costs","upper"]<-costsConst                                                    
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 #'                           perfectInformationCosts=perfectInformationCosts)
 #' # Define the model function with two decision variables:

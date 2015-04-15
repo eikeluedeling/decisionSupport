@@ -40,11 +40,11 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Read the estimate for revenue and costs:
             profitEstimate<-estimate_read_csv("profit-1.csv")
             # Calculate means from 95%-confidence intervalls:
-            meanRevenue <- mean(c(profitEstimate$base["revenue","lower"], profitEstimate$base["revenue","upper"]) ) 
-            meanCosts <- mean(c(profitEstimate$base["costs","lower"], profitEstimate$base["costs","upper"]) ) 
+            meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
+            meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
             # Calculate standard deviations from 95%-confidence intervalls:
-            sdRevenue <- 0.5 * (profitEstimate$base["revenue","upper"] - profitEstimate$base["revenue","lower"]) / qnorm(0.95)
-            sdCosts <- 0.5 * (profitEstimate$base["costs","upper"] - profitEstimate$base["costs","lower"]) / qnorm(0.95)
+            sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
+            sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
             # Calculate expected moments for profit = revenue - costs:
             meanProfitExpected <- meanRevenue - meanCosts
             sdProfitExpected <- sqrt( sdRevenue^2 + sdCosts^2)
@@ -67,11 +67,11 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Read the estimate for revenue and costs:
             profitEstimate<-estimate_read_csv("profit-1.csv")
             # Calculate means from 95%-confidence intervalls:
-            meanRevenue <- mean(c(profitEstimate$base["revenue","lower"], profitEstimate$base["revenue","upper"]) ) 
-            meanCosts <- mean(c(profitEstimate$base["costs","lower"], profitEstimate$base["costs","upper"]) ) 
+            meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
+            meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
             # Calculate standard deviations from 95%-confidence intervalls:
-            sdRevenue <- 0.5 * (profitEstimate$base["revenue","upper"] - profitEstimate$base["revenue","lower"]) / qnorm(0.95)
-            sdCosts <- 0.5 * (profitEstimate$base["costs","upper"] - profitEstimate$base["costs","lower"]) / qnorm(0.95)
+            sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
+            sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
             # Calculate expected moments for profit = revenue - costs:
             meanProfitExpected <- meanRevenue - meanCosts
             sdProfitExpected <- sqrt( sdRevenue^2 + sdCosts^2)
@@ -94,11 +94,11 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Read the estimate for revenue and costs:
             profitEstimate<-estimate_read_csv("profit-1.csv")
             # Calculate means from 95%-confidence intervalls:
-            meanRevenue <- mean(c(profitEstimate$base["revenue","lower"], profitEstimate$base["revenue","upper"]) ) 
-            meanCosts <- mean(c(profitEstimate$base["costs","lower"], profitEstimate$base["costs","upper"]) ) 
+            meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
+            meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
             # Calculate standard deviations from 95%-confidence intervalls:
-            sdRevenue <- 0.5 * (profitEstimate$base["revenue","upper"] - profitEstimate$base["revenue","lower"]) / qnorm(0.95)
-            sdCosts <- 0.5 * (profitEstimate$base["costs","upper"] - profitEstimate$base["costs","lower"]) / qnorm(0.95)
+            sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
+            sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
             # Calculate expected moments for profit = revenue - costs:
             meanProfitExpected <- meanRevenue - meanCosts
             sdProfitExpected <- sqrt( sdRevenue^2 + sdCosts^2)
@@ -121,11 +121,11 @@ test_that("Difference of two correlated normally distributed variables is normal
           	# Read the estimate for revenue and costs:
           	profitEstimate<-estimate_read_csv("profit-2.csv")
           	# Calculate means from 95%-confidence intervalls:
-          	meanRevenue <- mean(c(profitEstimate$base["revenue","lower"], profitEstimate$base["revenue","upper"]) ) 
-          	meanCosts <- mean(c(profitEstimate$base["costs","lower"], profitEstimate$base["costs","upper"]) ) 
+          	meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
+          	meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
           	# Calculate standard deviations from 95%-confidence intervalls:
-          	sdRevenue <- 0.5 * (profitEstimate$base["revenue","upper"] - profitEstimate$base["revenue","lower"]) / qnorm(0.95)
-          	sdCosts <- 0.5 * (profitEstimate$base["costs","upper"] - profitEstimate$base["costs","lower"]) / qnorm(0.95)
+          	sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
+          	sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
           	covRevenueCosts <- sdRevenue * sdCosts * profitEstimate$correlation_matrix["revenue","costs"]
           	# Calculate expected moments for profit = revenue - costs:
           	meanProfitExpected <- meanRevenue - meanCosts

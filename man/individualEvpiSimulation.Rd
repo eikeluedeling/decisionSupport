@@ -59,7 +59,7 @@ estimateText<-"variable,  distribution, lower, upper
                revenue2,  posnorm,      50,    2000
                costs1,    posnorm,      50,    2000
                costs2,    posnorm,      100,   1000"
-currentEstimate<-estimate(read.csv(header=TRUE, text=estimateText,
+currentEstimate<-as.estimate(read.csv(header=TRUE, text=estimateText,
                           strip.white=TRUE, stringsAsFactors=FALSE))
 # The model function:
 profitModel <- function(x){

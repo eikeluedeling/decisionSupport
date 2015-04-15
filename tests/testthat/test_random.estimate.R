@@ -35,14 +35,14 @@ test_that("3d - standard normal distribution (correlated) is generated correctly
 	# Read the estimate for revenue and costs:
 	profitEstimate<-estimate_read_csv("profit-4.csv")
 	# Calculate means from 95%-confidence intervalls:
-	meanProductPrice <- mean(c(profitEstimate$base["productprice","lower"], profitEstimate$base["productprice","upper"]) ) 
-	meanCostPrice <- mean(c(profitEstimate$base["costprice","lower"], profitEstimate$base["costprice","upper"]) ) 
-	meanSales <- mean(c(profitEstimate$base["sales","lower"], profitEstimate$base["sales","upper"]) )
+	meanProductPrice <- mean(c(profitEstimate$marginal["productprice","lower"], profitEstimate$marginal["productprice","upper"]) ) 
+	meanCostPrice <- mean(c(profitEstimate$marginal["costprice","lower"], profitEstimate$marginal["costprice","upper"]) ) 
+	meanSales <- mean(c(profitEstimate$marginal["sales","lower"], profitEstimate$marginal["sales","upper"]) )
 	mean <- c(productprice=meanProductPrice, costprice=meanCostPrice, sales=meanSales)
 	# Calculate standard deviations from 95%-confidence intervalls:
-	sdProductPrice <- 0.5 * (profitEstimate$base["productprice","upper"] - profitEstimate$base["productprice","lower"]) / qnorm(0.95)
-	sdCostPrice <- 0.5 * (profitEstimate$base["costprice","upper"] - profitEstimate$base["costprice","lower"]) / qnorm(0.95)
-	sdSales <- 0.5 * (profitEstimate$base["sales","upper"] - profitEstimate$base["sales","lower"]) / qnorm(0.95)
+	sdProductPrice <- 0.5 * (profitEstimate$marginal["productprice","upper"] - profitEstimate$marginal["productprice","lower"]) / qnorm(0.95)
+	sdCostPrice <- 0.5 * (profitEstimate$marginal["costprice","upper"] - profitEstimate$marginal["costprice","lower"]) / qnorm(0.95)
+	sdSales <- 0.5 * (profitEstimate$marginal["sales","upper"] - profitEstimate$marginal["sales","lower"]) / qnorm(0.95)
 	sd <- c(productprice=sdProductPrice, costprice=sdCostPrice, sales=sdSales)
 	# Extract the full correlation matrix:
 	cor<-corMat(profitEstimate)

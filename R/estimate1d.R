@@ -32,15 +32,15 @@ NULL
 # estimate1d(distribution, lower, upper,...)
 ##############################################################################################
 #' Create a 1-dimensional estimate object.
-#'
-#' \code{estimate1d} creates an object of class \code{estimate1d}. A one dimensional estimate is
-#' at minimum characterized by the type of a univariate parametric distribution, the 5\% - and 95\% 
-#' quantiles. Optionally, the median can be supplied.
-#' @param distribution \code{character}; A character string that defines the type of the univariate
+#' 
+#' \code{estimate1d} creates an object of class \code{estimate1d}. The estimate of a one dimensional
+#' variable is at minimum defined by the type of a univariate parametric distribution, the 5\% - and
+#' 95\% quantiles. Optionally, the median can be supplied.
+#' @param distribution \code{character}: A character string that defines the type of the univariate
 #'   parametric distribution. 
-#' @param lower \code{numeric}; lower bound of the 90\% confidence intervall, i.e the 5\%-quantile 
+#' @param lower \code{numeric}: lower bound of the 90\% confidence intervall, i.e the 5\%-quantile 
 #'   of this estimate.
-#' @param upper \code{numeric}; upper bound of the 90\% confidence intervall, i.e the 95\%-quantile 
+#' @param upper \code{numeric}: upper bound of the 90\% confidence intervall, i.e the 95\%-quantile 
 #'   of this estimate.
 #' @param ... arguments that can be coerced to a list comprising further elements of the 1-d 
 #'   estimate (for details cf. below). Each element must be atomic and of length 1 (1-d property).
@@ -103,9 +103,9 @@ estimate1d<-function(distribution, lower, upper, ...){
   ### Check input semantics:
   if ( lower > upper )
     stop("\"lower > upper\"")
-  ## Mandatory arguments:
-  #optionalArguments<-if(missing(...)) NULL else list(...)
-  optionalArguments<-list(...)
+  ## Optional arguments:
+  optionalArguments<-if( missing(...) || length(unlist(list(...)))==0 ) NULL else as.list(unlist(list(...))) 
+  #optionalArguments<-list(...)
   median<-NULL
   if( !is.null(optionalArguments) )
     for ( i in names(optionalArguments) ){
@@ -122,10 +122,12 @@ estimate1d<-function(distribution, lower, upper, ...){
           if( is.na(median) )
             median<-NULL
           else if( is.character(median) && median=="mean")
-            median<-mean(c(lower, upper))
-          else if( is.numeric(median) && (lower > median || median > upper) )
+            median<-as.numeric(mean(c(lower, upper)))
+          #else if ( !is.numeric(median) ) stop("\"median=", median, "\" is not allowed!")
+          else if (  is.na(median<-as.numeric(median)) ) 
+            stop("\"median=", median, "\" is not allowed!")
+          else if(  (lower > median || median > upper) )
             stop("It must hold: \"lower <= median <= upper\"")
-          else if ( !is.numeric(median) ) stop("\"median=", median, "\" is not allowed!")
         }
       }
       ### Check 1-d property:
@@ -135,7 +137,7 @@ estimate1d<-function(distribution, lower, upper, ...){
         stop("Optional argument \"", i, "\" is not 1 dimensional.")
     }
   # Create the estimate1d:
-  if( length(optionalArguments) )
+  if( as.logical(length(optionalArguments)) )
     estimate1dObject<-as.list( c(distribution=distribution, lower=lower, median=median, upper=upper, optionalArguments) )
   else
     estimate1dObject<-list(distribution=distribution, lower=lower, median=median, upper=upper )    
@@ -163,7 +165,7 @@ as.estimate1d<-function(x, ...){
   estimate1dObject<-estimate1d(distribution=x_vec[["distribution"]], 
                                lower=x_vec[["lower"]],
                                upper=x_vec[["upper"]],
-                               x_vec[!names(x_vec) %in% c("distribution", "lower", "upper")])
+                               as.list(x_vec[!names(x_vec) %in% c("distribution", "lower", "upper")]))
   # Return object:
   estimate1dObject
 }
@@ -258,7 +260,7 @@ as.estimate1d<-function(x, ...){
 #' @export
 random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05, ...){
   # Overwrite argument "method" if rho[["method"]] is supplied:
-  if ( !is.null(rho[["method"]]) )
+  if ( !is.null(rho[["method"]]) && rho[["method"]] !="")
     method<-rho[["method"]]
   # Create output vector for the random numbers to be generated:
   x<-vector(length=n)
@@ -274,8 +276,8 @@ random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05,
   else if(method=="calculate"){
     # ToDo: extract this block as function rdist90ci_calculate()?
     if(match(rho[["distribution"]], c("norm", 
-                                    "lnorm",
-                                    "unif"), nomatch = 0)){
+                                      "lnorm",
+                                      "unif"), nomatch = 0)){
       x <-  rdist90ci_exact(distribution=rho[["distribution"]],
                             n=n,
                             lower=rho[["lower"]],

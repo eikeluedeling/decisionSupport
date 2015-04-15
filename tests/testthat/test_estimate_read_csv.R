@@ -32,23 +32,25 @@ library(decisionSupport)
 ##############################################################################################
 context("Checking estimate_read_csv()")
 
-test_that("Simple base file is read correctly (full check)",{
-  profit_1_reference<-list(base=NULL,correlation_matrix=NULL)
+test_that("Simple marginal file is read correctly (full check)",{
+  profit_1_reference<-list(marginal=NULL,correlation_matrix=NULL)
   class(profit_1_reference)<-"estimate"
-  profit_1_reference$base<-data.frame( row.names   =c("revenue","costs"),
+  profit_1_reference$marginal<-data.frame( row.names   =c("revenue","costs"),
                                        distribution=c("norm", "norm"),
                                        lower       =c(20000,    10000),
+                                       median      =c(NA,       NA),
                                        upper       =c(100000,   70000),
                                        stringsAsFactors=FALSE)
   profit_1_estimate<-estimate_read_csv("profit-1.csv")
   expect_equal(profit_1_estimate, profit_1_reference)
 })
-test_that("Simple base and correlation file are read correctly (full check)",{
-  profit_2_reference<-list(base=NULL,correlation_matrix=NULL)
+test_that("Simple marginal and correlation file are read correctly (full check)",{
+  profit_2_reference<-list(marginal=NULL,correlation_matrix=NULL)
   class(profit_2_reference)<-"estimate"
-  profit_2_reference$base<-data.frame( row.names   =c("revenue","costs"),
+  profit_2_reference$marginal<-data.frame( row.names   =c("revenue","costs"),
                                        distribution=c("norm", "norm"),
                                        lower       =c(20000,    10000),
+                                       median      =c(NA,       NA),
                                        upper       =c(100000,   70000),
                                        stringsAsFactors=FALSE)
   profit_2_reference$correlation_matrix<-matrix(c(1, 0.5, 
@@ -59,11 +61,12 @@ test_that("Simple base and correlation file are read correctly (full check)",{
   expect_equal(profit_2_estimate, profit_2_reference)
 })
 test_that("Rows without variable name are dropped",{
-  profit_3_reference<-list(base=NULL,correlation_matrix=NULL)
+  profit_3_reference<-list(marginal=NULL,correlation_matrix=NULL)
   class(profit_3_reference)<-"estimate"
-  profit_3_reference$base<-data.frame( row.names   =c("revenue","costs"),
+  profit_3_reference$marginal<-data.frame( row.names   =c("revenue","costs"),
                                        distribution=c("norm", "norm"),
                                        lower       =c(20000,    10000),
+                                       median      =c(NA,       NA),
                                        upper       =c(100000,   70000),
                                        stringsAsFactors=FALSE)                                                   
   profit_3_estimate<-estimate_read_csv("profit-3.csv")
