@@ -42,6 +42,7 @@ NULL
 #' @param numberOfSimulations The number of Monte Carlo simulations to be run.
 #' @param randomMethod \code{character}: The method to be used to sample the distribution
 #'   representing the input estimate. For details see option \code{method} in 
+#'   \code{\link{random.estimate}}.
 #' @param functionSyntax \code{character}: The syntax which has to be used to implement the model
 #'   function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or 
 #'   \code{"matrixNames"}. Details are given below.

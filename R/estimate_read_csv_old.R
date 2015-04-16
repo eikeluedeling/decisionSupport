@@ -28,49 +28,15 @@
 NULL
 ###############################################################################################
 # estimate_read_csv_old(fileName, strip.white=TRUE, ...)
-# ToDo: review documentation (if pre and postconditions are correct)
 ##############################################################################################
 #' Read an Estimate from CSV - File (depreciated standard).
 #'
-#' This function reads an \code{\link{estimate}} from the specified csv files. In this context, an estimate of a variable is
-#' defined by its distribution type, its 90\%-confidence interval \code{[lower,upper]} and its correlation to other variables.
-#' #ToDo: Implement characterization of distribution by mean and sd. Eventually, also by other quantiles.
-#' @param fileName Name of the file containing the marginal information of the estimate that should be read.
-#' @param strip.white logical. Allows the stripping of leading and trailing white space from unquoted character fields
-#' (numeric fields are always stripped). See \code{\link[base]{scan}} for further details (including the exact meaning of 'white space'),
-#'  remembering that the columns may include the row names.
-#'  @param ... Further parameters to be passed to \code{\link[utils]{read.csv}}.
-#' @return An object of type \code{\link{estimate}}.
-#' @details An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
-#' is described in the following.
-#' @section CSV input file structures:
-#' The estimate is read from one or two csv files: the basic csv file which is mandatory and the correlation csv file which is optional.
-#' The basic csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
-#' file only defines correlations.
-#' \subsection{The structure of the basic input file (mandatory)}{
-#'    File name structure: \code{<basic-filename>.csv}\cr
-#'    Mandatory columns:
-#'    \tabular{lll}{
-#'      Column name         \tab  R-type    \tab Explanation\cr
-#'      \code{lower}        \tab  \code{numeric}   \tab  ToDo \cr
-#'      \code{upper}        \tab  \code{numeric}   \tab  ToDo \cr
-#'      \code{distribution} \tab  \code{character} \tab  ToDo \cr
-#'      \code{variable}     \tab  \code{character} \tab  ToDo
-#'    }
-#'    Optional columns:
-#'    \tabular{lll}{
-#'      Column name         \tab  R-type  \tab  Explanation \cr
-#'      \code{description}  \tab  \code{character}  \tab  ToDo\cr
-#'      \code{median}       \tab  \code{numeric}    \tab  ToDo\cr
-#'      \code{start}        \tab  \code{integer}    \tab  ToDo\cr
-#'      \code{end}          \tab  \code{integer}    \tab  ToDo\cr
-#'      \code{indicator}    \tab  \code{logical}    \tab  ToDo
-#'    }
-#'    Columns without names are ignored. Rows where the \code{variable} field is empty are also dropped.
-#' }
-#' \subsection{The structure of the correlation file (optional)}{
-#'    File name structure: \code{<basic-filename>.csv_correlations.csv}\cr
-#'    #ToDo
+#' \code{estimate_read_csv_old} reads an estimate form CSV file(s) according to the depreciated 
+#' standard. This funciton is for backward compatiility only.
+#' @rdname estimate_read_csv
+#' @details 
+#' \subsection{Depreciated input standard (\code{estimate_read_csv_old})}{
+#'    File name structure of the correlation file: \code{<marginal-filename>.csv_correlations.csv}\cr
 #' }
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 #' @export
@@ -78,7 +44,7 @@ estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
 	marginal<-NULL
 	#	correlation_matrix<-NULL
 	marginalFilename=fileName
-	# Read basic data:
+	# Read marginal data:
 	marginal<-read.csv(marginalFilename, strip.white=strip.white, stringsAsFactors=FALSE, ...)
 	marginal<-subset(marginal,variable!="")
 	marginal<-data.frame(marginal,row.names="variable")
@@ -92,7 +58,7 @@ estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
 		correlated_variables<-estimate_read_csv_old_correlation(paste(fileName,"_correlations.csv",sep=""))
 	}
 
-	# Merge basic information and correlation information (ToDo: check):
+	# Merge marginal information and correlation information (ToDo: check):
 	if( !setequal(intersect(row.names(marginal), row.names(correlated_variables$marginal)),
 					 row.names(subset(x=marginal,subset=(distribution=="correlated")))) )
 		stop("Variables in marginal file indicated as correlated are not the same as in correlation file.")

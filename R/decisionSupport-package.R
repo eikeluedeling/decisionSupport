@@ -65,7 +65,7 @@ NULL
 #'				Implementation: \code{\link{welfareDecisionAnalysis}}
 #'		}
 #'		\subsection{Utility Functions}{
-#'			Implementation: ToDo
+#'			Implementation: not implemented, yet :-(
 #'		}
 #' } 
 #' \subsection{The Meta Decision of Reducing Uncertainty}{ 
@@ -77,7 +77,7 @@ NULL
 #' 				Implementation: \code{\link{eviSimulation}}, \code{\link{individualEvpiSimulation}}
 #' 		}
 #' 		\subsection{Partial Least Squares (PLS) analysis and Variable Importance in Projection (VIP)}{
-#' 				Implementation: ToDo
+#' 				Implementation: \code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}
 #' 		}
 #' }
 #' \subsection{Solving the Practical Problem of Calculating Expectation Values by Monte Carlo Simulation}{
@@ -95,8 +95,6 @@ NULL
 #' 	Implementation: \code{\link{uncertaintyAnalysis}}
 #' }
 #'
-#' @section Package Options:
-#' 	ToDo
 #' 
 #' @section Copyright \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}: 
 #' 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)} 2015

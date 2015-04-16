@@ -2,7 +2,7 @@
 % Please edit documentation in R/welfareDecisionAnalysis.R
 \name{summary.welfareDecisionAnalysis}
 \alias{summary.welfareDecisionAnalysis}
-\title{Summarize Decsion Analysis Results.}
+\title{Summarize Welfare Decsion Analysis results.}
 \usage{
 \method{summary}{welfareDecisionAnalysis}(object, ..., digits = max(3,
   getOption("digits") - 3))
@@ -23,10 +23,11 @@
 An object of class \code{summary.welfareDecisionAnalysis}.
 }
 \description{
-summary.welfareDecisionAnalysis produces result summaries of the results of decision analysis
- simulation obtained by the function \code{\link{welfareDecisionAnalysis}}.
+Produce a summary of the results of a welfare decision analysis obtained by the function
+ \code{\link{welfareDecisionAnalysis}}.
 }
 \seealso{
-\code{\link{welfareDecisionAnalysis}}, \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
+\code{\link{welfareDecisionAnalysis}},
+ \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
 }
 

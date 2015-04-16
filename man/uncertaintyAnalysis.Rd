@@ -4,7 +4,7 @@
 \alias{uncertaintyAnalysis}
 \title{Uncertainty Analysis Wrapper Function.}
 \usage{
-uncertaintyAnalysis(inputFilePath, outputPath, modelFunction,
+uncertaintyAnalysis(inputFilePath, outputPath, welfareFunction,
   numberOfSimulations, randomMethod = "calculate",
   functionSyntax = "globalNames", write_table = TRUE,
   plsrVipAnalysis = TRUE, indicators = FALSE, log_scales = FALSE,
@@ -15,13 +15,16 @@ uncertaintyAnalysis(inputFilePath, outputPath, modelFunction,
 
 \item{outputPath}{Path were the result plots and tables are safed.}
 
-\item{modelFunction}{The model function.}
+\item{welfareFunction}{The welfare function.}
 
 \item{numberOfSimulations}{The number of Monte Carlo simulations to be performed.}
 
-\item{randomMethod}{ToDo}
+\item{randomMethod}{\code{character}: The method to be used to sample the distribution
+representing the input estimate. For details see option \code{method} in
+\code{\link{random.estimate}}.}
 
-\item{functionSyntax}{ToDo}
+\item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
+details see \code{\link{mcSimulation}}.}
 
 \item{write_table}{\code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 written to file.}

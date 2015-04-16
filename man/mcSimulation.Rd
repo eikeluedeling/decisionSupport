@@ -19,7 +19,8 @@ has to return a single \code{numeric} value or a \code{list} with named \code{nu
 \item{numberOfSimulations}{The number of Monte Carlo simulations to be run.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
-representing the input estimate. For details see option \code{method} in}
+representing the input estimate. For details see option \code{method} in
+\code{\link{random.estimate}}.}
 
 \item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
 function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or

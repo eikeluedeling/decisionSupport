@@ -23,10 +23,11 @@
 An object of class \code{summary.eviSimulation}.
 }
 \description{
-summary.eviSimulation produces result summaries of the results of Expected Value of
- Information (EVI) simulation obtained by the function \code{\link{eviSimulation}}.
+Produces result summaries of an Expected Value of Information (EVI) simulation obtained by
+ the function \code{\link{eviSimulation}}.
 }
 \seealso{
-\code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, \code{\link{summary.welfareDecisionAnalysis}}
+\code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}},
+\code{\link{summary.welfareDecisionAnalysis}}, \code{\link{sort.summary.eviSimulation}}
 }
 

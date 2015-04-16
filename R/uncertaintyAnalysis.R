@@ -28,7 +28,7 @@
 #' @include individualEvpiSimulation.R
 NULL
 ##############################################################################################
-# uncertaintyAnalysis(inputFilePath, outputPath, modelFunction, numberOfSimulations,
+# uncertaintyAnalysis(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
 #                     randomMethod="calculate",	functionSyntax="globalNames",
 #                     write_table=TRUE, indicators=FALSE, log_scales=FALSE,
 #                     oldInputStandard=FALSE)
@@ -40,10 +40,8 @@ NULL
 #' (VIP). Results are safed as plots.
 #' @param inputFilePath Path to input csv file, which gives the input \code{\link{estimate}}.
 #' @param outputPath Path were the result plots and tables are safed.
-#' @param modelFunction The model function.
+#' @param welfareFunction The welfare function.
 #' @param numberOfSimulations The number of Monte Carlo simulations to be performed.
-#' @param randomMethod ToDo
-#' @param functionSyntax ToDo
 #' @param write_table \code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 #'  written to file.
 #' @param plsrVipAnalysis \code{logical}: If PLSR-VIP analysis shall be performed.
@@ -53,10 +51,11 @@ NULL
 #' 	(\code{\link{estimate_read_csv_old}}).
 #' @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
 #'   more verbose is output information.
-#' 	@seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}, 
+#' @inheritParams welfareDecisionAnalysis
+#' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}, 
 #' 	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}
 #' @export
-uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, numberOfSimulations,
+uncertaintyAnalysis <- function(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
                                 randomMethod="calculate",	functionSyntax="globalNames",
                                 write_table=TRUE, 
                                 plsrVipAnalysis=TRUE,
@@ -77,7 +76,7 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, number
     print(estimateObject)
   # Run Monte Carlo simulation:
   mcResults<-mcSimulation(estimate=estimateObject,
-                          model_function=modelFunction,
+                          model_function=welfareFunction,
                           numberOfSimulations=numberOfSimulations,
                           randomMethod=randomMethod,
                           functionSyntax=functionSyntax)
@@ -100,8 +99,6 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, number
   if (verbosity > 0)
     cat("Monte Carlo results written into directory: ", outputPath, "\n")
   # Partial lest squares analysis:
-  ## ToDo
-  #if(0){
   if(plsrVipAnalysis){
     if (!requireNamespace("chillR", quietly = TRUE)) 
       stop("Package \"chillR\" needed. Please install it.",
@@ -133,37 +130,8 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, modelFunction, number
         #         if (write_table) write.csv(pls_tab,paste(result_path,resultnames[ress],"_pls_results.csv",sep=""))
         write.csv(vipPlsResultTable,file.path(outputPath, paste(i,"_pls_results.csv",sep="")))
       }
-      if (0){
-        ##         vip<-VIP(pls_out)["Comp 1",]
-        ##         coef<-pls_out$coefficients[,,1]
-        ##         color_bars<-color_bar_maker(vip,coef,threshold=0.8,col1="RED",col2="DARK GREEN",col3="DARK GREY")
-        #         
-        #         #barplot(coef,horiz=TRUE,las=1,col=color_bars,cex.names=4,cex.axis=3,main="Model coefficient",cex.main=5,axes=FALSE)
-        #         
-        ##         vip_select<-vip[order(vip,decreasing=TRUE)[1:50]]
-        ##         if(length(vip)<50) vip_select<-vip_select[1:length(vip)]
-        ##         col_select<-color_bars[order(vip,decreasing=TRUE)[1:50]]
-        ##         if(length(vip)<50) col_select<-col_select[1:length(vip)]
-        #         #par(mar=c(5.1,20,4.1,4.1))
-        #         
-        ##         png(paste(result_path,resultnames[ress],"_PLS_VIP.png",sep=""),height=1400,width=1400)
-        ##         par(mar=c(5.1,55,4.1,2.1))
-        ##         barplot(rev(vip_select),horiz=TRUE,las=1,col=rev(col_select),cex.names=2,cex.axis=1,main="VIP for most important variables",cex.main=2,axes=FALSE)
-        ##         axis(side=1,cex.axis=2,lwd=5,padj=0.7)
-        ##         abline(v=0.8,lwd=3)
-        ##         dev.off()
-        #         
-        ##         pls_tab<-cbind(vip,coef)
-        ##         colnames(pls_tab)<-c("VIP","Coefficient")
-        ##         if (write_table) write.csv(pls_tab,paste(result_path,resultnames[ress],"_pls_results.csv",sep=""))
-        #         #par(mar=c(5.1,4.1,4.1,2.1))
-      }
     }
-    
     if (verbosity > 0)
       cat("VIP PLSR results written into directory: ", outputPath, "\n")
   }
-  
-  #}
-  
 }

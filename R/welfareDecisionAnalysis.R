@@ -27,30 +27,140 @@
 #' @include mcSimulation.R
 NULL
 #############################################################
-# welfareDecisionAnalysis(estimate, model, numberOfSimulations, functionSyntax)
+# welfareDecisionAnalysis(estimate, welfare, numberOfSimulations, functionSyntax)
 #############################################################
-#' Analysis of the Underlying Welfare Based Decision Problem
+#' Analysis of the underlying welfare based decision problem.
 #' 
-#' The optimal choice between two different opportunities is calculated. This decision is based on minimizing 
-#' the Expected Net Loss (ENL).
+#' The optimal choice between two different opportunities is calculated. Optimality is taken as 
+#' maximizing expected welfare. Furthermore, the Expected Oportunity Loss (EOL) is calculated.
 #' @param estimate \code{\link{estimate}} object describing the distribution of the input variables.
-#' @param model either a function or a list with two functions: \code{list(p1,p2)}. In the first case the function is the 
-#' net benefit of project approval vs. the status quo. In the second case the element \code{p1} is the function valuing 
-#' the first project and the element \code{p2} valueing the second project.
-#' @param numberOfSimulations integer; number of simulations to be used in the underlying Monte Carlo analysis
-#' @param functionSyntax function character; function syntax used in the model function(s).
+#' @param welfare either a \code{function} or a \code{list} with two \code{functions}, i.e.
+#'   \code{list(p1,p2)}. In the first case the function is the net benefit (or welfare) of project approval (PA) vs.
+#'   the status quo (SQ). In the second case the element \code{p1} is the function valuing the first
+#'   project and the element \code{p2} valuing the second project, viz. the welfare function of \code{p1}
+#'   and \code{p2} respectively.
+#' @param numberOfSimulations \code{integer}: number of simulations to be used in the underlying Monte Carlo analysis
+#' @param randomMethod \code{character}: The method to be used to sample the distribution
+#'   representing the input estimate. For details see option \code{method} in 
+#'   \code{\link{random.estimate}}.
+#' @param functionSyntax  \code{character}: function syntax used in the welfare function(s). For 
+#'   details see \code{\link{mcSimulation}}.
 #' @return An object of class \code{welfareDecisionAnalysis} with the following elements:
-#'  \tabular{ll}{
-#' 			\code{enbPa} \tab Expected Net Loss (ENL) in case of project approval (PA)\cr
-#' 			\code{enbSq} \tab Expected Net Loss (ENL) in case of status quo (SQ)\cr
-#'  		\code{eol}   \tab  Expected Oportunity Loss (EOL)\cr
-#'  		\code{optimalChoice} \tab The optimal choice, i.e. either 
-#'  															project approval (PA) or the status quo (SQ)
+#'  \describe{
+#'      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate} 
+#'      transformed by \code{welfare}} (cf. \code{\link{mcSimulation}}).
+#'      \item{\code{$enb}}{Expected Net Benefit (ENB)}
+#' 			\item{\code{$elPa}}{Expected Loss in case of project approval: EL(PA)}
+#' 			\item{\code{$elSq}}{Expected Loss in case of status quo: EL(SQ)}
+#'  		\item{\code{$eol}}{Expected Oportunity Loss (EOL)}
+#'  		\item{\code{$optimalChoice}}{
+#'  		    The optimal choice, i.e. either project approval (PA) or the status quo (SQ).
+#'  		    }
 #' }
-#' @details This principle is along the line described in Hubbard (2014). The Expected Opportunity Loss (EOL) is defined as the 
-#' Expected Net Loss (ENL) for the best decision. The best decision minimises the ENL. The EOL is always conditional on the available 
-#' information (I): EOL=EOL(I). Here, the available information is the supplied estimate. One can show that in the case of two 
-#' alternatives, minimization of EOL is equivalent to maximization of the Expected Net Benefit.
+#' @details 
+#'   \subsection{The underlying decision problem and its notational framework}{ 
+#'   We are considering a
+#'   decision maker who can influence an ecological-economic system having two alternative decisions
+#'   \eqn{d_1} and \eqn{d_2} at hand. We assume, that the system can be characterized by the 
+#'   \eqn{n-}dimensional
+#'   vector \eqn{X}. The characteristics \eqn{X}, are not necessarily known exactly to the decision maker.
+#'   However, we assume furthermore that she is able to quantify this uncertainty which we call an
+#'   \emph{\link{estimate}} of the characteristics. Mathematically, an estimate is a random variable with
+#'   probability density \eqn{\rho_X}.
+#'   
+#'   Furthermore, the characteristics \eqn{X} determine the welfare \eqn{W(d)} according to the welfare
+#'   function \eqn{w_d}: 
+#'   \deqn{ 
+#'       W_d = w_d (X) 
+#'   }{
+#'     W(d) = w_d (X) 
+#'   } 
+#'   Thus, the welfare of decision \eqn{d} is also a random
+#'   variable which probability distribution we call \eqn{\rho_{W_d}}{rho(W(d))}. The welfare function \eqn{w_d} values
+#'   the decision \eqn{d} given a certain state \eqn{X} of the system. In other words, decision \eqn{d_2} is
+#'   preferred over decision \eqn{d_1}, if and only if, the expected welfare of decision \eqn{d_2} is
+#'   greater than the expected welfare (For a comprehensive
+#'   discussion of the concept of social preference ordering and its representation by a welfare
+#'   function cf. Gravelle and Rees (2004)). of decsion \eqn{d_1}, formally 
+#'   \deqn{
+#'     d_1 \prec d_2 \Leftrightarrow \textrm{E}[W_{d_1}] < \textrm{E}[W_{d_2}].
+#'    }{
+#'      d_1 < d_2 <==> E[W(d_1)] < E[W(d_2)].
+#'    }
+#'   This means the best decision \eqn{d^*}{d*} is the one which maximizes welfare: 
+#'   \deqn{ 
+#'     d^* := \arg \max_{d=d_1,d_2} \textrm{E}[W_d]
+#'   }{
+#'     d* := arg max (d=d_1,d_2) E[W(d)] 
+#'   }
+#'   
+#'   This maximization principle has a dual minimization principle. We define the net benefit
+#'   \eqn{\textrm{NB}_{d_1} := W_{d_1} - W_{d_2}}{NB(d_1) := W(d_1) - W(d_2)} as the difference 
+#'   between the welfare of the two decision
+#'   alternatives. A loss \eqn{L_d} is characterized if a decision \eqn{d} produces a negative net benefit.
+#'   No loss occurs if the decision produces a positive net benefit. This is reflected in the formal
+#'   definition 
+#'   \deqn{
+#'       L_d := - \textrm{NB}_d, \textrm{~if~} \textrm{NB}_d  < 0, \textrm{~and~} L_d := 0  
+#'          \textrm{~otherwise}.
+#'   }{
+#'      L(d) :=  - NB(d) if NB(d)  < 0 and L(d) := 0 otherwise.
+#'   }
+#'   Using this notion it can be shown that the maximization of
+#'   expected welfare is equivalent to the minimization of the expected loss 
+#'   \eqn{\textrm{EL}_d := \textrm{E}[L_d]}{EL(d) := E[L(d)]}. 
+#'   \subsection{The Expected Oportunity Loss (EOL)}{
+#'     The use of this concept, here, is in line as described in Hubbard (2014). The Expected
+#'     Opportunity Loss (\eqn{\textrm{EOL}}{EOL}) is defined as the expected loss for the best
+#'     decision. The best decision minimizes the expected loss:
+#'     \deqn{
+#'       \textrm{EOL} := \min \left\{ \textrm{EL}_{d_1}, \textrm{EL}_{d_2}\right\}
+#'      }{
+#'       EOL := min \{ EL(d_1), EL(d_2) \}
+#'      }
+#'     
+#'     The \eqn{\textrm{EOL}}{EOL} is always conditional on the available information which is
+#'     characterized by the probability distribution of \eqn{X}
+#'     \eqn{\rho_X}: \eqn{\textrm{EOL} = \textrm{EOL}(\rho_X)}{EOL = EOL(\rho_X)}.
+#'   }
+#'   \subsection{Special case: Status quo and project approval}{
+#'     A very common actual binary decision problem is the question if a certain project shall be 
+#'     approved versus continuing with business as usual, i.e. the status quo. It appears to be 
+#'     natural to identify the status quo with zero welfare. This is a special case ( Actually, one
+#'     can show, that this special case is equivalent to the discussion above.) of the binary
+#'     decision problem that we are considering here. The two decision alternatives are
+#'     \describe{
+#'       \item{\eqn{d_1:}}{ project approval (PA) and }
+#'       \item{\eqn{d_2:}}{ status quo (SQ),}
+#'     }
+#'     and the welfare of the approved project (or project outcome or yield of the project) is the
+#'     random variable \eqn{W_\textrm{PA}}{W(PA)} with distribution 
+#'     \eqn{P_{W_\textrm{PA}} = w_\textrm{PA}(P_X)}{P_W(PA) = w_PA(P_X)}:
+#'       \deqn{
+#'         W_\textrm{PA} \sim w_\textrm{PA}(P_X) = P_{W_\textrm{PA}}
+#'        }{
+#'        W(PA) ~ w_PA(P_X) = P_W(PA) 
+#'        }
+#'     and the welfare of the status quo serves as reference and is normalized to zero:
+#'     \deqn{
+#'       W_\textrm{SQ} \equiv 0,
+#'     }{
+#'       W(SQ) = 0
+#'     }
+#'     which implies zero expected welfare of the status quo:
+#'     \deqn{
+#'       \textrm{E}[W]_\textrm{SQ} 	= 0.
+#'     }{
+#'       E[W(SQ)] = 0.
+#'     }
+#'   }
+#'   }
+#'   
+#' @references Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
+#'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
+#'   
+#'   Gravelle, Hugh and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
+#' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{summary.welfareDecisionAnalysis}}
 #' @examples
 #' #############################################################
 #' # Example 1 (Creating the estimate from the command line):
@@ -61,92 +171,93 @@ NULL
 #' lower=c(10000,  5000)
 #' upper=c(100000, 50000)
 #' costBenefitEstimate<-as.estimate(variable, distribution, lower, upper)
-#' # (a) Define the model function without name for the return value:
+#' # (a) Define the welfare function without name for the return value:
 #' profit<-function(x){
 #'  x$revenue-x$costs
 #' }
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
-#'                                     model=profit, 
+#'                                     welfare=profit, 
 #'                                     numberOfSimulations=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
 #' #############################################################
-#' # (b) Define the model function with a name for the return value:
+#' # (b) Define the welfare function with a name for the return value:
 #' profit<-function(x){
 #'  list(Profit=x$revenue-x$costs)
 #' }
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
-#'                                     model=profit, 
+#'                                     welfare=profit, 
 #'                                     numberOfSimulations=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
 #' #############################################################
 #' # (c) Two decsion variables:
-#' decisionModel<-function(x){
+#' welfareModel<-function(x){
 #'  list(Profit=x$revenue-x$costs,
 #'    Costs=-x$costs)
 #' }
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
-#'                                     model=decisionModel, 
+#'                                     welfare=welfareModel, 
 #'                                     numberOfSimulations=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
-#' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{summary.welfareDecisionAnalysis}}
 #' @export
-welfareDecisionAnalysis <- function(estimate, model, numberOfSimulations, functionSyntax="data.frameNames"){
+welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations, 
+                                    randomMethod="calculate", functionSyntax="data.frameNames"){
 	# Auxiliary functions (ToDo: check!):
-	# Expected net loss of project approval
-	enlPa <- function(netBenefitSample){
+	# Expected loss of project approval
+	elPa <- function(netBenefitSample){
 		- mean( netBenefitSample*(netBenefitSample<0) )
 	}
 
-	# Expected net loss of status quo
-	enlSq <- function(netBenefitSample){
+	# Expected loss of status quo
+	elSq <- function(netBenefitSample){
 		mean( netBenefitSample*(netBenefitSample>0) )
 	}
 	# Expected opportunity loss
 	eol <- function(netBenefitSample){
-		enlPa_ <- enlPa(netBenefitSample)
-		enlSq_ <- enlSq(netBenefitSample)
-		min(enlPa_,enlSq_)
+		elPa_ <- elPa(netBenefitSample)
+		elSq_ <- elSq(netBenefitSample)
+		min(elPa_,elSq_)
 	}
 	# Return object:
 	thisAnalysis<-NULL
-	if ( is.function(model) ) {
+	if ( is.function(welfare) ) {
 		# Perform the Monte Carlo simulation:
 		mcResult<-mcSimulation( estimate=estimate, 
-														model_function=model, 
+														model_function=welfare, 
 														numberOfSimulations=numberOfSimulations,
+														randomMethod=randomMethod,
 														functionSyntax=functionSyntax)
 		# Expected net benefit:
 		enb_<-colMeans(mcResult$y)
-		# Expected net loss for project aproval:
-		enlPa_<-apply(X=mcResult$y, MARGIN=2, FUN=enlPa)
-		# Expected net loss for status quo:
-		enlSq_<-apply(X=mcResult$y, MARGIN=2, FUN=enlSq)
+		# Expected loss for project aproval:
+		elPa_<-apply(X=mcResult$y, MARGIN=2, FUN=elPa)
+		# Expected loss for status quo:
+		elSq_<-apply(X=mcResult$y, MARGIN=2, FUN=elSq)
 		# Expected oportunity loss:
-		eol_ <-pmin(enlPa_,enlSq_)
+		eol_ <-pmin(elPa_,elSq_)
 		# The optimal choice (either project aproval (PA) or the status quo (SQ)):
-		optimalChoice_<-ifelse( eol_==enlPa_, "PA", "SQ")
+		optimalChoice_<-ifelse( eol_==elPa_, "PA", "SQ")
 		# Fill return object:
 		thisAnalysis$call<-match.call()
 		thisAnalysis$mcResult
 		thisAnalysis$enb<-enb_
-		thisAnalysis$enlPa<-enlPa_
-		thisAnalysis$enlSq<-enlSq_
+		thisAnalysis$elPa<-elPa_
+		thisAnalysis$elSq<-elSq_
 		thisAnalysis$eol<-eol_
 		thisAnalysis$optimalChoice<-optimalChoice_
-	} else if ( is.list(model) ){
-		stop("The general case of two valuation model functions for project approval and status quo, 
+	} else if ( is.list(welfare) ){
+		stop("The general case of two welfare functions for project approval and status quo, 
 				 respectively is not implemented, yet!")
 	} else {
-		stop("model must be either a function or a list of two functions.")
+		stop("welfare must be either a function or a list of two functions.")
 	}
 	class(thisAnalysis) <- "welfareDecisionAnalysis"
 	return(thisAnalysis)
@@ -154,22 +265,23 @@ welfareDecisionAnalysis <- function(estimate, model, numberOfSimulations, functi
 ##############################################################################################
 # summary.welfareDecisionAnalysis(object, ...)
 ##############################################################################################
-#' Summarize Decsion Analysis Results.
+#' Summarize Welfare Decsion Analysis results.
 #' 
-#' summary.welfareDecisionAnalysis produces result summaries of the results of decision analysis
-#'  simulation obtained by the function \code{\link{welfareDecisionAnalysis}}.
+#'  Produce a summary of the results of a welfare decision analysis obtained by the function 
+#'  \code{\link{welfareDecisionAnalysis}}.
 #' @param object An object of class \code{welfareDecisionAnalysis}.
 #' @param ... Further arguments passed to \code{\link{format}}.
 #' @inheritParams base::format
 #' @return An object of class \code{summary.welfareDecisionAnalysis}.
-#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
+#' @seealso \code{\link{welfareDecisionAnalysis}}, 
+#'  \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
 #' @export
 summary.welfareDecisionAnalysis <- function(object,
 																		 ...,
 																		 digits = max(3, getOption("digits")-3)){	
 	summaryDf<-data.frame(enb=object$enb, 
-												enlPa=object$enlPa, 
-												enlSq=object$enlSq, 
+												elPa=object$elPa, 
+												elSq=object$elSq, 
 												eol=object$eol, 
 												optimalChoice=object$optimalChoice)	
 	summaryDf<-format(x=summaryDf, digits=digits, ...)
@@ -182,12 +294,14 @@ summary.welfareDecisionAnalysis <- function(object,
 ##############################################################################################
 # print.summary.welfareDecisionAnalysis(x, ...)
 ##############################################################################################
-#' Print the Summarized Decsion Analysis Results..
+#' Print the summarized Welfare Decsion Analysis results.
 #' 
-#' This function prints the summary of of \code{welfareDecisionAnalysis} obtained by \code{\link{summary.welfareDecisionAnalysis}}.
+#' This function prints the summary of a Welfare Decision Analysis generated by 
+#' \code{\link{summary.welfareDecisionAnalysis}}.
 #' @param x An object of class \code{summary.welfareDecisionAnalysis}.
-#' @param ... Further arguments #ToDo
-#' @seealso \code{\link{welfareDecisionAnalysis}}
+#' @param ... Further arguments to \code{\link{print.data.frame}}.
+#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{summary.welfareDecisionAnalysis}}, 
+#'   \code{\link{print.data.frame}}.
 #' @export
 print.summary.welfareDecisionAnalysis <- function(x, ...){
 	cat("Call:\n")

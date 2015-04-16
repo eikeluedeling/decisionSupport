@@ -4,42 +4,67 @@
 \alias{eviSimulation}
 \title{Expected Value of Information (EVI) Simulation.}
 \usage{
-eviSimulation(model, currentEstimate, prospectiveEstimate, numberOfSimulations,
+eviSimulation(welfare, currentEstimate, prospectiveEstimate,
+  numberOfSimulations, randomMethod = "calculate",
   functionSyntax = "data.frameNames")
 }
 \arguments{
-\item{model}{either a function or a list with two functions: \code{list(p1,p2)}. In the first case the function is the
-net benefit of project approval vs. the status quo. In the second case the element \code{p1} is the function valuing
-the first project and the element \code{p2} valueing the second project.}
+\item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
+\code{list(p1,p2)}. In the first case the function is the net benefit (or welfare) of project approval (PA) vs.
+the status quo (SQ). In the second case the element \code{p1} is the function valuing the first
+project and the element \code{p2} valuing the second project, viz. the welfare function of \code{p1}
+and \code{p2} respectively.}
 
-\item{currentEstimate}{\code{\link{estimate}} object describing the distribution of the input variables as currently estmated.}
+\item{currentEstimate}{\code{\link{estimate}}: describing the distribution of the input variables
+as currently being estimated.}
 
-\item{prospectiveEstimate}{\code{\link{estimate}} object describing the prospective distribution of the input variables
-which could hypothetically achieved by collecting more information, viz. improving the measurement.}
+\item{prospectiveEstimate}{\code{\link{estimate}} or \code{list} of \code{estimate} objects:
+describing the prospective distribution of the input variables which could hypothetically
+achieved by collecting more information, viz. improving the measurement.}
 
-\item{numberOfSimulations}{integer; number of simulations to be used in the underlying Monte Carlo analysis}
+\item{numberOfSimulations}{\code{integer}: number of simulations to be used in the underlying Monte Carlo analysis}
 
-\item{functionSyntax}{function character; function syntax used in the model function(s).}
+\item{randomMethod}{\code{character}: The method to be used to sample the distribution
+representing the input estimate. For details see option \code{method} in
+\code{\link{random.estimate}}.}
+
+\item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
+details see \code{\link{mcSimulation}}.}
 }
 \value{
 An object of class \code{eviSimulation} with the following elements:
- \tabular{ll}{
-			\code{current} \tab \code{\link{welfareDecisionAnalysis}} object for \code{currentEstimate}\cr
-			\code{prospective} \tab \code{\link{welfareDecisionAnalysis}} object  for \code{prospectiveEstimate}\cr
- 		\code{evi}   \tab  Expected Value of Information (EVI) of gained by the prospective estimate w.r.t.
- 								the current estimate
-}
+ \describe{
+			\item{\code{$current}}{
+			   \code{\link{welfareDecisionAnalysis}} object for \code{currentEstimate}
+			}
+			\item{\code{$prospective}}{
+			  \code{\link{welfareDecisionAnalysis}} object  for single \code{prospectiveEstimate} or a
+			  list of \code{\link{welfareDecisionAnalysis}} objects for \code{prospectiveEstimate} being
+			  a list of \code{estimate}s.
+			}
+ 		\item{\code{$evi}}{
+ 		  Expected Value of Information(s) (EVI)(s)  gained by the prospective estimate(s) w.r.t. the
+ 		  current estimate.
+ 		}
+  }
 }
 \description{
-The Expected Value of Information (EVI) is calculated based on a Monte Carlo simulation
-of the values of two different decision alternatives.
+The Expected Value of Information (EVI) is calculated based on a Monte Carlo simulation of the
+expected welfare (or values or benefits) of two different decision alternatives. The expected
+welfare is calculated for the current estimate of variables determining welfare and a prospective
+estimate of these variables. The prospective estimate resembles an improvement in information.
 }
 \details{
-This principle is along the line described in Hubbard (2014). The Expected Value of Information is the decrease in the EOL
- for an information improvement from the current estimate (I_current) to a better prospective (or hypothetical) information (I_prospective):
-  EVI := EOL(I_current) - EOL(I_prospective). Thus, the EVI depends on the model for valueing a decision,
-  the current information, i.e. the current estimate, and the specification of a hypothetical improvement in information, i.e. a prospective
-   estimate.
+\subsection{The Expected Value of Information (EVI)}{
+    The Expected Value of Information is the decrease in the \eqn{\textrm{EOL}}{EOL} for an information
+    improvement from the current (\eqn{\rho_X^{current}}{\rho_X_current}) to a better prospective (hypothetical)
+    information (\eqn{\rho_X^{current}}{\rho_X_prospective}):
+    \deqn{
+      \textrm{EVI} := \textrm{EOL}(\rho_X^{current}) - \textrm{EOL}(\rho_X^{prospective}).
+      }{
+         EVI := EOL(\rho_X_current) - EOL(\rho_X_prospective).
+      }
+  }
 }
 \examples{
 #############################################################
@@ -58,13 +83,13 @@ revenueConst<-mean(c(currentEstimate$marginal["revenue","lower"],
 prospectiveEstimate$marginal["revenue","distribution"]<-"const"
 prospectiveEstimate$marginal["revenue","lower"]<-revenueConst
 prospectiveEstimate$marginal["revenue","upper"]<-revenueConst
-# (a) Define the model function without name for the return value:
+# (a) Define the welfare function without name for the return value:
 profit<-function(x){
 	x$revenue-x$costs
 }
 
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=profit,
+eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -72,12 +97,12 @@ eviSimulationResult<-eviSimulation(model=profit,
 # Show the simulation results:
 print(summary(eviSimulationResult))
 #############################################################
-# (b) Define the model function with a name for the return value:
+# (b) Define the welfare function with a name for the return value:
 profit<-function(x){
 	list(Profit=x$revenue-x$costs)
 }
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=profit,
+eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -91,7 +116,7 @@ decisionModel<-function(x){
       Costs=-x$costs)
 }
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=decisionModel,
+eviSimulationResult<-eviSimulation(welfare=decisionModel,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -102,7 +127,7 @@ print(summary((eviSimulationResult)))
 # Example 2 A list of prospective estimates:
 #############################################################
 numberOfSimulations=10000
-#  Define the model function with a name for the return value:
+#  Define the welfare function with a name for the return value:
 profit<-function(x){
  list(Profit=x$revenue-x$costs)
 }
@@ -122,7 +147,7 @@ perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst
 # (a) A list with one element
 prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue)
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=profit,
+eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -140,7 +165,7 @@ perfectInformationCosts$marginal["costs","upper"]<-costsConst
 prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
                           perfectInformationCosts=perfectInformationCosts)
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=profit,
+eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -172,13 +197,13 @@ perfectInformationCosts$marginal["costs","lower"]<-costsConst
 perfectInformationCosts$marginal["costs","upper"]<-costsConst
 prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
                           perfectInformationCosts=perfectInformationCosts)
-# Define the model function with two decision variables:
+# Define the welfare function with two decision variables:
 decisionModel<-function(x){
  list(Profit=x$revenue-x$costs,
       Costs=-x$costs)
 }
 # Calculate the Expected Value of Information:
-eviSimulationResult<-eviSimulation(model=decisionModel,
+eviSimulationResult<-eviSimulation(welfare=decisionModel,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
                                    numberOfSimulations=numberOfSimulations,
@@ -186,7 +211,14 @@ eviSimulationResult<-eviSimulation(model=decisionModel,
 # Show the simulation results:
 print(sort(summary(eviSimulationResult)),decreasing=TRUE,along="Profit")
 }
+\references{
+Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
+  John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
+
+  Gravelle, Hugh and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
+}
 \seealso{
-\code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
+\code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}},
+  \code{\link{summary.eviSimulation}}
 }
 

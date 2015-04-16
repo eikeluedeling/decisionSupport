@@ -10,11 +10,11 @@
 \arguments{
 \item{x}{An object of class \code{summary.eviSimulation}.}
 
-\item{decreasing}{logical; if the evi should be sorted in decreasing order.}
+\item{decreasing}{\code{logical}: if the EVI should be sorted in decreasing order.}
 
-\item{...}{Further arguments #ToDo}
+\item{...}{currently not used}
 
-\item{along}{character; the name of the valuation variable along which evi
+\item{along}{\code{character}: the name of the valuation variable along which the EVI
 should be sorted.}
 }
 \value{
