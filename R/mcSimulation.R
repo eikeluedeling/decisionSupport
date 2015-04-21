@@ -46,6 +46,9 @@ NULL
 #' @param functionSyntax \code{character}: The syntax which has to be used to implement the model
 #'   function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or 
 #'   \code{"matrixNames"}. Details are given below.
+#' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
 # @param ... Optional arguments to be passed to \code{\link{random}.
 #' @details 
 #' This method solves the following problem. Given a multivariate random variable \eqn{x =
@@ -181,9 +184,14 @@ NULL
 #'  @seealso \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, 
 #'  \code{\link{estimate}}, \code{\link{random.estimate}}
 #' @export
-mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, randomMethod="calculate", functionSyntax="data.frameNames"){
+mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, 
+                         randomMethod="calculate", 
+                         functionSyntax="data.frameNames",
+                         relativeTolerance=0.05){
 	#ToDo: (i) review code and (ii) test
-	x<-random(rho=estimate, n=numberOfSimulations, method=randomMethod)
+	x<-random(rho=estimate, n=numberOfSimulations, 
+	          method=randomMethod,
+	          relativeTolerance=relativeTolerance)
 	if (functionSyntax=="data.frameNames"){
 		y<-model_function(as.data.frame(x), ...)
 	} else if (functionSyntax=="matrixNames"){
@@ -198,7 +206,6 @@ mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, ran
 			}
 			y<-rbind(y,data.frame(model_function()))
 		}
-		warning("functionSyntax=\"globalNames\" not tested, yet!")
 	} else 
 		stop("functionSyntax=",functionSyntax, "is not defined!") 
 	# 	# Remove names in y if any.

@@ -8,7 +8,8 @@ individualEvpiSimulation(welfare, currentEstimate,
   perfectProspectiveNames = row.names(currentEstimate),
   perfectProspectiveValues = colMeans(random(rho = currentEstimate, n =
   numberOfSimulations)[, perfectProspectiveNames]), numberOfSimulations,
-  randomMethod = "calculate", functionSyntax = "data.frameNames")
+  randomMethod = "calculate", functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
@@ -34,6 +35,10 @@ representing the input estimate. For details see option \code{method} in
 
 \item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
 details see \code{\link{mcSimulation}}.}
+
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 }
 \value{
 An object of class \code{eviSimulation} with the following elements:
@@ -61,7 +66,7 @@ on one particular variable.
 }
 \examples{
 # Number of simulations:
-n=100000
+n=10000
 # Create the current estimate from text:
 estimateText<-"variable,  distribution, lower, upper
                revenue1,  posnorm,      100,   1000

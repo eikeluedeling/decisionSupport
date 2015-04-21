@@ -5,7 +5,8 @@
 \title{Analysis of the underlying welfare based decision problem.}
 \usage{
 welfareDecisionAnalysis(estimate, welfare, numberOfSimulations,
-  randomMethod = "calculate", functionSyntax = "data.frameNames")
+  randomMethod = "calculate", functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05)
 }
 \arguments{
 \item{estimate}{\code{\link{estimate}} object describing the distribution of the input variables.}
@@ -24,6 +25,10 @@ representing the input estimate. For details see option \code{method} in
 
 \item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
 details see \code{\link{mcSimulation}}.}
+
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 }
 \value{
 An object of class \code{welfareDecisionAnalysis} with the following elements:

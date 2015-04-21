@@ -2,20 +2,26 @@
 % Please edit documentation in R/estimate.R
 \name{row.names.estimate}
 \alias{corMat.estimate}
+\alias{corMat<-.estimate}
 \alias{names.estimate}
 \alias{row.names.estimate}
-\title{Get the variable names, column names and correlation matrix of an \code{estimate} object.}
+\title{Get and set attributes of an \code{estimate} object.}
 \usage{
 \method{row.names}{estimate}(x)
 
 \method{names}{estimate}(x)
 
 \method{corMat}{estimate}(rho)
+
+\method{corMat}{estimate}(x) <- value
 }
 \arguments{
 \item{x}{an \code{\link{estimate}} object.}
 
 \item{rho}{an \code{\link{estimate}} object.}
+
+\item{value}{\code{numeric matrix}: new correlation matrix. For details cf.
+\code{\link{estimate}}.}
 }
 \description{
 \code{row.names.estimate} returns the variable names of an \code{\link{estimate}} object which
@@ -25,6 +31,8 @@ is identical to \code{row.names(x$marginal)}.
 \code{names(x$marginal)}.
 
 \code{corMat.estimate} returns the full correlation matrix of an \code{\link{estimate}} object.
+
+\code{'corMat<-.estimate'} replaces the correlation matrix of an \code{\link{estimate}} object.
 }
 \examples{
 # Read the joint estimate information for the variables "sales", "productprice" and
@@ -44,5 +52,7 @@ is identical to \code{row.names(x$marginal)}.
 \seealso{
 \code{\link{estimate}}, \code{\link{names.estimate}}, \code{\link{corMat.estimate}},
   \code{\link{corMat}}
+
+\code{\link{corMat<-}}
 }
 

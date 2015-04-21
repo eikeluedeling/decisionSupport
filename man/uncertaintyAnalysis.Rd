@@ -2,12 +2,13 @@
 % Please edit documentation in R/uncertaintyAnalysis.R
 \name{uncertaintyAnalysis}
 \alias{uncertaintyAnalysis}
-\title{Uncertainty Analysis Wrapper Function.}
+\title{Value of information wrapper function.}
 \usage{
 uncertaintyAnalysis(inputFilePath, outputPath, welfareFunction,
   numberOfSimulations, randomMethod = "calculate",
-  functionSyntax = "globalNames", write_table = TRUE,
-  plsrVipAnalysis = TRUE, indicators = FALSE, log_scales = FALSE,
+  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
+  write_table = TRUE, plsrVipAnalysis = TRUE, individualEvpiNames = NULL,
+  sortEvpiAlong = if (individualEvpiNames) individualEvpiNames[[1]] else NULL,
   oldInputStandard = FALSE, verbosity = 1)
 }
 \arguments{
@@ -26,14 +27,23 @@ representing the input estimate. For details see option \code{method} in
 \item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
 details see \code{\link{mcSimulation}}.}
 
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
+
 \item{write_table}{\code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 written to file.}
 
 \item{plsrVipAnalysis}{\code{logical}: If PLSR-VIP analysis shall be performed.}
 
-\item{indicators}{\code{logical}: If indicator variables should be respected specially.}
+\item{individualEvpiNames}{\code{character vector}: names of variables, which for the
+ IndividualEVPI shall be obtained via Monte Carlo simulation. If \code{=NULL} (the default), no
+ IndividualEVPI is calculated; if \code{="all"}, the IndividualEVPI is calculated for all
+ variables. \dfn{Note:} depending on \code{numberOfSimulations} and the complexity of
+ \code{welfare} this might take a long time.}
 
-\item{log_scales}{\code{logical}: If the scales in the pls plots should be logarithmic.}
+\item{sortEvpiAlong}{\code{character}: result name along which the summary of the IndividualEVPI
+shall be sorted. Only relevant if \code{sortEvpiAlong!=NULL}.}
 
 \item{oldInputStandard}{\code{logical}: If the old input standard should be used
 (\code{\link{estimate_read_csv_old}}).}
@@ -42,12 +52,24 @@ written to file.}
 more verbose is output information.}
 }
 \description{
-This function performs a Monte Carlo simulation from input files and analyses the results
-via Partial Least Squares Regression (PLSR) and calculates the Variable Importance on Projection
-(VIP). Results are safed as plots.
+This function performs a Monte Carlo simulation from input files and analyses the value of
+different information about the input variables. This value of information analysis can be done
+via combined PLSR - VIP analysis or via IndividualEVPI calculation. Results are safed as plots
+and tables.
+}
+\details{
+\subsection{Combined PLSR - VIP Analyis}{
+  The combined Partial Least Squares Regression (PLSR) and Variables Importance in Projection
+  (VIP) analysis is implemented via: \code{\link{plsr.mcSimulation}} and
+  \code{\link[chillR:VIP]{VIP}}.
+  }
+  \subsection{IndividualEVPI Calculation}{
+  Implementation: \code{\link{individualEvpiSimulation}}
+  }
 }
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}},
-	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}
+	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}},
+	\code{\link{individualEvpiSimulation}}
 }
 

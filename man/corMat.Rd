@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate.R
 \name{corMat}
 \alias{corMat}
-\title{Return the Correlation Matrix of x.}
+\title{Return the Correlation Matrix.}
 \usage{
 corMat(rho)
 }
@@ -10,6 +10,6 @@ corMat(rho)
 \item{rho}{a distribution.}
 }
 \description{
-Return the correlation matrix of x.
+Return the correlation matrix of rho.
 }
 

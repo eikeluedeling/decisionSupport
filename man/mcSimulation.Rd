@@ -5,7 +5,8 @@
 \title{Perform a Monte Carlo simulation.}
 \usage{
 mcSimulation(estimate, model_function, ..., numberOfSimulations,
-  randomMethod = "calculate", functionSyntax = "data.frameNames")
+  randomMethod = "calculate", functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05)
 }
 \arguments{
 \item{estimate}{\code{estimate}: estimate of the joint probability distribution of
@@ -25,6 +26,10 @@ representing the input estimate. For details see option \code{method} in
 \item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
 function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or
 \code{"matrixNames"}. Details are given below.}
+
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 }
 \value{
 An object of \code{class mcSimulation}, which is a \code{list} with elements:

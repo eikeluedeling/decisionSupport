@@ -6,7 +6,7 @@
 \usage{
 eviSimulation(welfare, currentEstimate, prospectiveEstimate,
   numberOfSimulations, randomMethod = "calculate",
-  functionSyntax = "data.frameNames")
+  functionSyntax = "data.frameNames", relativeTolerance = 0.05)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
@@ -30,6 +30,10 @@ representing the input estimate. For details see option \code{method} in
 
 \item{functionSyntax}{\code{character}: function syntax used in the welfare function(s). For
 details see \code{\link{mcSimulation}}.}
+
+\item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
+generated confidence interval from the specified interval. If this deviation is greater than
+\code{relativeTolerance} a warning is given.}
 }
 \value{
 An object of class \code{eviSimulation} with the following elements:

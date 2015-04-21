@@ -59,7 +59,7 @@ NULL
 #' on one particular variable.
 #' @examples
 #' # Number of simulations:
-#' n=100000
+#' n=10000
 #' # Create the current estimate from text:
 #' estimateText<-"variable,  distribution, lower, upper
 #'                revenue1,  posnorm,      100,   1000
@@ -82,29 +82,40 @@ NULL
 #' @seealso \code{\link{eviSimulation}}, \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
 individualEvpiSimulation <- function(welfare, currentEstimate, 
-																		 perfectProspectiveNames=row.names(currentEstimate),
-																		 perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfSimulations)[,perfectProspectiveNames]),
-																		 numberOfSimulations,
-																		 randomMethod="calculate",
-																		 functionSyntax="data.frameNames"){
-	prospectiveEstimate<-c()
-	#print(perfectProspectiveValues)
-	for( i in perfectProspectiveNames){
-		prospectiveEstimate[[i]]<-currentEstimate
-		prospectiveEstimate[[i]]$marginal[i,"distribution"]<-"const"
-		prospectiveEstimate[[i]]$marginal[i,"lower"]<-perfectProspectiveValues[[i]]
-		prospectiveEstimate[[i]]$marginal[i,"upper"]<-perfectProspectiveValues[[i]]
-	}
-	
-	# Calculate the Expected Value of Perfect Information:
-	evpiResult<-eviSimulation(welfare=welfare,
-														currentEstimate=currentEstimate,
-														prospectiveEstimate=prospectiveEstimate,
-														numberOfSimulations=numberOfSimulations,
-														randomMethod=randomMethod,
-														functionSyntax=functionSyntax)
-	#	class(evpiResult)<-c("individualEvpiSimulation", class(evpiResult))
-	evpiResult
+                                     perfectProspectiveNames=row.names(currentEstimate),
+                                     perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfSimulations)[,perfectProspectiveNames]),
+                                     numberOfSimulations,
+                                     randomMethod="calculate",
+                                     functionSyntax="data.frameNames",
+                                     relativeTolerance=0.05){
+  prospectiveEstimate<-c()
+  #print(perfectProspectiveValues)
+  for( i in perfectProspectiveNames){
+    # Set marginal information to certainty:
+    prospectiveEstimate[[i]]<-currentEstimate
+    prospectiveEstimate[[i]]$marginal[i,"distribution"]<-"const"
+    prospectiveEstimate[[i]]$marginal[i,"lower"]<-perfectProspectiveValues[[i]]
+    prospectiveEstimate[[i]]$marginal[i,"upper"]<-perfectProspectiveValues[[i]]
+    # Remove correlation information, if exists, due to certainty:
+    if( !is.null(prospectiveEstimate[[i]]$correlation_matrix) ){
+      correlationMatrix<-corMat(prospectiveEstimate[[i]])[!(row.names(prospectiveEstimate[[i]]) %in% i),
+                                                          !(row.names(prospectiveEstimate[[i]]) %in% i)]
+      if( !is.matrix(correlationMatrix) )
+        corMat(prospectiveEstimate[[i]])<-NULL
+      else 
+        corMat(prospectiveEstimate[[i]])<-correlationMatrix
+    }
+  }
+  # Calculate the Expected Value of Perfect Information:
+  evpiResult<-eviSimulation(welfare=welfare,
+                            currentEstimate=currentEstimate,
+                            prospectiveEstimate=prospectiveEstimate,
+                            numberOfSimulations=numberOfSimulations,
+                            randomMethod=randomMethod,
+                            functionSyntax=functionSyntax, 														
+                            relativeTolerance=relativeTolerance)
+  #	class(evpiResult)<-c("individualEvpiSimulation", class(evpiResult))
+  evpiResult
 }
 
 

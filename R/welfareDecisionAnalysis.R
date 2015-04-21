@@ -45,6 +45,9 @@ NULL
 #'   \code{\link{random.estimate}}.
 #' @param functionSyntax  \code{character}: function syntax used in the welfare function(s). For 
 #'   details see \code{\link{mcSimulation}}.
+#' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
+#'   generated confidence interval from the specified interval. If this deviation is greater than
+#'   \code{relativeTolerance} a warning is given.
 #' @return An object of class \code{welfareDecisionAnalysis} with the following elements:
 #'  \describe{
 #'      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate} 
@@ -209,7 +212,9 @@ NULL
 #' print(summary((myAnalysis)))
 #' @export
 welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations, 
-                                    randomMethod="calculate", functionSyntax="data.frameNames"){
+                                    randomMethod="calculate", 
+                                    functionSyntax="data.frameNames",
+                                    relativeTolerance=0.05){
 	# Auxiliary functions (ToDo: check!):
 	# Expected loss of project approval
 	elPa <- function(netBenefitSample){
@@ -234,7 +239,8 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations,
 														model_function=welfare, 
 														numberOfSimulations=numberOfSimulations,
 														randomMethod=randomMethod,
-														functionSyntax=functionSyntax)
+														functionSyntax=functionSyntax,
+														relativeTolerance=relativeTolerance)
 		# Expected net benefit:
 		enb_<-colMeans(mcResult$y)
 		# Expected loss for project aproval:

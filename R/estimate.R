@@ -303,6 +303,7 @@ estimate<-function(distribution, lower, upper, ..., correlation_matrix=NULL){
 #' @export
 as.estimate<-function(..., correlation_matrix=NULL){
   # Coerce the marginal data.frame:
+  # ToDo: if (...) contains an estimate: process correlation matrix!
   marginal<-data.frame(..., stringsAsFactors=FALSE)
   # Check preconditions:
   if (  is.null(marginal$distribution) )
@@ -321,7 +322,7 @@ as.estimate<-function(..., correlation_matrix=NULL){
 ##############################################################################################
 # row.names.estimate(x)
 ##############################################################################################
-#' Get the variable names, column names and correlation matrix of an \code{estimate} object.
+#' Get and set attributes of an \code{estimate} object.
 #'
 #' \code{row.names.estimate} returns the variable names of an \code{\link{estimate}} object which 
 #' is identical to \code{row.names(x$marginal)}.
@@ -360,9 +361,9 @@ names.estimate<-function(x){
 ##############################################################################################
 # generic: corMat(rho)
 ##############################################################################################
-#' Return the Correlation Matrix of x.
+#' Return the Correlation Matrix.
 #'
-#' Return the correlation matrix of x.
+#' Return the correlation matrix of rho.
 #' @param rho a distribution.
 #' @export
 corMat <- function(rho) UseMethod("corMat")
@@ -387,6 +388,57 @@ corMat.estimate<-function(rho){
   corMat[namesCorrelated, namesCorrelated]<-rho$correlation_matrix[namesCorrelated, namesCorrelated]
   # Return full correlation matrix:
   corMat
+}
+##############################################################################################
+# generic: corMat<-(rho, correlationMatrix)
+##############################################################################################
+#' Replace correlation matrix.
+#'
+#' Replace the correlation matrix.
+#' @param x a distribution.
+#' @param value \code{numeric matrix}: new correlation matrix.
+#' @export
+`corMat<-`<-function(x, value) UseMethod("corMat<-")
+##############################################################################################
+# corMat.estimate(x)
+##############################################################################################
+#' Replace the correlation matrix of an \code{estimate} object.
+#'
+#' \code{'corMat<-.estimate'} replaces the correlation matrix of an \code{\link{estimate}} object.
+#' @param value \code{numeric matrix}: new correlation matrix. For details cf. 
+#'   \code{\link{estimate}}.
+#' @rdname row.names.estimate
+#' @seealso \code{\link{corMat<-}}
+#' @export
+`corMat<-.estimate` <- function(x, value){ 
+  ## Correlation matrix precondition check:
+  if( !is.null(value)){
+    if( !is.matrix(value) )
+      value<-as.matrix(value)
+    if( !identical( value, t(value) ) )
+      stop("value must be a symmetric matrix.")
+    if( !identical( as.vector(diag(value)), rep(1, nrow(value)) ) )
+      stop("All diagonal elements of \"value\"  must be equal to 1.")
+    # Check that all elements are between -1 and 1.
+    if( any(abs(value) > 1 ) )
+      stop("All values of \"value\" must be  >= -1 and <= 1.")
+    # Check that all rows are named
+    if (  length(row.names(value)) != nrow(value) )
+      stop("All rows of \"value\" must be named.")
+    # Check that rownames(value) is a subset of marginal names
+    if (  !any(row.names(value) %in% row.names(x)) )
+      stop("Names of \"value\" must be a subset of \"row.name(x)\"") 
+    # Check for uncorrelated variables and eliminate these rows and columns:
+    correlatedVariables<-sapply(X=row.names(value), 
+                                FUN=function(x) any((value!=0)[x, !row.names(value) %in% x]))
+    x$correlation_matrix<-value[correlatedVariables, correlatedVariables]
+    if( nrow(x$correlation_matrix) <= 1)
+      x$correlation_matrix<-NULL
+  } 
+  else 
+    x$correlation_matrix<-NULL
+  # Return processed estimate:
+  x
 }
 ###############################################################################################
 # estimate_read_csv(fileName, strip.white=TRUE, ...)

@@ -29,15 +29,16 @@
 NULL
 ##############################################################################################
 # uncertaintyAnalysis(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
-#                     randomMethod="calculate",	functionSyntax="globalNames",
-#                     write_table=TRUE, indicators=FALSE, log_scales=FALSE,
+#                     randomMethod="calculate",	functionSyntax="data.frameNames",
+#                     write_table=TRUE, 
 #                     oldInputStandard=FALSE)
 ##############################################################################################
-#' Uncertainty Analysis Wrapper Function.
+#' Value of information wrapper function.
 #'
-#' This function performs a Monte Carlo simulation from input files and analyses the results
-#' via Partial Least Squares Regression (PLSR) and calculates the Variable Importance on Projection
-#' (VIP). Results are safed as plots.
+#' This function performs a Monte Carlo simulation from input files and analyses the value of 
+#' different information about the input variables. This value of information analysis can be done
+#' via combined PLSR - VIP analysis or via IndividualEVPI calculation. Results are safed as plots 
+#' and tables.
 #' @param inputFilePath Path to input csv file, which gives the input \code{\link{estimate}}.
 #' @param outputPath Path were the result plots and tables are safed.
 #' @param welfareFunction The welfare function.
@@ -45,21 +46,39 @@ NULL
 #' @param write_table \code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 #'  written to file.
 #' @param plsrVipAnalysis \code{logical}: If PLSR-VIP analysis shall be performed.
-#' @param indicators \code{logical}: If indicator variables should be respected specially.
-#' @param log_scales \code{logical}: If the scales in the pls plots should be logarithmic.
+#' @param individualEvpiNames \code{character vector}: names of variables, which for the 
+#'   IndividualEVPI shall be obtained via Monte Carlo simulation. If \code{=NULL} (the default), no 
+#'   IndividualEVPI is calculated; if \code{="all"}, the IndividualEVPI is calculated for all
+#'   variables. \dfn{Note:} depending on \code{numberOfSimulations} and the complexity of
+#'   \code{welfare} this might take a long time.
+#'  @param sortEvpiAlong \code{character}: result name along which the summary of the IndividualEVPI
+#'    shall be sorted. Only relevant if \code{sortEvpiAlong!=NULL}. 
 #' @param oldInputStandard \code{logical}: If the old input standard should be used
 #' 	(\code{\link{estimate_read_csv_old}}).
 #' @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
 #'   more verbose is output information.
 #' @inheritParams welfareDecisionAnalysis
+#' @details
+#'   \subsection{Combined PLSR - VIP Analyis}{
+#'   The combined Partial Least Squares Regression (PLSR) and Variables Importance in Projection 
+#'   (VIP) analysis is implemented via: \code{\link{plsr.mcSimulation}} and 
+#'   \code{\link[chillR:VIP]{VIP}}.
+#'   }
+#'   \subsection{IndividualEVPI Calculation}{
+#'   Implementation: \code{\link{individualEvpiSimulation}}
+#'   }
 #' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{estimate_read_csv}}, 
-#' 	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}
+#' 	\code{\link{plsr.mcSimulation}}, \code{\link[chillR:VIP]{VIP}}, 
+#' 	\code{\link{individualEvpiSimulation}}
 #' @export
 uncertaintyAnalysis <- function(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
-                                randomMethod="calculate",	functionSyntax="globalNames",
+                                randomMethod="calculate",	
+                                functionSyntax="data.frameNames",
+                                relativeTolerance=0.05,
                                 write_table=TRUE, 
                                 plsrVipAnalysis=TRUE,
-                                indicators=FALSE, log_scales=FALSE,
+                                individualEvpiNames=NULL,
+                                sortEvpiAlong=if(individualEvpiNames) individualEvpiNames[[1]] else NULL,
                                 oldInputStandard=FALSE,
                                 verbosity=1){
   # Read estimate from file:
@@ -79,7 +98,8 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, welfareFunction, numb
                           model_function=welfareFunction,
                           numberOfSimulations=numberOfSimulations,
                           randomMethod=randomMethod,
-                          functionSyntax=functionSyntax)
+                          functionSyntax=functionSyntax,
+                          relativeTolerance=relativeTolerance)
   if(verbosity > 0)
     cat("Monte Carlo Simulation done.\n")
   if(verbosity > 1)
@@ -95,7 +115,7 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, welfareFunction, numb
   }
   # Write the summary of the resulting distributions to file:
   mcSummary<-summary(mcResults, digits=2)
-  write.csv(mcSummary$summary,file.path(outputPath,"summary_cooperation.csv"))
+  write.csv(mcSummary$summary,file.path(outputPath,"mcSummary.csv"))
   if (verbosity > 0)
     cat("Monte Carlo results written into directory: ", outputPath, "\n")
   # Partial lest squares analysis:
@@ -134,4 +154,28 @@ uncertaintyAnalysis <- function(inputFilePath, outputPath, welfareFunction, numb
     if (verbosity > 0)
       cat("VIP PLSR results written into directory: ", outputPath, "\n")
   }
+  # Individual EVPI analysis:
+    if (!is.null(individualEvpiNames)){
+      if( !is.character(individualEvpiNames) )
+        stop("\"individualEvpiNames\" must be a character vector.")
+      else if( any(!individualEvpiNames %in% row.names(estimateObject)) && individualEvpiNames!="all") 
+        stop("\"individualEvpiNames\" must be a subset of variables defined in file 
+              \",inputFilePath\" or =\"all\".")
+      if (individualEvpiNames=="all" )
+        individualEvpiNames=row.names(estimateObject)
+      individualEvpiResults<-individualEvpiSimulation(welfare=welfareFunction, 
+                                                      currentEstimate=estimateObject, 
+                                                      perfectProspectiveNames=individualEvpiNames,
+                                                      numberOfSimulations=numberOfSimulations,
+                                                      randomMethod=randomMethod,
+                                                      functionSyntax=functionSyntax,
+                                                      relativeTolerance=relativeTolerance)
+      
+      if (verbosity > 1)
+        print(sort(summary(individualEvpiResults)))
+      write.csv(sort(summary(individualEvpiResults), along=sortEvpiAlong)$summary$evi,file.path(outputPath,"individualEvpiSummary.csv"))
+      if (verbosity > 0)
+        cat("IndividualEVPI results written into directory: ", outputPath, "\n")
+  }
+  
 }
