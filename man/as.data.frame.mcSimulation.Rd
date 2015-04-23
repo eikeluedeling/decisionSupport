@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcSimulation.R
 \name{as.data.frame.mcSimulation}
 \alias{as.data.frame.mcSimulation}
-\title{Coerce Monte Carlo simutlation results to a data frame.}
+\title{Coerce Monte Carlo simulation results to a data frame.}
 \usage{
 \method{as.data.frame}{mcSimulation}(x, row.names = NULL, optional = FALSE,
   ..., stringsAsFactors = default.stringsAsFactors())
@@ -23,7 +23,7 @@
     to a factor?}
 }
 \description{
-Coerces Monte Carlo simutlation results to a data frame.
+Coerces Monte Carlo simulation results to a data frame.
 }
 \seealso{
 \code{\link{as.data.frame}}

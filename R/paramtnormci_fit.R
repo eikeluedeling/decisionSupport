@@ -30,7 +30,7 @@
 #' Fit parameters of truncated normal distribution based on a confidence interval.
 #'
 #' This function fits the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated
-#' normal distribution from an arbitrary confidence interval and, facultatively, the median.
+#' normal distribution from an arbitrary confidence interval and, optionally, the median.
 #' @param p \code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the
 #'   corresponding confidence interval.
 #' @param ci \code{numeric} 2-dimensional vector; lower, i.e \code{ci[[1]]}, and upper bound, i.e
@@ -49,7 +49,7 @@
 #'   normal distribution.
 #' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
 #'
-#'   The cummulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the
+#'   The cumulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the
 #'   probability that a sampled value is less than \eqn{x}. This is equivalent to saying that for
 #'   the vector of quantiles \ifelse{latex}{\eqn{q=(q_{p_1}, \ldots, q_{p_k})}}{\eqn{q=(q(p_1),
 #'   \ldots, q(p_k))}} at the corresponding probabilities \eqn{p=(p_1, \ldots, p_k)} it holds that
@@ -123,7 +123,7 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
     q<-c(ci[["lower"]], median, ci[["upper"]])
     p<-c(p[["lower"]], 0.5, p[["upper"]])
   } else {
-    warning("median is not supplied; fitting the paramaters of a truncated normal distribution only
+    warning("median is not supplied; fitting the parameters of a truncated normal distribution only
             on the confidence interval might not lead to the desired distributions shape.")
     q<-c(ci[["lower"]], ci[["upper"]])
     p<-c(p[["lower"]],  p[["upper"]])

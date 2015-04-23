@@ -44,7 +44,7 @@ given quantiles. Internally, this is achieved by fitting the distribution functi
 to the given quantiles.
 }
 \details{
-The follwing table shows the available distributions and their identification
+The following table shows the available distributions and their identification
  (option: \code{distribution}) as a character string:
  \tabular{llll}{
  \bold{\code{distribution}}  \tab  \bold{Distribution Name}                 \tab \bold{\code{length(quantiles)}} \tab \bold{Necessary Package}\cr

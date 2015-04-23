@@ -2,7 +2,7 @@
 % Please edit documentation in R/welfareDecisionAnalysis.R
 \name{print.summary.welfareDecisionAnalysis}
 \alias{print.summary.welfareDecisionAnalysis}
-\title{Print the summarized Welfare Decsion Analysis results.}
+\title{Print the summarized Welfare Decision Analysis results.}
 \usage{
 \method{print}{summary.welfareDecisionAnalysis}(x, ...)
 }

@@ -13,9 +13,9 @@ to be randomly sampled. For possible options cf. section Details.}
 
 \item{n}{Number of generated observations.}
 
-\item{lower}{\code{numeric}; lower bound of the 90\% confidence intervall.}
+\item{lower}{\code{numeric}; lower bound of the 90\% confidence interval.}
 
-\item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall.}
+\item{upper}{\code{numeric}; upper bound of the 90\% confidence interval.}
 }
 \value{
 A numeric vector of length \code{n} with the sampled values according to the chosen
@@ -41,7 +41,7 @@ The follwing table shows the available distributions and their identification
  }
  \subsection{Parameter formulae}{
    We use the notation: \eqn{l}\code{=lower} and \eqn{u}=\code{upper};
-   \eqn{\Phi} is the cummulative distribution function of the standard normal distribution and
+   \eqn{\Phi} is the cumulative distribution function of the standard normal distribution and
    \eqn{\Phi^{-1}}{\Phi^(-1)} its inverse, which is the quantile function of the standard normal
    distribution.
    \describe{

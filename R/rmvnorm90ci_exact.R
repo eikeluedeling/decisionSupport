@@ -50,7 +50,7 @@ rmvnorm90ci_exact <- function(n, lower, upper, correlationMatrix){
   c_0.95=qnorm(0.95)
   # Check preconditions
   if ( !is.numeric(lower) || !is.numeric(upper) )
-    stop("lower and upper value of the 90%-confidence intervall must be given.")
+    stop("lower and upper value of the 90%-confidence interval must be given.")
   if( !identical(length(lower), length(upper)) )
     stop("lower and upper vectors must be of the same length.")
   if( !identical( correlationMatrix, t(correlationMatrix) ) ) 

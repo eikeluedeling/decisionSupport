@@ -79,7 +79,7 @@ purely defined empirically.
       }
       \item{ }{
         \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same
-        length. The first defines the probabilites of the quantiles, the second defines the quantiles
+        length. The first defines the probabilities of the quantiles, the second defines the quantiles
         values which determine the parametric distribution.
       }
     }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/welfareDecisionAnalysis.R
 \name{summary.welfareDecisionAnalysis}
 \alias{summary.welfareDecisionAnalysis}
-\title{Summarize Welfare Decsion Analysis results.}
+\title{Summarize Welfare Decision Analysis results.}
 \usage{
 \method{summary}{welfareDecisionAnalysis}(object, ..., digits = max(3,
   getOption("digits") - 3))

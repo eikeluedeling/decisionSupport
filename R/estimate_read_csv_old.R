@@ -31,8 +31,8 @@ NULL
 ##############################################################################################
 #' Read an Estimate from CSV - File (depreciated standard).
 #'
-#' \code{estimate_read_csv_old} reads an estimate form CSV file(s) according to the depreciated 
-#' standard. This funciton is for backward compatiility only.
+#' \code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the depreciated 
+#' standard. This function is for backward compatibility only.
 #' @rdname estimate_read_csv
 #' @details 
 #' \subsection{Depreciated input standard (\code{estimate_read_csv_old})}{

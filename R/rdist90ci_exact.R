@@ -36,8 +36,8 @@
 #' @param distribution \code{character}; A character string that defines the univariate distribution
 #'  to be randomly sampled. For possible options cf. section Details.
 #' @param n Number of generated observations.
-#' @param lower \code{numeric}; lower bound of the 90\% confidence intervall.
-#' @param upper \code{numeric}; upper bound of the 90\% confidence intervall.
+#' @param lower \code{numeric}; lower bound of the 90\% confidence interval.
+#' @param upper \code{numeric}; upper bound of the 90\% confidence interval.
 #' @details
 #'   The follwing table shows the available distributions and their identification 
 #'  (option: \code{distribution}) as a character string:
@@ -53,7 +53,7 @@
 #'  }
 #'  \subsection{Parameter formulae}{
 #'    We use the notation: \eqn{l}\code{=lower} and \eqn{u}=\code{upper}; 
-#'    \eqn{\Phi} is the cummulative distribution function of the standard normal distribution and 
+#'    \eqn{\Phi} is the cumulative distribution function of the standard normal distribution and 
 #'    \eqn{\Phi^{-1}}{\Phi^(-1)} its inverse, which is the quantile function of the standard normal 
 #'    distribution.
 #'    \describe{
@@ -107,7 +107,7 @@
 rdist90ci_exact <- function(distribution, n, lower, upper){
   # Check preconditions
   if ( is.null(lower) || is.null(upper) || is.na(lower) || is.na(upper) )
-    stop("lower and upper value of the 90%-confidence intervall must be given.")
+    stop("lower and upper value of the 90%-confidence interval must be given.")
   # Prepare input variable: types
   lower<-as.numeric(lower)
   upper<-as.numeric(upper)

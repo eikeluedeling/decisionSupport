@@ -68,13 +68,19 @@ calculated, where \eqn{f} is \code{model_function}.
 follows:
 \describe{
   \item{\code{"globalNames"}}{
+    This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
     \code{model_function} is constructed, e.g. like this:
        \preformatted{
-         profit<-function(){
+         profit<-function(x, varnames){
+           # Assign the variable names to the function environement:
+           tt<-table(varnames)
+           for (t in 1:length(tt))
+             assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+
            revenue-costs
          }
        }
-       \emph{CAVE}: this implementation is currently slow!
+       \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
   }
   \item{\code{"data.frameNames"}}{
      The model function is constructed, e.g. like this:
@@ -117,7 +123,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=100000,
+                                 numberOfSimulations=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit1))
@@ -130,26 +136,48 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=100000,
+                                 numberOfSimulations=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit1, classicView=TRUE))
  hist(predictionProfit1)
  #########################################################
  # (c) Using global names in the model function syntax
- #	(CAVE: currently slow!):
- profit1<-function(){
+ profit1<-function(x, varnames){
+   # Assign the variable names to the function environement:
+   tt<-table(varnames)
+   for (t in 1:length(tt))
+     assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+
    list(Profit=revenue-costs)
  }
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=10000,
+                                 numberOfSimulations=1000,
                                  functionSyntax="globalNames")
  # Show the simulation results:
  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
  hist(predictionProfit1)
+ #########################################################
+ # (d) Using global names in the model function syntax and
+ #     define the model function without name for the return value:
+ profit1<-function(x, varnames){
+   # Assign the variable names to the function environment:
+   tt<-table(varnames)
+   for (t in 1:length(tt))
+     assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
 
+   revenue-costs
+ }
+ # Perform the Monte Carlo simulation:
+ predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
+                                  model_function=profit1,
+                                  numberOfSimulations=1000,
+                                  functionSyntax="globalNames")
+ # Show the simulation results:
+ print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
+ hist(predictionProfit1, xlab="Profit")
  #############################################################
  # Example 2(Reading the estimate from file):
  #############################################################
@@ -165,7 +193,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit2<-mcSimulation( estimate=parameterEstimate,
                                  model_function=profit2,
-                                 numberOfSimulations=100000,
+                                 numberOfSimulations=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit2))

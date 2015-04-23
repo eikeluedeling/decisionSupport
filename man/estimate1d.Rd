@@ -13,10 +13,10 @@ as.estimate1d(x, ...)
 \item{distribution}{\code{character}: A character string that defines the type of the univariate
 parametric distribution.}
 
-\item{lower}{\code{numeric}: lower bound of the 90\% confidence intervall, i.e the 5\%-quantile
+\item{lower}{\code{numeric}: lower bound of the 90\% confidence interval, i.e the 5\%-quantile
 of this estimate.}
 
-\item{upper}{\code{numeric}: upper bound of the 90\% confidence intervall, i.e the 95\%-quantile
+\item{upper}{\code{numeric}: upper bound of the 90\% confidence interval, i.e the 95\%-quantile
 of this estimate.}
 
 \item{...}{arguments that can be coerced to a list comprising further elements of the 1-d

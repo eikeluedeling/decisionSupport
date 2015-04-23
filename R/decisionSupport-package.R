@@ -24,7 +24,7 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
-#' @include uncertaintyAnalysis.R
+#' @include decisionSupport.R
 NULL
 ##############################################################################################
 #' Quantitative Support of Decision Making under Uncertainty.
@@ -45,9 +45,9 @@ NULL
 #' } 
 #' The first problem, i.e. the underlying problem, is the problem of choosing
 #' the decision which maximizes expected welfare. The welfare function can be
-#' interpreted as a von Neumann-Morgentstern utility function. Whereas, the
+#' interpreted as a von Neumann-Morgenstern utility function. Whereas, the
 #' second problem, i.e. the meta decision problem, is dealt with using the
-#' \emph{Value of Information Analysis (VIA)}. Value of Information Analyis
+#' \emph{Value of Information Analysis (VIA)}. Value of Information Analysis
 #' seeks to assign a value to a certain reduction in uncertainty or,
 #' equivalently, increase in information. Uncertainty is dealt with in a
 #' probabilistic manner. Probabilities are transformed via Monte Carlo
@@ -84,15 +84,18 @@ NULL
 #' 		\subsection{Estimates}{
 #' 			Implementation: \code{\link{estimate}}
 #' 		}
-#' 		\subsection{Multivariate Ranom Number Generation}{
+#' 		\subsection{Multivariate Random Number Generation}{
 #' 			Implementation: \code{\link{random.estimate}}
 #' 		}
 #' 		\subsection{Monte Carlo Simulation}{
 #' 			Implementation: \code{\link{mcSimulation}}
 #' 		}
 #' }
-#' \subsection{Uncertainty Analysis: A wrapper function}{
-#' 	Implementation: \code{\link{uncertaintyAnalysis}}
+#' \subsection{Integrated Welfare Decision and Value of Information Analysis: A wrapper function}{
+#' 	The function \code{\link{decisionSupport}} integrates the most important features of this 
+#' 	package into a single function. It is wrapped arround the functions 
+#' 	\code{\link{welfareDecisionAnalysis}}, \code{\link{plsr.mcSimulation}}, 
+#' 	\code{\link[chillR:VIP]{VIP}} and \code{\link{individualEvpiSimulation}}.
 #' }
 #'
 #' 
@@ -113,7 +116,7 @@ NULL
 #'    You should have received a copy of the GNU General Public License
 #'    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 #' @docType package
-#' @name decisionSupport
+#' @name decisionSupport-package
 #' @author Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
 #'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{E.Luedeling@@cgiar.org}	
 #' @author Maintainer: Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de}

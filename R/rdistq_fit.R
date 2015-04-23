@@ -44,7 +44,7 @@
 #' @param verbosity \code{integer}; if \code{0} the function is silent; the larger the value the
 #'   more verbose is the output information.
 #' @details
-#'   The follwing table shows the available distributions and their identification 
+#'   The following table shows the available distributions and their identification 
 #'  (option: \code{distribution}) as a character string:
 #'  \tabular{llll}{
 #'  \bold{\code{distribution}}  \tab  \bold{Distribution Name}                 \tab \bold{\code{length(quantiles)}} \tab \bold{Necessary Package}\cr
@@ -243,6 +243,6 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
                   msg)
         }    
   }
-  # Return sampeled distribution if it could be achieved, NA otherwise:
+  # Return sampled distribution if it could be achieved, NA otherwise:
   x
 }

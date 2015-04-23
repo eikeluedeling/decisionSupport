@@ -50,14 +50,13 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             sdProfitExpected <- sqrt( sdRevenue^2 + sdCosts^2)
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=profitEstimate, 
-                                           model_function=profitModel, 
-                                           numberOfSimulations=n,
-                                           randomMethod="calculate",
-                                           functionSyntax="data.frameNames")
+                                             model_function=profitModel, 
+                                             numberOfSimulations=n,
+                                             randomMethod="calculate",
+                                             functionSyntax="data.frameNames")
             expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
             expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
           })
-
 test_that("Difference of two uncorrelated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"data.frameNames\") (2).",{
             # Define the model for the profit:
@@ -84,7 +83,6 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
             expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
           })
-
 test_that("Difference of two uncorrelated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"matrixNames\").",{
             # Define the model for the profit:
@@ -111,31 +109,54 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
             expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
           })
-
 test_that("Difference of two correlated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"data.frameNames\") (1).",{
-          	# Define the model for the profit:
-          	profitModel <- function(x){
-          		x$revenue-x$costs
-          	}
-          	# Read the estimate for revenue and costs:
-          	profitEstimate<-estimate_read_csv("profit-2.csv")
-          	# Calculate means from 95%-confidence intervalls:
-          	meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
-          	meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
-          	# Calculate standard deviations from 95%-confidence intervalls:
-          	sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
-          	sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
-          	covRevenueCosts <- sdRevenue * sdCosts * profitEstimate$correlation_matrix["revenue","costs"]
-          	# Calculate expected moments for profit = revenue - costs:
-          	meanProfitExpected <- meanRevenue - meanCosts
-          	sdProfitExpected <- sqrt( sdRevenue^2 - 2*covRevenueCosts + sdCosts^2)
-          	# Run the Monte Carlo Simulation:
-          	profitSimulation <- mcSimulation(estimate=profitEstimate, 
-          																	 model_function=profitModel, 
-          																	 numberOfSimulations=n,
-          																	 randomMethod="calculate",
-          																	 functionSyntax="data.frameNames")
-          	expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
-          	expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+            # Define the model for the profit:
+            profitModel <- function(x){
+              x$revenue-x$costs
+            }
+            # Read the estimate for revenue and costs:
+            profitEstimate<-estimate_read_csv("profit-2.csv")
+            # Calculate means from 95%-confidence intervalls:
+            meanRevenue <- mean(c(profitEstimate$marginal["revenue","lower"], profitEstimate$marginal["revenue","upper"]) ) 
+            meanCosts <- mean(c(profitEstimate$marginal["costs","lower"], profitEstimate$marginal["costs","upper"]) ) 
+            # Calculate standard deviations from 95%-confidence intervalls:
+            sdRevenue <- 0.5 * (profitEstimate$marginal["revenue","upper"] - profitEstimate$marginal["revenue","lower"]) / qnorm(0.95)
+            sdCosts <- 0.5 * (profitEstimate$marginal["costs","upper"] - profitEstimate$marginal["costs","lower"]) / qnorm(0.95)
+            covRevenueCosts <- sdRevenue * sdCosts * profitEstimate$correlation_matrix["revenue","costs"]
+            # Calculate expected moments for profit = revenue - costs:
+            meanProfitExpected <- meanRevenue - meanCosts
+            sdProfitExpected <- sqrt( sdRevenue^2 - 2*covRevenueCosts + sdCosts^2)
+            # Run the Monte Carlo Simulation:
+            profitSimulation <- mcSimulation(estimate=profitEstimate, 
+                                             model_function=profitModel, 
+                                             numberOfSimulations=n,
+                                             randomMethod="calculate",
+                                             functionSyntax="data.frameNames")
+            expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
+            expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+          })
+test_that("5 dimensional estimate and 2 dimensional named model function are simulated:
+          (randomMethod=\"calculate\", functionSyntax=\"globalNames\") (1).",{
+            # Number of simulations (only a small number needed for the testing that its running):
+            n=10
+            # Define some model for the profit and schnecke:
+            estimate5dModel2d<-function(x, varnames){
+              tt<-table(varnames)
+              for (t in 1:length(tt))
+                assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+              
+              a<-(b+c)^d+e+f-g
+              aa<-b+c+d-e+f*g
+              return(list(profit=a,schnecke=aa))
+            }
+            # Read the estimate for a, b, c, d, e and f from file:
+            estimate5d<-estimate_read_csv("estimate5d.csv")
+            
+            # Run the Monte Carlo Simulation:
+            profitSimulation <- mcSimulation(estimate=estimate5d, 
+                                             model_function=estimate5dModel2d, 
+                                             numberOfSimulations=n,
+                                             randomMethod="calculate",
+                                             functionSyntax="globalNames")
           })

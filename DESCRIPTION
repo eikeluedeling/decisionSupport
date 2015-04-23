@@ -33,6 +33,7 @@ Suggests:
     mc2d (>= 0.1.15),
     nleqslv (>= 2.6),
     pls (>= 2.4.3),
+    plyr (>= 1.8.2),
     rriskDistributions (>= 2.0),
     testthat (>= 0.9.1),
     knitr
@@ -54,7 +55,7 @@ Collate:
     'eviSimulation.R'
     'individualEvpiSimulation.R'
     'estimate_read_csv_old.R'
-    'uncertaintyAnalysis.R'
+    'decisionSupport.R'
     'decisionSupport-package.R'
     'globalNames2data.frameNames.R'
     'plsr.mcSimulation.R'

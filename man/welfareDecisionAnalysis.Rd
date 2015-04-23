@@ -46,7 +46,7 @@ An object of class \code{welfareDecisionAnalysis} with the following elements:
 }
 \description{
 The optimal choice between two different opportunities is calculated. Optimality is taken as
-maximizing expected welfare. Furthermore, the Expected Oportunity Loss (EOL) is calculated.
+maximizing expected welfare. Furthermore, the Expected Opportunity Loss (EOL) is calculated.
 }
 \details{
 \subsection{The underlying decision problem and its notational framework}{

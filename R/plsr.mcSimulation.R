@@ -74,11 +74,9 @@ plsr.mcSimulation <- function(object,
   } else { 
     y<-object$y
   }
-  # Prepare the independent varialbes:
-  #resu<-results_for_standard_PLS[,which(apply(results_for_standard_PLS,2,sd)>0)]
+  # Prepare the independent variables:
   x<-as.matrix((object$x)[variables.x])
   x<-x[,which(apply(x,2,sd)>0)]
-  #pls_out<-plsr(dep~indep,data=dat,method="oscorespls",scale=TRUE,ncomp=2) 
   # PLSR analysis:
   plsrResults<-pls::plsr(y~x, method=method, scale=scale, ncomp=ncomp, ...) 
   

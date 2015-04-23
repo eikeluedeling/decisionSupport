@@ -3,4 +3,7 @@
 Collate.note
 Makefile
 doc/*.*
+R/scratch
+R/todo
+R/benchmark
 

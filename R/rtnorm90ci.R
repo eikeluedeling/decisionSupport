@@ -88,8 +88,8 @@ rtnorm90ci <- function(n, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, 
 #' \code{rposnorm90ci} generates positive normal random numbers based on the 90\% confidence interval. 
 #' It is a wrapper function for \code{rtnorm90ci}.
 #' @rdname rtnorm90ci
-#' @param lower \code{numeric}; lower bound of the 90\% confidence intervall.
-#' @param upper \code{numeric}; upper bound of the 90\% confidence intervall. 
+#' @param lower \code{numeric}; lower bound of the 90\% confidence interval.
+#' @param upper \code{numeric}; upper bound of the 90\% confidence interval. 
 #' @details 
 #' Positive normal random number generation: a positive normal distribution
 #' is a truncated normal distribution with lower truncation point equal to zero and upper truncation

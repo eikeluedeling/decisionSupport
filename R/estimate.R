@@ -104,11 +104,11 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #'  }
 #'  \subsection{The structure of the estimates correlation input information}{
 #'    The argument \code{correlation_matrix} is the sub matrix of the full correlation matrix of 
-#'    the estimate conaining all correlated elements. Thus, its row and column names must be a 
+#'    the estimate containing all correlated elements. Thus, its row and column names must be a 
 #'    subset of the variable names of the marginal distributions. This means, that the information  
 #'    which variables are uncorrelated does not need to be provided explicitly.
 #'    
-#'    \code{correlation_matrix} must have all the porperties of a correlation matrix, viz. symmetry, 
+#'    \code{correlation_matrix} must have all the properties of a correlation matrix, viz. symmetry, 
 #'    all diagonal elements equal 1 and all of diagonal elements are between -1 and 1. 
 #'  }
 #'  

@@ -1,0 +1,7 @@
+distribution,lower,upper,variable
+tnorm_0_1,0.1,0.6,b
+lnorm,5,1000,c
+norm,3,20,d
+norm,-1,10,e
+norm,3,20,f
+norm,-1,20000,g

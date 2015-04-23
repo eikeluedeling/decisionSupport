@@ -37,12 +37,12 @@ A list with elements \code{mean} and \code{sd}, i.e. the parameters of the under
 }
 \description{
 This function fits the distribution parameters, i.e. \code{mean} and \code{sd}, of a truncated
-normal distribution from an arbitrary confidence interval and, facultatively, the median.
+normal distribution from an arbitrary confidence interval and, optionally, the median.
 }
 \details{
 For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
 
-  The cummulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the
+  The cumulative distribution of a truncated normal \eqn{F_{\mu, \sigma}}(x) gives the
   probability that a sampled value is less than \eqn{x}. This is equivalent to saying that for
   the vector of quantiles \ifelse{latex}{\eqn{q=(q_{p_1}, \ldots, q_{p_k})}}{\eqn{q=(q(p_1),
   \ldots, q(p_k))}} at the corresponding probabilities \eqn{p=(p_1, \ldots, p_k)} it holds that

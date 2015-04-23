@@ -38,9 +38,9 @@ NULL
 #' 95\% quantiles. Optionally, the median can be supplied.
 #' @param distribution \code{character}: A character string that defines the type of the univariate
 #'   parametric distribution. 
-#' @param lower \code{numeric}: lower bound of the 90\% confidence intervall, i.e the 5\%-quantile 
+#' @param lower \code{numeric}: lower bound of the 90\% confidence interval, i.e the 5\%-quantile 
 #'   of this estimate.
-#' @param upper \code{numeric}: upper bound of the 90\% confidence intervall, i.e the 95\%-quantile 
+#' @param upper \code{numeric}: upper bound of the 90\% confidence interval, i.e the 95\%-quantile 
 #'   of this estimate.
 #' @param ... arguments that can be coerced to a list comprising further elements of the 1-d 
 #'   estimate (for details cf. below). Each element must be atomic and of length 1 (1-d property).

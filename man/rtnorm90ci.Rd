@@ -40,9 +40,9 @@ generated confidence interval from the specified interval. If this deviation is 
 \item{...}{further parameters to be passed to \code{\link{paramtnormci_numeric}} or
 \code{\link{paramtnormci_fit}}, respectively.}
 
-\item{lower}{\code{numeric}; lower bound of the 90\% confidence intervall.}
+\item{lower}{\code{numeric}; lower bound of the 90\% confidence interval.}
 
-\item{upper}{\code{numeric}; upper bound of the 90\% confidence intervall.}
+\item{upper}{\code{numeric}; upper bound of the 90\% confidence interval.}
 }
 \description{
 \code{rtnorm90ci} generates truncated normal random numbers based on the 90\% confidence interval

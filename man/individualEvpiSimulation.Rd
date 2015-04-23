@@ -7,7 +7,8 @@
 individualEvpiSimulation(welfare, currentEstimate,
   perfectProspectiveNames = row.names(currentEstimate),
   perfectProspectiveValues = colMeans(random(rho = currentEstimate, n =
-  numberOfSimulations)[, perfectProspectiveNames]), numberOfSimulations,
+  numberOfSimulations, method = randomMethod, relativeTolerance =
+  relativeTolerance)[, perfectProspectiveNames]), numberOfSimulations,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
   relativeTolerance = 0.05)
 }
@@ -51,7 +52,7 @@ An object of class \code{eviSimulation} with the following elements:
 			  list of \code{\link{welfareDecisionAnalysis}} objects for several \code{perfectProspectiveNames}.
 			}
  		\item{\code{$evi}}{
- 		  Expected Value of Information(s) (EVI)(s) gained by the perfect knowldege of individual
+ 		  Expected Value of Information(s) (EVI)(s) gained by the perfect knowledge of individual
  		  variable(s) w.r.t. the current estimate.
  		}
   }

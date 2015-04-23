@@ -69,13 +69,19 @@ NULL
 #' follows:
 #' \describe{
 #'   \item{\code{"globalNames"}}{
+#'     This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
 #'     \code{model_function} is constructed, e.g. like this:
 #'        \preformatted{
-#'          profit<-function(){
+#'          profit<-function(x, varnames){
+#'            # Assign the variable names to the function environement:
+#'            tt<-table(varnames)
+#'            for (t in 1:length(tt))
+#'              assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+#'              
 #'            revenue-costs
 #'          }
 #'        }
-#'        \emph{CAVE}: this implementation is currently slow!
+#'        \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
 #'   }
 #'   \item{\code{"data.frameNames"}}{
 #'      The model function is constructed, e.g. like this:
@@ -128,7 +134,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=100000,
+#'                                  numberOfSimulations=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1))
@@ -141,26 +147,48 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=100000,
+#'                                  numberOfSimulations=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, classicView=TRUE))
 #'  hist(predictionProfit1) 
 #'  #########################################################
 #'  # (c) Using global names in the model function syntax
-#'  #	(CAVE: currently slow!):
-#'  profit1<-function(){
+#'  profit1<-function(x, varnames){
+#'    # Assign the variable names to the function environement:
+#'    tt<-table(varnames)
+#'    for (t in 1:length(tt))
+#'      assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+#'              
 #'    list(Profit=revenue-costs)
 #'  } 
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=10000,
+#'                                  numberOfSimulations=1000,
 #'                                  functionSyntax="globalNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
 #'  hist(predictionProfit1) 
-#'   
+#'  #########################################################
+#'  # (d) Using global names in the model function syntax and
+#'  #     define the model function without name for the return value:
+#'  profit1<-function(x, varnames){
+#'    # Assign the variable names to the function environment:
+#'    tt<-table(varnames)
+#'    for (t in 1:length(tt))
+#'      assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+#'    
+#'    revenue-costs
+#'  }
+#'  # Perform the Monte Carlo simulation:
+#'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
+#'                                   model_function=profit1,
+#'                                   numberOfSimulations=1000,
+#'                                   functionSyntax="globalNames")
+#'  # Show the simulation results:
+#'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
+#'  hist(predictionProfit1, xlab="Profit")
 #'  #############################################################
 #'  # Example 2(Reading the estimate from file):
 #'  #############################################################
@@ -176,7 +204,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit2<-mcSimulation( estimate=parameterEstimate, 
 #'                                  model_function=profit2, 
-#'                                  numberOfSimulations=100000,
+#'                                  numberOfSimulations=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit2))
@@ -188,52 +216,51 @@ mcSimulation <- function(estimate, model_function, ..., numberOfSimulations,
                          randomMethod="calculate", 
                          functionSyntax="data.frameNames",
                          relativeTolerance=0.05){
-	#ToDo: (i) review code and (ii) test
-	x<-random(rho=estimate, n=numberOfSimulations, 
-	          method=randomMethod,
-	          relativeTolerance=relativeTolerance)
-	if (functionSyntax=="data.frameNames"){
-		y<-model_function(as.data.frame(x), ...)
-	} else if (functionSyntax=="matrixNames"){
-		y<-model_function(as.matrix(x),...)
-	} else if (functionSyntax=="globalNames"){
-		#ToDo: test and benchmark
-		y<-NULL
-		for(j in 1:nrow(x)){
-			for(i in row.names(estimate)){
-#				assign(i,x[j,i],envir=parent.frame())
-				assign(i,x[j,i],envir=environment(model_function))
-			}
-			y<-rbind(y,data.frame(model_function()))
-		}
-	} else 
-		stop("functionSyntax=",functionSyntax, "is not defined!") 
-	# 	# Remove names in y if any.
-	# 	names(y)<-NULL
-	#	returnObject<-data.frame(y=y, x=x)
-	#	returnObject<-list(y=y, x=x)
-	returnObject<-list(y=data.frame(y), x=data.frame(x))
-	returnObject$call<-match.call()
-	# ToDo: is this better?:
-	# class(returnObject)<-c("mcSimulation", class(returnObject))
-	class(returnObject)<-cbind("mcSimulation", class(returnObject))
-	
-	return(returnObject)
+  #ToDo: (i) review code and (ii) test
+  x<-random(rho=estimate, n=numberOfSimulations, 
+            method=randomMethod,
+            relativeTolerance=relativeTolerance)
+  if (functionSyntax=="data.frameNames"){
+    y<-model_function(as.data.frame(x), ...)
+  } else if (functionSyntax=="matrixNames"){
+    y<-model_function(as.matrix(x),...)
+  } else if (functionSyntax=="globalNames"){
+    if( !requireNamespace("plyr", quietly = TRUE)) 
+      stop("Package \"plyr\" needed. Please install it.",
+           call. = FALSE)
+    y<-plyr::aaply(.data=x,
+                   .margins=1,
+                   .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
+                   .drop=FALSE,
+                   .progress="text")
+    ## Case: 1d model function without name needs to be treated separately, s.t. output syntax is 
+    ## consistent with other "functionSyntax":
+    if(colnames(y)[[1]]=="1" && dim(y)[[2]]==1) 
+      (y<-as.vector(y))
+  } else 
+    stop("functionSyntax=",functionSyntax, "is not defined!") 
+  
+  # Return object:
+  returnObject<-list(y=data.frame(y), x=data.frame(x))
+  returnObject$call<-match.call()
+  class(returnObject)<-cbind("mcSimulation", class(returnObject))
+  
+  return(returnObject)
 }
 ##############################################################################################
 # as.data.frame.mcSimulation(x, row.names, optional, ..., stringsAsFactors)
 ##############################################################################################
-#' Coerce Monte Carlo simutlation results to a data frame.
+#' Coerce Monte Carlo simulation results to a data frame.
 #' 
-#' Coerces Monte Carlo simutlation results to a data frame.
+#' Coerces Monte Carlo simulation results to a data frame.
 #' @param x An object of class \code{mcSimulation}.
 #' @inheritParams base::as.data.frame
 #' @seealso \code{\link{as.data.frame}}
 #' @export
 as.data.frame.mcSimulation <- function(x, row.names = NULL, optional = FALSE, ..., 
-																			 stringsAsFactors = default.stringsAsFactors()){
-	as.data.frame(list(y=x$y,x=x$x), row.names = row.names, optional = optional, ..., 
-								stringsAsFactors = stringsAsFactors)
+                                       stringsAsFactors = default.stringsAsFactors()){
+  as.data.frame(list(y=x$y,x=x$x), row.names = row.names, optional = optional, ..., 
+                stringsAsFactors = stringsAsFactors)
 }
 ##############################################################################################
 # print.mcSimulation(x, ...)
@@ -246,11 +273,11 @@ as.data.frame.mcSimulation <- function(x, row.names = NULL, optional = FALSE, ..
 #' @seealso \code{\link{mcSimulation}}, \code{\link{print.data.frame}}
 #' @export
 print.mcSimulation <- function(x, ...){
-	#ToDo: Review
-	cat("Call:\n")
-	print(x$call)
-	cat("\nMonte Carlo simulation results:\n")
-	print.data.frame(as.data.frame(x),...)
+  #ToDo: Review
+  cat("Call:\n")
+  print(x$call)
+  cat("\nMonte Carlo simulation results:\n")
+  print.data.frame(as.data.frame(x),...)
 }
 ##############################################################################################
 # summary.mcSimulation(object, ...)
@@ -279,52 +306,52 @@ print.mcSimulation <- function(x, ...){
 #' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
 #' @export
 summary.mcSimulation <- function(object,
-																 ...,
-																 digits = max(3, getOption("digits")-3),
-																 variables.y=names(object$y),
-																 variables.x=if(classicView) names(object$x),
-																 classicView=FALSE,
-																 probs=c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1)
+                                 ...,
+                                 digits = max(3, getOption("digits")-3),
+                                 variables.y=names(object$y),
+                                 variables.x=if(classicView) names(object$x),
+                                 classicView=FALSE,
+                                 probs=c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1)
 ){
-	#ToDo: Review
-	data<-as.data.frame(list(y=(object$y)[variables.y],x=(object$x)[variables.x]))
-	if( classicView ){
-		res<-list(summary=summary.data.frame(object=as.data.frame(data),...,digits=digits),
-							call=object$call)
-	} else{
-		chance_loss<-function(x){
-			length(x[x<0])/length(x)
-		}
-		chance_zero<-function(x){
-			length(x[x==0])/length(x)
-		}
-		chance_gain<-function(x){
-			length(x[x>0])/length(x)
-		}
-		
-		#		data<-mcResult$y[variables]
-		
-		summaryDf<-as.data.frame(t(apply(X=data, MARGIN=2, FUN=quantile, probs=probs)))
-		summaryDf<-cbind(summaryDf,
-										 mean=colMeans(data),
-										 deparse.level=1)
-		summaryDf<-cbind(summaryDf,
-										 chance_loss=apply(X=data, MARGIN=2, FUN=chance_loss),
-										 deparse.level=1)
-		summaryDf<-cbind(summaryDf,
-										 chance_zero=apply(X=data, MARGIN=2, FUN=chance_zero),
-										 deparse.level=1)
-		summaryDf<-cbind(summaryDf,
-										 chance_gain=apply(X=data, MARGIN=2, FUN=chance_gain),
-										 deparse.level=1)
-		
-		summaryDf<-format(x=summaryDf, digits=digits, ...)
-		res<-list(summary=summaryDf,
-							call=object$call)
-	}
-	
-	class(res)<-"summary.mcSimulation"
-	res
+  #ToDo: Review
+  data<-as.data.frame(list(y=(object$y)[variables.y],x=(object$x)[variables.x]))
+  if( classicView ){
+    res<-list(summary=summary.data.frame(object=as.data.frame(data),...,digits=digits),
+              call=object$call)
+  } else{
+    chance_loss<-function(x){
+      length(x[x<0])/length(x)
+    }
+    chance_zero<-function(x){
+      length(x[x==0])/length(x)
+    }
+    chance_gain<-function(x){
+      length(x[x>0])/length(x)
+    }
+    
+    #		data<-mcResult$y[variables]
+    
+    summaryDf<-as.data.frame(t(apply(X=data, MARGIN=2, FUN=quantile, probs=probs)))
+    summaryDf<-cbind(summaryDf,
+                     mean=colMeans(data),
+                     deparse.level=1)
+    summaryDf<-cbind(summaryDf,
+                     chance_loss=apply(X=data, MARGIN=2, FUN=chance_loss),
+                     deparse.level=1)
+    summaryDf<-cbind(summaryDf,
+                     chance_zero=apply(X=data, MARGIN=2, FUN=chance_zero),
+                     deparse.level=1)
+    summaryDf<-cbind(summaryDf,
+                     chance_gain=apply(X=data, MARGIN=2, FUN=chance_gain),
+                     deparse.level=1)
+    
+    summaryDf<-format(x=summaryDf, digits=digits, ...)
+    res<-list(summary=summaryDf,
+              call=object$call)
+  }
+  
+  class(res)<-"summary.mcSimulation"
+  res
 }
 ##############################################################################################
 # print.summary.mcSimulation(x, ...)
@@ -338,10 +365,10 @@ summary.mcSimulation <- function(object,
 #'   \code{\link{print.data.frame}}
 #' @export
 print.summary.mcSimulation <- function(x, ...){
-	cat("Call:\n")
-	print(x$call)
-	cat("\nSummary of Monte Carlo simulation:\n")
-	print(x$summary,...)
+  cat("Call:\n")
+  print(x$call)
+  cat("\nSummary of Monte Carlo simulation:\n")
+  print(x$summary,...)
 }
 ##############################################################################################
 # hist.mcSimulation(x, ...)
@@ -373,41 +400,41 @@ print.summary.mcSimulation <- function(x, ...){
 #'   available in R see \code{\link[grDevices]{colors}}.
 #' @export
 hist.mcSimulation <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Histogram of " , xlab), ...,
-															colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
-															colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
-															resultName=NULL){
-	# ToDo: review!!!
-	if( is.list(x$y) ){
-		if( !is.null(resultName) ){
-			result<-x$y[[resultName]]
-			if( is.null(xlab) )
-				xlab<-resultName
-		} else {
-			if(length(names(x$y))==1){
-				result<-unlist(x$y)
-				if( is.null(xlab) )
-					xlab<-names(x$y)[[1]]
-			}
-			else 
-				stop("No component of the model function chosen!")
-		}
-		if( main==paste("Histogram of " , xlab))
-			main<-paste("Histogram of " , xlab, " Monte Carlo Simulation")
-	} else { 
-		result<-x$y
-	}
-	if(!isTRUE(is.null(colorQuantile))){
-		resultNames<-NULL
-		if( length(colorQuantile) != length(colorProbability) )
-			stop("length(colorQuantile) != length(colorProbability)")
-		histPrepare<-hist(result, breaks=breaks, plot=FALSE)
-		probability<-cumsum(histPrepare$density * diff(histPrepare$breaks))
-		color<-c()
-		for( i in seq(along=probability) ){
-			for( j in seq(along=colorQuantile) )
-				if(probability[i] < colorProbability[j]) color[i]<-colorQuantile[j]
-		}	
-	} else
-		color=col
-	hist(result, breaks=breaks, col=color, xlab=xlab, main=main,...)
+                              colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
+                              colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
+                              resultName=NULL){
+  # ToDo: review!!!
+  if( is.list(x$y) ){
+    if( !is.null(resultName) ){
+      result<-x$y[[resultName]]
+      if( is.null(xlab) )
+        xlab<-resultName
+    } else {
+      if(length(names(x$y))==1){
+        result<-unlist(x$y)
+        if( is.null(xlab) )
+          xlab<-names(x$y)[[1]]
+      }
+      else 
+        stop("No component of the model function chosen!")
+    }
+    if( main==paste("Histogram of " , xlab))
+      main<-paste("Histogram of " , xlab, " Monte Carlo Simulation")
+  } else { 
+    result<-x$y
+  }
+  if(!isTRUE(is.null(colorQuantile))){
+    resultNames<-NULL
+    if( length(colorQuantile) != length(colorProbability) )
+      stop("length(colorQuantile) != length(colorProbability)")
+    histPrepare<-hist(result, breaks=breaks, plot=FALSE)
+    probability<-cumsum(histPrepare$density * diff(histPrepare$breaks))
+    color<-c()
+    for( i in seq(along=probability) ){
+      for( j in seq(along=colorQuantile) )
+        if(probability[i] < colorProbability[j]) color[i]<-colorQuantile[j]
+    }	
+  } else
+    color=col
+  hist(result, breaks=breaks, col=color, xlab=xlab, main=main,...)
 }
