@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100.0.9006
-Date: 2015-04-16
+Version: 1.100.0.9007
+Date: 2015-04-24
 Authors@R: c(
     person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
     person("Eike", "Luedeling", email = "E.Luedeling@cgiar.org", role = "aut"))
@@ -39,7 +39,6 @@ Suggests:
     knitr
 URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
-Classification/JEL: I38, O16, O21, O22, O23
 Collate:
     'rmvnorm90ci_exact.R'
     'rdistq_fit.R'
@@ -59,4 +58,3 @@ Collate:
     'decisionSupport-package.R'
     'globalNames2data.frameNames.R'
     'plsr.mcSimulation.R'
-VignetteBuilder: knitr

@@ -1,9 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-Collate.note
-Makefile
-doc/*.*
-R/scratch
-R/todo
-R/benchmark
+^Collate\.note$
+^Makefile$
+^doc$
+^R/old$
+^R/scratch$
+^R/todo$
+^R/benchmark$
 

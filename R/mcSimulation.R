@@ -49,6 +49,8 @@ NULL
 #' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
+#' @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
+#'   more verbose is output information.
 # @param ... Optional arguments to be passed to \code{\link{random}.
 #' @details 
 #' This method solves the following problem. Given a multivariate random variable \eqn{x =
@@ -215,7 +217,8 @@ NULL
 mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, 
                          randomMethod="calculate", 
                          functionSyntax="data.frameNames",
-                         relativeTolerance=0.05){
+                         relativeTolerance=0.05,
+                         verbosity=0){
   #ToDo: (i) review code and (ii) test
   x<-random(rho=estimate, n=numberOfSimulations, 
             method=randomMethod,
@@ -228,18 +231,31 @@ mcSimulation <- function(estimate, model_function, ..., numberOfSimulations,
     if( !requireNamespace("plyr", quietly = TRUE)) 
       stop("Package \"plyr\" needed. Please install it.",
            call. = FALSE)
+    if(verbosity > 0)
+      .progress="text"
+    else
+      .progress="none"
     y<-plyr::aaply(.data=x,
                    .margins=1,
                    .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
                    .drop=FALSE,
-                   .progress="text")
-    ## Case: 1d model function without name needs to be treated separately, s.t. output syntax is 
-    ## consistent with other "functionSyntax":
-    if(colnames(y)[[1]]=="1" && dim(y)[[2]]==1) 
-      (y<-as.vector(y))
+                   .progress=.progress)
+    #     ## Case: 1d model function without name needs to be treated separately, s.t. output syntax is 
+    #     ## consistent with other "functionSyntax":
+    #     if(colnames(y)[[1]]=="1" && dim(y)[[2]]==1) 
+    #       (y<-as.vector(y))
+    if(any(colnames(y)==as.character(1:ncol(y))))
+      colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
   } else 
     stop("functionSyntax=",functionSyntax, "is not defined!") 
-  
+  if( is.null(names(y)) && is.null(colnames(y)) ) {
+    if(is.null(ncol(y))){
+      y<-data.frame(y)
+      colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
+    } else{
+      colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
+    }
+  }
   # Return object:
   returnObject<-list(y=data.frame(y), x=data.frame(x))
   returnObject$call<-match.call()

@@ -48,6 +48,8 @@ NULL
 #' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
+#' @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
+#'   more verbose is output information.
 #' @return An object of class \code{welfareDecisionAnalysis} with the following elements:
 #'  \describe{
 #'      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate} 
@@ -214,7 +216,8 @@ NULL
 welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations, 
                                     randomMethod="calculate", 
                                     functionSyntax="data.frameNames",
-                                    relativeTolerance=0.05){
+                                    relativeTolerance=0.05,
+                                    verbosity=0){
 	# Auxiliary functions (ToDo: check!):
 	# Expected loss of project approval
 	elPa <- function(netBenefitSample){
@@ -240,7 +243,8 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations,
 														numberOfSimulations=numberOfSimulations,
 														randomMethod=randomMethod,
 														functionSyntax=functionSyntax,
-														relativeTolerance=relativeTolerance)
+														relativeTolerance=relativeTolerance,
+														verbosity=verbosity)
 		# Expected net benefit:
 		enb_<-colMeans(mcResult$y)
 		# Expected loss for project aproval:

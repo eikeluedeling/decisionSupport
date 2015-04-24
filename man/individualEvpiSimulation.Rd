@@ -10,7 +10,7 @@ individualEvpiSimulation(welfare, currentEstimate,
   numberOfSimulations, method = randomMethod, relativeTolerance =
   relativeTolerance)[, perfectProspectiveNames]), numberOfSimulations,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05)
+  relativeTolerance = 0.05, verbosity = 0)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
@@ -40,6 +40,9 @@ details see \code{\link{mcSimulation}}.}
 \item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
+
+\item{verbosity}{\code{integer}: if \code{0} the function is silent; the larger the value the
+more verbose is output information.}
 }
 \value{
 An object of class \code{eviSimulation} with the following elements:

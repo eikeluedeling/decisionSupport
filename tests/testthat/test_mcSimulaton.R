@@ -54,8 +54,8 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
                                              numberOfSimulations=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
-            expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
-            expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+            expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
+            expect_equal(sd(profitSimulation$y$output_1), sdProfitExpected, tolerance=tolerance)
           })
 test_that("Difference of two uncorrelated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"data.frameNames\") (2).",{
@@ -80,8 +80,8 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
                                              numberOfSimulations=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
-            expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
-            expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+            expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
+            expect_equal(sd(profitSimulation$y$output_1), sdProfitExpected, tolerance=tolerance)
           })
 test_that("Difference of two uncorrelated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"matrixNames\").",{
@@ -106,8 +106,8 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
                                              numberOfSimulations=n,
                                              randomMethod="calculate",
                                              functionSyntax="matrixNames")
-            expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
-            expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+            expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
+            expect_equal(sd(profitSimulation$y$output_1), sdProfitExpected, tolerance=tolerance)
           })
 test_that("Difference of two correlated normally distributed variables is normally distributed
           (randomMethod=\"calculate\", functionSyntax=\"data.frameNames\") (1).",{
@@ -133,8 +133,8 @@ test_that("Difference of two correlated normally distributed variables is normal
                                              numberOfSimulations=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
-            expect_equal(mean(profitSimulation$y$y), meanProfitExpected, tolerance=tolerance)
-            expect_equal(sd(profitSimulation$y$y), sdProfitExpected, tolerance=tolerance)
+            expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
+            expect_equal(sd(profitSimulation$y$output_1), sdProfitExpected, tolerance=tolerance)
           })
 test_that("5 dimensional estimate and 2 dimensional named model function are simulated:
           (randomMethod=\"calculate\", functionSyntax=\"globalNames\") (1).",{

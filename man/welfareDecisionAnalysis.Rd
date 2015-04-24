@@ -6,7 +6,7 @@
 \usage{
 welfareDecisionAnalysis(estimate, welfare, numberOfSimulations,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05)
+  relativeTolerance = 0.05, verbosity = 0)
 }
 \arguments{
 \item{estimate}{\code{\link{estimate}} object describing the distribution of the input variables.}
@@ -29,6 +29,9 @@ details see \code{\link{mcSimulation}}.}
 \item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
+
+\item{verbosity}{\code{integer}: if \code{0} the function is silent; the larger the value the
+more verbose is output information.}
 }
 \value{
 An object of class \code{welfareDecisionAnalysis} with the following elements:

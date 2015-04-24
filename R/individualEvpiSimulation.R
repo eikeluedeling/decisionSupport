@@ -87,7 +87,8 @@ individualEvpiSimulation <- function(welfare, currentEstimate,
                                      numberOfSimulations,
                                      randomMethod="calculate",
                                      functionSyntax="data.frameNames",
-                                     relativeTolerance=0.05){
+                                     relativeTolerance=0.05,
+                                     verbosity=0){
   prospectiveEstimate<-c()
   #print(perfectProspectiveValues)
   for( i in perfectProspectiveNames){
@@ -113,7 +114,8 @@ individualEvpiSimulation <- function(welfare, currentEstimate,
                             numberOfSimulations=numberOfSimulations,
                             randomMethod=randomMethod,
                             functionSyntax=functionSyntax, 														
-                            relativeTolerance=relativeTolerance)
+                            relativeTolerance=relativeTolerance,
+                            verbosity=verbosity)
   #	class(evpiResult)<-c("individualEvpiSimulation", class(evpiResult))
   evpiResult
 }

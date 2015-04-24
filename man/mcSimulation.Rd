@@ -6,7 +6,7 @@
 \usage{
 mcSimulation(estimate, model_function, ..., numberOfSimulations,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05)
+  relativeTolerance = 0.05, verbosity = 0)
 }
 \arguments{
 \item{estimate}{\code{estimate}: estimate of the joint probability distribution of
@@ -30,6 +30,9 @@ function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or
 \item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
 \code{relativeTolerance} a warning is given.}
+
+\item{verbosity}{\code{integer}: if \code{0} the function is silent; the larger the value the
+more verbose is output information.}
 }
 \value{
 An object of \code{class mcSimulation}, which is a \code{list} with elements:

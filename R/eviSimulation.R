@@ -221,7 +221,8 @@ NULL
 eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfSimulations, 
                         randomMethod="calculate", 
                         functionSyntax="data.frameNames",
-                        relativeTolerance=0.05){
+                        relativeTolerance=0.05,
+                        verbosity=0){
 	# Return object:
 	thisAnalysis<-NULL
 	# Perform the current decision analysis:
@@ -230,7 +231,8 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 																		 numberOfSimulations=numberOfSimulations,
 																		 randomMethod=randomMethod,
 																		 functionSyntax=functionSyntax, 														
-																		 relativeTolerance=relativeTolerance)
+																		 relativeTolerance=relativeTolerance,
+																		 verbosity=verbosity)
 	
 	# Perform the prospective decision analysis:
 	if( class(prospectiveEstimate) == "estimate"){
@@ -240,7 +242,8 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 																					 numberOfSimulations=numberOfSimulations,
 																					 randomMethod=randomMethod,
 																					 functionSyntax=functionSyntax, 														
-																					 relativeTolerance=relativeTolerance)
+																					 relativeTolerance=relativeTolerance,
+																					 verbosity=verbosity)
 		evi<-analysisCurrent$eol - analysisProspective$eol
 	} else if ( is.list(prospectiveEstimate) ){
 		analysisProspective<-lapply(X=prospectiveEstimate, 
@@ -249,7 +252,8 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 																																				numberOfSimulations=numberOfSimulations,
 																																				randomMethod=randomMethod,
 																																				functionSyntax=functionSyntax, 														
-																																				relativeTolerance=relativeTolerance)
+																																				relativeTolerance=relativeTolerance,
+																																				verbosity=verbosity)
 		)
 		evi<-lapply(X=analysisProspective, 
 								FUN=function(x) analysisCurrent$eol - x$eol)

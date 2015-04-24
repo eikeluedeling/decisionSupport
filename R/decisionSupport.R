@@ -55,8 +55,8 @@ NULL
 #'    shall be sorted. Only relevant if \code{sortEvpiAlong!=NULL}. 
 #' @param oldInputStandard \code{logical}: If the old input standard should be used
 #' 	(\code{\link{estimate_read_csv_old}}).
-#' @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
-#'   more verbose is output information.
+# @param verbosity \code{integer}: if \code{0} the function is silent; the larger the value the
+#   more verbose is output information.
 #' @inheritParams welfareDecisionAnalysis
 #' @details
 #'  This function integrates the most important features of  
@@ -106,7 +106,8 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
                                                   numberOfSimulations=numberOfSimulations,
                                                   randomMethod=randomMethod,
                                                   functionSyntax=functionSyntax,
-                                                  relativeTolerance=relativeTolerance)
+                                                  relativeTolerance=relativeTolerance,
+                                                  verbosity=verbosity)
   if(verbosity > 0)
     cat("Monte Carlo Simulation for Welfare Decision Analysis done.\n")
   if(verbosity > 1){
@@ -188,7 +189,8 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
                                                     numberOfSimulations=numberOfSimulations,
                                                     randomMethod=randomMethod,
                                                     functionSyntax=functionSyntax,
-                                                    relativeTolerance=relativeTolerance)
+                                                    relativeTolerance=relativeTolerance,
+                                                    verbosity=verbosity)
     
     if (verbosity > 1)
       print(sort(summary(individualEvpiResults)))
