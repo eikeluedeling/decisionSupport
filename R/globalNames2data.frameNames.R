@@ -5,7 +5,7 @@
 #
 # Authors:
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
 #	http://www.worldagroforestry.org
@@ -28,7 +28,7 @@
 #'
 #' The variable names of a function are transformed from global variable names to data.frame names
 #' of the form \code{x$<globalName>}.
-#' @param modelFunction a function which body contains global variables. The function must not
+#' @param modelFunction a function whose body contains global variables. The function must not
 #'   contain any arguments.
 #' @param globalNames a \code{character} vector containing the names of the global variables that
 #'   shall be transformed.
@@ -50,7 +50,7 @@
 #'    }
 #'  }
 #' @section Warning:
-#'   If there are local functions within the function \code{modelFunction} defined, which arguments
+#'   If there are local functions within the function \code{modelFunction} defined, whose arguments
 #'   have identical names to any of the \code{globalNames} the function fails!
 #' @examples
 #'  profit1<-function(){

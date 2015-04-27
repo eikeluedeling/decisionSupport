@@ -4,10 +4,9 @@
 \alias{eviSimulation}
 \title{Expected Value of Information (EVI) Simulation.}
 \usage{
-eviSimulation(welfare, currentEstimate, prospectiveEstimate,
-  numberOfSimulations, randomMethod = "calculate",
-  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
-  verbosity = 0)
+eviSimulation(welfare, currentEstimate, prospectiveEstimate, numberOfModelRuns,
+  randomMethod = "calculate", functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05, verbosity = 0)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
@@ -21,9 +20,10 @@ as currently being estimated.}
 
 \item{prospectiveEstimate}{\code{\link{estimate}} or \code{list} of \code{estimate} objects:
 describing the prospective distribution of the input variables which could hypothetically
-achieved by collecting more information, viz. improving the measurement.}
+be achieved by collecting more information, viz. improving the measurement.}
 
-\item{numberOfSimulations}{\code{integer}: number of simulations to be used in the underlying Monte Carlo analysis}
+\item{numberOfModelRuns}{\code{integer}: The number of running the welfare model for the
+underlying Monte Carlo simulation.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
 representing the input estimate. For details see option \code{method} in
@@ -66,7 +66,7 @@ estimate of these variables. The prospective estimate resembles an improvement i
 \subsection{The Expected Value of Information (EVI)}{
     The Expected Value of Information is the decrease in the \eqn{\textrm{EOL}}{EOL} for an information
     improvement from the current (\eqn{\rho_X^{current}}{\rho_X_current}) to a better prospective (hypothetical)
-    information (\eqn{\rho_X^{current}}{\rho_X_prospective}):
+    information (\eqn{\rho_X^{prospective}}{\rho_X_prospective}):
     \deqn{
       \textrm{EVI} := \textrm{EOL}(\rho_X^{current}) - \textrm{EOL}(\rho_X^{prospective}).
       }{
@@ -78,7 +78,7 @@ estimate of these variables. The prospective estimate resembles an improvement i
 #############################################################
 # Example 1 Only one prospective estimate:
 #############################################################
-numberOfSimulations=10000
+numberOfModelRuns=10000
 # Create the estimate object:
 variable=c("revenue","costs")
 distribution=c("posnorm","posnorm")
@@ -100,7 +100,7 @@ profit<-function(x){
 eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(summary(eviSimulationResult))
@@ -113,7 +113,7 @@ profit<-function(x){
 eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(summary((eviSimulationResult)))
@@ -127,14 +127,14 @@ decisionModel<-function(x){
 eviSimulationResult<-eviSimulation(welfare=decisionModel,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(summary((eviSimulationResult)))
 #############################################################
 # Example 2 A list of prospective estimates:
 #############################################################
-numberOfSimulations=10000
+numberOfModelRuns=10000
 #  Define the welfare function with a name for the return value:
 profit<-function(x){
  list(Profit=x$revenue-x$costs)
@@ -158,7 +158,7 @@ prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue)
 eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(summary(eviSimulationResult))
@@ -176,14 +176,14 @@ prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 eviSimulationResult<-eviSimulation(welfare=profit,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(summary(eviSimulationResult))
 #############################################################
 # Example 3 A list of prospective estimates and two decision variables:
 #############################################################
-numberOfSimulations=10000
+numberOfModelRuns=10000
 # Create the current estimate object:
 variable=c("revenue","costs")
 distribution=c("posnorm","posnorm")
@@ -214,7 +214,7 @@ decisionModel<-function(x){
 eviSimulationResult<-eviSimulation(welfare=decisionModel,
                                    currentEstimate=currentEstimate,
                                    prospectiveEstimate=prospectiveEstimate,
-                                   numberOfSimulations=numberOfSimulations,
+                                   numberOfModelRuns=numberOfModelRuns,
                                    functionSyntax="data.frameNames")
 # Show the simulation results:
 print(sort(summary(eviSimulationResult)),decreasing=TRUE,along="Profit")

@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -76,7 +76,7 @@ paramposnorm90ci <- function(lower, upper, relativeTolerance=0.05, method="numer
 		mean<-x_0$x[1]
 		sd<-x_0$x[2]
 		
-		# Alternative calculation (depreciated):
+		# Alternative calculation (deprecated):
 		# Calculate the mean and sd from lower and upper:
 		# Auxiliary function defining mean and sd by lower and upper by f(x) = 0 
 		# (x[1]:=mean/sd, x[2]:=sd): 

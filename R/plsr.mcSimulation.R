@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -33,12 +33,12 @@ NULL
 #' 
 #' Perform a Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.
 #' @param object An object of class \code{mcSimulation}.
-#' @param resultName \code{character}; indicating the name of the component of
-#'   the simulation function (\code{model_function}) which results histogram
+#' @param resultName \code{character}: indicating the name of the component of
+#'   the simulation function (\code{model_function}) whose results histogram
 #'   shall be generated. If \code{model_function} is single valued, no name
 #'   needs to be supplied. Otherwise, one valid name has to be specified.
 #'   Defaults to \code{NULL}.
-#' @param variables.x \code{character} or \code{character} vector; Names of the 
+#' @param variables.x \code{character} or \code{character} vector: Names of the 
 #'   components of the input variables to the simulation function, i.e. the
 #'   names of the variables in the input \code{estimate} which random sampling
 #'   results shall be displayed. Defaults to all components.

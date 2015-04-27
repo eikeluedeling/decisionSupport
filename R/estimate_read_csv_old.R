@@ -5,7 +5,7 @@
 #
 # Authors:
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
 #	http://www.worldagroforestry.org
@@ -29,13 +29,13 @@ NULL
 ###############################################################################################
 # estimate_read_csv_old(fileName, strip.white=TRUE, ...)
 ##############################################################################################
-#' Read an Estimate from CSV - File (depreciated standard).
+#' Read an Estimate from CSV - File (deprecated standard).
 #'
-#' \code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the depreciated 
+#' \code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the deprecated 
 #' standard. This function is for backward compatibility only.
 #' @rdname estimate_read_csv
 #' @details 
-#' \subsection{Depreciated input standard (\code{estimate_read_csv_old})}{
+#' \subsection{Deprecated input standard (\code{estimate_read_csv_old})}{
 #'    File name structure of the correlation file: \code{<marginal-filename>.csv_correlations.csv}\cr
 #' }
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}

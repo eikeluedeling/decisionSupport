@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -30,10 +30,10 @@ NULL
 # generic: random(rho,n,method,...)
 # ToD: rename to rdistq or rq?
 ##############################################################################################
-#' Quantiles or empirical based generic random number generation.
+#' Quantiles or empirically based generic random number generation.
 #' 
 #' These functions generate random numbers for parametric distributions, parameters of which are 
-#' determined by given quantiles or for purely empirical defined distributions. 
+#' determined by given quantiles or for distributions purely defined empirically. 
 #' @param rho Distribution to be randomly sampled.
 #' @param n \code{integer}: Number of observations to be generated
 #' @param method \code{character}: Particular method to be used for random number generation. 

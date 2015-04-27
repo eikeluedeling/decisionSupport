@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -27,7 +27,7 @@
 #' @include mcSimulation.R
 NULL
 #############################################################
-# welfareDecisionAnalysis(estimate, welfare, numberOfSimulations, functionSyntax)
+# welfareDecisionAnalysis(estimate, welfare, numberOfModelRuns, functionSyntax)
 #############################################################
 #' Analysis of the underlying welfare based decision problem.
 #' 
@@ -39,7 +39,8 @@ NULL
 #'   the status quo (SQ). In the second case the element \code{p1} is the function valuing the first
 #'   project and the element \code{p2} valuing the second project, viz. the welfare function of \code{p1}
 #'   and \code{p2} respectively.
-#' @param numberOfSimulations \code{integer}: number of simulations to be used in the underlying Monte Carlo analysis
+#' @param numberOfModelRuns \code{integer}: The number of running the welfare model for the 
+#' underlying Monte Carlo simulation.
 #' @param randomMethod \code{character}: The method to be used to sample the distribution
 #'   representing the input estimate. For details see option \code{method} in 
 #'   \code{\link{random.estimate}}.
@@ -81,12 +82,12 @@ NULL
 #'     W(d) = w_d (X) 
 #'   } 
 #'   Thus, the welfare of decision \eqn{d} is also a random
-#'   variable which probability distribution we call \eqn{\rho_{W_d}}{rho(W(d))}. The welfare function \eqn{w_d} values
+#'   variable whose probability distribution we call \eqn{\rho_{W_d}}{rho(W(d))}. The welfare function \eqn{w_d} values
 #'   the decision \eqn{d} given a certain state \eqn{X} of the system. In other words, decision \eqn{d_2} is
 #'   preferred over decision \eqn{d_1}, if and only if, the expected welfare of decision \eqn{d_2} is
 #'   greater than the expected welfare (For a comprehensive
 #'   discussion of the concept of social preference ordering and its representation by a welfare
-#'   function cf. Gravelle and Rees (2004)). of decsion \eqn{d_1}, formally 
+#'   function cf. Gravelle and Rees (2004)) of decsion \eqn{d_1}, formally 
 #'   \deqn{
 #'     d_1 \prec d_2 \Leftrightarrow \textrm{E}[W_{d_1}] < \textrm{E}[W_{d_2}].
 #'    }{
@@ -183,7 +184,7 @@ NULL
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
 #'                                     welfare=profit, 
-#'                                     numberOfSimulations=100000,
+#'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
@@ -195,7 +196,7 @@ NULL
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
 #'                                     welfare=profit, 
-#'                                     numberOfSimulations=100000,
+#'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
@@ -208,12 +209,12 @@ NULL
 #' # Perform the decision analysis:
 #' myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate, 
 #'                                     welfare=welfareModel, 
-#'                                     numberOfSimulations=100000,
+#'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
 #' print(summary((myAnalysis)))
 #' @export
-welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations, 
+welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns, 
                                     randomMethod="calculate", 
                                     functionSyntax="data.frameNames",
                                     relativeTolerance=0.05,
@@ -240,7 +241,7 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations,
 		# Perform the Monte Carlo simulation:
 		mcResult<-mcSimulation( estimate=estimate, 
 														model_function=welfare, 
-														numberOfSimulations=numberOfSimulations,
+														numberOfModelRuns=numberOfModelRuns,
 														randomMethod=randomMethod,
 														functionSyntax=functionSyntax,
 														relativeTolerance=relativeTolerance,
@@ -277,8 +278,8 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfSimulations,
 ##############################################################################################
 #' Summarize Welfare Decision Analysis results.
 #' 
-#'  Produce a summary of the results of a welfare decision analysis obtained by the function 
-#'  \code{\link{welfareDecisionAnalysis}}.
+#'  Produce a summary of the results of a welfare decision analysis obtained by the function
+#'  \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}}.
 #' @param object An object of class \code{welfareDecisionAnalysis}.
 #' @param ... Further arguments passed to \code{\link{format}}.
 #' @inheritParams base::format
@@ -307,7 +308,7 @@ summary.welfareDecisionAnalysis <- function(object,
 ##############################################################################################
 #' Print the summarized Welfare Decision Analysis results.
 #' 
-#' This function prints the summary of a Welfare Decision Analysis generated by 
+#' This function prints the summary of a Welfare Decision Analysis generated by \ifelse{latex}{\cr}{ }
 #' \code{\link{summary.welfareDecisionAnalysis}}.
 #' @param x An object of class \code{summary.welfareDecisionAnalysis}.
 #' @param ... Further arguments to \code{\link{print.data.frame}}.

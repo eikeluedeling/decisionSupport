@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -27,7 +27,7 @@
 context("Testing mcSimulation()")
 
 set.seed(100)
-# Number of Monte Carlo Simulations:
+# Number of model runs to perform the Monte Carlo simulation:
 n= 1000000
 tolerance=3/sqrt(n)
 
@@ -51,7 +51,7 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=profitEstimate, 
                                              model_function=profitModel, 
-                                             numberOfSimulations=n,
+                                             numberOfModelRuns=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
             expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
@@ -77,7 +77,7 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=profitEstimate, 
                                              model_function=profitModel, 
-                                             numberOfSimulations=n,
+                                             numberOfModelRuns=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
             expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
@@ -103,7 +103,7 @@ test_that("Difference of two uncorrelated normally distributed variables is norm
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=profitEstimate, 
                                              model_function=profitModel, 
-                                             numberOfSimulations=n,
+                                             numberOfModelRuns=n,
                                              randomMethod="calculate",
                                              functionSyntax="matrixNames")
             expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
@@ -130,7 +130,7 @@ test_that("Difference of two correlated normally distributed variables is normal
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=profitEstimate, 
                                              model_function=profitModel, 
-                                             numberOfSimulations=n,
+                                             numberOfModelRuns=n,
                                              randomMethod="calculate",
                                              functionSyntax="data.frameNames")
             expect_equal(mean(profitSimulation$y$output_1), meanProfitExpected, tolerance=tolerance)
@@ -156,7 +156,94 @@ test_that("5 dimensional estimate and 2 dimensional named model function are sim
             # Run the Monte Carlo Simulation:
             profitSimulation <- mcSimulation(estimate=estimate5d, 
                                              model_function=estimate5dModel2d, 
-                                             numberOfSimulations=n,
+                                             numberOfModelRuns=n,
                                              randomMethod="calculate",
                                              functionSyntax="globalNames")
+          })
+test_that("4 dimensional estimate and 2 dimensional unnamed model function are simulated:
+          (randomMethod=\"calculate\", functionSyntax=\"globalNames\") (1).",{
+            # Number of simulations:
+            n=10
+            # Create the current estimate from text:
+            estimateText<-"variable,  distribution, lower, upper
+               revenue1,  posnorm,      100,   1000
+               revenue2,  posnorm,      50,    2000
+               costs1,    posnorm,      50,    2000
+               costs2,    posnorm,      100,   1000"
+            estimate4d<-as.estimate(read.csv(header=TRUE, text=estimateText,
+                                             strip.white=TRUE, stringsAsFactors=FALSE))
+            # The welfare function:
+            estimate4dModel2d <- function(x,varnames){
+              # Assign the variable names to the function environement:
+              tt<-table(varnames)
+              for (t in 1:length(tt))
+                assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+              
+              list(revenue1 + revenue2 - costs1 - costs2, revenue1)
+            }
+            # Calculate the Individual EVPI:
+            
+            # Run the Monte Carlo Simulation:
+            profitSimulation <- mcSimulation(estimate=estimate4d, 
+                                             model_function=estimate4dModel2d, 
+                                             numberOfModelRuns=n,
+                                             randomMethod="calculate",
+                                             functionSyntax="globalNames",
+                                             verbosity=0)
+            expect_false(is.null(profitSimulation$y$output_1))
+            expect_false(is.null(profitSimulation$y$output_2))
+            expect_true( is.null(profitSimulation$y$output_3))
+          })
+test_that("2 dimensional estimate and 1 dimensional  model function returning an unnamed list are simulated:
+          (randomMethod=\"calculate\", functionSyntax=\"globalNames\") (1).",{
+            #########################################################
+            # Create the estimate object:
+            variable=c("revenue","costs")
+            distribution=c("norm","norm")
+            lower=c(10000,  5000)
+            upper=c(100000, 50000)
+            costBenefitEstimate<-as.estimate(variable, distribution, lower, upper)
+            # Number of simulations:
+            n=10
+            profit1<-function(x, varnames){
+              # Assign the variable names to the function environment:
+              tt<-table(varnames)
+              for (t in 1:length(tt))
+                assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+              #list(revenue-costs,revenue+costs)
+              list(revenue-costs)
+            }
+            # Perform the Monte Carlo simulation:
+            predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
+                                             model_function=profit1,
+                                             numberOfModelRuns=n,
+                                             functionSyntax="globalNames")
+            expect_false(is.null(predictionProfit1$y$output_1))
+            expect_true(is.null(predictionProfit1$y$output_2))
+            expect_true(is.null(predictionProfit1$y$output_3))
+          })
+test_that("2 dimensional estimate and 2 dimensional  model function returning an unnamed list are simulated:
+          (randomMethod=\"calculate\", functionSyntax=\"data.frameNames\") (1).",{
+            #########################################################
+            # Create the estimate object:
+            variable=c("revenue","costs")
+            distribution=c("norm","norm")
+            lower=c(10000,  5000)
+            upper=c(100000, 50000)
+            costBenefitEstimate<-as.estimate(variable, distribution, lower, upper)
+            # Number of simulations:
+            n=10
+            # (a) Define the model function without name for the return value:
+            profit1<-function(x){
+              list(x[["revenue"]]-x[["costs"]],x[["revenue"]]+x[["costs"]])
+            }
+            # Perform the Monte Carlo simulation:
+            profitSimulation<-mcSimulation( estimate=costBenefitEstimate,
+                                             model_function=profit1,
+                                             numberOfModelRuns=n,
+                                             functionSyntax="data.frameNames",
+                                             verbosity=0)
+            expect_false(is.null(profitSimulation$y$output_1))
+            expect_false(is.null(profitSimulation$y$output_2))
+            expect_true( is.null(profitSimulation$y$output_3))
           })

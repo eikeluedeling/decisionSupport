@@ -23,7 +23,7 @@ generated confidence interval from the specified interval. If this deviation is 
 generating function (cf. below).}
 }
 \description{
-This function generates random numbers for univariate parametric distributions, which
+This function generates random numbers for univariate parametric distributions, whose
 parameters are determined by a one dimensional estimate (\code{\link{estimate1d}}).
 }
 \details{
@@ -60,7 +60,7 @@ parameters are determined by a one dimensional estimate (\code{\link{estimate1d}
    argument \code{method}.
    }
    \item{\code{method}}{
-   This parameter defines, how the parameters of the distribution to be sample are derived from
+   This parameter defines, how the parameters of the distribution to be sampled are derived from
    \code{rho[["lower"]]}, \code{rho[["upper"]]} and possibly \code{rho[["median"]]}.
    Possibilities are \code{"calculate"} (the default) or \code{"fit"}:
    \describe{
@@ -70,7 +70,7 @@ parameters are determined by a one dimensional estimate (\code{\link{estimate1d}
      \code{rho[["median"]]} being  supplied or not. For the implemented distributions, it only
      depends on \code{rho[["lower"]]} and \code{rho[["upper"]]}. However, if it is supplied, i.e.
      \code{is.numeric(rho[["median"]])}, a check is performed, if the relative deviation of the
-     generated median from\code{rho[["median"]]} is greater than \code{relativeTolerance}. In
+     generated median from \code{rho[["median"]]} is greater than \code{relativeTolerance}. In
      this case a warning is given.
      }
      \item{\code{method="fit"}}{

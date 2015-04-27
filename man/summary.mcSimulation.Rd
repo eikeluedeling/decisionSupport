@@ -23,12 +23,12 @@ or \code{\link{format}} (\code{classicView=FALSE}).}
     (For the interpretation for complex numbers see \code{\link{signif}}.)}
 
 \item{variables.y}{\code{character} or \code{character vector}: Names of the components of the
-simulation function (\code{model_function}) which results shall be displayed. Defaults to all
+simulation function (\code{model_function}), whose results shall be displayed. Defaults to all
 components.}
 
 \item{variables.x}{\code{character} or \code{character vector}: Names of the components of the
 input variables to the simulation function, i.e. the names of the variables in the input
-\code{estimate} which random sampling results shall be displayed. Defaults to all components.}
+\code{estimate}, whose random sampling results shall be displayed. Defaults to all components.}
 
 \item{classicView}{\code{logical}: if \code{TRUE} the results are summarized using
 \code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile

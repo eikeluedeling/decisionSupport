@@ -5,7 +5,7 @@
 \alias{random.data.frame}
 \alias{random.default}
 \alias{random.vector}
-\title{Quantiles or empirical based generic random number generation.}
+\title{Quantiles or empirically based generic random number generation.}
 \usage{
 random(rho, n, method, relativeTolerance, ...)
 
@@ -35,7 +35,7 @@ generating function.}
 }
 \description{
 These functions generate random numbers for parametric distributions, parameters of which are
-determined by given quantiles or for purely empirical defined distributions.
+determined by given quantiles or for distributions purely defined empirically.
 
 The default method generates univariate random numbers specified by arbitrary quantiles.
 

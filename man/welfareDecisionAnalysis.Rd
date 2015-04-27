@@ -4,7 +4,7 @@
 \alias{welfareDecisionAnalysis}
 \title{Analysis of the underlying welfare based decision problem.}
 \usage{
-welfareDecisionAnalysis(estimate, welfare, numberOfSimulations,
+welfareDecisionAnalysis(estimate, welfare, numberOfModelRuns,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
   relativeTolerance = 0.05, verbosity = 0)
 }
@@ -17,7 +17,8 @@ the status quo (SQ). In the second case the element \code{p1} is the function va
 project and the element \code{p2} valuing the second project, viz. the welfare function of \code{p1}
 and \code{p2} respectively.}
 
-\item{numberOfSimulations}{\code{integer}: number of simulations to be used in the underlying Monte Carlo analysis}
+\item{numberOfModelRuns}{\code{integer}: The number of running the welfare model for the
+underlying Monte Carlo simulation.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
 representing the input estimate. For details see option \code{method} in
@@ -70,12 +71,12 @@ maximizing expected welfare. Furthermore, the Expected Opportunity Loss (EOL) is
     W(d) = w_d (X)
   }
   Thus, the welfare of decision \eqn{d} is also a random
-  variable which probability distribution we call \eqn{\rho_{W_d}}{rho(W(d))}. The welfare function \eqn{w_d} values
+  variable whose probability distribution we call \eqn{\rho_{W_d}}{rho(W(d))}. The welfare function \eqn{w_d} values
   the decision \eqn{d} given a certain state \eqn{X} of the system. In other words, decision \eqn{d_2} is
   preferred over decision \eqn{d_1}, if and only if, the expected welfare of decision \eqn{d_2} is
   greater than the expected welfare (For a comprehensive
   discussion of the concept of social preference ordering and its representation by a welfare
-  function cf. Gravelle and Rees (2004)). of decsion \eqn{d_1}, formally
+  function cf. Gravelle and Rees (2004)) of decsion \eqn{d_1}, formally
   \deqn{
     d_1 \prec d_2 \Leftrightarrow \textrm{E}[W_{d_1}] < \textrm{E}[W_{d_2}].
    }{
@@ -167,7 +168,7 @@ profit<-function(x){
 # Perform the decision analysis:
 myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     welfare=profit,
-                                    numberOfSimulations=100000,
+                                    numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
 print(summary((myAnalysis)))
@@ -179,7 +180,7 @@ profit<-function(x){
 # Perform the decision analysis:
 myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     welfare=profit,
-                                    numberOfSimulations=100000,
+                                    numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
 print(summary((myAnalysis)))
@@ -192,7 +193,7 @@ welfareModel<-function(x){
 # Perform the decision analysis:
 myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     welfare=welfareModel,
-                                    numberOfSimulations=100000,
+                                    numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
 print(summary((myAnalysis)))

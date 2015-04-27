@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -28,7 +28,7 @@
 NULL
 ##############################################################################################
 # individualEvpiSimulation(welfare, currentEstimate, perfectProspectiveNames,perfectProspectiveValues,
-#                           numberOfSimulations, functionSyntax)
+#                           numberOfModelRuns, functionSyntax)
 ##############################################################################################
 #' Individual Expected Value of Perfect Information Simulation
 #' 
@@ -55,10 +55,11 @@ NULL
 #'  		  variable(s) w.r.t. the current estimate.
 #'  		}
 #'   }
-#' @details The Individual EVPI is defined as the prospective information assumes perfect knowledge
-#' on one particular variable.
+#' @details The Individual EVPI is defined as the EVI with respect to a prospective information 
+#' that assumes perfect knowledge on one particular variable.
+#'
 #' @examples
-#' # Number of simulations:
+#' # Number of running the underlying welfare model:
 #' n=10000
 #' # Create the current estimate from text:
 #' estimateText<-"variable,  distribution, lower, upper
@@ -75,7 +76,7 @@ NULL
 #' # Calculate the Individual EVPI:
 #' individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
 #'                                                currentEstimate=currentEstimate,
-#'                                                numberOfSimulations=n,
+#'                                                numberOfModelRuns=n,
 #'                                                functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
@@ -83,8 +84,8 @@ NULL
 #' @export
 individualEvpiSimulation <- function(welfare, currentEstimate, 
                                      perfectProspectiveNames=row.names(currentEstimate),
-                                     perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfSimulations, method=randomMethod, relativeTolerance=relativeTolerance)[,perfectProspectiveNames]),
-                                     numberOfSimulations,
+                                     perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfModelRuns, method=randomMethod, relativeTolerance=relativeTolerance)[,perfectProspectiveNames]),
+                                     numberOfModelRuns,
                                      randomMethod="calculate",
                                      functionSyntax="data.frameNames",
                                      relativeTolerance=0.05,
@@ -111,7 +112,7 @@ individualEvpiSimulation <- function(welfare, currentEstimate,
   evpiResult<-eviSimulation(welfare=welfare,
                             currentEstimate=currentEstimate,
                             prospectiveEstimate=prospectiveEstimate,
-                            numberOfSimulations=numberOfSimulations,
+                            numberOfModelRuns=numberOfModelRuns,
                             randomMethod=randomMethod,
                             functionSyntax=functionSyntax, 														
                             relativeTolerance=relativeTolerance,

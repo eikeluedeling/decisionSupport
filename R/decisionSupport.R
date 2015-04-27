@@ -5,7 +5,7 @@
 #
 # Authors:
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
 #	http://www.worldagroforestry.org
@@ -28,7 +28,7 @@
 #' @include individualEvpiSimulation.R
 NULL
 ##############################################################################################
-# decisionSupport(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
+# decisionSupport(inputFilePath, outputPath, welfareFunction, numberOfModelRuns,
 #                     randomMethod="calculate",	functionSyntax="data.frameNames",
 #                     write_table=TRUE, 
 #                     oldInputStandard=FALSE)
@@ -40,16 +40,17 @@ NULL
 #' information analysis can be done via combined PLSR - VIP analysis or via IndividualEVPI
 #' calculation. Results are saved as plots and tables.
 #' @param inputFilePath Path to input csv file, which gives the input \code{\link{estimate}}.
-#' @param outputPath Path were the result plots and tables are saved.
+#' @param outputPath Path where the result plots and tables are saved.
 #' @param welfareFunction The welfare function.
-#' @param numberOfSimulations The number of Monte Carlo simulations to be performed.
+#' @param numberOfModelRuns The number of running the welfare model for the underlying Monte Carlo 
+#' simulation.
 #' @param write_table \code{logical}: If the full Monte Carlo simulation results and PLSR results should be
 #'  written to file.
 #' @param plsrVipAnalysis \code{logical}: If PLSR-VIP analysis shall be performed.
 #' @param individualEvpiNames \code{character vector}: names of variables, which for the 
 #'   IndividualEVPI shall be obtained via Monte Carlo simulation. If \code{=NULL} (the default), no 
 #'   IndividualEVPI is calculated; if \code{="all"}, the IndividualEVPI is calculated for all
-#'   variables. \dfn{Note:} depending on \code{numberOfSimulations} and the complexity of
+#'   variables. \dfn{Note:} depending on \code{numberOfModelRuns} and the complexity of
 #'   \code{welfare} this might take a long time.
 #'  @param sortEvpiAlong \code{character}: result name along which the summary of the IndividualEVPI
 #'    shall be sorted. Only relevant if \code{sortEvpiAlong!=NULL}. 
@@ -76,7 +77,7 @@ NULL
 #' 	\code{\link{welfareDecisionAnalysis}}, \code{\link{individualEvpiSimulation}}, 
 #' 	\code{\link{decisionSupport-package}}
 #' @export
-decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
+decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOfModelRuns,
                             randomMethod="calculate",	
                             functionSyntax="data.frameNames",
                             relativeTolerance=0.05,
@@ -103,7 +104,7 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
     cat("Performing Monte Carlo Simulation for the Welfare Decision Analysis:\n")
   welfareDecisionResults<-welfareDecisionAnalysis(estimate=estimateObject,
                                                   welfare=welfareFunction,
-                                                  numberOfSimulations=numberOfSimulations,
+                                                  numberOfModelRuns=numberOfModelRuns,
                                                   randomMethod=randomMethod,
                                                   functionSyntax=functionSyntax,
                                                   relativeTolerance=relativeTolerance,
@@ -120,7 +121,7 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
   for(i in names(welfareDecisionResults$mcResult$y)) {
     png(file.path(outputPath, paste(i, "_distribution.png",sep="")), width=1000, height=500)
     par(mar=c(5.1,5.1,4.1,2.1))
-    hist(welfareDecisionResults$mcResult, lwd=3, cex.lab=2 ,cex.axis=2, prob=TRUE, resultName=i)
+    hist(welfareDecisionResults$mcResult, lwd=3, cex.lab=2 ,cex.axis=2, prob=FALSE, resultName=i)
     dev.off()
   }
   # Write the summary of the resulting distributions to file:
@@ -186,7 +187,7 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
     individualEvpiResults<-individualEvpiSimulation(welfare=welfareFunction, 
                                                     currentEstimate=estimateObject, 
                                                     perfectProspectiveNames=individualEvpiNames,
-                                                    numberOfSimulations=numberOfSimulations,
+                                                    numberOfModelRuns=numberOfModelRuns,
                                                     randomMethod=randomMethod,
                                                     functionSyntax=functionSyntax,
                                                     relativeTolerance=relativeTolerance,

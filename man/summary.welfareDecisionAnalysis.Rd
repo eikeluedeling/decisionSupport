@@ -24,7 +24,7 @@ An object of class \code{summary.welfareDecisionAnalysis}.
 }
 \description{
 Produce a summary of the results of a welfare decision analysis obtained by the function
- \code{\link{welfareDecisionAnalysis}}.
+ \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}}.
 }
 \seealso{
 \code{\link{welfareDecisionAnalysis}},

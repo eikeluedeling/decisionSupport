@@ -32,7 +32,7 @@ This function reads an \code{\link{estimate}} from the specified csv files. In t
 estimate of several variables is defined by its marginal distribution types, its marginal 90\%-confidence
 intervals \code{[lower,upper]} and, optionally, its correlations.
 
-\code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the depreciated
+\code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the deprecated
 standard. This function is for backward compatibility only.
 }
 \details{
@@ -77,7 +77,7 @@ An estimate might consists of uncorrelated and correlated variables. This is ref
   }
 }
 
-\subsection{Depreciated input standard (\code{estimate_read_csv_old})}{
+\subsection{Deprecated input standard (\code{estimate_read_csv_old})}{
    File name structure of the correlation file: \code{<marginal-filename>.csv_correlations.csv}\cr
 }
 }

@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -27,7 +27,7 @@
 #' @include welfareDecisionAnalysis.R
 NULL
 ##############################################################################################
-# eviSimulation(welfare, currentEstimate, prospectiveEstimate, numberOfSimulations, functionSyntax)
+# eviSimulation(welfare, currentEstimate, prospectiveEstimate, numberOfModelRuns, functionSyntax)
 ##############################################################################################
 #' Expected Value of Information (EVI) Simulation.
 #' 
@@ -39,7 +39,7 @@ NULL
 #'   as currently being estimated.
 #' @param prospectiveEstimate \code{\link{estimate}} or \code{list} of \code{estimate} objects:
 #'   describing the prospective distribution of the input variables which could hypothetically
-#'   achieved by collecting more information, viz. improving the measurement.
+#'   be achieved by collecting more information, viz. improving the measurement.
 #' @inheritParams welfareDecisionAnalysis
 #' @return An object of class \code{eviSimulation} with the following elements:
 #'  \describe{
@@ -60,7 +60,7 @@ NULL
 #'   \subsection{The Expected Value of Information (EVI)}{
 #'     The Expected Value of Information is the decrease in the \eqn{\textrm{EOL}}{EOL} for an information
 #'     improvement from the current (\eqn{\rho_X^{current}}{\rho_X_current}) to a better prospective (hypothetical)
-#'     information (\eqn{\rho_X^{current}}{\rho_X_prospective}):
+#'     information (\eqn{\rho_X^{prospective}}{\rho_X_prospective}):
 #'     \deqn{
 #'       \textrm{EVI} := \textrm{EOL}(\rho_X^{current}) - \textrm{EOL}(\rho_X^{prospective}).
 #'       }{
@@ -77,7 +77,7 @@ NULL
 #' #############################################################
 #' # Example 1 Only one prospective estimate:
 #' #############################################################
-#' numberOfSimulations=10000
+#' numberOfModelRuns=10000
 #' # Create the estimate object:
 #' variable=c("revenue","costs")
 #' distribution=c("posnorm","posnorm")
@@ -99,7 +99,7 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=profit,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
@@ -112,7 +112,7 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=profit,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary((eviSimulationResult)))
@@ -126,14 +126,14 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=decisionModel,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary((eviSimulationResult)))
 #' #############################################################
 #' # Example 2 A list of prospective estimates:
 #' #############################################################
-#' numberOfSimulations=10000
+#' numberOfModelRuns=10000
 #' #  Define the welfare function with a name for the return value:
 #' profit<-function(x){
 #'  list(Profit=x$revenue-x$costs)
@@ -157,7 +157,7 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=profit,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
@@ -175,14 +175,14 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=profit,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(summary(eviSimulationResult))
 #' #############################################################
 #' # Example 3 A list of prospective estimates and two decision variables:
 #' #############################################################
-#' numberOfSimulations=10000
+#' numberOfModelRuns=10000
 #' # Create the current estimate object:
 #' variable=c("revenue","costs")
 #' distribution=c("posnorm","posnorm")
@@ -213,12 +213,12 @@ NULL
 #' eviSimulationResult<-eviSimulation(welfare=decisionModel,
 #'                                    currentEstimate=currentEstimate,
 #'                                    prospectiveEstimate=prospectiveEstimate,
-#'                                    numberOfSimulations=numberOfSimulations,
+#'                                    numberOfModelRuns=numberOfModelRuns,
 #'                                    functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(eviSimulationResult)),decreasing=TRUE,along="Profit")
 #' @export
-eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfSimulations, 
+eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfModelRuns, 
                         randomMethod="calculate", 
                         functionSyntax="data.frameNames",
                         relativeTolerance=0.05,
@@ -228,7 +228,7 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 	# Perform the current decision analysis:
 	analysisCurrent<-welfareDecisionAnalysis( estimate=currentEstimate,
 																		 welfare=welfare,
-																		 numberOfSimulations=numberOfSimulations,
+																		 numberOfModelRuns=numberOfModelRuns,
 																		 randomMethod=randomMethod,
 																		 functionSyntax=functionSyntax, 														
 																		 relativeTolerance=relativeTolerance,
@@ -239,7 +239,7 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 		# Perform the decision analysis:
 		analysisProspective<-welfareDecisionAnalysis( estimate=prospectiveEstimate,
 																					 welfare=welfare,
-																					 numberOfSimulations=numberOfSimulations,
+																					 numberOfModelRuns=numberOfModelRuns,
 																					 randomMethod=randomMethod,
 																					 functionSyntax=functionSyntax, 														
 																					 relativeTolerance=relativeTolerance,
@@ -249,7 +249,7 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 		analysisProspective<-lapply(X=prospectiveEstimate, 
 																FUN=function(estimate) welfareDecisionAnalysis(estimate=estimate,
 																																				welfare=welfare,
-																																				numberOfSimulations=numberOfSimulations,
+																																				numberOfModelRuns=numberOfModelRuns,
 																																				randomMethod=randomMethod,
 																																				functionSyntax=functionSyntax, 														
 																																				relativeTolerance=relativeTolerance,
@@ -281,7 +281,8 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfS
 #' @inheritParams base::format
 #' @return An object of class \code{summary.eviSimulation}.
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, 
-#' \code{\link{summary.welfareDecisionAnalysis}}, \code{\link{sort.summary.eviSimulation}}
+#' \code{\link{summary.welfareDecisionAnalysis}}, \ifelse{latex}{\cr}{ }
+#'  \code{\link{sort.summary.eviSimulation}}
 #' @export
 summary.eviSimulation <- function(object,
 																	...,
@@ -332,7 +333,7 @@ sort.summary.eviSimulation <- function(x, decreasing=TRUE, ..., along=row.names(
 #' This function prints the summary of \code{eviSimulation} generated by 
 #'\code{\link{summary.eviSimulation}}.
 #' @param x An object of class \code{summary.eviSimulation}.
-#' @param ... Further arguments to be passed to \code{\link{print.default}} and 
+#' @param ... Further arguments to be passed to \code{\link{print.default}} and \ifelse{latex}{\cr}{ }
 #'   \code{\link{print.summary.welfareDecisionAnalysis}}.
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.welfareDecisionAnalysis}}.
 #' @export

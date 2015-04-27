@@ -7,8 +7,8 @@
 individualEvpiSimulation(welfare, currentEstimate,
   perfectProspectiveNames = row.names(currentEstimate),
   perfectProspectiveValues = colMeans(random(rho = currentEstimate, n =
-  numberOfSimulations, method = randomMethod, relativeTolerance =
-  relativeTolerance)[, perfectProspectiveNames]), numberOfSimulations,
+  numberOfModelRuns, method = randomMethod, relativeTolerance =
+  relativeTolerance)[, perfectProspectiveNames]), numberOfModelRuns,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
   relativeTolerance = 0.05, verbosity = 0)
 }
@@ -28,7 +28,8 @@ prospective information.}
 \item{perfectProspectiveValues}{\code{numeric vector}: of the same length as \code{perfectProspectiveNames} with the corresponding
 values assumed to be known perfectly.}
 
-\item{numberOfSimulations}{\code{integer}: number of simulations to be used in the underlying Monte Carlo analysis}
+\item{numberOfModelRuns}{\code{integer}: The number of running the welfare model for the
+underlying Monte Carlo simulation.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
 representing the input estimate. For details see option \code{method} in
@@ -65,11 +66,11 @@ The Individual Expected Value of Perfect Information (Individual EVPI) is calcul
 Monte Carlo simulation of the values of two different decision alternatives.
 }
 \details{
-The Individual EVPI is defined as the prospective information assumes perfect knowledge
-on one particular variable.
+The Individual EVPI is defined as the EVI with respect to a prospective information
+that assumes perfect knowledge on one particular variable.
 }
 \examples{
-# Number of simulations:
+# Number of running the underlying welfare model:
 n=10000
 # Create the current estimate from text:
 estimateText<-"variable,  distribution, lower, upper
@@ -86,7 +87,7 @@ profitModel <- function(x){
 # Calculate the Individual EVPI:
 individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
                                                currentEstimate=currentEstimate,
-                                               numberOfSimulations=n,
+                                               numberOfModelRuns=n,
                                                functionSyntax="data.frameNames")
 # Show the simulation results:
 print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")

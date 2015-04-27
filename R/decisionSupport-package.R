@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -61,13 +61,8 @@ NULL
 #' there is a wrapper function around these three parts which aims at providing an 
 #' easy-to-use interface.
 #' \subsection{Welfare based Analysis of the Underlying Decision Problem}{
-#'		\subsection{Welfare Decision Analysis}{
 #'				Implementation: \code{\link{welfareDecisionAnalysis}}
 #'		}
-#'		\subsection{Utility Functions}{
-#'			Implementation: not implemented, yet :-(
-#'		}
-#' } 
 #' \subsection{The Meta Decision of Reducing Uncertainty}{ 
 #' 		The meta decision of how to allocate resources for uncertainty reduction can
 #' 		be analyzed with this package in two different ways: via (i) Expected Value
@@ -118,7 +113,7 @@ NULL
 #' @docType package
 #' @name decisionSupport-package
 #' @author Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
-#'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{E.Luedeling@@cgiar.org}	
+#'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@@eikeluedeling.com}	
 #' @author Maintainer: Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de}
 #' @references Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
 #'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.

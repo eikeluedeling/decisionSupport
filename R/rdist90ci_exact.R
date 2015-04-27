@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -39,7 +39,7 @@
 #' @param lower \code{numeric}; lower bound of the 90\% confidence interval.
 #' @param upper \code{numeric}; upper bound of the 90\% confidence interval.
 #' @details
-#'   The follwing table shows the available distributions and their identification 
+#'   The following table shows the available distributions and their identification 
 #'  (option: \code{distribution}) as a character string:
 #'  \tabular{lll}{
 #'  \bold{\code{distribution}} \tab \bold{Distribution Name}      \tab \bold{Requirements}\cr

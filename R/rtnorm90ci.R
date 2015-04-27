@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -93,7 +93,7 @@ rtnorm90ci <- function(n, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, 
 #' @details 
 #' Positive normal random number generation: a positive normal distribution
 #' is a truncated normal distribution with lower truncation point equal to zero and upper truncation
-#' is infinity. \code{rposnorm90ci} implements this as a wrapper function for
+#' is infinity. \code{rposnorm90ci} implements this as a wrapper function for \ifelse{latex}{\cr}{ }
 #' \code{rtnorm90ci(n, c(lower,upper), median, lowerTrunc=0, upperTrunc=Inf, method, relativeTolerance,...)}.
 #' @export
 rposnorm90ci <- function(n, lower, median=mean(c(lower,upper)), upper, method="numeric", relativeTolerance=0.05,...){
@@ -122,7 +122,7 @@ rposnorm90ci <- function(n, lower, median=mean(c(lower,upper)), upper, method="n
 #' @details 
 #' 0-1-(truncated) normal random number generation: a 0-1-normal distribution
 #' is a truncated normal distribution with lower truncation point equal to zero and upper truncation
-#' equal to 1. \code{rtnorm_0_1_90ci} implements this as a wrapper function for
+#' equal to 1. \code{rtnorm_0_1_90ci} implements this as a wrapper function for \ifelse{latex}{\cr}{ }
 #' \code{rtnorm90ci(n, c(lower,upper), median, lowerTrunc=0, upperTrunc=1, method, relativeTolerance,...)}.
 #' @export
 rtnorm_0_1_90ci <- function(n, lower, median=mean(c(lower,upper)), upper, method="numeric", relativeTolerance=0.05,...){

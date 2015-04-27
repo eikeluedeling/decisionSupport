@@ -17,7 +17,7 @@ rmvnorm90ci_exact(n, lower, upper, correlationMatrix)
 multivariate normal distribution. In particular, all diagonal elements must be equal to 1.}
 }
 \description{
-This function generates normal distributed multivariate random numbers which parameters are
+This function generates normally distributed multivariate random numbers which parameters are
 determined by the 90\%-confidence interval. The calculation of \code{mean} and \code{sd} is
 exact.
 }

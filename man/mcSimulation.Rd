@@ -4,7 +4,7 @@
 \alias{mcSimulation}
 \title{Perform a Monte Carlo simulation.}
 \usage{
-mcSimulation(estimate, model_function, ..., numberOfSimulations,
+mcSimulation(estimate, model_function, ..., numberOfModelRuns,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
   relativeTolerance = 0.05, verbosity = 0)
 }
@@ -17,7 +17,7 @@ has to return a single \code{numeric} value or a \code{list} with named \code{nu
 
 \item{...}{Optional arguments of \code{model_function}.}
 
-\item{numberOfSimulations}{The number of Monte Carlo simulations to be run.}
+\item{numberOfModelRuns}{The number of times running the model function.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
 representing the input estimate. For details see option \code{method} in
@@ -63,7 +63,7 @@ defines another random variable with distribution
 Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination
 of the probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the
 probability density \eqn{\phi} of \eqn{y} as follows: The input distribution \eqn{P} is provided
-as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfSimulations} is
+as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfModelRuns} is
 generated using \code{\link{random.estimate}}. Then the function values \eqn{y=f(x)} are
 calculated, where \eqn{f} is \code{model_function}.
 
@@ -71,7 +71,6 @@ calculated, where \eqn{f} is \code{model_function}.
 follows:
 \describe{
   \item{\code{"globalNames"}}{
-    This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
     \code{model_function} is constructed, e.g. like this:
        \preformatted{
          profit<-function(x, varnames){
@@ -126,7 +125,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=10000,
+                                 numberOfModelRuns=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit1))
@@ -139,7 +138,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=10000,
+                                 numberOfModelRuns=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit1, classicView=TRUE))
@@ -157,7 +156,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
-                                 numberOfSimulations=1000,
+                                 numberOfModelRuns=1000,
                                  functionSyntax="globalNames")
  # Show the simulation results:
  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
@@ -176,7 +175,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                   model_function=profit1,
-                                  numberOfSimulations=1000,
+                                  numberOfModelRuns=1000,
                                   functionSyntax="globalNames")
  # Show the simulation results:
  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
@@ -196,7 +195,7 @@ follows:
  # Perform the Monte Carlo simulation:
  predictionProfit2<-mcSimulation( estimate=parameterEstimate,
                                  model_function=profit2,
-                                 numberOfSimulations=10000,
+                                 numberOfModelRuns=10000,
                                  functionSyntax="data.frameNames")
  # Show the simulation results:
  print(summary(predictionProfit2))

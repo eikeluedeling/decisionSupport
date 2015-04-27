@@ -7,7 +7,7 @@
 globalNames2data.frameNames(modelFunction, globalNames)
 }
 \arguments{
-\item{modelFunction}{a function which body contains global variables. The function must not
+\item{modelFunction}{a function whose body contains global variables. The function must not
 contain any arguments.}
 
 \item{globalNames}{a \code{character} vector containing the names of the global variables that
@@ -39,7 +39,7 @@ The input function must be of the form:
 }
 \section{Warning}{
 
-  If there are local functions within the function \code{modelFunction} defined, which arguments
+  If there are local functions within the function \code{modelFunction} defined, whose arguments
   have identical names to any of the \code{globalNames} the function fails!
 }
 \examples{

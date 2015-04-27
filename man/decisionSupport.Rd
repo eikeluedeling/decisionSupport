@@ -4,7 +4,7 @@
 \alias{decisionSupport}
 \title{Welfare Decision and Value of Information Analysis wrapper function.}
 \usage{
-decisionSupport(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
+decisionSupport(inputFilePath, outputPath, welfareFunction, numberOfModelRuns,
   randomMethod = "calculate", functionSyntax = "data.frameNames",
   relativeTolerance = 0.05, write_table = TRUE, plsrVipAnalysis = TRUE,
   individualEvpiNames = NULL, sortEvpiAlong = if (individualEvpiNames)
@@ -14,11 +14,12 @@ decisionSupport(inputFilePath, outputPath, welfareFunction, numberOfSimulations,
 \arguments{
 \item{inputFilePath}{Path to input csv file, which gives the input \code{\link{estimate}}.}
 
-\item{outputPath}{Path were the result plots and tables are saved.}
+\item{outputPath}{Path where the result plots and tables are saved.}
 
 \item{welfareFunction}{The welfare function.}
 
-\item{numberOfSimulations}{The number of Monte Carlo simulations to be performed.}
+\item{numberOfModelRuns}{The number of running the welfare model for the underlying Monte Carlo
+simulation.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
 representing the input estimate. For details see option \code{method} in
@@ -39,7 +40,7 @@ written to file.}
 \item{individualEvpiNames}{\code{character vector}: names of variables, which for the
  IndividualEVPI shall be obtained via Monte Carlo simulation. If \code{=NULL} (the default), no
  IndividualEVPI is calculated; if \code{="all"}, the IndividualEVPI is calculated for all
- variables. \dfn{Note:} depending on \code{numberOfSimulations} and the complexity of
+ variables. \dfn{Note:} depending on \code{numberOfModelRuns} and the complexity of
  \code{welfare} this might take a long time.}
 
 \item{sortEvpiAlong}{\code{character}: result name along which the summary of the IndividualEVPI

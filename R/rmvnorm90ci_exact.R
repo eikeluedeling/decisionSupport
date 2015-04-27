@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -29,7 +29,7 @@
 ##############################################################################################
 #' 90\%-confidence interval multivariate normal random number generation. 
 #' 
-#' This function generates normal distributed multivariate random numbers which parameters are 
+#' This function generates normally distributed multivariate random numbers which parameters are 
 #' determined by the 90\%-confidence interval. The calculation of \code{mean} and \code{sd} is 
 #' exact.
 #' @param n \code{integer}: Number of observations to be generated.

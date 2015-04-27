@@ -37,13 +37,8 @@ transformation of probabilities and calculation of expectation values. Furthermo
 there is a wrapper function around these three parts which aims at providing an
 easy-to-use interface.
 \subsection{Welfare based Analysis of the Underlying Decision Problem}{
-		\subsection{Welfare Decision Analysis}{
 				Implementation: \code{\link{welfareDecisionAnalysis}}
 		}
-		\subsection{Utility Functions}{
-			Implementation: not implemented, yet :-(
-		}
-}
 \subsection{The Meta Decision of Reducing Uncertainty}{
 		The meta decision of how to allocate resources for uncertainty reduction can
 		be analyzed with this package in two different ways: via (i) Expected Value
@@ -97,7 +92,7 @@ easy-to-use interface.
 }
 \author{
 Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
-	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{E.Luedeling@cgiar.org}
+	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@eikeluedeling.com}
 
 Maintainer: Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de}
 }

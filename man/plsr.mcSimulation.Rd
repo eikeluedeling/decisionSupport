@@ -10,13 +10,13 @@ plsr.mcSimulation(object, resultName = NULL, variables.x = names(object$x),
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}
 
-\item{resultName}{\code{character}; indicating the name of the component of
-the simulation function (\code{model_function}) which results histogram
+\item{resultName}{\code{character}: indicating the name of the component of
+the simulation function (\code{model_function}) whose results histogram
 shall be generated. If \code{model_function} is single valued, no name
 needs to be supplied. Otherwise, one valid name has to be specified.
 Defaults to \code{NULL}.}
 
-\item{variables.x}{\code{character} or \code{character} vector; Names of the
+\item{variables.x}{\code{character} or \code{character} vector: Names of the
 components of the input variables to the simulation function, i.e. the
 names of the variables in the input \code{estimate} which random sampling
 results shall be displayed. Defaults to all components.}

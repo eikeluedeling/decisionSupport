@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -27,7 +27,7 @@
 #' @include estimate.R
 NULL
 ##############################################################################################
-# mcSimulation(estimate, model_function, numberOfSimulations, ...)
+# mcSimulation(estimate, model_function, numberOfModelRuns, ...)
 ##############################################################################################
 #' Perform a Monte Carlo simulation.
 #' 
@@ -39,7 +39,7 @@ NULL
 #' @param model_function \code{function}: The function that transforms the input distribution. It 
 #'   has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.
 #' @param  ... Optional arguments of \code{model_function}.
-#' @param numberOfSimulations The number of Monte Carlo simulations to be run.
+#' @param numberOfModelRuns The number of times running the model function.
 #' @param randomMethod \code{character}: The method to be used to sample the distribution
 #'   representing the input estimate. For details see option \code{method} in 
 #'   \code{\link{random.estimate}}.
@@ -63,7 +63,7 @@ NULL
 #' Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination 
 #' of the probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the 
 #' probability density \eqn{\phi} of \eqn{y} as follows: The input distribution \eqn{P} is provided 
-#' as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfSimulations} is  
+#' as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfModelRuns} is  
 #' generated using \code{\link{random.estimate}}. Then the function values \eqn{y=f(x)} are 
 #' calculated, where \eqn{f} is \code{model_function}.
 #' 
@@ -71,7 +71,7 @@ NULL
 #' follows:
 #' \describe{
 #'   \item{\code{"globalNames"}}{
-#'     This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
+#     This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
 #'     \code{model_function} is constructed, e.g. like this:
 #'        \preformatted{
 #'          profit<-function(x, varnames){
@@ -136,7 +136,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=10000,
+#'                                  numberOfModelRuns=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1))
@@ -149,7 +149,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=10000,
+#'                                  numberOfModelRuns=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, classicView=TRUE))
@@ -167,7 +167,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
-#'                                  numberOfSimulations=1000,
+#'                                  numberOfModelRuns=1000,
 #'                                  functionSyntax="globalNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
@@ -186,7 +186,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
 #'                                   model_function=profit1,
-#'                                   numberOfSimulations=1000,
+#'                                   numberOfModelRuns=1000,
 #'                                   functionSyntax="globalNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
@@ -206,7 +206,7 @@ NULL
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit2<-mcSimulation( estimate=parameterEstimate, 
 #'                                  model_function=profit2, 
-#'                                  numberOfSimulations=10000,
+#'                                  numberOfModelRuns=10000,
 #'                                  functionSyntax="data.frameNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit2))
@@ -214,13 +214,13 @@ NULL
 #'  @seealso \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, 
 #'  \code{\link{estimate}}, \code{\link{random.estimate}}
 #' @export
-mcSimulation <- function(estimate, model_function, ..., numberOfSimulations, 
+mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns, 
                          randomMethod="calculate", 
                          functionSyntax="data.frameNames",
                          relativeTolerance=0.05,
                          verbosity=0){
   #ToDo: (i) review code and (ii) test
-  x<-random(rho=estimate, n=numberOfSimulations, 
+  x<-random(rho=estimate, n=numberOfModelRuns, 
             method=randomMethod,
             relativeTolerance=relativeTolerance)
   if (functionSyntax=="data.frameNames"){
@@ -228,18 +228,28 @@ mcSimulation <- function(estimate, model_function, ..., numberOfSimulations,
   } else if (functionSyntax=="matrixNames"){
     y<-model_function(as.matrix(x),...)
   } else if (functionSyntax=="globalNames"){
-    if( !requireNamespace("plyr", quietly = TRUE)) 
-      stop("Package \"plyr\" needed. Please install it.",
-           call. = FALSE)
-    if(verbosity > 0)
-      .progress="text"
-    else
-      .progress="none"
-    y<-plyr::aaply(.data=x,
-                   .margins=1,
-                   .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
-                   .drop=FALSE,
-                   .progress=.progress)
+    
+    y<-do.call(what=rbind,
+            args=lapply(X=apply(X=x,
+                                MARGIN=1,
+                                FUN=model_function,
+                                varnames=row.names(estimate)),
+                        FUN=unlist))
+    
+#     if( !requireNamespace("plyr", quietly = TRUE)) 
+#       stop("Package \"plyr\" needed. Please install it.",
+#            call. = FALSE)
+#     if(verbosity > 0)
+#       .progress="text"
+#     else
+#       .progress="none"
+#     y<-plyr::aaply(.data=x,
+#                    .margins=1,
+#                    .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
+#                    .drop=FALSE,
+#                    .progress=.progress)
+    
+    
     #     ## Case: 1d model function without name needs to be treated separately, s.t. output syntax is 
     #     ## consistent with other "functionSyntax":
     #     if(colnames(y)[[1]]=="1" && dim(y)[[2]]==1) 
@@ -307,11 +317,11 @@ print.mcSimulation <- function(x, ...){
 #'   or \code{\link{format}} (\code{classicView=FALSE}).
 #' @inheritParams base::format
 #' @param variables.y \code{character} or \code{character vector}: Names of the components of the
-#'   simulation function (\code{model_function}) which results shall be displayed. Defaults to all
+#'   simulation function (\code{model_function}), whose results shall be displayed. Defaults to all
 #'   components.
 #' @param variables.x \code{character} or \code{character vector}: Names of the components of the
 #'   input variables to the simulation function, i.e. the names of the variables in the input
-#'   \code{estimate} which random sampling results shall be displayed. Defaults to all components.
+#'   \code{estimate}, whose random sampling results shall be displayed. Defaults to all components.
 #' @param classicView \code{logical}: if \code{TRUE} the results are summarized using
 #'   \code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile
 #'   information can be chosen. Cf. section Value and argument \code{probs}. Default is

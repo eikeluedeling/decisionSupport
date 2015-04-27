@@ -48,7 +48,7 @@ variable is at minimum defined by the type of a univariate parametric distributi
 \details{
 It must hold that \code{lower <= upper}.
   \subsection{The structure of the input arguments}{
-    \subsection{Mandatory input elements:}{
+    \subsection{Mandatory input elements}{
     \tabular{lll}{
       \bold{Argument}    \tab  \bold{R-type}     \tab \bold{Explanation}\cr
       \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
@@ -56,7 +56,7 @@ It must hold that \code{lower <= upper}.
       \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
     }
     }
-    \subsection{Optional input elements:}{
+    \subsection{Optional input elements}{
     The optional parameters in \code{...} provide additional characteristics of the 1-d estimate.
     Frequent optional elements are:
     \tabular{lll}{

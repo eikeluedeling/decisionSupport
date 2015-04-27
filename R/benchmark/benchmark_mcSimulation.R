@@ -5,7 +5,7 @@
 # 
 # Authors (ToDo order?): 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Affiliation: ToDo
 # 
@@ -45,66 +45,66 @@ estimate<-as.estimate(distribution=distribution,lower=lower,upper=upper,row.name
 microbenchmark(
 {
   set.seed(100)
-  direct0<-mcSimulation(estimate=estimate, model_function=profit0, numberOfSimulations=n, 
+  direct0<-mcSimulation(estimate=estimate, model_function=profit0, numberOfModelRuns=n, 
                        randomMethod="exact", functionSyntax="data.frameNames")  
 },  
 {
   set.seed(100)
-  direct<-mcSimulation(estimate=estimate, model_function=profit, numberOfSimulations=n, 
+  direct<-mcSimulation(estimate=estimate, model_function=profit, numberOfModelRuns=n, 
                        randomMethod="exact", functionSyntax="data.frameNames")  
 },
 {
   set.seed(100)
-  direct1m<-mcSimulation(estimate=estimate, model_function=profit1, numberOfSimulations=n, 
+  direct1m<-mcSimulation(estimate=estimate, model_function=profit1, numberOfModelRuns=n, 
                         randomMethod="exact", functionSyntax="matrixNames")
 },
 {
 	set.seed(100)
-	direct2<-mcSimulation(estimate=estimate, model_function=profit2, numberOfSimulations=n, 
+	direct2<-mcSimulation(estimate=estimate, model_function=profit2, numberOfModelRuns=n, 
 												 randomMethod="exact", functionSyntax="data.frameNames")
 },
 {
   set.seed(100)
-  indirectSimp<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfSimulations=n, 
+  indirectSimp<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfModelRuns=n, 
                                randomMethod="exact", xAs="data.frame", applyMethod="simple")
 },
 {
   set.seed(100)
-  indirectmSimp<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfSimulations=n, 
+  indirectmSimp<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfModelRuns=n, 
                                randomMethod="exact", xAs="matrix", applyMethod="simple")
 },
 # This syntax does not work: 
 # {
 #   set.seed(100)
-#   indirect<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfSimulations=n, 
+#   indirect<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfModelRuns=n, 
 #                                randomMethod="exact", xAs="data.frame", applyMethod="simple")
 # },
 # This syntax does not work: 
 # {
 #   set.seed(100)
-#   indirect<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfSimulations=n, 
+#   indirect<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfModelRuns=n, 
 #                                randomMethod="exact", xAs="matrix", applyMethod="simple")
 # },
 # This syntax does not work: 
 # {
 #   set.seed(100)
-#   indirect0<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfSimulations=n, 
+#   indirect0<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfModelRuns=n, 
 #                                randomMethod="exact", xAs="data.frame")
 # },
 {
   set.seed(100)
-  indirect<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfSimulations=n, 
+  indirect<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfModelRuns=n, 
                                 randomMethod="exact", xAs="data.frame")
 },
 # This syntax does not work: 
 # {
 #   set.seed(100)
-#   indirect0m<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfSimulations=n, 
+#   indirect0m<-mcSimulation_apply(estimate=estimate, model_function=profit0, numberOfModelRuns=n, 
 #                                 randomMethod="exact", xAs="matrix")
 # },
 {
   set.seed(100)
-  indirectm<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfSimulations=n, 
+  indirectm<-mcSimulation_apply(estimate=estimate, model_function=profit, numberOfModelRuns=n, 
                                  randomMethod="exact", xAs="matrix")
 })
 set.seed(100)

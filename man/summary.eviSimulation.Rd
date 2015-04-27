@@ -28,6 +28,7 @@ Produces result summaries of an Expected Value of Information (EVI) simulation o
 }
 \seealso{
 \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}},
-\code{\link{summary.welfareDecisionAnalysis}}, \code{\link{sort.summary.eviSimulation}}
+\code{\link{summary.welfareDecisionAnalysis}}, \ifelse{latex}{\cr}{ }
+ \code{\link{sort.summary.eviSimulation}}
 }
 

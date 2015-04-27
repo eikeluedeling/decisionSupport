@@ -61,12 +61,12 @@ It is a wrapper function for \code{rtnorm90ci}.
 
 Positive normal random number generation: a positive normal distribution
 is a truncated normal distribution with lower truncation point equal to zero and upper truncation
-is infinity. \code{rposnorm90ci} implements this as a wrapper function for
+is infinity. \code{rposnorm90ci} implements this as a wrapper function for \ifelse{latex}{\cr}{ }
 \code{rtnorm90ci(n, c(lower,upper), median, lowerTrunc=0, upperTrunc=Inf, method, relativeTolerance,...)}.
 
 0-1-(truncated) normal random number generation: a 0-1-normal distribution
 is a truncated normal distribution with lower truncation point equal to zero and upper truncation
-equal to 1. \code{rtnorm_0_1_90ci} implements this as a wrapper function for
+equal to 1. \code{rtnorm_0_1_90ci} implements this as a wrapper function for \ifelse{latex}{\cr}{ }
 \code{rtnorm90ci(n, c(lower,upper), median, lowerTrunc=0, upperTrunc=1, method, relativeTolerance,...)}.
 }
 \seealso{

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class \code{summary.eviSimulation}.}
 
-\item{...}{Further arguments to be passed to \code{\link{print.default}} and
+\item{...}{Further arguments to be passed to \code{\link{print.default}} and \ifelse{latex}{\cr}{ }
 \code{\link{print.summary.welfareDecisionAnalysis}}.}
 }
 \description{

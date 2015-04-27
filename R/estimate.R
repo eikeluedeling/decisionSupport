@@ -5,7 +5,7 @@
 #
 # Authors:
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
 #	http://www.worldagroforestry.org
@@ -73,7 +73,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #'        \code{distribution}, \code{lower} and  \code{upper}. 
 #'       }
 #'     }
-#'     \subsection{Mandatory input columns:}{
+#'     \subsection{Mandatory input columns}{
 #'     \tabular{lll}{
 #'       \bold{Column}       \tab  \bold{R-type}    \tab \bold{Explanation}\cr
 #'       \code{distribution} \tab  \code{character vector} \tab  Marginal distribution types \cr
@@ -82,7 +82,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c("variable",
 #'     }
 #'     It must hold that \code{lower <= upper} for every component of the estimate.  
 #'     }
-#'     \subsection{Optional input columns:}{
+#'     \subsection{Optional input columns}{
 #'     The optional parameters in \code{...} provide additional characteristics of the marginal 
 #'     distributions of the estimate. Frequent optional columns are:
 #'     \tabular{lll}{

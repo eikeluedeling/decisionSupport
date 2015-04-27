@@ -5,7 +5,7 @@
 # 
 # Authors (ToDo order?): 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Affiliation: ToDo
 # 
@@ -13,17 +13,17 @@
 #
 ##############################################################################################
 ##############################################################################################
-# mcSimulation_apply(estimate, model_function, numberOfSimulations, ...)
+# mcSimulation_apply(estimate, model_function, numberOfModelRuns, ...)
 ##############################################################################################
 # Perform a Monte Carlo Simulation using apply(...) for benchmarking.
 #
-mcSimulation_apply <- function(estimate, model_function, ..., numberOfSimulations, 
+mcSimulation_apply <- function(estimate, model_function, ..., numberOfModelRuns, 
                                randomMethod="exact", functionSyntax=NULL,
                                xAs="data.frame", applyMethod="complex"){
   if ( !is.null(functionSyntax) )
     stop("functionSyntax  not implemented, yet!")
   #ToDo: (i) review code and (ii) test
-  x<-random(rho=estimate, n=numberOfSimulations, method=randomMethod)
+  x<-random(rho=estimate, n=numberOfModelRuns, method=randomMethod)
   if (applyMethod=="complex"){
     if ( xAs=="data.frame" ){
       y<-apply(t(sapply(apply(X=as.data.frame(x), 1, FUN=model_function, ...),c)),2,as.numeric)

@@ -5,7 +5,7 @@
 # 
 # Authors: 
 #   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <E.Luedeling@cgiar.org>
+#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
 #	http://www.worldagroforestry.org
@@ -47,7 +47,7 @@ NULL
 #' @details 
 #'   It must hold that \code{lower <= upper}.
 #'   \subsection{The structure of the input arguments}{
-#'     \subsection{Mandatory input elements:}{
+#'     \subsection{Mandatory input elements}{
 #'     \tabular{lll}{
 #'       \bold{Argument}    \tab  \bold{R-type}     \tab \bold{Explanation}\cr
 #'       \code{distribution} \tab  \code{character} \tab  Distribution type of the estimate \cr
@@ -55,7 +55,7 @@ NULL
 #'       \code{upper}        \tab  \code{numeric}   \tab  95\%-quantile of the estimate
 #'     }
 #'     }
-#'     \subsection{Optional input elements:}{
+#'     \subsection{Optional input elements}{
 #'     The optional parameters in \code{...} provide additional characteristics of the 1-d estimate. 
 #'     Frequent optional elements are:
 #'     \tabular{lll}{
@@ -174,7 +174,7 @@ as.estimate1d<-function(x, ...){
 ##############################################################################################
 #' Generate univariate random numbers defined by a 1-d estimate.
 #' 
-#' This function generates random numbers for univariate parametric distributions, which 
+#' This function generates random numbers for univariate parametric distributions, whose  
 #' parameters are determined by a one dimensional estimate (\code{\link{estimate1d}}).
 #' @param rho \code{estimate1d}: Univariate distribution to be randomly sampled. 
 #' @param n \code{integer}: Number of observations to be generated
@@ -220,7 +220,7 @@ as.estimate1d<-function(x, ...){
 #'    argument \code{method}. 
 #'    }
 #'    \item{\code{method}}{
-#'    This parameter defines, how the parameters of the distribution to be sample are derived from 
+#'    This parameter defines, how the parameters of the distribution to be sampled are derived from 
 #'    \code{rho[["lower"]]}, \code{rho[["upper"]]} and possibly \code{rho[["median"]]}.
 #'    Possibilities are \code{"calculate"} (the default) or \code{"fit"}:
 #'    \describe{
@@ -230,7 +230,7 @@ as.estimate1d<-function(x, ...){
 #'      \code{rho[["median"]]} being  supplied or not. For the implemented distributions, it only 
 #'      depends on \code{rho[["lower"]]} and \code{rho[["upper"]]}. However, if it is supplied, i.e. 
 #'      \code{is.numeric(rho[["median"]])}, a check is performed, if the relative deviation of the 
-#'      generated median from\code{rho[["median"]]} is greater than \code{relativeTolerance}. In 
+#'      generated median from \code{rho[["median"]]} is greater than \code{relativeTolerance}. In 
 #'      this case a warning is given.
 #'      }
 #'      \item{\code{method="fit"}}{

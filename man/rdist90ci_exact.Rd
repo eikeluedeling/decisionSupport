@@ -30,7 +30,7 @@ given 90\% confidence interval.  Internally, this is achieved by exact, i.e. ana
 of the parameters for the individual distribution from the given 90\% confidence interval.
 }
 \details{
-The follwing table shows the available distributions and their identification
+The following table shows the available distributions and their identification
  (option: \code{distribution}) as a character string:
  \tabular{lll}{
  \bold{\code{distribution}} \tab \bold{Distribution Name}      \tab \bold{Requirements}\cr
