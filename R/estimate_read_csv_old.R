@@ -41,6 +41,7 @@ NULL
 #' @seealso \code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 #' @export
 estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
+  .Deprecated("estimate_read_csv")
 	marginal<-NULL
 	#	correlation_matrix<-NULL
 	marginalFilename=fileName

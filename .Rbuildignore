@@ -1,10 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^Collate\.note$
 ^Makefile$
+^cran-comments.md$
 ^doc$
 ^R/old$
 ^R/scratch$
 ^R/todo$
 ^R/benchmark$
 
+^revdep$

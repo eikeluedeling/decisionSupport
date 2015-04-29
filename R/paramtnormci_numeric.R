@@ -85,11 +85,11 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
   names(ci)<-c("lower", "upper")
   if ( !((lowerTrunc < ci[["lower"]] &&  ci[["upper"]] < upperTrunc))  )
     stop("ci is not a subset of [lowerTrunc, upperTrunc]!")
-
+  
   # Initialize the root finding:
   mean_init <- mean(ci)
   sd_init<- (mean_init - ci[["lower"]])/c_0.95
-
+  
   if ( rootMethod=="quantile"){
     # Function defined by the difference between the target confidence values and the calculated
     # confidence values for certain values of the parameters mean and sd. Thus this function defines
@@ -104,10 +104,10 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
     f_sim<-function(x){
       n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
       r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc)
-
+      
       quantile(x=r,probs=p) - ci
     }
-
+    
   } else if( rootMethod=="probability"){
     # Function defined by the difference between confidence probabilities p and the calculated
     # probability for certain values of the parameters mean and sd. Thus this function defines
@@ -125,10 +125,10 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
     f_sim<-function(x){
       n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
       r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc)
-
+      
       length(r[ r<= ci ])/n - p
     }
-
+    
   } else
     stop("No root finding method chosen.")
   # Function wrapping f_calc and f_sim and thus defining mean and sd by f(x) = 0
@@ -138,14 +138,14 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
              error=function(e) f_sim(x=x)
     )
   }
-
+  
   # The root of f are mean and sd:
   #	x_0<-nleqslv::nleqslv(x=c(mean_init, sd_init), fn=f, control=list(maxit=10000))
   x_0<-nleqslv::nleqslv(x=c(mean_init, sd_init), fn=f, ...)
   mean<-x_0$x[1]
   sd<-x_0$x[2]
-
-
+  
+  
   # Check postcondition:
   tryCatch( ci_calc<- msm::qtnorm(p=p, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc),
             error=function(e){
@@ -158,14 +158,14 @@ paramtnormci_numeric <- function(p, ci, lowerTrunc=-Inf, upperTrunc=Inf, relativ
   for( j in seq(along=p) ){
     scale <- if( p[[j]] > 0 ) p[[j]] else NULL
     if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
-      warning("Calculated value of ", 100*p[[j]], "%-quantile: ", ci_calc[[j]], "\n  ",
-              "Target value of ", 100*p[[j]], "%-quantile:     ", ci[[j]],   "\n  ",
-              "Calculated cumulative probability at value ", ci[[j]], " : ", p_calc[[j]], "\n  ",
-              "Target  cumulative probability at value ", ci[[j]], " : ", p[[j]], "\n  ",
-              msg)
+        warning("Calculated value of ", 100*p[[j]], "%-quantile: ", ci_calc[[j]], "\n  ",
+                "Target value of ", 100*p[[j]], "%-quantile:     ", ci[[j]],   "\n  ",
+                "Calculated cumulative probability at value ", ci[[j]], " : ", p_calc[[j]], "\n  ",
+                "Target  cumulative probability at value ", ci[[j]], " : ", p[[j]], "\n  ",
+                msg)
     }
   }
-
+  
   #Return the calculated parameters:
   list(mean=mean, sd=sd)
 }

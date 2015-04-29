@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.100.0.9008
-Date: 2015-04-27
+Version: 1.100.0.9009
+Date: 2015-04-29
 Authors@R: c(
     person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut")),
     person("Eike", "Luedeling", email = "eike@eikeluedeling.com ", role = "aut"))
@@ -15,11 +15,13 @@ Description: Supporting the quantitative analysis of binary welfare based
     decision level is to allocate resources to reduce the uncertainty in the
     underlying decision problem, i.e to increase the current information to
     improve the actual decision making process. This problem is dealt with
-    using the Value of Information Analysis (VIA). The Expected Value of
-    Information (EVI) for arbitrary prospective estimates can be calculated as
-    well as Individual and Clustered Expected Value of Perfect Information
-    (EVPI). The probabilistic calculations are done via Monte Carlo
-    simulations. This Monte Carlo functionality can be used on its own.
+    using the Value of Information Analysis. The Expected Value of
+    Information for arbitrary prospective estimates can be calculated as
+    well as Individual and Clustered Expected Value of Perfect Information.
+    The probabilistic calculations are done via Monte Carlo
+    simulations. This Monte Carlo functionality can be used on its own. The
+    suggested package rriskDistribution can be downloaded from
+    http://cran.r-project.org/src/contrib/Archive/rriskDistributions/.
 License: GPL-3
 Depends:
     R (>= 3.1.3)
