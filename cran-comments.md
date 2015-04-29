@@ -1,6 +1,6 @@
 ## Test environments
-* ubuntu 14.04 LTS (local install), R 3.1.3
-* win-builder (R under development and R 3.2.0)
+* ubuntu 14.04 LTS (local install): R under development (2015-04-28 r68272) and R 3.1.3
+* win-builder: R under development and R 3.2.0
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
@@ -18,7 +18,7 @@ There were 2 NOTEs:
   
 * checking package dependencies ... NOTE
   No repository set, so cyclic dependency check skipped  
-    + Comment: cf. Description: in file DESCRIPTION: "The 
+    + Comment: cf. field Description: in file DESCRIPTION: "The 
     suggested package rriskDistribution can be downloaded from 
     http://cran.r-project.org/src/contrib/Archive/rriskDistributions/."
 
