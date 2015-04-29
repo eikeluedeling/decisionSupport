@@ -93,7 +93,8 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
   # Check preconditions:
   ## Namespace requirements:
   if (!requireNamespace("rriskDistributions", quietly = TRUE)) 
-    stop("Package \"rriskDistributions\" needed. Please install it.",
+    stop("Package \"rriskDistributions\" needed. Please install it, e.g. from 
+         http://cran.r-project.org/src/contrib/Archive/rriskDistributions/",
          call. = FALSE)
   if(distribution=="triang"){
     requiredPackage<-"mc2d"
