@@ -115,6 +115,13 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
     print(summary(welfareDecisionResults$mcResult))
     print(summary(welfareDecisionResults))
   }
+  if (write_table){
+    mcSimulationResultsFilePath<-file.path(outputPath, "mcSimulationResults.csv")
+    write.csv(data.frame(welfareDecisionResults$mcResult$x,welfareDecisionResults$mcResult$y),
+              mcSimulationResultsFilePath)
+    if (verbosity > 0)
+      cat("Monte Carlo results written into file: ", mcSimulationResultsFilePath, "\n")
+  }
   # Write histogram of results to png files:
   if ( !file.exists(outputPath) )
     dir.create(outputPath, recursive=TRUE)
@@ -126,14 +133,16 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
   }
   # Write the summary of the resulting distributions to file:
   mcSummary<-summary(welfareDecisionResults$mcResult, digits=2)
-  write.csv(mcSummary$summary,file.path(outputPath,"mcSummary.csv"))
+  mcSimulationSummaryFilePath<-file.path(outputPath,"mcSummary.csv")
+  write.csv(mcSummary$summary,mcSimulationSummaryFilePath)
   if (verbosity > 0)
-    cat("Monte Carlo results written into directory: ", outputPath, "\n")
+    cat("Monte Carlo summary written into file: ", mcSimulationSummaryFilePath, "\n")
   # Write the summary of the Welfare Decision Analysis to file:
   welfareDecisionSummary<-summary(welfareDecisionResults, digits=2)
-  write.csv(welfareDecisionSummary$summary,file.path(outputPath,"welfareDecisionSummary.csv"))
+  welfareDecisionSummaryFilePath<-file.path(outputPath,"welfareDecisionSummary.csv")
+  write.csv(welfareDecisionSummary$summary,welfareDecisionSummaryFilePath)
   if (verbosity > 0)
-    cat("Welfare Decision Analysis results written into directory: ", outputPath, "\n")
+    cat("Welfare Decision Analysis summary written into file: ", welfareDecisionSummaryFilePath, "\n")
   # Partial lest squares analysis:
   if(plsrVipAnalysis){
     if (!requireNamespace("chillR", quietly = TRUE)) 
@@ -195,9 +204,12 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
     
     if (verbosity > 1)
       print(sort(summary(individualEvpiResults)))
-    write.csv(sort(summary(individualEvpiResults), along=sortEvpiAlong)$summary$evi,file.path(outputPath,"individualEvpiSummary.csv"))
+    individualEvpiSimulationSummaryFilePath<-file.path(outputPath,"individualEvpiSummary.csv")
+    write.csv(sort(summary(individualEvpiResults), along=sortEvpiAlong)$summary$evi,
+              individualEvpiSimulationSummaryFilePath)
     if (verbosity > 0)
-      cat("IndividualEVPI results written into directory: ", outputPath, "\n")
+      cat("IndividualEVPI simulation summary written into file: ", 
+          individualEvpiSimulationSummaryFilePath, "\n")
   }
   
 }

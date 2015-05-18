@@ -22,14 +22,12 @@ to be randomly sampled.}
 generated individual percentiles from the specified percentiles. If any deviation is greater
 than \code{relativeTolerance} a warning is given.}
 
-\item{tolConv}{positive numerical value, the absolute
-  convergence tolerance for reaching zero by fitting
-  distributions \code{get.norm.par} will be shown.}
+\item{tolConv}{positive numerical value, the absolute convergence tolerance for reaching zero by fitting distributions
+\code{get.norm.par} will be shown.}
 
-\item{fit.weights}{numerical vector of the same length as
-  a probabilities vector \code{p} containing positive
-  values for weighting quantiles. By default all quantiles
-  will be weighted by 1.}
+\item{fit.weights}{numerical vector of the same length as a probabilities vector
+\code{p} containing positive values for weighting quantiles. By default all
+quantiles will be weighted by 1.}
 
 \item{verbosity}{\code{integer}; if \code{0} the function is silent; the larger the value the
 more verbose is the output information.}
@@ -80,10 +78,12 @@ the percentiles argument has to be adjusted to match the length of quantiles.
 }
 \examples{
 # Fit a log normal distribution to 3 quantiles:
-percentiles<-c(0.05, 0.5, 0.95)
-quantiles=c(1,3,15)
-hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
-print(quantile(x=r, probs=percentiles))
+if ( requireNamespace("rriskDistributions", quietly = TRUE) ){
+  percentiles<-c(0.05, 0.5, 0.95)
+  quantiles=c(1,3,15)
+  hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
+  print(quantile(x=r, probs=percentiles))
+}
 }
 \seealso{
 \code{\link[rriskDistributions]{rriskFitdist.perc}}

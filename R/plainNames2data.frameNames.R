@@ -1,5 +1,5 @@
 #
-# file: globalNames2data.frameNames.R
+# file: plainNames2data.frameNames.R
 #
 # This file is part of the R-package decisionSupport
 #
@@ -24,13 +24,13 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
-#' Transform model function variable names: global to data.frame names.
+#' Transform model function variable names: plain to data.frame names.
 #'
-#' The variable names of a function are transformed from global variable names to data.frame names
+#' The variable names of a function are transformed from plain variable names to data.frame names
 #' of the form \code{x$<globalName>}.
-#' @param modelFunction a function whose body contains global variables. The function must not
-#'   contain any arguments.
-#' @param globalNames a \code{character} vector containing the names of the global variables that
+#' @param modelFunction a function whose body contains variables with plain names. The 
+#'   function must not contain any arguments.
+#' @param plainNames a \code{character} vector containing the names of the  variables that
 #'   shall be transformed.
 #' @details
 #'  The input function must be of the form:
@@ -51,22 +51,23 @@
 #'  }
 #' @section Warning:
 #'   If there are local functions within the function \code{modelFunction} defined, whose arguments
-#'   have identical names to any of the \code{globalNames} the function fails!
+#'   have identical names to any of the \code{plainNames} the function fails!
 #' @examples
 #'  profit1<-function(){
 #'    list(Profit=revenue-costs)
 #'  }
-#'  profit2<-globalNames2data.frameNames(modelFunction=profit1, globalNames=c("revenue", "costs"))
+#'  profit2<-plainNames2data.frameNames(modelFunction=profit1, 
+#'                                                plainNames=c("revenue", "costs"))
 #   #CAVE: here is a problem with the environment: ToDo check!!! (cf. above where eval is used)
 #'  print(profit2)
 #'  is.function(profit2)
 #'  profit2(data.frame("revenue"=10,"costs"=2))
 #' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
-globalNames2data.frameNames<-function(modelFunction, globalNames){
+plainNames2data.frameNames<-function(modelFunction, plainNames){
 	modelFunctionString<-deparse(modelFunction)
 	# Replace all occurences of the global variable names:
-	for (i in globalNames){
+	for (i in plainNames){
 		modelFunctionString<-gsub(pattern=i,
 															replacement=paste("x$",i,sep=""),
 															x=modelFunctionString,
@@ -75,7 +76,7 @@ globalNames2data.frameNames<-function(modelFunction, globalNames){
 	# Replace only the first occurrence of "()" ; ToDo: regular expression s.t. any "(    )" is replace, i.e. not depending on the
 	# count of whitespaces:
 	modelFunctionString<-sub(pattern=c("()"),replacement=c("(x)"),x=modelFunctionString, fixed=TRUE)
-	print(modelFunctionString)
+	#print(modelFunctionString)
 	# ToDo: Probably here some problem with the environment emerges:
 	modelFunctionData.frameNames<-eval(parse(text=modelFunctionString))
 	# Return the transformed function:
@@ -87,7 +88,7 @@ if(0){
 	profit1<-function(){
 		list(Profit=revenue-costs)
 	}
-	profit2<-globalNames2data.frameNames(modelFunction=profit1, globalNames=c("revenue", "costs"))
+	profit2<-plainNames2data.frameNames(modelFunction=profit1, plainNames=c("revenue", "costs"))
 	# CAVE: here is a problem with the environment: ToDo check!!! (cf. above where eval is used)
 	print(profit2)
 	is.function(profit2)

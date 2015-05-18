@@ -24,8 +24,8 @@ representing the input estimate. For details see option \code{method} in
 \code{\link{random.estimate}}.}
 
 \item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
-function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or
-\code{"matrixNames"}. Details are given below.}
+function. Possible values are \code{"data.frameNames"},
+\code{"matrixNames"} or \code{"plainNames"}. Details are given below.}
 
 \item{relativeTolerance}{\code{numeric}: the relative tolerance level of deviation of the
 generated confidence interval from the specified interval. If this deviation is greater than
@@ -70,20 +70,6 @@ calculated, where \eqn{f} is \code{model_function}.
 \code{functionSyntax} defines the syntax of \code{model_function}, which has to be used, as
 follows:
 \describe{
-  \item{\code{"globalNames"}}{
-    \code{model_function} is constructed, e.g. like this:
-       \preformatted{
-         profit<-function(x, varnames){
-           # Assign the variable names to the function environement:
-           tt<-table(varnames)
-           for (t in 1:length(tt))
-             assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-
-           revenue-costs
-         }
-       }
-       \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
-  }
   \item{\code{"data.frameNames"}}{
      The model function is constructed, e.g. like this:
        \preformatted{
@@ -106,7 +92,16 @@ follows:
            }
         }
      }
+  \item{\code{"plainNames"}}{
+    \code{model_function} is constructed, e.g. like this:
+       \preformatted{
+         profit<-function(x){
+           revenue-costs
+         }
+       }
+       \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
    }
+ }
 }
 \examples{
 #############################################################
@@ -144,39 +139,27 @@ follows:
  print(summary(predictionProfit1, classicView=TRUE))
  hist(predictionProfit1)
  #########################################################
- # (c) Using global names in the model function syntax
- profit1<-function(x, varnames){
-   # Assign the variable names to the function environement:
-   tt<-table(varnames)
-   for (t in 1:length(tt))
-     assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-
+ # (c) Using plain names in the model function syntax
+ profit1<-function(){
    list(Profit=revenue-costs)
  }
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                  model_function=profit1,
                                  numberOfModelRuns=1000,
-                                 functionSyntax="globalNames")
+                                 functionSyntax="plainNames")
  # Show the simulation results:
  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
  hist(predictionProfit1)
  #########################################################
- # (d) Using global names in the model function syntax and
+ # (d) Using plain names in the model function syntax and
  #     define the model function without name for the return value:
- profit1<-function(x, varnames){
-   # Assign the variable names to the function environment:
-   tt<-table(varnames)
-   for (t in 1:length(tt))
-     assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-
-   revenue-costs
- }
+ profit1<-function() revenue-costs
  # Perform the Monte Carlo simulation:
  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                   model_function=profit1,
                                   numberOfModelRuns=1000,
-                                  functionSyntax="globalNames")
+                                  functionSyntax="plainNames")
  # Show the simulation results:
  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
  hist(predictionProfit1, xlab="Profit")

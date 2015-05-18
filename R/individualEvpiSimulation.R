@@ -80,11 +80,13 @@ NULL
 #'                                                functionSyntax="data.frameNames")
 #' # Show the simulation results:
 #' print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
+#' hist(individualEvpiResult, breaks=100)
 #' @seealso \code{\link{eviSimulation}}, \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
 individualEvpiSimulation <- function(welfare, currentEstimate, 
                                      perfectProspectiveNames=row.names(currentEstimate),
-                                     perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfModelRuns, method=randomMethod, relativeTolerance=relativeTolerance)[,perfectProspectiveNames]),
+                                     #perfectProspectiveValues=colMeans(random(rho=currentEstimate, n=numberOfModelRuns, method=randomMethod, relativeTolerance=relativeTolerance)[,perfectProspectiveNames]),
+                                     perfectProspectiveValues=colMeans(as.data.frame(random(rho=currentEstimate, n=numberOfModelRuns, method=randomMethod, relativeTolerance=relativeTolerance))[perfectProspectiveNames]),
                                      numberOfModelRuns,
                                      randomMethod="calculate",
                                      functionSyntax="data.frameNames",

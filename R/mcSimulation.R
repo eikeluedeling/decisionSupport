@@ -44,8 +44,8 @@ NULL
 #'   representing the input estimate. For details see option \code{method} in 
 #'   \code{\link{random.estimate}}.
 #' @param functionSyntax \code{character}: The syntax which has to be used to implement the model
-#'   function. Possible values are \code{"globalNames"}, \code{"data.frameNames"} or 
-#'   \code{"matrixNames"}. Details are given below.
+#'   function. Possible values are \code{"data.frameNames"},
+#'   \code{"matrixNames"} or \code{"plainNames"}. Details are given below.
 #' @param relativeTolerance \code{numeric}: the relative tolerance level of deviation of the
 #'   generated confidence interval from the specified interval. If this deviation is greater than
 #'   \code{relativeTolerance} a warning is given.
@@ -70,21 +70,19 @@ NULL
 #' \code{functionSyntax} defines the syntax of \code{model_function}, which has to be used, as 
 #' follows:
 #' \describe{
-#'   \item{\code{"globalNames"}}{
+#   \item{\code{"plainNamesDeprecated"}}{
 #     This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
-#'     \code{model_function} is constructed, e.g. like this:
-#'        \preformatted{
-#'          profit<-function(x, varnames){
-#'            # Assign the variable names to the function environement:
-#'            tt<-table(varnames)
-#'            for (t in 1:length(tt))
-#'              assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-#'              
-#'            revenue-costs
-#'          }
-#'        }
-#'        \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
-#'   }
+#     \code{model_function} is constructed, e.g. like this:
+#        \preformatted{
+#          profit<-function(x){
+#            # Assign the variable names to the function environement:
+#            for(i in names(x)) assign(i, as.numeric(x[i]))
+#              
+#            revenue-costs
+#          }
+#        }
+#        \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
+#   }
 #'   \item{\code{"data.frameNames"}}{
 #'      The model function is constructed, e.g. like this:
 #'        \preformatted{
@@ -107,7 +105,17 @@ NULL
 #'            }
 #'         }     
 #'      }
-#'    }
+#'   \item{\code{"plainNames"}}{
+#     This option requires the package \pkg{\code{\link[plyr]{plyr}}}.
+#'     \code{model_function} is constructed, e.g. like this:
+#'        \preformatted{
+#'          profit<-function(x){
+#'            revenue-costs
+#'          }
+#'        }
+#'        \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
+#'    }     
+#'  }
 #' @return An object of \code{class mcSimulation}, which is a \code{list} with elements:
 #'   \describe{
 #'      \item{\code{$x}}{
@@ -155,39 +163,60 @@ NULL
 #'  print(summary(predictionProfit1, classicView=TRUE))
 #'  hist(predictionProfit1) 
 #'  #########################################################
-#'  # (c) Using global names in the model function syntax
-#'  profit1<-function(x, varnames){
-#'    # Assign the variable names to the function environement:
-#'    tt<-table(varnames)
-#'    for (t in 1:length(tt))
-#'      assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-#'              
+#  # (c) Using plain names (deprecated) in the model function syntax
+#  profit1<-function(x){
+#   # Assign the variable names to the function environement:
+#   for(i in names(x)) assign(i, as.numeric(x[i]))
+#              
+#    list(Profit=revenue-costs)
+#  } 
+#  # Perform the Monte Carlo simulation:
+#  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
+#                                  model_function=profit1, 
+#                                  numberOfModelRuns=1000,
+#                                  functionSyntax="plainNamesDeprecated")
+#  # Show the simulation results:
+#  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
+#  hist(predictionProfit1) 
+#  #########################################################
+#  # (d) Using plain names (deprecated) in the model function syntax and
+#  #     define the model function without name for the return value:
+#  profit1<-function(x){
+#   # Assign the variable names to the function environement:
+#   for(i in names(x)) assign(i, as.numeric(x[i])) 
+#    
+#    revenue-costs
+#  }
+#  # Perform the Monte Carlo simulation:
+#  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
+#                                   model_function=profit1,
+#                                   numberOfModelRuns=1000,
+#                                   functionSyntax="plainNamesDeprecated")
+#  # Show the simulation results:
+#  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
+#  hist(predictionProfit1, xlab="Profit")
+#  #########################################################
+#'  # (c) Using plain names in the model function syntax
+#'  profit1<-function(){
 #'    list(Profit=revenue-costs)
 #'  } 
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
 #'                                  model_function=profit1, 
 #'                                  numberOfModelRuns=1000,
-#'                                  functionSyntax="globalNames")
+#'                                  functionSyntax="plainNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
 #'  hist(predictionProfit1) 
 #'  #########################################################
-#'  # (d) Using global names in the model function syntax and
+#'  # (d) Using plain names in the model function syntax and
 #'  #     define the model function without name for the return value:
-#'  profit1<-function(x, varnames){
-#'    # Assign the variable names to the function environment:
-#'    tt<-table(varnames)
-#'    for (t in 1:length(tt))
-#'      assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
-#'    
-#'    revenue-costs
-#'  }
+#'  profit1<-function() revenue-costs
 #'  # Perform the Monte Carlo simulation:
 #'  predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
 #'                                   model_function=profit1,
 #'                                   numberOfModelRuns=1000,
-#'                                   functionSyntax="globalNames")
+#'                                   functionSyntax="plainNames")
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
 #'  hist(predictionProfit1, xlab="Profit")
@@ -227,33 +256,63 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
     y<-model_function(as.data.frame(x), ...)
   } else if (functionSyntax=="matrixNames"){
     y<-model_function(as.matrix(x),...)
-  } else if (functionSyntax=="globalNames"){
-    
+  } else if (functionSyntax=="plainNamesDeprecated"){
+    warning("functionSyntax=\"plainNamesDeprecated\" is deprecated. Please use 
+             functionSyntax=\"plainNames\" instead.")
     y<-do.call(what=rbind,
-            args=lapply(X=apply(X=x,
-                                MARGIN=1,
-                                FUN=model_function,
-                                varnames=row.names(estimate)),
-                        FUN=unlist))
+               args=lapply(X=apply(X=x,
+                                   MARGIN=1,
+                                   FUN=model_function#,
+    #                               varnames=row.names(estimate)
+                                   ),
+                           FUN=unlist))
     
-#     if( !requireNamespace("plyr", quietly = TRUE)) 
-#       stop("Package \"plyr\" needed. Please install it.",
-#            call. = FALSE)
-#     if(verbosity > 0)
-#       .progress="text"
-#     else
-#       .progress="none"
-#     y<-plyr::aaply(.data=x,
-#                    .margins=1,
-#                    .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
-#                    .drop=FALSE,
-#                    .progress=.progress)
+    #     if( !requireNamespace("plyr", quietly = TRUE)) 
+    #       stop("Package \"plyr\" needed. Please install it.",
+    #            call. = FALSE)
+    #     if(verbosity > 0)
+    #       .progress="text"
+    #     else
+    #       .progress="none"
+    #     y<-plyr::aaply(.data=x,
+    #                    .margins=1,
+    #                    .fun=function(x) unlist(model_function(x=x,varnames=row.names(estimate))),
+    #                    .drop=FALSE,
+    #                    .progress=.progress)
     
     
     #     ## Case: 1d model function without name needs to be treated separately, s.t. output syntax is 
     #     ## consistent with other "functionSyntax":
     #     if(colnames(y)[[1]]=="1" && dim(y)[[2]]==1) 
     #       (y<-as.vector(y))
+    # Construct names for the output components if not supplied:
+    if(any(colnames(y)==as.character(1:ncol(y))))
+      colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
+  } else if (functionSyntax=="plainNames"){
+    # Auxiliary model function:
+    #  CRAN does not allow the use of assign:
+    #     model_function_ <- function (x) {
+    #       sapply(X=row.names(estimate), 
+    #              FUN=function(i) assign(i, as.numeric(x[i]), pos=1)
+    #       )
+    #       model_function()
+    #     }
+    model_function_ <- function (x) {
+      # Construct a named list where each variable name indicates its value:
+      e<-as.list(sapply(X=row.names(estimate), 
+                        FUN=function(i) as.numeric(x[i])
+      ))
+      # Execute the user defined model function in an environment defined by the above constructed list:
+      eval(expr=body(model_function), 
+           envir=e)
+    }
+    # Run the actual Monte Carlo simulation:
+    y<-do.call(what=rbind,
+               args=lapply(X=apply(X=x,
+                                   MARGIN=1,
+                                   FUN=model_function_),
+                           FUN=unlist))
+    # Construct names for the output components if not supplied:
     if(any(colnames(y)==as.character(1:ncol(y))))
       colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
   } else 
@@ -337,7 +396,7 @@ summary.mcSimulation <- function(object,
                                  variables.y=names(object$y),
                                  variables.x=if(classicView) names(object$x),
                                  classicView=FALSE,
-                                 probs=c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1)
+                                 probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1)
 ){
   #ToDo: Review
   data<-as.data.frame(list(y=(object$y)[variables.y],x=(object$x)[variables.x]))
