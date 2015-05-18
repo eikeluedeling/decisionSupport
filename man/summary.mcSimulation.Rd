@@ -6,8 +6,8 @@
 \usage{
 \method{summary}{mcSimulation}(object, ..., digits = max(3,
   getOption("digits") - 3), variables.y = names(object$y), variables.x = if
-  (classicView) names(object$x), classicView = FALSE, probs = c(0, 0.1,
-  0.25, 0.5, 0.75, 0.9, 1))
+  (classicView) names(object$x), classicView = FALSE, probs = c(0, 0.05,
+  0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1))
 }
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}

@@ -55,10 +55,10 @@ NULL
 #'  \describe{
 #'      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate} 
 #'      transformed by \code{welfare}} (cf. \code{\link{mcSimulation}}).
-#'      \item{\code{$enb}}{Expected Net Benefit (ENB)}
+#'      \item{\code{$enbPa}}{Expected Net Benefit of project approval: ENB(PA)}
 #' 			\item{\code{$elPa}}{Expected Loss in case of project approval: EL(PA)}
 #' 			\item{\code{$elSq}}{Expected Loss in case of status quo: EL(SQ)}
-#'  		\item{\code{$eol}}{Expected Oportunity Loss (EOL)}
+#'  		\item{\code{$eol}}{Expected Opportunity Loss: EOL}
 #'  		\item{\code{$optimalChoice}}{
 #'  		    The optimal choice, i.e. either project approval (PA) or the status quo (SQ).
 #'  		    }
@@ -115,7 +115,7 @@ NULL
 #'   Using this notion it can be shown that the maximization of
 #'   expected welfare is equivalent to the minimization of the expected loss 
 #'   \eqn{\textrm{EL}_d := \textrm{E}[L_d]}{EL(d) := E[L(d)]}. 
-#'   \subsection{The Expected Oportunity Loss (EOL)}{
+#'   \subsection{The Expected Opportunity Loss (EOL)}{
 #'     The use of this concept, here, is in line as described in Hubbard (2014). The Expected
 #'     Opportunity Loss (\eqn{\textrm{EOL}}{EOL}) is defined as the expected loss for the best
 #'     decision. The best decision minimizes the expected loss:
@@ -246,20 +246,20 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns,
 														functionSyntax=functionSyntax,
 														relativeTolerance=relativeTolerance,
 														verbosity=verbosity)
-		# Expected net benefit:
-		enb_<-colMeans(mcResult$y)
+		# Expected net benefit of project approval:
+		enbPa_<-colMeans(mcResult$y)
 		# Expected loss for project aproval:
 		elPa_<-apply(X=mcResult$y, MARGIN=2, FUN=elPa)
 		# Expected loss for status quo:
 		elSq_<-apply(X=mcResult$y, MARGIN=2, FUN=elSq)
-		# Expected oportunity loss:
+		# Expected opportunity loss:
 		eol_ <-pmin(elPa_,elSq_)
 		# The optimal choice (either project aproval (PA) or the status quo (SQ)):
 		optimalChoice_<-ifelse( eol_==elPa_, "PA", "SQ")
 		# Fill return object:
 		thisAnalysis$call<-match.call()
 		thisAnalysis$mcResult<-mcResult
-		thisAnalysis$enb<-enb_
+		thisAnalysis$enbPa<-enbPa_
 		thisAnalysis$elPa<-elPa_
 		thisAnalysis$elSq<-elSq_
 		thisAnalysis$eol<-eol_
@@ -290,7 +290,7 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns,
 summary.welfareDecisionAnalysis <- function(object,
 																		 ...,
 																		 digits = max(3, getOption("digits")-3)){	
-	summaryDf<-data.frame(enb=object$enb, 
+	summaryDf<-data.frame(enbPa=object$enbPa, 
 												elPa=object$elPa, 
 												elSq=object$elSq, 
 												eol=object$eol, 
@@ -320,4 +320,43 @@ print.summary.welfareDecisionAnalysis <- function(x, ...){
 	print(x$call)
 	cat("\nSummary of decision analysis:\n")
 	print(x$summary,...)
+}
+##############################################################################################
+# hist.welfareDecisionAnalysis(x, ...)
+##############################################################################################
+#' Plot Histogram of results of a Welfare Decision Analysis
+#' 
+#' This function plots the histograms of the results of
+#' \code{\link{welfareDecisionAnalysis}}.
+#' @param x An object of class \code{welfareDecisionAnalysis}.
+#' @param xlab \code{character}: x label of the histogram. If it is not
+#'   provided, i.e. equals \code{NULL} the name of the chosen variable by
+#'   argument \code{resultName} is used.
+#' @param main \code{character}: main title of the histogram.
+#' @inheritParams graphics::hist
+#' @param ... Further arguments to be passed to \code{\link[graphics]{hist}}.
+#' @param colorQuantile \code{character vector}: encoding the colors of the 
+#'   quantiles defined in argument \code{colorProbability}.
+#' @param colorProbability \code{numeric vector}: defines the quantiles that 
+#'   shall be distinguished by the colors chosen in argument 
+#'   \code{colorQuantile}. Must be of the same length as \code{colorQuantile}.
+#' @param resultName \code{character}: indicating the name of the component of
+#'   the simulation function (\code{model_function}) which results histogram
+#'   shall be generated. If \code{model_function} is single valued, no name
+#'   needs to be supplied. Otherwise, one valid name has to be specified.
+#'   Defaults to \code{NULL}.
+#' @return an object of class "\code{histogram}". For details see 
+#'   \code{\link[graphics]{hist}}.
+#' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{hist}}. For a list of colors
+#'   available in R see \code{\link[grDevices]{colors}}.
+#' @export
+hist.welfareDecisionAnalysis <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Histogram of " , xlab), ...,
+                              colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
+                              colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
+                              resultName=NULL){
+
+  hist(x$mcResult, breaks=breaks, col=col, xlab=xlab, main=main, ...,
+       colorQuantile   =colorQuantile, 
+       colorProbability=colorProbability,
+       resultName=resultName)
 }

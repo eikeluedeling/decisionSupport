@@ -223,51 +223,51 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
                         functionSyntax="data.frameNames",
                         relativeTolerance=0.05,
                         verbosity=0){
-	# Return object:
-	thisAnalysis<-NULL
-	# Perform the current decision analysis:
-	analysisCurrent<-welfareDecisionAnalysis( estimate=currentEstimate,
-																		 welfare=welfare,
-																		 numberOfModelRuns=numberOfModelRuns,
-																		 randomMethod=randomMethod,
-																		 functionSyntax=functionSyntax, 														
-																		 relativeTolerance=relativeTolerance,
-																		 verbosity=verbosity)
-	
-	# Perform the prospective decision analysis:
-	if( class(prospectiveEstimate) == "estimate"){
-		# Perform the decision analysis:
-		analysisProspective<-welfareDecisionAnalysis( estimate=prospectiveEstimate,
-																					 welfare=welfare,
-																					 numberOfModelRuns=numberOfModelRuns,
-																					 randomMethod=randomMethod,
-																					 functionSyntax=functionSyntax, 														
-																					 relativeTolerance=relativeTolerance,
-																					 verbosity=verbosity)
-		evi<-analysisCurrent$eol - analysisProspective$eol
-	} else if ( is.list(prospectiveEstimate) ){
-		analysisProspective<-lapply(X=prospectiveEstimate, 
-																FUN=function(estimate) welfareDecisionAnalysis(estimate=estimate,
-																																				welfare=welfare,
-																																				numberOfModelRuns=numberOfModelRuns,
-																																				randomMethod=randomMethod,
-																																				functionSyntax=functionSyntax, 														
-																																				relativeTolerance=relativeTolerance,
-																																				verbosity=verbosity)
-		)
-		evi<-lapply(X=analysisProspective, 
-								FUN=function(x) analysisCurrent$eol - x$eol)
-	} else {
-		stop("prospectiveEstimate must be either an estimate or a list of estimates.")
-	}	
-	
-	# Fill return object:
-	thisAnalysis$call<-match.call()
-	thisAnalysis$current<-analysisCurrent
-	thisAnalysis$prospective<-analysisProspective
-	thisAnalysis$evi<-as.data.frame(evi)
-	class(thisAnalysis) <- "eviSimulation"
-	return(thisAnalysis)
+  # Return object:
+  thisAnalysis<-NULL
+  # Perform the current decision analysis:
+  analysisCurrent<-welfareDecisionAnalysis( estimate=currentEstimate,
+                                            welfare=welfare,
+                                            numberOfModelRuns=numberOfModelRuns,
+                                            randomMethod=randomMethod,
+                                            functionSyntax=functionSyntax, 														
+                                            relativeTolerance=relativeTolerance,
+                                            verbosity=verbosity)
+  
+  # Perform the prospective decision analysis:
+  if( class(prospectiveEstimate) == "estimate"){
+    # Perform the decision analysis:
+    analysisProspective<-welfareDecisionAnalysis( estimate=prospectiveEstimate,
+                                                  welfare=welfare,
+                                                  numberOfModelRuns=numberOfModelRuns,
+                                                  randomMethod=randomMethod,
+                                                  functionSyntax=functionSyntax, 														
+                                                  relativeTolerance=relativeTolerance,
+                                                  verbosity=verbosity)
+    evi<-analysisCurrent$eol - analysisProspective$eol
+  } else if ( is.list(prospectiveEstimate) ){
+    analysisProspective<-lapply(X=prospectiveEstimate, 
+                                FUN=function(estimate) welfareDecisionAnalysis(estimate=estimate,
+                                                                               welfare=welfare,
+                                                                               numberOfModelRuns=numberOfModelRuns,
+                                                                               randomMethod=randomMethod,
+                                                                               functionSyntax=functionSyntax, 														
+                                                                               relativeTolerance=relativeTolerance,
+                                                                               verbosity=verbosity)
+    )
+    evi<-lapply(X=analysisProspective, 
+                FUN=function(x) analysisCurrent$eol - x$eol)
+  } else {
+    stop("prospectiveEstimate must be either an estimate or a list of estimates.")
+  }	
+  
+  # Fill return object:
+  thisAnalysis$call<-match.call()
+  thisAnalysis$current<-analysisCurrent
+  thisAnalysis$prospective<-analysisProspective
+  thisAnalysis$evi<-as.data.frame(evi)
+  class(thisAnalysis) <- "eviSimulation"
+  return(thisAnalysis)
 }
 ##############################################################################################
 # summary.eviSimulation(object, ...)
@@ -285,24 +285,24 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
 #'  \code{\link{sort.summary.eviSimulation}}
 #' @export
 summary.eviSimulation <- function(object,
-																	...,
-																	digits = max(3, getOption("digits")-3)){	
-	summaryList<-list(evi=format(x=object$evi, digits=digits),
-										current=summary(object$current, ..., digits=digits),
-										prospective=if( class(object$prospective)=="welfareDecisionAnalysis" ){
-											summary(object$prospective, ..., digits=digits)
-										}else{
-											lapply(X=object$prospective, 
-														 FUN=function(x) summary(x, ..., digits=digits)
-											)
-										}
-	)
-	#	summaryList<-format(x=summaryList, digits=digits, ...)
-	res<-list(summary=summaryList,
-						call=object$call)
-	
-	class(res)<-"summary.eviSimulation"
-	res
+                                  ...,
+                                  digits = max(3, getOption("digits")-3)){	
+  summaryList<-list(evi=format(x=object$evi, digits=digits),
+                    current=summary(object$current, ..., digits=digits)$summary,
+                    prospective=if( class(object$prospective)=="welfareDecisionAnalysis" ){
+                      summary(object$prospective, ..., digits=digits)$summary
+                    } else {
+                      lapply(X=object$prospective, 
+                             FUN=function(x) summary(x, ..., digits=digits)$summary
+                      )
+                    }
+  )
+  #	summaryList<-format(x=summaryList, digits=digits, ...)
+  res<-list(summary=summaryList,
+            call=object$call)
+  
+  class(res)<-"summary.eviSimulation"
+  res
 }
 ##############################################################################################
 # sort.summary.eviSimulation(x, decreasing, ..., along)
@@ -319,11 +319,11 @@ summary.eviSimulation <- function(object,
 #' @seealso \code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base]{sort}}
 #' @export
 sort.summary.eviSimulation <- function(x, decreasing=TRUE, ..., along=row.names(x$summary$evi)[[1]]){
-	eviRanking<-order(x=as.numeric(x$summary$evi[along,]), decreasing=decreasing)
-	eviRankingNames<-names(x$summary$evi)[eviRanking]
-	x$summary$evi<-x$summary$evi[eviRankingNames]
-	x$summary$prospective<-x$summary$prospective[eviRankingNames]
-	x
+  eviRanking<-order(x=as.numeric(x$summary$evi[along,]), decreasing=decreasing)
+  eviRankingNames<-names(x$summary$evi)[eviRanking]
+  x$summary$evi<-x$summary$evi[eviRankingNames]
+  x$summary$prospective<-x$summary$prospective[eviRankingNames]
+  x
 }
 ##############################################################################################
 # print.summary.eviSimulation(x, ...)
@@ -338,13 +338,77 @@ sort.summary.eviSimulation <- function(x, decreasing=TRUE, ..., along=row.names(
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.welfareDecisionAnalysis}}.
 #' @export
 print.summary.eviSimulation <- function(x, ...){
-	cat("Call:\n")
-	print(x$call)
-	cat("\nExpected Value of Information (EVI):\n")
-	print(x$summary$evi,...)
-	cat("\nUnderlying welfare decision analysis:\n")
-	cat("Based on the current estimate:\n")
-	print(x$summary$current, ...)
-	cat("\nBased on the prospective estimate(s):\n")
-	print(x$summary$prospective, ...)
+  cat("Call:\n")
+  print(x$call)
+  cat("\nSummary of EVI simulation:\n")
+  cat("\nExpected Value of Information (EVI):\n")
+  print(x$summary$evi,...)
+  cat("\nUnderlying welfare decision analysis:\n")
+  cat("Based on the current estimate:\n")
+  print(x$summary$current, ...)
+  cat("\nBased on the prospective estimate(s):\n")
+  print(x$summary$prospective, ...)
+}
+##############################################################################################
+# hist.eviSimulation(x, ...)
+##############################################################################################
+#' Plot Histograms of results of an EVI simulation
+#' 
+#' This function plots the histograms of the results of
+#' \code{\link{eviSimulation}}.
+#' @param x An object of class \code{eviSimulation}.
+#' @param mainSuffix \code{character}: Suffix of the main titles of the histograms.
+#' @inheritParams graphics::hist
+#' @param ... Further arguments to be passed to \code{\link[graphics]{hist}}.
+#' @param colorQuantile \code{character vector}: encoding the colors of the 
+#'   quantiles defined in argument \code{colorProbability}.
+#' @param colorProbability \code{numeric vector}: defines the quantiles that 
+#'   shall be distinguished by the colors chosen in argument 
+#'   \code{colorQuantile}. Must be of the same length as \code{colorQuantile}.
+#' @param resultName \code{character}: indicating the name of the component of
+#'   the simulation function (\code{model_function}) which results histogram
+#'   shall be generated. If \code{model_function} is single valued, no name
+#'   needs to be supplied. Otherwise, one valid name has to be specified.
+#'   Defaults to \code{NULL}.
+#' @return an object of class "\code{histogram}". For details see 
+#'   \code{\link[graphics]{hist}}.
+#' @seealso \code{\link{eviSimulation}}, \code{\link{hist}}. For a list of colors
+#'   available in R see \code{\link[grDevices]{colors}}.
+#' @export
+hist.eviSimulation <- function(x, breaks=100, col=NULL, mainSuffix=" welfare simulation result", ...,
+                               colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
+                               colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
+                               resultName=NULL){
+  #numberOfPlots<- 1 + ifelse(class(x$prospective)=="welfareDecisionAnalysis", 
+  #                           yes=1, 
+  #                          no=length(x$prospective)
+  #)
+  #par(mfcol=c(numberOfPlots,1))
+  #layout(1:numberOfPlots, respect=TRUE)
+  #split.screen(figs=c(numberOfPlots,1))
+  # Plot the distribution for the current information for the chosen component:
+  hist(x$current, breaks=breaks, col=col,  
+       main=paste("Current", mainSuffix), 
+       ...,
+       colorQuantile   =colorQuantile, 
+       colorProbability=colorProbability,
+       resultName=resultName)
+  # Plot the distribution(s) for the prospective information for the chosen component:
+  if( class(x$prospective)=="welfareDecisionAnalysis" ){
+    hist(x$prospective, breaks=breaks, col=col, 
+         main=paste("Prospective", mainSuffix), 
+         ...,
+         colorQuantile   =colorQuantile, 
+         colorProbability=colorProbability,
+         resultName=resultName)
+  } else {
+    for( i in names(x$prospective) )
+      hist(x$prospective[[i]], breaks=breaks, col=col, 
+           main=paste("Prospective (\"", i, "\")", mainSuffix), 
+           ...,
+           colorQuantile   =colorQuantile, 
+           colorProbability=colorProbability,
+           resultName=resultName)
+  }
+  
 }

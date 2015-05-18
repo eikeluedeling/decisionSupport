@@ -6,11 +6,12 @@
 \usage{
 individualEvpiSimulation(welfare, currentEstimate,
   perfectProspectiveNames = row.names(currentEstimate),
-  perfectProspectiveValues = colMeans(random(rho = currentEstimate, n =
-  numberOfModelRuns, method = randomMethod, relativeTolerance =
-  relativeTolerance)[, perfectProspectiveNames]), numberOfModelRuns,
-  randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05, verbosity = 0)
+  perfectProspectiveValues = colMeans(as.data.frame(random(rho =
+  currentEstimate, n = numberOfModelRuns, method = randomMethod,
+  relativeTolerance = relativeTolerance))[perfectProspectiveNames]),
+  numberOfModelRuns, randomMethod = "calculate",
+  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
+  verbosity = 0)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.
@@ -91,6 +92,7 @@ individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
                                                functionSyntax="data.frameNames")
 # Show the simulation results:
 print(sort(summary(individualEvpiResult)),decreasing=TRUE,along="Profit")
+hist(individualEvpiResult, breaks=100)
 }
 \seealso{
 \code{\link{eviSimulation}}, \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}

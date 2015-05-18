@@ -82,10 +82,12 @@
 #' @seealso \code{\link[rriskDistributions]{rriskFitdist.perc}}
 #' @examples
 #' # Fit a log normal distribution to 3 quantiles:
-#' percentiles<-c(0.05, 0.5, 0.95)
-#' quantiles=c(1,3,15)
-#' hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
-#' print(quantile(x=r, probs=percentiles))
+#' if ( requireNamespace("rriskDistributions", quietly = TRUE) ){
+#'   percentiles<-c(0.05, 0.5, 0.95)
+#'   quantiles=c(1,3,15)
+#'   hist(r<-rdistq_fit(distribution="lnorm", n=10000, quantiles=quantiles),breaks=100)
+#'   print(quantile(x=r, probs=percentiles))
+#' }
 #' @export
 rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles, 
                        relativeTolerance=0.05, tolConv=0.001, fit.weights=rep(1,length(percentiles)),

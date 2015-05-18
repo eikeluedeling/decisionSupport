@@ -99,7 +99,7 @@ test_that("Individual EVPI is calculated for 4-D partly correlated current estim
 })
 test_that("Individual EVPI is calculated for 4-D uncorrelated current estimate
            and 2 dimensional unnamed model function
-          (randomMethod=\"calculate\", functionSyntax=\"globalNames\") (1).",{
+          (randomMethod=\"calculate\", functionSyntax=\"plainNamesDeprecated\") (1).",{
             # Number of simulations:
             n=10
             # Create the current estimate from text:
@@ -111,11 +111,13 @@ test_that("Individual EVPI is calculated for 4-D uncorrelated current estimate
             currentEstimate<-as.estimate(read.csv(header=TRUE, text=estimateText,
                                                   strip.white=TRUE, stringsAsFactors=FALSE))
             # The welfare function:
-            profitModel <- function(x,varnames){
+#            profitModel <- function(x,varnames){
+            profitModel <- function(x){
               # Assign the variable names to the function environement:
-              tt<-table(varnames)
-              for (t in 1:length(tt))
-                assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+#               tt<-table(varnames)
+#               for (t in 1:length(tt))
+#                 assign(names(tt[t]),as.numeric(x[which(varnames==names(tt[t]))]))
+              for(i in names(x)) assign(i, as.numeric(x[i]))
               
               list(revenue1 + revenue2 - costs1 - costs2, revenue1)
             }
@@ -123,6 +125,76 @@ test_that("Individual EVPI is calculated for 4-D uncorrelated current estimate
             individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
                                                            currentEstimate=currentEstimate,
                                                            numberOfModelRuns=n,
-                                                           functionSyntax="globalNames",
+                                                           functionSyntax="plainNamesDeprecated",
                                                            verbosity=0)
           })
+test_that("Example from Hubbard (2014), ch. 7, The value of information for ranges
+           is reproduced correctly.",{
+             # Number of simulations:
+             n=100000
+             # Relative comparison tolerance:
+             tolerance=4.5/sqrt(n)
+             # Example from Hubbard (2014), ch. 7, The value of information for ranges:
+             ## welfare function: w_{PA}(x) = px - c with 
+             ##    x: units sold,
+             ##    P_x: Normal distribution with 90\%-confidence interval: $[c_l,c_u]:=[1.5 \cdot 10^5, 3.0 \cdot 10^5]$
+             ##    p: unit price (=25$)
+             ##    c: campaign costs
+             sales<-estimate("norm", 1.5e+05, 3.0e+05, variable="sales")
+             p<-25
+             c<-5e+06
+             profitModel<-function(x) {
+               list(Profit = p*x$sales - c)
+             }
+             # Run IndividualEVPI simulation:
+             individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
+                                                            currentEstimate=sales,
+                                                            numberOfModelRuns=n,
+                                                            functionSyntax="data.frameNames")
+             ## Parameters of the distribution of sales: 
+             ##  mu = (c_l + c_u)/2
+             ##  sigma = (mu - c_l)/(Phi^{-1}(0.95))
+             mu<-(sales$marginal["sales","lower"] + sales$marginal["sales","upper"])/2
+             sigma<-(mu - sales$marginal["sales","lower"])/qnorm(0.95)
+             ## Calculation of theoretical expectation values:
+             ###  EL_{PA}(current)=( c - p*mu) Phi( 1/sigma(c/p - mu) ) 
+             ###                    + p*sigma^2 /(sqrt(2*pi)*sigma) e^(-1/(2*sigma^2) (c/p - mu)^2 )
+             elPaCurrent_calc<-(c - p*mu)*pnorm( (c/p - mu)/sigma ) + p*sigma^2 * dnorm(x=c/p,mean=mu,sd=sigma)
+             ### ENB_PA(current) = p*mu - c
+             enbPaCurrent_calc <- p*mu - c
+             ###  EL_{SQ}(current)=( p*mu - c ) Phi( 1/sigma(mu - c/p ) ) 
+             ###                    + p*sigma^2 /(sqrt(2*pi)*sigma) e^(-1/(2*sigma^2) (c/p - mu)^2 )
+             elSqCurrent_calc<-(p*mu - c)*pnorm( (mu - c/p)/sigma ) + p*sigma^2 * dnorm(x=c/p,mean=mu,sd=sigma)
+             ### EOL(current)=EL_PA, c<=p*mu; =EL_SQ, otherwise
+             eolCurrent_calc<-ifelse(c<=p*mu, yes=elPaCurrent_calc, no=elSqCurrent_calc)
+             ### EL_PA(prospective)=0, c<=p*mu; =c-p*mu, otherwise
+             elPaProspective_calc<-ifelse(c<=p*mu, yes=0, no=c-p*mu)
+             ### ENB_PA(prospective) = ENB_PA(current) 
+             enbPaProspective_calc <- enbPaCurrent_calc
+             ### EL_SQ(prospective)=p*mu-c, c<=p*mu; =0, otherwise
+             elSqProspective_calc<-ifelse(c<=p*mu, yes=p*mu-c, no=0)
+             ### EOL(prospective)=0
+             eolProspective_calc<-0
+             ### IndividualEVPI[x=mu]=EOL(current)
+             IndividualEvpiXMu_calc<-eolCurrent_calc
+             ## Safe the corresponding simulated values:
+             elPaCurrent_sim <-individualEvpiResult$current$elPa[["Profit"]]
+             enbPaCurrent_sim<-individualEvpiResult$current$enbPa[["Profit"]]
+             elSqCurrent_sim <-individualEvpiResult$current$elSq[["Profit"]]
+             eolCurrent_sim  <-individualEvpiResult$current$eol[["Profit"]]
+             elPaProspective_sim <-individualEvpiResult$prospective$sales$elPa[["Profit"]]
+             enbPaProspective_sim<-individualEvpiResult$prospective$sales$enbPa[["Profit"]]
+             elSqProspective_sim <-individualEvpiResult$prospective$sales$elSq[["Profit"]]
+             eolProspective_sim  <-individualEvpiResult$prospective$sales$eol[["Profit"]]
+             IndividualEvpiXMu_sim<-individualEvpiResult$evi["Profit","sales"]
+             ## Compare theoretical with simulated values:
+             expect_equal(elPaCurrent_sim,  elPaCurrent_calc,  tolerance=tolerance, scale=elPaCurrent_calc,  use.names=FALSE)
+             expect_equal(enbPaCurrent_sim, enbPaCurrent_calc, tolerance=tolerance, scale=enbPaCurrent_calc, use.names=FALSE)
+             expect_equal(elSqCurrent_sim,  elSqCurrent_calc,  tolerance=tolerance, scale=elSqCurrent_calc,  use.names=FALSE)
+             expect_equal(eolCurrent_sim,   eolCurrent_calc,   tolerance=tolerance, scale=eolCurrent_calc,   use.names=FALSE)
+             expect_equal(elPaProspective_sim,  elPaProspective_calc,  tolerance=tolerance, scale=elPaProspective_calc,  use.names=FALSE)
+             expect_equal(enbPaProspective_sim, enbPaProspective_calc, tolerance=tolerance, scale=enbPaProspective_calc, use.names=FALSE)
+             expect_equal(elSqProspective_sim,  elSqProspective_calc,  tolerance=tolerance, scale=elSqProspective_calc,  use.names=FALSE)
+             expect_equal(eolProspective_sim,  eolProspective_calc,  tolerance=tolerance, scale=eolProspective_calc,  use.names=FALSE)
+             expect_equal(IndividualEvpiXMu_sim,  IndividualEvpiXMu_calc,  tolerance=tolerance, scale=IndividualEvpiXMu_calc,  use.names=FALSE)
+           })

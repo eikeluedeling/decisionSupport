@@ -39,10 +39,10 @@ An object of class \code{welfareDecisionAnalysis} with the following elements:
  \describe{
      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate}
      transformed by \code{welfare}} (cf. \code{\link{mcSimulation}}).
-     \item{\code{$enb}}{Expected Net Benefit (ENB)}
+     \item{\code{$enbPa}}{Expected Net Benefit of project approval: ENB(PA)}
 			\item{\code{$elPa}}{Expected Loss in case of project approval: EL(PA)}
 			\item{\code{$elSq}}{Expected Loss in case of status quo: EL(SQ)}
- 		\item{\code{$eol}}{Expected Oportunity Loss (EOL)}
+ 		\item{\code{$eol}}{Expected Opportunity Loss: EOL}
  		\item{\code{$optimalChoice}}{
  		    The optimal choice, i.e. either project approval (PA) or the status quo (SQ).
  		    }
@@ -104,7 +104,7 @@ maximizing expected welfare. Furthermore, the Expected Opportunity Loss (EOL) is
   Using this notion it can be shown that the maximization of
   expected welfare is equivalent to the minimization of the expected loss
   \eqn{\textrm{EL}_d := \textrm{E}[L_d]}{EL(d) := E[L(d)]}.
-  \subsection{The Expected Oportunity Loss (EOL)}{
+  \subsection{The Expected Opportunity Loss (EOL)}{
     The use of this concept, here, is in line as described in Hubbard (2014). The Expected
     Opportunity Loss (\eqn{\textrm{EOL}}{EOL}) is defined as the expected loss for the best
     decision. The best decision minimizes the expected loss:

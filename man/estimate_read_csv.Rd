@@ -29,20 +29,21 @@ An object of type \code{\link{estimate}} which element \code{$marginal} is read 
 }
 \description{
 This function reads an \code{\link{estimate}} from the specified csv files. In this context, an
-estimate of several variables is defined by its marginal distribution types, its marginal 90\%-confidence
-intervals \code{[lower,upper]} and, optionally, its correlations.
+estimate of several variables is defined by its marginal distribution types, its marginal
+90\%-confidence intervals \code{[lower,upper]} and, optionally, its correlations.
 
 \code{estimate_read_csv_old} reads an estimate from CSV file(s) according to the deprecated
 standard. This function is for backward compatibility only.
 }
 \details{
-An estimate might consists of uncorrelated and correlated variables. This is reflected in the input file structure, which
-  is described in the following.
+An estimate might consists of uncorrelated and correlated variables. This is reflected
+  in the input file structure, which is described in the following.
   \subsection{ CSV input file structures}{
-  The estimate is read from one or two csv files: the marginal csv file which is mandatory and the correlation csv file which is optional.
-  The marginal csv file contains the definition of the distribution of all variables ignoring potential correlations. The correlation csv
-  file only defines correlations.
-  \subsection{The structure of the marginal distributions input file (mandatory)}{
+  The estimate is read from one or two csv files: the marginal csv file which is mandatory and
+  the correlation csv file which is optional. The marginal csv file contains the definition of
+  the distribution of all variables ignoring potential correlations. The correlation csv file
+  only defines correlations. \subsection{The structure of the marginal distributions input file
+  (mandatory)}{
     File name structure: \code{<marginal-filename>.csv}
 
     Mandatory columns:
@@ -69,9 +70,8 @@ An estimate might consists of uncorrelated and correlated variables. This is ref
      present which are correlated with others.
 
      The element \code{["rowname","columnname"]} contains the correlation between the variables
-     \code{rowname} and \code{columnname}. Uncorrelated elements can be left empty, i.e. as
-     \code{NA}, or defined as \code{0}. The diagonal element \code{["name","name"]} has to be
-     set to \code{1}.
+     \code{rowname} and \code{columnname}. Uncorrelated elements have to be set to \code{0}. The
+     diagonal element \code{["name","name"]} has to be set to \code{1}.
 
      The matrix must be given in symmetric form.
   }

@@ -1,0 +1,64 @@
+---
+title: "How to calculate the IndividualEVPI"
+author: "Lutz Göhring"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to calculate the IndividualEVPI}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## Example from Hubbard (2014), ch. 7, The value of information for ranges:
+welfare function
+\[
+w_{PA}(x) = px - c
+\]
+$x$: units sold lutz
+
+$P_x:$ Normal distribution with 90\%-confidence interval: $[c_l,c_u]:=[1.5 \cdot 10^5, 3.0 \cdot 10^5]$
+
+$p$: unit price
+
+$c$: campaign costs
+
+```{r}
+library(decisionSupport)
+n=100000
+
+sales<-estimate("norm", 1.5e+05, 3.0e+05, variable="sales")
+p<-25
+c<-5e+06
+
+profitModel<-function(x) {
+  list(Profit = p*x$sales - c)
+}
+individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
+                                               currentEstimate=sales,
+                                               numberOfModelRuns=n,
+                                               functionSyntax="data.frameNames")
+# Show the simulation results:
+print(sort(summary(individualEvpiResult),decreasing=TRUE,along="Profit"))
+```
+
+```{r, fig.show='hold'}
+hist(individualEvpiResult, breaks=100)
+hist(individualEvpiResult$current$mcResult$x$sales, breaks=100)
+```
+\[
+EL_{PA}=( c - p\mu) \Phi(\frac{1}{\sigma}(\frac{c}{p} - \mu)) + \frac{p\sigma^2 }{\sqrt{2 \pi}\sigma} e^{-\frac{1}{2 \sigma^2} (\frac{c}{p} - \mu)^2 }
+\]
+$\mu = \frac{c_l + c_u}{2}$
+ 
+$\sigma = \frac{\mu - c_l}{\Phi^{-1}(0.95)}\approx \frac{c_u - c_l}{3.289707}$
+```{r}
+mu<-(sales$marginal["sales","lower"] + sales$marginal["sales","upper"])/2
+sigma<-(mu - sales$marginal["sales","lower"])/qnorm(0.95)
+
+elPa_calc<-(c - p*mu)*pnorm( (c/p - mu)/sigma ) + p*sigma^2 * dnorm(x=c/p,mean=mu,sd=sigma)
+print(elPa_calc)
+elPa_sim<-individualEvpiResult$current$elPa[["Profit"]]
+print(elPa_sim)
+all.equal(elPa_calc, elPa_sim, tolerance=2/sqrt(n), scale=elPa_calc, use.names=FALSE)
+```
+
