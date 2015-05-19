@@ -1,21 +1,13 @@
 ---
 title: "NEWS"
 author: "Lutz Göhring"
-date: "May 18, 2015"
+date: "May 19, 2015"
 output: html_document
 ---
 
-# 1.101.9002 pre-release
-## Changes:
-File: NEWS.md added
+# 1.101.1 release
 
-# 1.101.9001 pre-release
-## Changes:
-Locally deleted files commited
-
-
-# 1.101.0.9000 pre-release
-## Changes:
+## Not so minor changes:
 
 1.  in class estimate:
     + in documentation of estimate_read_csv(): 
@@ -42,3 +34,8 @@ Locally deleted files commited
     2. test_welfareDecisionAnalysis.R implemented;  
 8.   vignette for individualEvpiSimulation(): 
     + first draft in folder R/todo added  
+
+## Minor Changes:
+
+ + File: NEWS.md added
+ + Locally deleted files commited

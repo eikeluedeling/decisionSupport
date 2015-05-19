@@ -9,7 +9,7 @@ Lutz Göhring, has
 
 ## Test environments
 * ubuntu 14.04 LTS (local install): R under development (2015-05-06 r68336) and R 3.1.3
-* win-builder: R under development and R 3.2.0
+* win-builder: R under development (2015-05-18 r68382) and R 3.2.0
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
