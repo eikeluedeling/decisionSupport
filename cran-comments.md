@@ -1,26 +1,25 @@
+## Re-submission
+
+This is a re-submission. To meet the CRAN requirements, the maintainer of this package, i.e.
+Lutz Göhring, has 
+
+* adapted the package rriskDistributions to current CRAN standards and provided this to the 
+  authors of the rriskDistributions package. This updated package was recently re-accepted by CRAN. 
+  This implies that, now, all the package dependencies of this package are in the mainstream again.
+
 ## Test environments
-* ubuntu 14.04 LTS (local install): R under development (2015-04-28 r68272) and R 3.1.3
+* ubuntu 14.04 LTS (local install): R under development (2015-05-06 r68336) and R 3.1.3
 * win-builder: R under development and R 3.2.0
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There were 2 NOTEs:
+There was 1 NOTE:
 
 * checking CRAN incoming feasibility ... NOTE
    Maintainer: ‘Lutz Göhring <lutz.goehring@gmx.de>’
    New submission
-   Suggests or Enhances not in mainstream repositories:
-   rriskDistributions
-      + Comment on New submission: This is my first submission
-      + Comment on package "rriskDistributions": We will substitute the used functionality of the 
-      package rriskDistributions soon. 
-  
-* checking package dependencies ... NOTE
-  No repository set, so cyclic dependency check skipped  
-    + Comment: cf. field Description: in file DESCRIPTION: "The 
-    suggested package rriskDistribution can be downloaded from 
-    http://cran.r-project.org/src/contrib/Archive/rriskDistributions/."
+      + Maintainers comment: This is my first submission
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
