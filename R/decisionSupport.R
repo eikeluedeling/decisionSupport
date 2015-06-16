@@ -99,6 +99,9 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
     cat("Estimate read from file: ",inputFilePath, "\n")
   if(verbosity > 1)
     print(estimateObject)
+  # Create the output directory if necessary
+  if ( !file.exists(outputPath) )
+      dir.create(outputPath, recursive=TRUE)
   # Run Monte Carlo simulation for the Welfare Decision Analysis:
   if(verbosity > 0)
     cat("Performing Monte Carlo Simulation for the Welfare Decision Analysis:\n")
@@ -123,8 +126,6 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
       cat("Monte Carlo results written into file: ", mcSimulationResultsFilePath, "\n")
   }
   # Write histogram of results to png files:
-  if ( !file.exists(outputPath) )
-    dir.create(outputPath, recursive=TRUE)
   for(i in names(welfareDecisionResults$mcResult$y)) {
     png(file.path(outputPath, paste(i, "_distribution.png",sep="")), width=1000, height=500)
     par(mar=c(5.1,5.1,4.1,2.1))

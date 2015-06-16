@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.101.1
-Date: 2015-05-19
+Version: 1.101.1.9000
+Date: 2015-05-20
 Authors@R: c(
     person("Lutz", "Göhring",  email = "lutz.goehring@gmx.de",  role = c("cre", "aut"), comment="ICRAF and Lutz Göhring Consulting"),
     person("Eike", "Luedeling", email = "eike@eikeluedeling.com ", role = "aut", comment="ICRAF"))
@@ -17,7 +17,7 @@ Description: Supporting the quantitative analysis of binary welfare based
     improve the actual decision making process. This problem is dealt with
     using the Value of Information Analysis. The Expected Value of
     Information for arbitrary prospective estimates can be calculated as
-    well as Individual and Clustered Expected Value of Perfect Information.
+    well as Individual Expected Value of Perfect Information.
     The probabilistic calculations are done via Monte Carlo
     simulations. This Monte Carlo functionality can be used on its own.
 License: GPL-3
@@ -38,6 +38,7 @@ Suggests:
     knitr
 URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
+Classification/JEL: I38, O16, O21, O22, O23
 Collate:
     'rmvnorm90ci_exact.R'
     'rdistq_fit.R'

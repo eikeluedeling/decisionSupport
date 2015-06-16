@@ -4,6 +4,10 @@ author: "Lutz Göhring"
 date: "May 19, 2015"
 output: html_document
 ---
+# 1.101.1.9000
+
++ in method summary.welfareDecisionAnalysis(): argument probs=c(0.05,0,5,0.95) added
++ in method decisionSupport(): BUG fixed: creation of outputdirectory corrected
 
 # 1.101.1 release
 
@@ -15,7 +19,7 @@ output: html_document
 2. in class mcSimulation:
     1. in method mcSimulation(): 
       1. functionSyntax=”globalNames” 
-        + changed to "plainNamesDeprecated" and remvoed from documentation;
+        + changed to "plainNamesDeprecated" and removed from documentation;
         + made the use of varnames in the model function superfluous;
       2. functionSyntax=”plainNames” implemented, tested and examples implemented and documented
     2. in method summary.mcSimulation():

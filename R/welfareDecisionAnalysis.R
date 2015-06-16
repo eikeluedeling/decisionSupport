@@ -283,18 +283,37 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns,
 #' @param object An object of class \code{welfareDecisionAnalysis}.
 #' @param ... Further arguments passed to \code{\link{format}}.
 #' @inheritParams base::format
+#' @param probs \code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no 
+#'   quantiles will be displayed.
 #' @return An object of class \code{summary.welfareDecisionAnalysis}.
 #' @seealso \code{\link{welfareDecisionAnalysis}}, 
 #'  \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
 #' @export
 summary.welfareDecisionAnalysis <- function(object,
 																		 ...,
-																		 digits = max(3, getOption("digits")-3)){	
-	summaryDf<-data.frame(enbPa=object$enbPa, 
-												elPa=object$elPa, 
-												elSq=object$elSq, 
-												eol=object$eol, 
-												optimalChoice=object$optimalChoice)	
+																		 digits = max(3, getOption("digits")-3),
+																		 probs=c(0.05, 0.5, 0.95)){	
+# 	summaryDf<-data.frame(enbPa=object$enbPa, 
+# 												elPa=object$elPa, 
+# 												elSq=object$elSq, 
+# 												eol=object$eol, 
+# 												optimalChoice=object$optimalChoice)	
+summaryDf<-if(!is.null(probs)){
+       data.frame(  t(apply(X=object$mcResult$y, MARGIN=2, FUN=quantile, probs=probs)),
+                    enbPa=object$enbPa, 
+                    elPa=object$elPa, 
+                    elSq=object$elSq, 
+                    eol=object$eol, 
+                    optimalChoice=object$optimalChoice,
+                    check.names=FALSE)
+             }else{
+	         data.frame(enbPa=object$enbPa, 
+	                    elPa=object$elPa, 
+	                    elSq=object$elSq, 
+	                    eol=object$eol, 
+	                    optimalChoice=object$optimalChoice)
+  }
+	
 	summaryDf<-format(x=summaryDf, digits=digits, ...)
 	# ToDo: combine this summary with summary(object$mcResult)
 	res<-list(summary=summaryDf,

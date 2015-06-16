@@ -5,7 +5,7 @@
 \title{Summarize Welfare Decision Analysis results.}
 \usage{
 \method{summary}{welfareDecisionAnalysis}(object, ..., digits = max(3,
-  getOption("digits") - 3))
+  getOption("digits") - 3), probs = c(0.05, 0.5, 0.95))
 }
 \arguments{
 \item{object}{An object of class \code{welfareDecisionAnalysis}.}
@@ -18,6 +18,9 @@
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
     (For the interpretation for complex numbers see \code{\link{signif}}.)}
+
+\item{probs}{\code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no
+quantiles will be displayed.}
 }
 \value{
 An object of class \code{summary.welfareDecisionAnalysis}.
