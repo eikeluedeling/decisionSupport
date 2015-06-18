@@ -38,7 +38,7 @@ more verbose is output information.}
 An object of class \code{welfareDecisionAnalysis} with the following elements:
  \describe{
      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate}
-     transformed by \code{welfare}} (cf. \code{\link{mcSimulation}}).
+     transformed by \code{welfare} (cf. \code{\link{mcSimulation}}).}
      \item{\code{$enbPa}}{Expected Net Benefit of project approval: ENB(PA)}
 			\item{\code{$elPa}}{Expected Loss in case of project approval: EL(PA)}
 			\item{\code{$elSq}}{Expected Loss in case of status quo: EL(SQ)}
@@ -46,6 +46,15 @@ An object of class \code{welfareDecisionAnalysis} with the following elements:
  		\item{\code{$optimalChoice}}{
  		    The optimal choice, i.e. either project approval (PA) or the status quo (SQ).
  		    }
+ 		\item{\code{$plPa}}{
+ 		    The probability of incurring a net loss in case of project approval.
+ 		}
+ 		\item{\code{$pZero}}{
+ 		     The probability of experiencing no change in welfare for either choice.
+ 		}
+ 		\item{\code{$pnbPa}}{
+ 		     The probability of net benefiting in case of project approval.
+ 		}
 }
 }
 \description{
@@ -171,7 +180,7 @@ myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
-print(summary((myAnalysis)))
+print(summary(myAnalysis))
 #############################################################
 # (b) Define the welfare function with a name for the return value:
 profit<-function(x){
@@ -183,7 +192,7 @@ myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
-print(summary((myAnalysis)))
+print(summary(myAnalysis))
 #############################################################
 # (c) Two decsion variables:
 welfareModel<-function(x){
@@ -196,7 +205,7 @@ myAnalysis<-welfareDecisionAnalysis(estimate=costBenefitEstimate,
                                     numberOfModelRuns=100000,
                                     functionSyntax="data.frameNames")
 # Show the analysis results:
-print(summary((myAnalysis)))
+print(summary(myAnalysis))
 }
 \references{
 Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},

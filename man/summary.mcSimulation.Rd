@@ -7,7 +7,8 @@
 \method{summary}{mcSimulation}(object, ..., digits = max(3,
   getOption("digits") - 3), variables.y = names(object$y), variables.x = if
   (classicView) names(object$x), classicView = FALSE, probs = c(0, 0.05,
-  0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1))
+  0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1), moments = c("mean", "sd", "skewness",
+  "kurtosis"))
 }
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}
@@ -28,7 +29,8 @@ components.}
 
 \item{variables.x}{\code{character} or \code{character vector}: Names of the components of the
 input variables to the simulation function, i.e. the names of the variables in the input
-\code{estimate}, whose random sampling results shall be displayed. Defaults to all components.}
+\code{estimate}, whose random sampling results shall be displayed. If \code{classicView=TRUE}
+defaults to all components, otherwise defaults to no component.}
 
 \item{classicView}{\code{logical}: if \code{TRUE} the results are summarized using
 \code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile
@@ -36,16 +38,51 @@ information can be chosen. Cf. section Value and argument \code{probs}. Default 
 \code{FALSE}.}
 
 \item{probs}{\code{numeric vector}: quantiles that shall be displayed if
-\code{classicView=FALSE}.}
+\code{classicView=FALSE}. If \code{=NULL} no quantiles are returned.}
+
+\item{moments}{\code{character vector}: moments that shall be returned if
+\code{classicView=FALSE}. Possible components are
+\code{"mean"}, \code{"sd"}, \code{"skewness"} or \code{"kurtosis"}. If \code{=NULL} no
+moments are returned.}
 }
 \value{
-An object of class \code{summary.mcSimulation}.
+An object of class \code{summary.mcSimulation} with list elements
+  \describe{
+    \item{\code{$call}}{Containing the call of the function \code{mcSimulation}.}
+    \item{\code{$summary}}{
+      If \code{classicView=TRUE}: the result of \code{\link{summary.data.frame}} applied to
+      the data frame composed of the simulation results chosen by \code{variables.y} and the
+      sampled values of the input variables chosen by \code{variables.x}.
+      If \code{classicView=FALSE}: a data frame with columns as chosen with \code{probs}
+      and \code{moments}. The rows are the components of the simulation results chosen by
+      \code{variables.y} followed by the input variables chosen by \code{variables.x}.
+      }
+  }
 }
 \description{
 A summary of the results of a Monte Carlo simulation obtained by the function
 \code{\link{mcSimulation}} is produced.
 }
+\details{
+The skewness and kurtosis are calculated using the functions
+  \code{\link[moments:skewness]{skewness}} and \code{\link[moments:kurtosis]{kurtosis}} of the
+  package \pkg{moments}, respectively.
+}
+\examples{
+sim<-mcSimulation(estimate(c("norm","norm"),
+                           c(10000,  5000),
+                           c(100000, 50000),
+                           variable=c("revenue","costs")),
+                           function(x) list(Profit=x$revenue - x$costs),
+                           numberOfModelRuns=1000)
+summary(sim, classicView=TRUE)
+summary(sim, moments=NULL)
+summary(sim,probs=c(0.05,0.5,0.9), moments=c("mean","sd","skewness"))
+summary(sim,probs=NULL, moments=c("mean","sd","skewness"),
+        variables.x = c("revenue", "costs"))
+}
 \seealso{
-\code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
+\code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}},
+  \code{\link{summary.data.frame}}
 }
 

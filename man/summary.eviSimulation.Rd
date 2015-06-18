@@ -5,7 +5,7 @@
 \title{Summarize EVI Simulation Results}
 \usage{
 \method{summary}{eviSimulation}(object, ..., digits = max(3,
-  getOption("digits") - 3))
+  getOption("digits") - 3), probs = NULL, moments = NULL)
 }
 \arguments{
 \item{object}{An object of class \code{eviSimulation}.}
@@ -18,6 +18,13 @@
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
     (For the interpretation for complex numbers see \code{\link{signif}}.)}
+
+\item{probs}{\code{numeric vector}: quantiles that shall be calculated. If \code{=NULL} no
+quantiles are returned.}
+
+\item{moments}{\code{character vector}: moments that shall be calculated. Possible components are
+\code{"mean"}, \code{"sd"}, \code{"skewness"} or \code{"kurtosis"}. If \code{=NULL} no
+moments are returned.}
 }
 \value{
 An object of class \code{summary.eviSimulation}.

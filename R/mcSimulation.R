@@ -263,9 +263,9 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
                args=lapply(X=apply(X=x,
                                    MARGIN=1,
                                    FUN=model_function#,
-    #                               varnames=row.names(estimate)
-                                   ),
-                           FUN=unlist))
+                                   #                               varnames=row.names(estimate)
+               ),
+               FUN=unlist))
     
     #     if( !requireNamespace("plyr", quietly = TRUE)) 
     #       stop("Package \"plyr\" needed. Please install it.",
@@ -380,15 +380,48 @@ print.mcSimulation <- function(x, ...){
 #'   components.
 #' @param variables.x \code{character} or \code{character vector}: Names of the components of the
 #'   input variables to the simulation function, i.e. the names of the variables in the input
-#'   \code{estimate}, whose random sampling results shall be displayed. Defaults to all components.
+#'   \code{estimate}, whose random sampling results shall be displayed. If \code{classicView=TRUE} 
+#'   defaults to all components, otherwise defaults to no component.
 #' @param classicView \code{logical}: if \code{TRUE} the results are summarized using
 #'   \code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile
 #'   information can be chosen. Cf. section Value and argument \code{probs}. Default is
 #'   \code{FALSE}.
 #' @param probs \code{numeric vector}: quantiles that shall be displayed if 
-#'   \code{classicView=FALSE}.
-#' @return An object of class \code{summary.mcSimulation}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
+#'   \code{classicView=FALSE}. If \code{=NULL} no quantiles are returned.
+#' @param moments \code{character vector}: moments that shall be returned if 
+#'   \code{classicView=FALSE}. Possible components are 
+#'   \code{"mean"}, \code{"sd"}, \code{"skewness"} or \code{"kurtosis"}. If \code{=NULL} no 
+#'   moments are returned.
+#' @return An object of class \code{summary.mcSimulation} with list elements 
+#'   \describe{
+#'     \item{\code{$call}}{Containing the call of the function \code{mcSimulation}.}
+#'     \item{\code{$summary}}{
+#'       If \code{classicView=TRUE}: the result of \code{\link{summary.data.frame}} applied to 
+#'       the data frame composed of the simulation results chosen by \code{variables.y} and the 
+#'       sampled values of the input variables chosen by \code{variables.x}.
+#'       If \code{classicView=FALSE}: a data frame with columns as chosen with \code{probs}
+#'       and \code{moments}. The rows are the components of the simulation results chosen by
+#'       \code{variables.y} followed by the input variables chosen by \code{variables.x}. 
+#'       }
+#'   }
+#' @details 
+#'   The skewness and kurtosis are calculated using the functions  
+#'   \code{\link[moments:skewness]{skewness}} and \code{\link[moments:kurtosis]{kurtosis}} of the 
+#'   package \pkg{moments}, respectively.
+#' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, 
+#'   \code{\link{summary.data.frame}}
+#' @examples
+#' sim<-mcSimulation(estimate(c("norm","norm"),
+#'                            c(10000,  5000),
+#'                            c(100000, 50000),
+#'                            variable=c("revenue","costs")),
+#'                            function(x) list(Profit=x$revenue - x$costs),
+#'                            numberOfModelRuns=1000)
+#' summary(sim, classicView=TRUE)
+#' summary(sim, moments=NULL)
+#' summary(sim,probs=c(0.05,0.5,0.9), moments=c("mean","sd","skewness"))
+#' summary(sim,probs=NULL, moments=c("mean","sd","skewness"), 
+#'         variables.x = c("revenue", "costs"))
 #' @export
 summary.mcSimulation <- function(object,
                                  ...,
@@ -396,41 +429,55 @@ summary.mcSimulation <- function(object,
                                  variables.y=names(object$y),
                                  variables.x=if(classicView) names(object$x),
                                  classicView=FALSE,
-                                 probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1)
+                                 probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1),
+                                 moments=c("mean", "sd", "skewness", "kurtosis")
 ){
-  #ToDo: Review
+  # Extract the data that shall be summarized:
   data<-as.data.frame(list(y=(object$y)[variables.y],x=(object$x)[variables.x]))
   if( classicView ){
     res<-list(summary=summary.data.frame(object=as.data.frame(data),...,digits=digits),
               call=object$call)
-  } else{
-    chance_loss<-function(x){
-      length(x[x<0])/length(x)
+  } else {
+    if(!is.null(probs) || !is.null(moments) ){
+      # Calculate quantiles if required:
+      if(!is.null(probs)){
+        quantilesDf<-as.data.frame(t(apply(X=data, MARGIN=2, FUN=quantile, probs=probs)))
+      } 
+      # Calculate moments if required: 
+      if(!is.null(moments)){
+        momentsDf<-NULL
+        if("mean" %in% moments)
+          momentsDf<-data.frame(mean=colMeans(data))
+        if("sd" %in% moments )
+          momentsDf<-cbind(momentsDf,
+                           sd=apply(X=data, MARGIN=2, FUN=sd),
+                           deparse.level=1)
+        if("skewness" %in% moments )
+          momentsDf<-cbind(momentsDf,
+                           skewness=apply(X=data, MARGIN=2, FUN=moments::skewness),
+                           deparse.level=1)
+        if("kurtosis" %in% moments )
+          momentsDf<-cbind(momentsDf,
+                           kurtosis=apply(X=data, MARGIN=2, FUN=moments::kurtosis),
+                           deparse.level=1)
+        if(is.null(momentsDf))
+          stop("The supplied values for \"moments\" do not match 
+               \"mean\", \"sd\",\"skewness\" or \"kurtosis\".")
+      } 
+      # Collate quantiles and moments if applicable:
+      if (is.null(probs))
+        summaryDf<-momentsDf
+      else if (is.null(moments))
+        summaryDf<-quantilesDf
+      else
+        summaryDf<-cbind(quantilesDf,
+                         momentsDf,
+                         deparse.level=1)
+      # Format numbers:
+      summaryDf<-format(x=summaryDf, digits=digits, ...)
+    } else { 
+      summaryDf<-NULL
     }
-    chance_zero<-function(x){
-      length(x[x==0])/length(x)
-    }
-    chance_gain<-function(x){
-      length(x[x>0])/length(x)
-    }
-    
-    #		data<-mcResult$y[variables]
-    
-    summaryDf<-as.data.frame(t(apply(X=data, MARGIN=2, FUN=quantile, probs=probs)))
-    summaryDf<-cbind(summaryDf,
-                     mean=colMeans(data),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_loss=apply(X=data, MARGIN=2, FUN=chance_loss),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_zero=apply(X=data, MARGIN=2, FUN=chance_zero),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_gain=apply(X=data, MARGIN=2, FUN=chance_gain),
-                     deparse.level=1)
-    
-    summaryDf<-format(x=summaryDf, digits=digits, ...)
     res<-list(summary=summaryDf,
               call=object$call)
   }

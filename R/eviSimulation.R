@@ -279,6 +279,7 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
 #' @param object An object of class \code{eviSimulation}.
 #' @param ... Further arguments passed to \code{\link{summary.welfareDecisionAnalysis}}.
 #' @inheritParams base::format
+#' @inheritParams summary.welfareDecisionAnalysis
 #' @return An object of class \code{summary.eviSimulation}.
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, 
 #' \code{\link{summary.welfareDecisionAnalysis}}, \ifelse{latex}{\cr}{ }
@@ -286,14 +287,16 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
 #' @export
 summary.eviSimulation <- function(object,
                                   ...,
-                                  digits = max(3, getOption("digits")-3)){	
+                                  digits = max(3, getOption("digits")-3),
+                                  probs=NULL,
+                                  moments=NULL){	
   summaryList<-list(evi=format(x=object$evi, digits=digits),
-                    current=summary(object$current, ..., digits=digits)$summary,
+                    current=summary(object$current, ..., digits=digits, probs=probs, moments=moments)$summary,
                     prospective=if( class(object$prospective)=="welfareDecisionAnalysis" ){
-                      summary(object$prospective, ..., digits=digits)$summary
+                      summary(object$prospective, ..., digits=digits, probs=probs, moments=moments)$summary
                     } else {
                       lapply(X=object$prospective, 
-                             FUN=function(x) summary(x, ..., digits=digits)$summary
+                             FUN=function(x) summary(x, ..., digits=digits, probs=probs, moments=moments)$summary
                       )
                     }
   )

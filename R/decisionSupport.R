@@ -115,7 +115,7 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
   if(verbosity > 0)
     cat("Monte Carlo Simulation for Welfare Decision Analysis done.\n")
   if(verbosity > 1){
-    print(summary(welfareDecisionResults$mcResult))
+#    print(summary(welfareDecisionResults$mcResult))
     print(summary(welfareDecisionResults))
   }
   if (write_table){
@@ -141,7 +141,7 @@ decisionSupport <- function(inputFilePath, outputPath, welfareFunction, numberOf
   # Write the summary of the Welfare Decision Analysis to file:
   welfareDecisionSummary<-summary(welfareDecisionResults, digits=2)
   welfareDecisionSummaryFilePath<-file.path(outputPath,"welfareDecisionSummary.csv")
-  write.csv(welfareDecisionSummary$summary,welfareDecisionSummaryFilePath)
+  write.csv(welfareDecisionSummary$summary$wda,welfareDecisionSummaryFilePath)
   if (verbosity > 0)
     cat("Welfare Decision Analysis summary written into file: ", welfareDecisionSummaryFilePath, "\n")
   # Partial lest squares analysis:

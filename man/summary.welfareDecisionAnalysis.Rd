@@ -5,7 +5,9 @@
 \title{Summarize Welfare Decision Analysis results.}
 \usage{
 \method{summary}{welfareDecisionAnalysis}(object, ..., digits = max(3,
-  getOption("digits") - 3), probs = c(0.05, 0.5, 0.95))
+  getOption("digits") - 3), variables.y = names(object$mcResult$y),
+  variables.x = NULL, probs = c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95,
+  1), moments = c("mean", "sd", "skewness"))
 }
 \arguments{
 \item{object}{An object of class \code{welfareDecisionAnalysis}.}
@@ -19,18 +21,58 @@
     this many significant digits, and also to satisfy \code{nsmall}.
     (For the interpretation for complex numbers see \code{\link{signif}}.)}
 
-\item{probs}{\code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no
-quantiles will be displayed.}
+\item{variables.y}{\code{character} or \code{character vector}: Names of the components of the
+welfare function (cf. argument \code{welfare} in method
+\code{\link{welfareDecisionAnalysis}}), whose Monte Carlo results shall be summarized.
+Defaults to all components.}
+
+\item{variables.x}{\code{character} or \code{character vector}: Names of the components of the
+input variables to the welfare function, i.e. the names of the variables in the input
+\code{estimate}, whose random sampling results used for the underlying Monte Carlo simulation
+shall be summarized. Defaults to none.}
+
+\item{probs}{\code{numeric vector}: quantiles that shall be calculated. If \code{=NULL} no
+quantiles are returned.}
+
+\item{moments}{\code{character vector}: moments that shall be calculated. Possible components are
+\code{"mean"}, \code{"sd"}, \code{"skewness"} or \code{"kurtosis"}. If \code{=NULL} no
+moments are returned.}
 }
 \value{
-An object of class \code{summary.welfareDecisionAnalysis}.
+An object of class \code{summary.welfareDecisionAnalysis}with list elements
+  \describe{
+    \item{\code{$call}}{Containing the call of the function \code{welfareDecisionAnalysis}.}
+    \item{\code{$summary}}{
+      A list with elements \code{$wda} and \code{$mc}, each of which is a data frame. \code{$wda}
+      contains the summary of the actual welfare decision analysis
+      (cf. \code{\link{welfareDecisionAnalysis}}). \code{$mc} is the summary of the underlying
+      Monte Carlo simulation, if \code{probs} or \code{moments} are chosen or, otherwise, is
+      \code{NULL}. For details cf. \code{\link{summary.mcSimulation}}.
+      }
+  }
 }
 \description{
 Produce a summary of the results of a welfare decision analysis obtained by the function
- \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}}.
+ \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}} and, if required, of the
+ underlying Monte Carlo simulation.
+}
+\examples{
+wda<-welfareDecisionAnalysis(estimate(c("posnorm","posnorm"),
+                                      c(10000,  5000),
+                                      c(100000, 50000),
+                                      variable=c("revenue","costs")),
+                                      function(x) list(Profit=x$revenue - x$costs),
+                                      1000)
+summary(wda, variables.x=c("revenue", "costs"))
+summary(wda,probs=c(0.05,0.5,0.9))
+summary(wda,probs=c(0.05,0.5,0.9), moments=NULL)
+summary(wda,probs=c(0.05,0.5,0.9), moments="sd")
+summary(wda,probs=NULL)
+summary(wda,probs=NULL, moments=NULL)
 }
 \seealso{
 \code{\link{welfareDecisionAnalysis}},
- \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
+ \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}},
+ \code{\link{summary.mcSimulation}}
 }
 

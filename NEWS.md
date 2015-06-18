@@ -4,6 +4,23 @@ author: "Lutz Göhring"
 date: "May 19, 2015"
 output: html_document
 ---
+# 1.101.1.9001
++ in method `summary.welfareDecisionAnalysis()`: 
+  + default of argument `probs` changed to `probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1)`
+  + argument `moments` and `variables.x` added
+  + new values added: probability of incurring a loss (`plPa`), 
+  probability of zero welfare change (`pZero`) and
+  probability of experiencing a net benefit (`pnbPa`).
+  + documentation impoved
++ in method `summary.mcSimulation()`:
+  + arguments `moments` and `probs` added.
+  + return values `chance_loss`, `chance_zero`, `chance_gain` 
+    * moved from `summary.mcSimulation()` to `summary.welfareDecisionAnalysis()` because they are 
+    semantically part of the economic sphere and
+    * renamed to `plPa`, `pZero`, `pnbPa`, because this uses the terminology used in the rest of 
+    the package (in particular `enbPa` and `elPa`).
+  + documentation improved
+
 # 1.101.1.9000
 
 + in method summary.welfareDecisionAnalysis(): argument probs=c(0.05,0,5,0.95) added

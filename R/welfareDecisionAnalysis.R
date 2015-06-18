@@ -54,7 +54,7 @@ NULL
 #' @return An object of class \code{welfareDecisionAnalysis} with the following elements:
 #'  \describe{
 #'      \item{\code{$mcResult}}{The results of the Monte Carlo analysis of \code{estimate} 
-#'      transformed by \code{welfare}} (cf. \code{\link{mcSimulation}}).
+#'      transformed by \code{welfare} (cf. \code{\link{mcSimulation}}).}
 #'      \item{\code{$enbPa}}{Expected Net Benefit of project approval: ENB(PA)}
 #' 			\item{\code{$elPa}}{Expected Loss in case of project approval: EL(PA)}
 #' 			\item{\code{$elSq}}{Expected Loss in case of status quo: EL(SQ)}
@@ -62,6 +62,15 @@ NULL
 #'  		\item{\code{$optimalChoice}}{
 #'  		    The optimal choice, i.e. either project approval (PA) or the status quo (SQ).
 #'  		    }
+#'  		\item{\code{$plPa}}{
+#'  		    The probability of incurring a net loss in case of project approval. 
+#'  		}
+#'  		\item{\code{$pZero}}{
+#'  		     The probability of experiencing no change in welfare for either choice.
+#'  		} 		
+#'  		\item{\code{$pnbPa}}{
+#'  		     The probability of net benefiting in case of project approval.
+#'  		} 
 #' }
 #' @details 
 #'   \subsection{The underlying decision problem and its notational framework}{ 
@@ -187,7 +196,7 @@ NULL
 #'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
-#' print(summary((myAnalysis)))
+#' print(summary(myAnalysis))
 #' #############################################################
 #' # (b) Define the welfare function with a name for the return value:
 #' profit<-function(x){
@@ -199,7 +208,7 @@ NULL
 #'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
-#' print(summary((myAnalysis)))
+#' print(summary(myAnalysis))
 #' #############################################################
 #' # (c) Two decsion variables:
 #' welfareModel<-function(x){
@@ -212,66 +221,87 @@ NULL
 #'                                     numberOfModelRuns=100000,
 #'                                     functionSyntax="data.frameNames")
 #' # Show the analysis results:
-#' print(summary((myAnalysis)))
+#' print(summary(myAnalysis))
 #' @export
 welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns, 
                                     randomMethod="calculate", 
                                     functionSyntax="data.frameNames",
                                     relativeTolerance=0.05,
                                     verbosity=0){
-	# Auxiliary functions (ToDo: check!):
-	# Expected loss of project approval
-	elPa <- function(netBenefitSample){
-		- mean( netBenefitSample*(netBenefitSample<0) )
-	}
-
-	# Expected loss of status quo
-	elSq <- function(netBenefitSample){
-		mean( netBenefitSample*(netBenefitSample>0) )
-	}
-	# Expected opportunity loss
-	eol <- function(netBenefitSample){
-		elPa_ <- elPa(netBenefitSample)
-		elSq_ <- elSq(netBenefitSample)
-		min(elPa_,elSq_)
-	}
-	# Return object:
-	thisAnalysis<-NULL
-	if ( is.function(welfare) ) {
-		# Perform the Monte Carlo simulation:
-		mcResult<-mcSimulation( estimate=estimate, 
-														model_function=welfare, 
-														numberOfModelRuns=numberOfModelRuns,
-														randomMethod=randomMethod,
-														functionSyntax=functionSyntax,
-														relativeTolerance=relativeTolerance,
-														verbosity=verbosity)
-		# Expected net benefit of project approval:
-		enbPa_<-colMeans(mcResult$y)
-		# Expected loss for project aproval:
-		elPa_<-apply(X=mcResult$y, MARGIN=2, FUN=elPa)
-		# Expected loss for status quo:
-		elSq_<-apply(X=mcResult$y, MARGIN=2, FUN=elSq)
-		# Expected opportunity loss:
-		eol_ <-pmin(elPa_,elSq_)
-		# The optimal choice (either project aproval (PA) or the status quo (SQ)):
-		optimalChoice_<-ifelse( eol_==elPa_, "PA", "SQ")
-		# Fill return object:
-		thisAnalysis$call<-match.call()
-		thisAnalysis$mcResult<-mcResult
-		thisAnalysis$enbPa<-enbPa_
-		thisAnalysis$elPa<-elPa_
-		thisAnalysis$elSq<-elSq_
-		thisAnalysis$eol<-eol_
-		thisAnalysis$optimalChoice<-optimalChoice_
-	} else if ( is.list(welfare) ){
-		stop("The general case of two welfare functions for project approval and status quo, 
+  # Auxiliary functions (ToDo: check!):
+  # Expected loss of project approval
+  elPa <- function(netBenefitSample){
+    - mean( netBenefitSample*(netBenefitSample<0) )
+  }
+  
+  # Expected loss of status quo
+  elSq <- function(netBenefitSample){
+    mean( netBenefitSample*(netBenefitSample>0) )
+  }
+  # Expected opportunity loss
+  eol <- function(netBenefitSample){
+    elPa_ <- elPa(netBenefitSample)
+    elSq_ <- elSq(netBenefitSample)
+    min(elPa_,elSq_)
+  }
+  # Probability of incurring a loss:
+  plPa<-function(x){
+    length(x[x<0])/length(x)
+  }
+  # Probability of experiencing no change in welfare:
+  pZero<-function(x){
+    length(x[x==0])/length(x)
+  }
+  # Probability of benefiting
+  pnbPa<-function(x){
+    length(x[x>0])/length(x)
+  }
+  # Return object:
+  thisAnalysis<-NULL
+  if ( is.function(welfare) ) {
+    # Perform the Monte Carlo simulation:
+    mcResult<-mcSimulation( estimate=estimate, 
+                            model_function=welfare, 
+                            numberOfModelRuns=numberOfModelRuns,
+                            randomMethod=randomMethod,
+                            functionSyntax=functionSyntax,
+                            relativeTolerance=relativeTolerance,
+                            verbosity=verbosity)
+    # Expected net benefit of project approval:
+    enbPa_<-colMeans(mcResult$y)
+    # Expected loss for project aproval:
+    elPa_<-apply(X=mcResult$y, MARGIN=2, FUN=elPa)
+    # Expected loss for status quo:
+    elSq_<-apply(X=mcResult$y, MARGIN=2, FUN=elSq)
+    # Expected opportunity loss:
+    eol_ <-pmin(elPa_,elSq_)
+    # The optimal choice (either project aproval (PA) or the status quo (SQ)):
+    optimalChoice_<-ifelse( eol_==elPa_, "PA", "SQ")
+    # Probability of incurring a loss:
+    plPa_<-apply(X=mcResult$y, MARGIN=2, FUN=plPa)
+    # Probability of experiencing no change in welfare:
+    pZero_<-apply(X=mcResult$y, MARGIN=2, FUN=pZero)
+    # Probability of benefiting
+    pnbPa_<-apply(X=mcResult$y, MARGIN=2, FUN=pnbPa)
+    # Fill return object:
+    thisAnalysis$call<-match.call()
+    thisAnalysis$mcResult<-mcResult
+    thisAnalysis$enbPa<-enbPa_
+    thisAnalysis$elPa<-elPa_
+    thisAnalysis$elSq<-elSq_
+    thisAnalysis$eol<-eol_
+    thisAnalysis$optimalChoice<-optimalChoice_
+    thisAnalysis$plPa<-plPa_
+    thisAnalysis$pZero<-pZero_
+    thisAnalysis$pnbPa<-pnbPa_
+  } else if ( is.list(welfare) ){
+    stop("The general case of two welfare functions for project approval and status quo, 
 				 respectively is not implemented, yet!")
-	} else {
-		stop("welfare must be either a function or a list of two functions.")
-	}
-	class(thisAnalysis) <- "welfareDecisionAnalysis"
-	return(thisAnalysis)
+  } else {
+    stop("welfare must be either a function or a list of two functions.")
+  }
+  class(thisAnalysis) <- "welfareDecisionAnalysis"
+  return(thisAnalysis)
 }
 ##############################################################################################
 # summary.welfareDecisionAnalysis(object, ...)
@@ -279,48 +309,87 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns,
 #' Summarize Welfare Decision Analysis results.
 #' 
 #'  Produce a summary of the results of a welfare decision analysis obtained by the function
-#'  \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}}.
+#'  \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}} and, if required, of the 
+#'  underlying Monte Carlo simulation.
 #' @param object An object of class \code{welfareDecisionAnalysis}.
 #' @param ... Further arguments passed to \code{\link{format}}.
 #' @inheritParams base::format
-#' @param probs \code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no 
-#'   quantiles will be displayed.
-#' @return An object of class \code{summary.welfareDecisionAnalysis}.
+#' @param variables.y \code{character} or \code{character vector}: Names of the components of the
+#'   welfare function (cf. argument \code{welfare} in method 
+#'   \code{\link{welfareDecisionAnalysis}}), whose Monte Carlo results shall be summarized.  
+#'   Defaults to all components.
+#' @param variables.x \code{character} or \code{character vector}: Names of the components of the
+#'   input variables to the welfare function, i.e. the names of the variables in the input
+#'   \code{estimate}, whose random sampling results used for the underlying Monte Carlo simulation
+#'   shall be summarized. Defaults to none.
+#' @param probs \code{numeric vector}: quantiles that shall be calculated. If \code{=NULL} no 
+#'  quantiles are returned. 
+#' @param moments \code{character vector}: moments that shall be calculated. Possible components are 
+#'   \code{"mean"}, \code{"sd"}, \code{"skewness"} or \code{"kurtosis"}. If \code{=NULL} no 
+#'   moments are returned. 
+#' @return An object of class \code{summary.welfareDecisionAnalysis}with list elements 
+#'   \describe{
+#'     \item{\code{$call}}{Containing the call of the function \code{welfareDecisionAnalysis}.}
+#'     \item{\code{$summary}}{
+#'       A list with elements \code{$wda} and \code{$mc}, each of which is a data frame. \code{$wda} 
+#'       contains the summary of the actual welfare decision analysis 
+#'       (cf. \code{\link{welfareDecisionAnalysis}}). \code{$mc} is the summary of the underlying
+#'       Monte Carlo simulation, if \code{probs} or \code{moments} are chosen or, otherwise, is
+#'       \code{NULL}. For details cf. \code{\link{summary.mcSimulation}}.
+#'       }
+#'   }
 #' @seealso \code{\link{welfareDecisionAnalysis}}, 
-#'  \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
+#'  \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}, 
+#'  \code{\link{summary.mcSimulation}}
+#' @examples
+#' wda<-welfareDecisionAnalysis(estimate(c("posnorm","posnorm"),
+#'                                       c(10000,  5000),
+#'                                       c(100000, 50000),
+#'                                       variable=c("revenue","costs")),
+#'                                       function(x) list(Profit=x$revenue - x$costs),
+#'                                       1000)
+#' summary(wda, variables.x=c("revenue", "costs"))
+#' summary(wda,probs=c(0.05,0.5,0.9))
+#' summary(wda,probs=c(0.05,0.5,0.9), moments=NULL)
+#' summary(wda,probs=c(0.05,0.5,0.9), moments="sd")
+#' summary(wda,probs=NULL)
+#' summary(wda,probs=NULL, moments=NULL)
 #' @export
 summary.welfareDecisionAnalysis <- function(object,
-																		 ...,
-																		 digits = max(3, getOption("digits")-3),
-																		 probs=c(0.05, 0.5, 0.95)){	
-# 	summaryDf<-data.frame(enbPa=object$enbPa, 
-# 												elPa=object$elPa, 
-# 												elSq=object$elSq, 
-# 												eol=object$eol, 
-# 												optimalChoice=object$optimalChoice)	
-summaryDf<-if(!is.null(probs)){
-       data.frame(  t(apply(X=object$mcResult$y, MARGIN=2, FUN=quantile, probs=probs)),
-                    enbPa=object$enbPa, 
-                    elPa=object$elPa, 
-                    elSq=object$elSq, 
-                    eol=object$eol, 
-                    optimalChoice=object$optimalChoice,
-                    check.names=FALSE)
-             }else{
-	         data.frame(enbPa=object$enbPa, 
-	                    elPa=object$elPa, 
-	                    elSq=object$elSq, 
-	                    eol=object$eol, 
-	                    optimalChoice=object$optimalChoice)
+                                            ...,
+                                            digits = max(3, getOption("digits")-3),
+                                            variables.y=names(object$mcResult$y),
+                                            variables.x=NULL,
+                                            probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1),
+                                            moments=c("mean", "sd", "skewness")){
+  # Summarize the actual welfare decision analysis:
+  summaryWda<-data.frame(enbPa=object$enbPa, 
+                         elPa=object$elPa, 
+                         elSq=object$elSq, 
+                         eol=object$eol, 
+                         optimalChoice=object$optimalChoice,
+                         plPa=object$plPa,
+                         pZero=object$pZero,
+                         pnbPa=object$pnbPa)
+  summaryWda<-format(x=summaryWda, digits=digits, ...)
+  # Combine this summary with the summary of the underlying Monte Carlo simulation, if required:
+  if(!is.null(probs) || !is.null(moments) ){
+    summaryMc<-summary(object$mcResult, 
+                       ...= ..., 
+                       digits=digits,
+                       variables.y=variables.y,
+                       variables.x=variables.x,
+                       probs=probs,
+                       moments=moments)$summary
+    summaryMc<-format(x=summaryMc, digits=digits, ...)
+  } else {
+    summaryMc<-NULL
   }
-	
-	summaryDf<-format(x=summaryDf, digits=digits, ...)
-	# ToDo: combine this summary with summary(object$mcResult)
-	res<-list(summary=summaryDf,
-						call=object$call)
-	
-	class(res)<-"summary.welfareDecisionAnalysis"
-	res
+  # Return value:
+  res<-list(summary=if(!is.null(summaryMc)) list(wda=summaryWda, mc=summaryMc) else list(wda=summaryWda),
+            call=object$call)
+  class(res)<-"summary.welfareDecisionAnalysis"
+  res
 }
 ##############################################################################################
 # print.summary.welfareDecisionAnalysis(x, ...)
@@ -335,10 +404,14 @@ summaryDf<-if(!is.null(probs)){
 #'   \code{\link{print.data.frame}}.
 #' @export
 print.summary.welfareDecisionAnalysis <- function(x, ...){
-	cat("Call:\n")
-	print(x$call)
-	cat("\nSummary of decision analysis:\n")
-	print(x$summary,...)
+  cat("Call:\n")
+  print(x$call)
+  cat("\nSummary of the welfare decision analysis:\n")
+  print(x$summary$wda,...)
+  if(!is.null(x$summary$mc)){
+    cat("\nDistributional details of the net benefit (PA) Monte Carlo simulation:\n")
+    print(x$summary$mc)
+  }
 }
 ##############################################################################################
 # hist.welfareDecisionAnalysis(x, ...)
@@ -370,10 +443,10 @@ print.summary.welfareDecisionAnalysis <- function(x, ...){
 #'   available in R see \code{\link[grDevices]{colors}}.
 #' @export
 hist.welfareDecisionAnalysis <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Histogram of " , xlab), ...,
-                              colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
-                              colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
-                              resultName=NULL){
-
+                                         colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
+                                         colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
+                                         resultName=NULL){
+  
   hist(x$mcResult, breaks=breaks, col=col, xlab=xlab, main=main, ...,
        colorQuantile   =colorQuantile, 
        colorProbability=colorProbability,
