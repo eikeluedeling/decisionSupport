@@ -252,11 +252,7 @@ as.estimate1d<-function(x, ...){
 #'  
 #' @seealso \code{\link{estimate1d}}; For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
 #'   methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}. For the default method: \code{\link{random}}.
-#' @examples
-#' # Generate log normal distributed random numbers:
-#' x<-random(estimate1d("lnorm",50,100), n=100000)
-#' quantile(x, probs=c(0.05, 0.95))
-#' hist(x, breaks=100)
+
 #' @export
 random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05, ...){
   # Overwrite argument "method" if rho[["method"]] is supplied:
@@ -297,20 +293,32 @@ random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05,
                             method="numeric",
                             relativeTolerance = relativeTolerance)
     }
+    else if(match(rho[["distribution"]], c("triang"), nomatch = 0)){
+      if(is.na(rho[["median"]]))
+        stop ("Median missing for calculation of", rho[["distribution"]], "distribution.")
+      x <-  mc2d::rtriang(n=n,
+                    min=rho[["lower"]],
+                    mode=rho[["median"]],
+                    max=rho[["upper"]])
+      warning("For the triangular distribution, the lower and upper bounds are interpreted as the extreme values (not the 90% confidence interval) and the 'median' as the mode (the most likely value).")
+      
+    }
+    
     else
       stop("\"", rho[["distribution"]], "\" is not a valid distribution type for method=\"", method, "\".")
     ### Generate warning if relative deviation from median (if provided) is greater than 
     ### relativeTolerance:
-    if ( !is.null(median<-rho[["median"]]) ){
-      median_calc<- quantile(x=x,probs=0.50)[["50%"]]
-      scale <- if( median > 0 ) median else NULL
-      if( !isTRUE( msg<-all.equal(median, median_calc,  scale=scale, tolerance=relativeTolerance) ) ){
-        warning("For method=\"calculate\": deviation of calculated \"median\" from supplied target value:\n",
-                "  Calculated value: ", median_calc, "\n  ",
-                "Target value:     ", median,   "\n  ",
-                msg)
+    if(!rho[["distribution"]]=="triang")
+      if ( !is.null(median<-rho[["median"]]) ){
+        median_calc<- quantile(x=x,probs=0.50)[["50%"]]
+        scale <- if( median > 0 ) median else NULL
+        if( !isTRUE( msg<-all.equal(median, median_calc,  scale=scale, tolerance=relativeTolerance) ) ){
+          warning("For method=\"calculate\": deviation of calculated \"median\" from supplied target value:\n",
+                  "  Calculated value: ", median_calc, "\n  ",
+                  "Target value:     ", median,   "\n  ",
+                  msg)
+        }
       }
-    }
   }
   ## Generate the random numbers by fitting the distribution parameters on lower and upper, and 
   ##  (if provided) on the median:
@@ -365,7 +373,7 @@ random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05,
     ### Generate warning if median is not provided:
     if ( is.null(rho[["median"]]) )
       warning("For method=\"fit\": no \"median\" supplied. Sometimes, this might not lead to the the desired
-                  distributions shape. Advise: check it.")
+              distributions shape. Advise: check it.")
   }
   else
     stop ("method must be either \"calculate\" or \"fit\".")
@@ -373,3 +381,8 @@ random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05,
   x
 }
 
+#' @examples
+#' # Generate log normal distributed random numbers:
+#' x<-random(estimate1d("lnorm",50,100), n=100000)
+#' quantile(x, probs=c(0.05, 0.95))
+#' hist(x, breaks=100)

@@ -42,13 +42,13 @@ NULL
 #'   \code{relativeTolerance} a warning is given.
 #' @param ... Optional arguments to be passed to the particular random number
 #'  generating function.
-#'  @export
+#' @export
 random <- function(rho,n,method, relativeTolerance, ...) UseMethod("random")
 ##############################################################################################
 # random.default(rho,n,method,...)
 ##############################################################################################
 #' The default method generates univariate random numbers specified by arbitrary quantiles.
-#'  @describeIn random Quantiles based univariate random number generation.
+#' @describeIn random Quantiles based univariate random number generation.
 #'  \describe{
 #'    \item{\bold{Arguments}}{
 #'       \describe{  
@@ -120,8 +120,8 @@ random.default <- function(rho=list(distribution="norm", probabilities=c(0.05,0.
     stop("rho must be a list with elements \"distribution\", \"probabilities\" and \"quantiles\"")
   if( is.null(rho[["distribution"]]) )
     stop("rho[[\"distribution\"]] must be supplied.")
-    if( is.null(rho[["probabilities"]]) || !all(!is.na(as.numeric(rho[["probabilities"]]))) )
-      stop("rho[\"probabilities\"] must be supplied.")
+  if( is.null(rho[["probabilities"]]) || !all(!is.na(as.numeric(rho[["probabilities"]]))) )
+    stop("rho[\"probabilities\"] must be supplied.")
   if( is.null(rho[["quantiles"]]) || !all(!is.na(as.numeric(rho[["quantiles"]]))) )
     stop("rho[\"quantiles\"] must be supplied.")
   if( length(rho[["probabilities"]])!=length(rho[["quantiles"]]) )
@@ -167,7 +167,7 @@ random.default <- function(rho=list(distribution="norm", probabilities=c(0.05,0.
 ##############################################################################################
 #' \code{random.vector} generates univariate random numbers drawn from a distribution purely defined
 #' empirically. 
-#'  @describeIn random Univariate random number generation by drawing from a given 
+#' @describeIn random Univariate random number generation by drawing from a given 
 #'    empirical sample.
 #'    \describe{
 #'       \item{\bold{Arguments}}{
@@ -203,7 +203,7 @@ random.default <- function(rho=list(distribution="norm", probabilities=c(0.05,0.
 #'    }  
 #' @export
 random.vector <- function(rho=runif(n=n), 
-                           n, method=NULL, relativeTolerance=NULL, ...){
+                          n, method=NULL, relativeTolerance=NULL, ...){
   # Return generated random numbers:
   sample(rho, size=n, replace=TRUE)
 }
@@ -247,7 +247,7 @@ random.vector <- function(rho=runif(n=n),
 #'    }
 #' @export
 random.data.frame <- function(rho=data.frame(uniform=runif(n=n)), 
-                          n, method=NULL, relativeTolerance=NULL, ...){
+                              n, method=NULL, relativeTolerance=NULL, ...){
   # Return generated random numbers:
   data.frame(rho[sample.int(n=nrow(rho), size=n, replace=TRUE),], row.names=NULL)
 }

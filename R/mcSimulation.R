@@ -240,8 +240,7 @@ NULL
 #'  # Show the simulation results:
 #'  print(summary(predictionProfit2))
 #'  hist(predictionProfit2) 
-#'  @seealso \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, 
-#'  \code{\link{estimate}}, \code{\link{random.estimate}}
+#' @seealso \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, \code{\link{estimate}}, \code{\link{random.estimate}}
 #' @export
 mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns, 
                          randomMethod="calculate", 

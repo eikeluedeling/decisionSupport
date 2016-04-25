@@ -52,7 +52,7 @@ NULL
 #'   IndividualEVPI is calculated; if \code{="all"}, the IndividualEVPI is calculated for all
 #'   variables. \dfn{Note:} depending on \code{numberOfModelRuns} and the complexity of
 #'   \code{welfare} this might take a long time.
-#'  @param sortEvpiAlong \code{character}: result name along which the summary of the IndividualEVPI
+#' @param sortEvpiAlong \code{character}: result name along which the summary of the IndividualEVPI
 #'    shall be sorted. Only relevant if \code{sortEvpiAlong!=NULL}. 
 #' @param oldInputStandard \code{logical}: If the old input standard should be used
 #' 	(\code{\link{estimate_read_csv_old}}).

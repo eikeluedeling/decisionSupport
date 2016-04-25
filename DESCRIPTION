@@ -40,14 +40,14 @@ URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
 Collate:
-    'rmvnorm90ci_exact.R'
-    'rdistq_fit.R'
-    'random.R'
-    'paramtnormci_numeric.R'
     'paramtnormci_fit.R'
+    'paramtnormci_numeric.R'
     'rtnorm90ci.R'
+    'rdistq_fit.R'
     'rdist90ci_exact.R'
     'estimate1d.R'
+    'random.R'
+    'rmvnorm90ci_exact.R'
     'estimate.R'
     'mcSimulation.R'
     'welfareDecisionAnalysis.R'
@@ -58,3 +58,4 @@ Collate:
     'decisionSupport-package.R'
     'plainNames2data.frameNames.R'
     'plsr.mcSimulation.R'
+RoxygenNote: 5.0.1

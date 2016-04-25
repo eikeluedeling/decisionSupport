@@ -1,4 +1,4 @@
-variable, 			distribution, lower,  upper
-productprice,  	norm,       	5,  		30
-costprice,    	norm,       	2,  		10
-sales,					norm,					10000,	100000
+variable,distribution,lower,upper
+productprice,norm,5,30
+costprice,norm,2,10
+sales,norm,10000,100000

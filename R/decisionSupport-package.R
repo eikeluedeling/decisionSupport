@@ -114,11 +114,15 @@ NULL
 #' @name decisionSupport-package
 #' @author Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
 #'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@@eikeluedeling.com}	
-#' @author Maintainer: Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de}
+#' @author Maintainer: Eike Luedeling \email{eike@@eikeluedeling.com}
 #' @references Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
 #'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
 #'   
 #'   Hugh Gravelle and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
+#' @importFrom grDevices dev.off png
+#' @importFrom graphics abline axis barplot hist par
+#' @importFrom stats qnorm quantile rbeta rcauchy rchisq rexp rf rgamma rlnorm rlogis rnorm rt runif rweibull sd
+#' @importFrom utils capture.output read.csv write.csv
 #'   
 #' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}	
 NULL

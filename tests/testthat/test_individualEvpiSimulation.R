@@ -99,7 +99,7 @@ test_that("Individual EVPI is calculated for 4-D partly correlated current estim
 })
 test_that("Individual EVPI is calculated for 4-D uncorrelated current estimate
            and 2 dimensional unnamed model function
-          (randomMethod=\"calculate\", functionSyntax=\"plainNamesDeprecated\") (1).",{
+          (randomMethod=\"calculate\", functionSyntax=\"plainNames\") (1).",{
             # Number of simulations:
             n=10
             # Create the current estimate from text:
@@ -125,7 +125,7 @@ test_that("Individual EVPI is calculated for 4-D uncorrelated current estimate
             individualEvpiResult<-individualEvpiSimulation(welfare=profitModel,
                                                            currentEstimate=currentEstimate,
                                                            numberOfModelRuns=n,
-                                                           functionSyntax="plainNamesDeprecated",
+                                                           functionSyntax="plainNames",
                                                            verbosity=0)
           })
 test_that("Example from Hubbard (2014), ch. 7, The value of information for ranges

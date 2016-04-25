@@ -194,7 +194,7 @@ test_that("Difference of two correlated normally distributed variables is normal
             expect_equal(sd(profitSimulation$y$output_1), sdProfitExpected, tolerance=tolerance)
           })
 test_that("5 dimensional estimate and 2 dimensional named model function are simulated:
-          (randomMethod=\"calculate\", functionSyntax=\"plainNamesDeprecated\") (1).",{
+          (randomMethod=\"calculate\", functionSyntax=\"plainNames\") (1).",{
             # Number of simulations (only a small number needed for the testing that its running):
             n=10
             # Define some model for the profit and schnecke:
@@ -213,10 +213,10 @@ test_that("5 dimensional estimate and 2 dimensional named model function are sim
                                              model_function=estimate5dModel2d, 
                                              numberOfModelRuns=n,
                                              randomMethod="calculate",
-                                             functionSyntax="plainNamesDeprecated")
+                                             functionSyntax="plainNames")
           })
 test_that("4 dimensional estimate and 2 dimensional unnamed model function are simulated:
-          (randomMethod=\"calculate\", functionSyntax=\"plainNamesDeprecated\") (1).",{
+          (randomMethod=\"calculate\", functionSyntax=\"plainNames\") (1).",{
             # Number of simulations:
             n=10
             # Create the current estimate from text:
@@ -241,14 +241,14 @@ test_that("4 dimensional estimate and 2 dimensional unnamed model function are s
                                              model_function=estimate4dModel2d, 
                                              numberOfModelRuns=n,
                                              randomMethod="calculate",
-                                             functionSyntax="plainNamesDeprecated",
+                                             functionSyntax="plainNames",
                                              verbosity=0)
             expect_false(is.null(profitSimulation$y$output_1))
             expect_false(is.null(profitSimulation$y$output_2))
             expect_true( is.null(profitSimulation$y$output_3))
           })
 test_that("2 dimensional estimate and 1 dimensional  model function returning an unnamed list are simulated:
-          (randomMethod=\"calculate\", functionSyntax=\"plainNamesDeprecated\") (1).",{
+          (randomMethod=\"calculate\", functionSyntax=\"plainNames\") (1).",{
             #########################################################
             # Create the estimate object:
             variable=c("revenue","costs")
@@ -268,7 +268,7 @@ test_that("2 dimensional estimate and 1 dimensional  model function returning an
             predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
                                              model_function=profit1,
                                              numberOfModelRuns=n,
-                                             functionSyntax="plainNamesDeprecated")
+                                             functionSyntax="plainNames")
             expect_false(is.null(predictionProfit1$y$output_1))
             expect_true(is.null(predictionProfit1$y$output_2))
             expect_true(is.null(predictionProfit1$y$output_3))

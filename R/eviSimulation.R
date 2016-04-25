@@ -149,8 +149,7 @@ NULL
 #'                      currentEstimate$marginal["revenue","upper"]))
 #' perfectInformationRevenue$marginal["revenue","distribution"]<-"const"
 #' perfectInformationRevenue$marginal["revenue","lower"]<-revenueConst 
-#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst 
-#'                                                        
+#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst
 #' # (a) A list with one element
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue)
 #' # Calculate the Expected Value of Information:
@@ -168,7 +167,7 @@ NULL
 #'                    currentEstimate$marginal["costs","upper"]))
 #' perfectInformationCosts$marginal["costs","distribution"]<-"const"
 #' perfectInformationCosts$marginal["costs","lower"]<-costsConst 
-#' perfectInformationCosts$marginal["costs","upper"]<-costsConst                                                  
+#' perfectInformationCosts$marginal["costs","upper"]<-costsConst
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 #'                           perfectInformationCosts=perfectInformationCosts)
 #' # Calculate the Expected Value of Information:
@@ -195,13 +194,13 @@ NULL
 #'                      currentEstimate$marginal["revenue","upper"]))
 #' perfectInformationRevenue$marginal["revenue","distribution"]<-"const"
 #' perfectInformationRevenue$marginal["revenue","lower"]<-revenueConst 
-#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst                                                      
+#' perfectInformationRevenue$marginal["revenue","upper"]<-revenueConst
 #' perfectInformationCosts<-currentEstimate
 #' costsConst<-mean(c(currentEstimate$marginal["costs","lower"], 
 #'                    currentEstimate$marginal["costs","upper"]))
 #' perfectInformationCosts$marginal["costs","distribution"]<-"const"
 #' perfectInformationCosts$marginal["costs","lower"]<-costsConst 
-#' perfectInformationCosts$marginal["costs","upper"]<-costsConst                                                    
+#' perfectInformationCosts$marginal["costs","upper"]<-costsConst
 #' prospectiveEstimate<-list(perfectInformationRevenue=perfectInformationRevenue,
 #'                           perfectInformationCosts=perfectInformationCosts)
 #' # Define the welfare function with two decision variables:
