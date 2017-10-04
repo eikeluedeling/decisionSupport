@@ -25,7 +25,7 @@ than \code{relativeTolerance} a warning is given.}
 \item{tolConv}{positive numerical value, the absolute convergence tolerance for reaching zero by fitting distributions
 \code{get.norm.par} will be shown.}
 
-\item{fit.weights}{numerical vector of the same length as a probabilities vector
+\item{fit.weights}{numerical vector of the same length as a probabilities vector 
 \code{p} containing positive values for weighting quantiles. By default all
 quantiles will be weighted by 1.}
 
