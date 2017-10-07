@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.102
-Date: 2017-10-04
+Version: 1.102.1
+Date: 2017-10-06
 Authors@R: c(
     person("Eike", "Luedeling",  email = "eike@eikeluedeling.com",  role = c("cre", "aut"), comment="ICRAF"),
     person("Lutz", "Göhring", email = "lutz.goehring@gmx.de", role = "aut", comment="ICRAF and Lutz Göhring Consulting"))
@@ -24,11 +24,11 @@ License: GPL-3
 Depends:
     R (>= 3.1.3)
 Imports:
+    chillR (>= 0.62),
     msm (>= 1.5),
     mvtnorm (>= 1.0.2),
     stats (>= 3.1.3)
 Suggests:
-    chillR (>= 0.62),
     eha (>= 2.4.2),
     mc2d (>= 0.1.15),
     nleqslv (>= 2.6),
@@ -59,8 +59,12 @@ Collate:
     'decisionSupport-package.R'
     'discount.R'
     'gompertz_yield.R'
+    'make_CPT.R'
     'plainNames2data.frameNames.R'
     'plsr.mcSimulation.R'
+    'random_state.R'
+    'sample_CPT.R'
+    'sample_simple_CPT.R'
     'temp_situations.R'
     'vv.R'
 RoxygenNote: 5.0.1
