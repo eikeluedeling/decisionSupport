@@ -228,4 +228,3 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
 \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}},
   \code{\link{summary.eviSimulation}}
 }
-

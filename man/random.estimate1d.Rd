@@ -93,4 +93,3 @@ parameters are determined by a one dimensional estimate (\code{\link{estimate1d}
 \code{\link{estimate1d}}; For \code{method="calculate"}: \code{\link{rdist90ci_exact}}; for \code{method="fit"}: \code{\link{rdistq_fit}}; for both
   methods: \code{\link{rposnorm90ci}} and \code{\link{rtnorm_0_1_90ci}}. For the default method: \code{\link{random}}.
 }
-

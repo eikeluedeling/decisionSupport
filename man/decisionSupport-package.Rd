@@ -90,12 +90,7 @@ easy-to-use interface.
    You should have received a copy of the GNU General Public License
    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 }
-\author{
-Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
- Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@eikeluedeling.com}
 
-Maintainer: Eike Luedeling \email{eike@eikeluedeling.com}
-}
 \references{
 Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
@@ -105,4 +100,9 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
 \seealso{
 \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}
 }
+\author{
+Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
+ Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@eikeluedeling.com}
 
+Maintainer: Eike Luedeling \email{eike@eikeluedeling.com}
+}

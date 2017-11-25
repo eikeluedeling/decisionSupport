@@ -24,4 +24,3 @@ exact.
 \seealso{
 \code{\link{random}}, \code{\link[mvtnorm]{rmvnorm}}
 }
-

@@ -48,6 +48,7 @@
 #' @return A list with elements \code{mean} and \code{sd}, i.e. the parameters of the underlying
 #'   normal distribution.
 #' @details For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
+#' #' @importFrom nleqslv nleqslv
 #'
 #' @seealso \code{\link[msm]{tnorm}}, \code{\link[nleqslv]{nleqslv}}
 #' @export

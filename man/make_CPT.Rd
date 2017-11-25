@@ -58,18 +58,17 @@ test_CPT<-make_CPT(parent_effects=list(c(-1,3),c(-4,2),c(-2,3,4),c(1,2,3)),
 
 
 }
-\author{
-Eike Luedeling
-}
 \references{
 Sjoekvist S & Hansson F, 2013. Modelling expert judgement into a Bayesian
 Belief Network - a method for consistent and robust determination of conditional
 probability tables. Master's thesis, Faculty of Engineering, Lund University;
 http://lup.lub.lu.se/luur/download?func=downloadFile&recordOId=3866733&fileOId=3866740
 }
+\author{
+Eike Luedeling
+}
 \keyword{"Bayesian}
 \keyword{"Likelihood}
 \keyword{CPT,}
 \keyword{Method"}
 \keyword{Network",}
-

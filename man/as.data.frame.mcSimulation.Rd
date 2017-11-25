@@ -31,4 +31,3 @@ Coerces Monte Carlo simulation results to a data frame.
 \seealso{
 \code{\link{as.data.frame}}
 }
-

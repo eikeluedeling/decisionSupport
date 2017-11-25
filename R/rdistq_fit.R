@@ -43,6 +43,7 @@
 #' @inheritParams rriskDistributions::rriskFitdist.perc
 #' @param verbosity \code{integer}; if \code{0} the function is silent; the larger the value the
 #'   more verbose is the output information.
+#' @importFrom rriskDistributions rriskFitdist.perc
 #' @details
 #'   The following table shows the available distributions and their identification 
 #'  (option: \code{distribution}) as a character string:

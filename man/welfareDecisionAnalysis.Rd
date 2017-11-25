@@ -207,4 +207,3 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{estimate}}, \code{\link{summary.welfareDecisionAnalysis}}
 }
-

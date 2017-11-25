@@ -24,6 +24,9 @@
 # along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################################
+#' @importFrom testthat test_check
+
+
 library(testthat)
 library(decisionSupport)
 

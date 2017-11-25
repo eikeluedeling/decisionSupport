@@ -78,4 +78,3 @@ This function integrates the most important features of
 	\code{\link{welfareDecisionAnalysis}}, \code{\link{individualEvpiSimulation}}, 
 	\code{\link{decisionSupport-package}}
 }
-

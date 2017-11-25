@@ -73,4 +73,3 @@ For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
 \seealso{
 \code{\link[msm]{tnorm}}, \code{\link[stats]{constrOptim}}
 }
-

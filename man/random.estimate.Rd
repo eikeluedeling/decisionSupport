@@ -67,4 +67,3 @@ distribution=c("norm","norm")
 \seealso{
 \code{\link{estimate}}, \code{\link{random.estimate1d}}, \code{\link{random}}
 }
-

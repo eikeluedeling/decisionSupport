@@ -42,6 +42,7 @@ The input function must be of the form:
   If there are local functions within the function \code{modelFunction} defined, whose arguments
   have identical names to any of the \code{plainNames} the function fails!
 }
+
 \examples{
  profit1<-function(){
    list(Profit=revenue-costs)
@@ -55,4 +56,3 @@ The input function must be of the form:
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{estimate}}
 }
-

@@ -39,8 +39,8 @@ truncated normal distribution from an arbitrary confidence interval.
 }
 \details{
 For details of the truncated normal distribution see \code{\link[msm]{tnorm}}.
+#' @importFrom nleqslv nleqslv
 }
 \seealso{
 \code{\link[msm]{tnorm}}, \code{\link[nleqslv]{nleqslv}}
 }
-

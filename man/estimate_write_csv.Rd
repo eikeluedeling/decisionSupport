@@ -35,4 +35,3 @@ The marginal information of the \code{estimate} is written to file \code{fileNam
 \seealso{
 \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
 }
-

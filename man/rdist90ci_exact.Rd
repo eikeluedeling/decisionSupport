@@ -88,4 +88,3 @@ hist(r<-rdist90ci_exact(distribution="lnorm", n=10000, lower=lower, upper=upper)
 print(quantile(x=r, probs=c(0.05,0.95)))
 print(summary(r))
 }
-

@@ -46,4 +46,3 @@ Perform a Partial Least Squares Regression (PLSR) of Monte Carlo simulation resu
 \code{\link[pls:summary.mvr]{summary.mvr}}, \code{\link[pls:biplot.mvr]{biplot.mvr}}, 
 \code{\link[pls:coef.mvr]{coef.mvr}}, \code{\link[pls:plot.mvr]{plot.mvr}},
 }
-

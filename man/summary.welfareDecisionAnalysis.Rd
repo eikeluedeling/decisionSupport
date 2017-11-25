@@ -33,4 +33,3 @@ Produce a summary of the results of a welfare decision analysis obtained by the 
 \code{\link{welfareDecisionAnalysis}}, 
  \code{\link{print.summary.welfareDecisionAnalysis}}, \code{\link{format}}
 }
-

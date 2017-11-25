@@ -14,4 +14,3 @@ corMat(x) <- value
 \description{
 Replace the correlation matrix.
 }
-

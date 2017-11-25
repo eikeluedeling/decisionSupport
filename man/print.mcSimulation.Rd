@@ -17,4 +17,3 @@ This function prints basic results from Monte Carlo simulation  and returns it i
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{print.data.frame}}
 }
-

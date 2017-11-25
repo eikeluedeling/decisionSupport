@@ -101,4 +101,3 @@ An estimate might consists of uncorrelated and correlated variables. This is ref
 
 \code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
 }
-

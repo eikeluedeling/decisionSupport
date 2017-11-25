@@ -31,4 +31,3 @@ Produces result summaries of an Expected Value of Information (EVI) simulation o
 \code{\link{summary.welfareDecisionAnalysis}}, \ifelse{latex}{\cr}{ }
  \code{\link{sort.summary.eviSimulation}}
 }
-

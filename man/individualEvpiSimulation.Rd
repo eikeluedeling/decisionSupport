@@ -97,4 +97,3 @@ hist(individualEvpiResult, breaks=100)
 \seealso{
 \code{\link{eviSimulation}}, \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}}
 }
-

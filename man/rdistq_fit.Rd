@@ -88,4 +88,3 @@ if ( requireNamespace("rriskDistributions", quietly = TRUE) ){
 \seealso{
 \code{\link[rriskDistributions]{rriskFitdist.perc}}
 }
-

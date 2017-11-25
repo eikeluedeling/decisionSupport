@@ -12,4 +12,3 @@ corMat(rho)
 \description{
 Return the correlation matrix of rho.
 }
-

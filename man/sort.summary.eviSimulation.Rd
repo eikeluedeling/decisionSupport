@@ -26,4 +26,3 @@ Sort summarized EVI simulation results according to their EVI.
 \seealso{
 \code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base]{sort}}
 }
-

@@ -18,4 +18,3 @@ This function prints the summary of of \code{mcSimulation} obtained by \code{\li
 \code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}}, 
   \code{\link{print.data.frame}}
 }
-

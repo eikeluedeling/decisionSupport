@@ -2,9 +2,9 @@
 % Please edit documentation in R/random.R
 \name{random}
 \alias{random}
-\alias{random.data.frame}
 \alias{random.default}
 \alias{random.vector}
+\alias{random.data.frame}
 \title{Quantiles or empirically based generic random number generation.}
 \usage{
 random(rho, n, method, relativeTolerance, ...)
@@ -169,6 +169,7 @@ empirical sample.
    }
  }
 }}
+
 \examples{
  x<-random(n=10000)
  hist(x,breaks=100)
@@ -182,4 +183,3 @@ empirical sample.
  hist(x,breaks=100)
  quantile(x,p=rho[["probabilities"]])
 }
-

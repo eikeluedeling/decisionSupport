@@ -187,4 +187,3 @@ follows:
 \seealso{
 \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, \code{\link{estimate}}, \code{\link{random.estimate}}
 }
-

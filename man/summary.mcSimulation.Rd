@@ -48,4 +48,3 @@ A summary of the results of a Monte Carlo simulation obtained by the function
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
 }
-
