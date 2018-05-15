@@ -1,6 +1,7 @@
 ---
 title: "Controlled burns in conifer forests"
 author: "Eike Luedeling and Cory Whitney, University of Bonn, Germany"
+date: "`r Sys.Date()`"
 csl: elsevier-harvard.csl
 bibliography: wildfire.bib
 output: rmarkdown::html_vignette
@@ -268,7 +269,7 @@ With this metric, we can compare the two forest management options.
 
 Here’s an illustration of the basic steps of the simulation:
 
-![Fig 1. Overview of the wildfire decision model](wildfire_diagram.PNG){width=500px}
+![Fig 1. Overview of the wildfire decision model](wildfire_diagram.png){width=500px}
 
 We now show how this overview can be translated into a probabilistic simulation using the ```decisionSupport``` package. We’ve already developed much of the code we’ll need, but we have to put it in the right frame, and we have to develop an input table, where we can specify our uncertainty about all the input variables.
 
@@ -465,7 +466,7 @@ All results are stored in the folder specified by ```outputPath```. The two summ
 
 Here’s the automatically generated histogram figure, based on 10,000 model runs:
 
-![Fig 2. Histogram of simulated net benefits of controlled burns, based on 10,000 model runs](MCresults/NPV_controlled_burning_distribution.PNG){width=500px}
+![Fig 2. Histogram of simulated net benefits of controlled burns, based on 10,000 model runs](MCResults/NPV_controlled_burning_distribution.png){width=500px}
 
 ```{r include=FALSE}
 mcSummary<-read.csv("MCResults/mcSummary.csv")
@@ -480,7 +481,7 @@ read.csv("MCResults/mcSummary.csv")
 ```
 The second figure is the VIP plot, i.e. a diagram showing the Variable Importance in the Projection, a metric to evaluate the significance of individual variables in a Projection-to-Latent-Structures (PLS) regression model:
 
-![Fig 3. Variable-importance-in-the-projection (VIP) plot for input variables to the burn.sim model. Colored bars indicate that variables have an important influence on the simulated outcome, with red bars indicating a negative impact, green bars a positive impacts](MCresults/NPV_controlled_burning_PLS_VIP.PNG){width=500px}
+![Fig 3. Variable-importance-in-the-projection (VIP) plot for input variables to the burn.sim model. Colored bars indicate that variables have an important influence on the simulated outcome, with red bars indicating a negative impact, green bars a positive impacts](MCResults/NPV_controlled_burning_PLS_VIP.png){width=500px}
 
 This figure indicates, which input variables had the strongest influence on the model outputs. If also contains a vertical line at VIP=0.8, which is commonly used as a threshold for considering variables as important for explaining variation in the response variable [@RN1]. In this plot, bars shown in green indicate that there is a positive relationship between values of the input variable and values of the output variable, while red bars imply a negative relationship. Variables that were not found to be important (according to the VIP=0.8 threshold) are shown in gray.
 

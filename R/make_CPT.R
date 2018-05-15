@@ -84,7 +84,7 @@ tmp<-tmp[nrow(tmp):1,]
 CPT<-matrix(0,nrow=child_n_states,ncol=prod(sapply(parent_effects,length)))
 
 if(length(gamma)==1)
-  for(i in 1:length(gamma))  CPT<-CPT+gamma[[i]][,tmp[i]] else
+  for(i in 1:length(gamma))  CPT<-CPT+gamma[[i]][,tmp] else
     for(i in 1:length(gamma))  CPT<-CPT+gamma[[i]][,tmp[i,]]
 CPT<-b^CPT
 

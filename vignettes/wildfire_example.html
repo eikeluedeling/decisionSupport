@@ -12,6 +12,7 @@
 
 <meta name="author" content="Eike Luedeling and Cory Whitney, University of Bonn, Germany" />
 
+<meta name="date" content="2017-11-27" />
 
 <title>Controlled burns in conifer forests</title>
 
@@ -267,6 +268,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Controlled burns in conifer forests</h1>
 <h4 class="author"><em>Eike Luedeling and Cory Whitney, University of Bonn, Germany</em></h4>
+<h4 class="date"><em>2017-11-27</em></h4>
 
 
 
@@ -339,20 +341,20 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 1     1    0          0
 ## 2     2    0          1
 ## 3     3    0          0
-## 4     4    0          1
+## 4     4    1          1
 ## 5     5    0          0
 ## 6     6    1          1
 ## 7     7    0          0
 ## 8     8    0          1
 ## 9     9    0          0
 ## 10   10    0          1
-## 11   11    0          0
+## 11   11    1          0
 ## 12   12    0          1
-## 13   13    1          0
+## 13   13    0          0
 ## 14   14    0          1
 ## 15   15    0          0
-## 16   16    0          1
-## 17   17    0          0
+## 16   16    1          1
+## 17   17    1          0
 ## 18   18    0          1
 ## 19   19    0          0
 ## 20   20    0          1</code></pre>
@@ -427,50 +429,50 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="sourceLine" id="cb9-25" data-line-number="25">  } <span class="co">#end of year loop 'no burn' scenario</span></div></code></pre>
 <p>At this point, the fire time series is complete, with all information stored in the data.frames <code>control</code> and <code>no.control</code>:</p>
 <pre class="sourceCode r" id="cb10"><code class="sourceCode r"><div class="sourceLine" id="cb10-1" data-line-number="1">control</div></code></pre>
-<pre><code>##    Year  Biomass   FireType
-## 1     1 38.96121       None
-## 2     2 63.24004 Controlled
-## 3     3 15.60725       None
-## 4     4 25.33296 Controlled
-## 5     5 15.60725       None
-## 6     6 25.33296 Controlled
-## 7     7 15.60725       None
-## 8     8 25.33296 Controlled
-## 9     9 15.60725       None
-## 10   10 25.33296 Controlled
-## 11   11 15.60725       None
-## 12   12 25.33296 Controlled
-## 13   13 15.60725       Mild
-## 14   14 18.29975 Controlled
-## 15   15 15.60725       None
-## 16   16 25.33296 Controlled
-## 17   17 15.60725       None
-## 18   18 25.33296 Controlled
-## 19   19 15.60725       None
-## 20   20 25.33296 Controlled</code></pre>
+<pre><code>##    Year   Biomass   FireType
+## 1     1  75.94962       None
+## 2     2 107.62400 Controlled
+## 3     3  19.84516       None
+## 4     4  28.12147 Controlled
+## 5     5  19.84516       None
+## 6     6  28.12147 Controlled
+## 7     7  19.84516       None
+## 8     8  28.12147 Controlled
+## 9     9  19.84516       None
+## 10   10  28.12147 Controlled
+## 11   11  19.84516       Mild
+## 12   12  13.76171 Controlled
+## 13   13  19.84516       None
+## 14   14  28.12147 Controlled
+## 15   15  19.84516       None
+## 16   16  28.12147 Controlled
+## 17   17  19.84516       Mild
+## 18   18  13.76171 Controlled
+## 19   19  19.84516       None
+## 20   20  28.12147 Controlled</code></pre>
 <pre class="sourceCode r" id="cb12"><code class="sourceCode r"><div class="sourceLine" id="cb12-1" data-line-number="1">no.control</div></code></pre>
 <pre><code>##    Year    Biomass FireType
-## 1     1  38.961215     None
-## 2     2  63.240045     None
-## 3     3 102.648321     None
-## 4     4 166.614016     None
-## 5     5 270.440179     None
-## 6     6 438.966012   Severe
-## 7     7   3.718431     None
-## 8     8   6.035585     None
-## 9     9   9.796683     None
-## 10   10  15.901523     None
-## 11   11  25.810618     None
-## 12   12  41.894603     None
-## 13   13  68.001386     Mild
-## 14   14  18.299750     None
-## 15   15  29.703310     None
-## 16   16  48.213041     None
-## 17   17  78.257183     None
-## 18   18 127.023446     None
-## 19   19 206.178593     None
-## 20   20 334.659573     None</code></pre>
-<p>In the above simulation, the <code>controlled_burning_frequency</code> was 2 and the severity_threshold 81.</p>
+## 1     1  75.949618     None
+## 2     2 107.623997     None
+## 3     3 152.508005     None
+## 4     4 216.110646   Severe
+## 5     5   4.237791     None
+## 6     6   6.005138     Mild
+## 7     7  13.761705     None
+## 8     8  19.500951     None
+## 9     9  27.633717     None
+## 10   10  39.158210     None
+## 11   11  55.488930     Mild
+## 12   12  13.761705     None
+## 13   13  19.500951     None
+## 14   14  27.633717     None
+## 15   15  39.158210     None
+## 16   16  55.488930     Mild
+## 17   17  13.761705     Mild
+## 18   18  13.761705     None
+## 19   19  19.500951     None
+## 20   20  27.633717     None</code></pre>
+<p>In the above simulation, the <code>controlled_burning_frequency</code> was 2 and the severity_threshold 75.</p>
 <p>With this information we can move on to computing the cost implications for each scenario. We only consider three types of costs: the cost of controlled burning (<code>cost_of_controlled_burning</code>), the cost of fighting fires (<code>fire_fighting_cost</code>), and the value of the environmental damage caused by a fire (<code>env_imp</code>). We distinguish between severe and mild fires, so we get separate variables for the cost of firefighting (<code>fire_fighting_cost_mild_fire</code> and <code>fire_fighting_cost_severe_fire</code>) and the environmental impacts (<code>env_imp_mild_fire</code> and <code>env_imp_severe_fire</code>). For each year and each scenario, the applicable costs are selected (depending on the fire type) and added up to produce the total cost for each option. The result is then multiplied by the area under consideration (<code>area_size</code>) to produce the total cost.</p>
 <pre class="sourceCode r" id="cb14"><code class="sourceCode r"><div class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># calculate costs of no.control treatment -------------------------</span></div>
 <div class="sourceLine" id="cb14-2" data-line-number="2">  </div>
@@ -503,18 +505,19 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <pre class="sourceCode r" id="cb15"><code class="sourceCode r"><div class="sourceLine" id="cb15-1" data-line-number="1">benefit_of_controlled_burning &lt;-<span class="st"> </span>bottomline_contr_burn <span class="op">-</span><span class="st"> </span>bottomline_no_burn</div></code></pre>
 <p>This produces, for example:</p>
 <pre class="sourceCode r" id="cb16"><code class="sourceCode r"><div class="sourceLine" id="cb16-1" data-line-number="1">bottomline_no_burn</div></code></pre>
-<pre><code>##  [1]     0.0000     0.0000     0.0000     0.0000     0.0000 -8379.4177
-##  [7]     0.0000     0.0000     0.0000     0.0000     0.0000     0.0000
-## [13]  -483.1549     0.0000     0.0000     0.0000     0.0000     0.0000
-## [19]     0.0000     0.0000</code></pre>
+<pre><code>##  [1]      0.000      0.000      0.000 -12862.685      0.000   -137.979
+##  [7]      0.000      0.000      0.000      0.000   -137.979      0.000
+## [13]      0.000      0.000      0.000   -137.979   -137.979      0.000
+## [19]      0.000      0.000</code></pre>
 <pre class="sourceCode r" id="cb18"><code class="sourceCode r"><div class="sourceLine" id="cb18-1" data-line-number="1">bottomline_contr_burn</div></code></pre>
-<pre><code>##  [1]    0.0000 -638.7930    0.0000 -638.7930    0.0000 -638.7930    0.0000
-##  [8] -638.7930    0.0000 -638.7930    0.0000 -638.7930 -483.1549 -638.7930
-## [15]    0.0000 -638.7930    0.0000 -638.7930    0.0000 -638.7930</code></pre>
+<pre><code>##  [1]    0.000 -677.240    0.000 -677.240    0.000 -677.240    0.000
+##  [8] -677.240    0.000 -677.240 -137.979 -677.240    0.000 -677.240
+## [15]    0.000 -677.240 -137.979 -677.240    0.000 -677.240</code></pre>
 <pre class="sourceCode r" id="cb20"><code class="sourceCode r"><div class="sourceLine" id="cb20-1" data-line-number="1">benefit_of_controlled_burning</div></code></pre>
-<pre><code>##  [1]    0.000 -638.793    0.000 -638.793    0.000 7740.625    0.000
-##  [8] -638.793    0.000 -638.793    0.000 -638.793    0.000 -638.793
-## [15]    0.000 -638.793    0.000 -638.793    0.000 -638.793</code></pre>
+<pre><code>##  [1]     0.0000  -677.2400     0.0000 12185.4445     0.0000  -539.2611
+##  [7]     0.0000  -677.2400     0.0000  -677.2400     0.0000  -677.2400
+## [13]     0.0000  -677.2400     0.0000  -539.2611     0.0000  -677.2400
+## [19]     0.0000  -677.2400</code></pre>
 <p>The last step in this decision model is to compute the total benefits by summing up the yearly values. A slight complication in this is that very few people are indifferent about the time at which they are faced with costs or benefits. Most people would prefer to have income now over having that same income in the future, and they feel the opposite way about expenses (most prefer expenses later). This characteristic is known as the time preference. We also say that people ‘discount’ future costs and benefits. This is considered when calculating the so-called Net Present Value (NPV), which discounts future costs or benefits by an investor-specific discount rate. Usually, the further in the future these costs and benefits occur, the lower their perceived value. <code>decisionSupport</code> provides a discounting function called <code>discount()</code>, which implements the standard equation used by economists to compute the NPV. For example, a discount rate of 4% applied to a regular income stream of 100 dollars per year over 10 years would produce:</p>
 <pre class="sourceCode r" id="cb22"><code class="sourceCode r"><div class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">discount</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">100</span>,<span class="dv">10</span>)),<span class="dt">discount_rate =</span> <span class="dv">4</span>)</div></code></pre>
 <pre><code>##  [1] 100.00000  96.15385  92.45562  88.89964  85.48042  82.19271  79.03145
@@ -746,7 +749,7 @@ decisionSupport(inputFilePath = &quot;wildfire_input_table.csv&quot;, #input fil
 <p>Luedeling, E., Gassner, A., 2012. Partial least squares regression for analyzing walnut phenology in california. Agricultural and Forest Meteorology 158, 43–52. <a href="https://doi.org/10.1016/j.agrformet.2011.10.020" class="uri">https://doi.org/10.1016/j.agrformet.2011.10.020</a></p>
 </div>
 <div id="ref-RN3">
-<p>Luedeling, E., Göhring, L., 2017. DecisionSupport: Quantitative support of decision making under uncertainty. <a href="https://cran.r-project.org/web/packages/decisionSupport/index.html" class="uri">https://cran.r-project.org/web/packages/decisionSupport/index.html</a></p>
+<p>Luedeling, E., Göhring, L., 2017. R package decisionSupport: Quantitative support of decision making under uncertainty. <a href="https://CRAN.R-project.org/package=decisionSupport" class="uri">https://CRAN.R-project.org/package=decisionSupport</a></p>
 </div>
 <div id="ref-RN4">
 <p>Luedeling, E., Oord, A., Kiteme, B., Ogalleh, S., Malesu, M., Shepherd, K.D., De Leeuw, J., 2015. Fresh groundwater for wajir – ex-ante assessment of uncertain benefits for multiple stakeholders in a water supply project in northern kenya. Frontiers in Environmental Science 3, Article 16, 1–18. <a href="https://doi.org/10.3389/fenvs.2015.00016" class="uri">https://doi.org/10.3389/fenvs.2015.00016</a></p>
