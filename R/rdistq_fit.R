@@ -238,7 +238,7 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
                            FUN=function(x_) length(x[x<=x_])/n
   )
   for( j in seq(along=quantiles) ){
-        scale <- if( abs(quantiles[[j]]) > 0 ) quantiles[[j]] else NULL
+        scale <- if( abs(quantiles[[j]]) > 0 ) abs(quantiles[[j]]) else NULL
         if( !isTRUE( msg<-all.equal(quantiles[[j]], quantiles_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
           warning("Fitted value of ", 100*percentiles[[j]], "%-quantile: ", quantiles_calc[[j]], "\n  ",
                   "Target value of ", 100*percentiles[[j]], "%-quantile: ", quantiles[[j]],   "\n  ",

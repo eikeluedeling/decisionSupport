@@ -5,10 +5,10 @@
 \title{Plot Histograms of results of an EVI simulation}
 \usage{
 \method{hist}{eviSimulation}(x, breaks = 100, col = NULL,
-  mainSuffix = " welfare simulation result", ..., colorQuantile = c("GREY",
-  "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"),
-  colorProbability = c(1, 0.95, 0.75, 0.55, 0.45, 0.25, 0.05),
-  resultName = NULL)
+  mainSuffix = " welfare simulation result", ...,
+  colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE",
+  "YELLOW", "GREY"), colorProbability = c(1, 0.95, 0.75, 0.55, 0.45,
+  0.25, 0.05), resultName = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{eviSimulation}.}

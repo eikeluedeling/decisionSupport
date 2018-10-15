@@ -4,8 +4,9 @@
 \alias{plsr.mcSimulation}
 \title{Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.}
 \usage{
-plsr.mcSimulation(object, resultName = NULL, variables.x = names(object$x),
-  method = "oscorespls", scale = TRUE, ncomp = 2, ...)
+plsr.mcSimulation(object, resultName = NULL,
+  variables.x = names(object$x), method = "oscorespls", scale = TRUE,
+  ncomp = 2, ...)
 }
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}

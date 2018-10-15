@@ -5,8 +5,8 @@
 \title{Fit parameters of truncated normal distribution based on a confidence interval.}
 \usage{
 paramtnormci_fit(p, ci, median = mean(ci), lowerTrunc = -Inf,
-  upperTrunc = Inf, relativeTolerance = 0.05, fitMethod = "Nelder-Mead",
-  ...)
+  upperTrunc = Inf, relativeTolerance = 0.05,
+  fitMethod = "Nelder-Mead", ...)
 }
 \arguments{
 \item{p}{\code{numeric} 2-dimensional vector; probabilities of upper and lower bound of the

@@ -4,8 +4,8 @@
 \alias{sample_simple_CPT}
 \title{Make Conditional Probability tables using the likelihood method}
 \usage{
-sample_simple_CPT(parent_list, child_states_n, child_prior = NULL, b = 2,
-  obs_states = NULL)
+sample_simple_CPT(parent_list, child_states_n, child_prior = NULL,
+  b = 2, obs_states = NULL)
 }
 \arguments{
 \item{parent_list}{named list of parameters for the parent nodes containing a

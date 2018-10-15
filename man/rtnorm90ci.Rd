@@ -6,8 +6,9 @@
 \alias{rtnorm_0_1_90ci}
 \title{90\%-confidence interval based truncated normal random number generation.}
 \usage{
-rtnorm90ci(n, ci, median = mean(ci), lowerTrunc = -Inf, upperTrunc = Inf,
-  method = "numeric", relativeTolerance = 0.05, ...)
+rtnorm90ci(n, ci, median = mean(ci), lowerTrunc = -Inf,
+  upperTrunc = Inf, method = "numeric", relativeTolerance = 0.05,
+  ...)
 
 rposnorm90ci(n, lower, median = mean(c(lower, upper)), upper,
   method = "numeric", relativeTolerance = 0.05, ...)

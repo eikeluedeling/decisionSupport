@@ -4,8 +4,8 @@
 \alias{chance_event}
 \title{simulate occurrence of random events}
 \usage{
-chance_event(chance, value_if = 1, value_if_not = 0, n = 1, CV_if = 0,
-  CV_if_not = CV_if, one_draw = FALSE)
+chance_event(chance, value_if = 1, value_if_not = 0, n = 1,
+  CV_if = 0, CV_if_not = CV_if, one_draw = FALSE)
 }
 \arguments{
 \item{chance}{probability that the risky event will occur (between 0 and 1)}

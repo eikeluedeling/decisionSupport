@@ -9,9 +9,9 @@
 \usage{
 random(rho, n, method, relativeTolerance, ...)
 
-\method{random}{default}(rho = list(distribution = "norm", probabilities =
-  c(0.05, 0.95), quantiles = c(-qnorm(0.95), qnorm(0.95))), n, method = "fit",
-  relativeTolerance = 0.05, ...)
+\method{random}{default}(rho = list(distribution = "norm", probabilities
+  = c(0.05, 0.95), quantiles = c(-qnorm(0.95), qnorm(0.95))), n,
+  method = "fit", relativeTolerance = 0.05, ...)
 
 \method{random}{vector}(rho = runif(n = n), n, method = NULL,
   relativeTolerance = NULL, ...)
@@ -36,14 +36,6 @@ generating function.}
 \description{
 These functions generate random numbers for parametric distributions, parameters of which are 
 determined by given quantiles or for distributions purely defined empirically.
-
-The default method generates univariate random numbers specified by arbitrary quantiles.
-
-\code{random.vector} generates univariate random numbers drawn from a distribution purely defined
-empirically.
-
-\code{random.data.frame} generates multivariate random numbers drawn from a distribution 
-purely defined empirically.
 }
 \section{Methods (by class)}{
 \itemize{

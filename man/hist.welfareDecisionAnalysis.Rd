@@ -7,8 +7,8 @@
 \method{hist}{welfareDecisionAnalysis}(x, breaks = 100, col = NULL,
   xlab = NULL, main = paste("Histogram of ", xlab), ...,
   colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE",
-  "YELLOW", "GREY"), colorProbability = c(1, 0.95, 0.75, 0.55, 0.45, 0.25,
-  0.05), resultName = NULL)
+  "YELLOW", "GREY"), colorProbability = c(1, 0.95, 0.75, 0.55, 0.45,
+  0.25, 0.05), resultName = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{welfareDecisionAnalysis}.}
