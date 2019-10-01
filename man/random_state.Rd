@@ -28,5 +28,9 @@ random_state(states=c("very low","low","medium","high","very high"),
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{"conditional}
+\keyword{"random}
+\keyword{CPTs}
+\keyword{probability}
+\keyword{state"}
+\keyword{table"}

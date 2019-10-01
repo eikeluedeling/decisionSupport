@@ -22,7 +22,7 @@
 #' the effects of a situation that arises with a probability p_occurrence and disappears again
 #' with a probability p_resolution
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords utility "temporary situations"
 #' 
 #' @examples
 #' 

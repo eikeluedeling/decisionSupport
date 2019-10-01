@@ -31,7 +31,7 @@
 #' does not occur (both optionally with artificial variation)
 #' @author Eike Luedeling
 #' @importFrom stats rbinom
-#' @keywords ~kwd1 ~kwd2
+#' @keywords utility
 #' @examples
 #' 
 #' chance_event(0.6,6)

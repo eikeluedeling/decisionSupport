@@ -13,7 +13,7 @@
 #' parent variables.
 #' @return one of the states of the child node belonging to the CPT.
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords CPT sampling
 #' @importFrom stats runif
 #' 
 #' @examples

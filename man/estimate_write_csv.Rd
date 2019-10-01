@@ -20,9 +20,9 @@ separate column, otherwise as row names.}
 TRUE, any character or factor columns will be surrounded by double quotes.
 If a numeric vector, its elements are taken as the indices of columns to
 quote. In both cases, row and column names are quoted if they are written.
-If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.}
+If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.table}}.}
 
-\item{...}{Further parameters to be passed to \code{\link[utils]{write.csv}}.}
+\item{...}{Further parameters to be passed to \code{\link[utils]{write.table}}.}
 }
 \description{
 This function writes an \code{\link{estimate}} to the specified csv file(s).
@@ -33,5 +33,5 @@ The marginal information of the \code{estimate} is written to file \code{fileNam
   file \code{<marginal-filename>_cor.csv}.
 }
 \seealso{
-\code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
+\code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.table}}
 }

@@ -38,7 +38,7 @@ NULL
 #' \subsection{Deprecated input standard (\code{estimate_read_csv_old})}{
 #'    File name structure of the correlation file: \code{<marginal-filename>.csv_correlations.csv}\cr
 #' }
-#' @seealso \code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
+#' @seealso \code{\link{estimate_read_csv}}, \code{\link[utils]{read.table}}, \code{\link{estimate}}
 #' @export
 estimate_read_csv_old<-function(fileName, strip.white=TRUE, ...){
   .Deprecated("estimate_read_csv")

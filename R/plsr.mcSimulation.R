@@ -43,9 +43,9 @@ NULL
 #'   names of the variables in the input \code{estimate} which random sampling
 #'   results shall be displayed. Defaults to all components.
 #' @inheritParams pls::plsr
-#' @param ... further arguments to be passed to \code{\link[pls:plsr]{plsr}}.
+#' @param ... further arguments to be passed to \code{\link[pls:mvr]{plsr}}.
 #' @return An object of class \code{\link[pls:mvr]{mvr}}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link[pls:plsr]{plsr}}, 
+#' @seealso \code{\link{mcSimulation}}, \code{\link[pls:mvr]{plsr}}, 
 #' \code{\link[pls:summary.mvr]{summary.mvr}}, \code{\link[pls:biplot.mvr]{biplot.mvr}}, 
 #' \code{\link[pls:coef.mvr]{coef.mvr}}, \code{\link[pls:plot.mvr]{plot.mvr}},
 #' @export

@@ -134,7 +134,7 @@ rdistq_fit <- function(distribution, n, percentiles=c(0.05,0.5,0.95), quantiles,
   ## Consistency of arguments:
   if ( length(percentiles) != length(quantiles) )
     stop("length(percentiles) != length(quantiles)" )
-  if( any( percentiles < 0 || percentiles > 1 ) )
+  if( any( any(percentiles < 0) || any(percentiles > 1) ) )
     stop( "All elements of \"percentiles\" must lie between 0 and 1!")
   # Fit the distribution to the given quantiles:
   capture.output(dists<-try(rriskDistributions::rriskFitdist.perc(p=percentiles,

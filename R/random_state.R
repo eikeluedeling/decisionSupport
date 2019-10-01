@@ -8,7 +8,7 @@
 #' not add up to 1, they are automatically normalized.
 #' @return one of the states, drawn randomly according to the specified probabilities.
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords CPTs "conditional probability table" "random state"
 #' @importFrom stats runif
 #' 
 #' @examples

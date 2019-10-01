@@ -15,7 +15,7 @@
 #' (NPV) as a numeric value. If calculate_NPV=FALSE, the time-discounted values
 #' are returned as a numeric vector.
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords "discount rate" utility
 #' @examples
 #' 
 #' x<-c(3,6,2,5,4,3,9,0,110)

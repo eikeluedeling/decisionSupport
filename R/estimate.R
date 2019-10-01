@@ -165,9 +165,9 @@ estimate<-function(distribution, lower, upper, ..., correlation_matrix=NULL){
   ### Check argument types:
   if ( any(is.null(distribution) || !is.character(distribution)) )
     stop("\"distribution\" must be supplied as character string.")
-  if ( any(is.null(lower) || is.na(lower<-as.numeric(lower))) )
+  if ( any(is.null(lower) || any(is.na(lower<-as.numeric(lower)))) )
     stop("\"lower\" must be supplied as numeric.")
-  if ( any(is.null(upper) || is.na(upper<-as.numeric(upper))) )
+  if ( any(is.null(upper) || any(is.na(upper<-as.numeric(upper)))) )
     stop("\"upper\" must be supplied as numeric.")
   #### Check equality of dimension:
   if ( length(distribution) != length(lower)  || length(distribution) != length(upper) )
@@ -451,7 +451,7 @@ corMat.estimate<-function(rho){
 #' @param fileName Name of the file containing the marginal information of the estimate that 
 #' should be read.
 #' @inheritParams utils::read.csv
-#' @param ... Further parameters to be passed to \code{\link[utils]{read.csv}}.
+#' @param ... Further parameters to be passed to \code{\link[utils]{read.table}}.
 #' @return An object of type \code{\link{estimate}} which element \code{$marginal} is read from 
 #'  file \code{fileName} and which element \code{$correlation_matrix} is read from file
 #'  \code{gsub(".csv","_cor.csv",fileName)}.
@@ -495,7 +495,7 @@ corMat.estimate<-function(rho){
 #'      The matrix must be given in symmetric form.
 #'   }
 #' }
-#' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
+#' @seealso \code{\link{estimate_write_csv}}, \code{\link[utils]{read.table}}, \code{\link{estimate}}
 #' @examples
 #'  # Read the joint estimate information for the variables "sales", "productprice" and 
 #'  # "costprice" from file:
@@ -546,13 +546,13 @@ estimate_read_csv <- function(fileName, strip.white=TRUE, ...){
 #'   TRUE, any character or factor columns will be surrounded by double quotes.
 #'   If a numeric vector, its elements are taken as the indices of columns to
 #'   quote. In both cases, row and column names are quoted if they are written.
-#'   If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.csv}}.
-#' @param ... Further parameters to be passed to \code{\link[utils]{write.csv}}.
+#'   If FALSE, nothing is quoted. Parameter is passed on to \code{\link{write.table}}.
+#' @param ... Further parameters to be passed to \code{\link[utils]{write.table}}.
 #' @details
 #'   The marginal information of the \code{estimate} is written to file \code{fileName=<marginal-filename>.csv}. If 
 #'   the estimate contains correlated variables, the correlation matrix is written to the separate
 #'   file \code{<marginal-filename>_cor.csv}.
-#' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.csv}}
+#' @seealso \code{\link{estimate_read_csv}}, \code{\link{estimate}}, \code{\link[utils]{write.table}}
 #' @export
 estimate_write_csv <- function(estimate, fileName, varNamesAsColumn=TRUE, quote=FALSE, ...){
   marginalFilename=fileName

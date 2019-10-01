@@ -20,7 +20,7 @@ should be read.}
     (including the exact meaning of \sQuote{white space}),
     remembering that the columns may include the row names.}
 
-\item{...}{Further parameters to be passed to \code{\link[utils]{read.csv}}.}
+\item{...}{Further parameters to be passed to \code{\link[utils]{read.table}}.}
 }
 \value{
 An object of type \code{\link{estimate}} which element \code{$marginal} is read from 
@@ -97,7 +97,7 @@ An estimate might consists of uncorrelated and correlated variables. This is ref
  print(parameterEstimate)
 }
 \seealso{
-\code{\link{estimate_write_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
+\code{\link{estimate_write_csv}}, \code{\link[utils]{read.table}}, \code{\link{estimate}}
 
-\code{\link{estimate_read_csv}}, \code{\link[utils]{read.csv}}, \code{\link{estimate}}
+\code{\link{estimate_read_csv}}, \code{\link[utils]{read.table}}, \code{\link{estimate}}
 }

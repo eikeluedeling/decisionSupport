@@ -61,5 +61,6 @@ plot(valvar)
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{"value}
+\keyword{utility}
+\keyword{varier"}

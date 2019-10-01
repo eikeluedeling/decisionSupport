@@ -37,7 +37,7 @@
 #' @param upper \code{numeric vector}: upper bound of the 90\% confidence interval.
 #' @param correlationMatrix \code{numeric matrix}: symmetric matrix which is the correlation matrix of the 
 #'   multivariate normal distribution. In particular, all diagonal elements must be equal to 1. 
-#' @seealso \code{\link{random}}, \code{\link[mvtnorm]{rmvnorm}}
+#' @seealso \code{\link{random}}, \code{\link[mvtnorm]{Mvnorm}}
 #' @export
 rmvnorm90ci_exact <- function(n, lower, upper, correlationMatrix){
   correlationMatrix<-as.matrix(correlationMatrix)

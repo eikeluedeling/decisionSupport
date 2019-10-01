@@ -50,5 +50,5 @@ sample_simple_CPT(parent_list=list(management_intensity=c(5,2),inputs=c(5,1)),5,
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{CPT}
+\keyword{sampling}

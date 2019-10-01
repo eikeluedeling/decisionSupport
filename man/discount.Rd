@@ -39,5 +39,6 @@ discount(x,discount_rate,calculate_NPV=TRUE)
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{"discount}
+\keyword{rate"}
+\keyword{utility}

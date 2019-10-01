@@ -23,7 +23,7 @@
 #' CPT and the obs_states provided.
 #' @importFrom chillR interpolate_gaps
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords CPT sampling
 #' 
 #' @examples
 #' 

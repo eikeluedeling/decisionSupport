@@ -27,7 +27,7 @@
 #' specified trends. Variation is determined by the given coefficient of
 #' variation var_CV
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords "value varier" utility
 #' @examples
 #' 
 #' valvar<-vv(100,10,30)

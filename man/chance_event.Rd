@@ -62,5 +62,4 @@ chance_event(chance=0.5,
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{utility}

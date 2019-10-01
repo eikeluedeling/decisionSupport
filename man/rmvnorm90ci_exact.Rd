@@ -22,5 +22,5 @@ determined by the 90\%-confidence interval. The calculation of \code{mean} and \
 exact.
 }
 \seealso{
-\code{\link{random}}, \code{\link[mvtnorm]{rmvnorm}}
+\code{\link{random}}, \code{\link[mvtnorm]{Mvnorm}}
 }

@@ -38,5 +38,5 @@ sample_CPT(CPT=test_CPT,states=c("low","A","2","Left"))
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{CPT}
+\keyword{sampling}

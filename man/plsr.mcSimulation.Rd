@@ -34,7 +34,7 @@ results shall be displayed. Defaults to all components.}
 
 \item{ncomp}{the number of components to include in the model (see below).}
 
-\item{...}{further arguments to be passed to \code{\link[pls:plsr]{plsr}}.}
+\item{...}{further arguments to be passed to \code{\link[pls:mvr]{plsr}}.}
 }
 \value{
 An object of class \code{\link[pls:mvr]{mvr}}.
@@ -43,7 +43,7 @@ An object of class \code{\link[pls:mvr]{mvr}}.
 Perform a Partial Least Squares Regression (PLSR) of Monte Carlo simulation results.
 }
 \seealso{
-\code{\link{mcSimulation}}, \code{\link[pls:plsr]{plsr}}, 
+\code{\link{mcSimulation}}, \code{\link[pls:mvr]{plsr}}, 
 \code{\link[pls:summary.mvr]{summary.mvr}}, \code{\link[pls:biplot.mvr]{biplot.mvr}}, 
 \code{\link[pls:coef.mvr]{coef.mvr}}, \code{\link[pls:plot.mvr]{plot.mvr}},
 }

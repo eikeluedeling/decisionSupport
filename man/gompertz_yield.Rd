@@ -79,5 +79,6 @@ gompertz_yield(max_harvest=1000,
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{"yield}
+\keyword{function"}
+\keyword{utility}

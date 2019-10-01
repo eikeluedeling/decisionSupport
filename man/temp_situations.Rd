@@ -50,5 +50,6 @@ var_CV_situation=40)
 \author{
 Eike Luedeling
 }
-\keyword{~kwd1}
-\keyword{~kwd2}
+\keyword{"temporary}
+\keyword{situations"}
+\keyword{utility}

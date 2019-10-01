@@ -48,7 +48,7 @@
 #' number of years, approaches max_harvest. If var_CV>0, this time series
 #' includes artificial variation.
 #' @author Eike Luedeling
-#' @keywords ~kwd1 ~kwd2
+#' @keywords "yield function" utility
 #' @examples
 #' 
 #' gompertz_yield(max_harvest=1000,
