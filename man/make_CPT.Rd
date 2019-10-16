@@ -68,8 +68,4 @@ http://lup.lub.lu.se/luur/download?func=downloadFile&recordOId=3866733&fileOId=3
 \author{
 Eike Luedeling
 }
-\keyword{"Bayesian}
-\keyword{"Likelihood}
-\keyword{CPT,}
-\keyword{Method"}
-\keyword{Network",}
+\keyword{CPT}

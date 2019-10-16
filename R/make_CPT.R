@@ -32,7 +32,7 @@
 #' Belief Network - a method for consistent and robust determination of conditional
 #' probability tables. Master's thesis, Faculty of Engineering, Lund University;
 #' http://lup.lub.lu.se/luur/download?func=downloadFile&recordOId=3866733&fileOId=3866740
-#' @keywords CPT, "Bayesian Network", "Likelihood Method"
+#' @keywords CPT
 #' 
 #' @examples
 #' 

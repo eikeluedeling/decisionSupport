@@ -94,8 +94,8 @@ NULL
 #' }
 #'
 #' 
-#' @section Copyright \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}: 
-#' 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)} 2015
+#' @section Copyright for all developments before April 2018 \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}: 
+#' 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}
 #' @section License:
 #'    The R-package \pkg{decisionSupport} is free software: you can redistribute it and/or modify
 #'    it under the terms of the GNU General Public License as published by
@@ -112,8 +112,9 @@ NULL
 #'    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 #' @docType package
 #' @name decisionSupport-package
-#' @author Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
-#'	 Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@@eikeluedeling.com}	
+#' @author Eike Luedeling (\href{http://www.eikeluedeling.com/}{personal website}) \email{eike@@eikeluedeling.com},
+#'   Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
+#'	 Katja Schiffers \email{katja.schiffers@@uni-bonn.de}	
 #' @author Maintainer: Eike Luedeling \email{eike@@eikeluedeling.com}
 #' @references Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
 #'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.

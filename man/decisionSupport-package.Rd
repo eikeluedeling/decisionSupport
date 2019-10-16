@@ -69,9 +69,9 @@ easy-to-use interface.
 	\code{\link[chillR:VIP]{VIP}} and \code{\link{individualEvpiSimulation}}.
 }
 }
-\section{Copyright \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}}{
+\section{Copyright for all developments before April 2018 \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}}{
  
-	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)} 2015
+	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}
 }
 
 \section{License}{
@@ -101,8 +101,9 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
 \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}
 }
 \author{
-Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
- Eike Luedeling (\href{http://www.worldagroforestry.org/}{ICRAF}) \email{eike@eikeluedeling.com}
+Eike Luedeling (\href{http://www.eikeluedeling.com/}{personal website}) \email{eike@eikeluedeling.com},
+  Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
+ Katja Schiffers \email{katja.schiffers@uni-bonn.de}
 
 Maintainer: Eike Luedeling \email{eike@eikeluedeling.com}
 }

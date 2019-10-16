@@ -2,72 +2,129 @@
 % Please edit documentation in R/empirical_EVPI.R
 \name{empirical_EVPI}
 \alias{empirical_EVPI}
-\title{Expected value of perfect information (EVPI) for many variables. This
-is a wrapper for the EVPI_empi function}
+\alias{summary.EVPI_res}
+\alias{summary_empirical_EVPI}
+\alias{plot.EVPI_res}
+\alias{plot_empirical_EVPI}
+\title{Expected value of perfect information (EVPI) for a simple
+model with the predictor variable sampled from a normal
+distribution with.}
 \usage{
-empirical_EVPI(mc, first_out_var, fileformat = NA, outfolder = NA,
-  write_table = FALSE, scale_results = TRUE, legend_table = NULL,
-  output_legend_table = NULL)
+empirical_EVPI(mc, test_var_name, out_var_name)
+
+\method{summary}{EVPI_res}(object, ...)
+
+\method{plot}{EVPI_res}(x, res = TRUE, ...)
 }
 \arguments{
 \item{mc}{output table from a Monte Carlo simulation,
 e.g. as realized with the decisionSupport package}
 
-\item{first_out_var}{name of the column in the mc table that contains the first output
-variable. Information Values are computed for variables in all earlier columns.}
+\item{test_var_name}{character; name of an independent
+variable in mc, sampled from a normal distribution}
 
-\item{fileformat}{format of the output file. This can only be "png" for output as a file
-or NA for plotting within R.}
+\item{out_var_name}{character; name of a dependent
+variable in mc}
 
-\item{outfolder}{folder where the outputs should be saved (this is optional).}
+\item{object}{EVPI_res object (produced with
+empirical_EVPI) as input to the summary function.}
 
-\item{write_table}{boolean parameter indicating whether an output table should be written.}
+\item{...}{Arguments to be passed to methods, such as
+graphical parameters (see par).}
 
-\item{scale_results}{boolean parameter indicating whether numbers in the output should be
-expressed in thousands, millions, billions etc.}
+\item{x}{EVPI_res object (produced with empirical_EVPI)
+as input to the plotting function.}
 
-\item{legend_table}{data.frame containing translations of input variable names into
-labels for the EVPI figure}
-
-\item{output_legend_table}{data.frame containing translations of output variable names into
-labels for the EVPI figure}
+\item{res}{boolean parameter indicating whether the plot
+function should output a plot of opportunity losses and
+gains  (res = TRUE) or a plot of the original data with
+the loess prediction (res = FALSE).}
 }
 \value{
-list of as many elements as there are output variables in the Monte Carlo table:
-  each element refers to one of the output variables and contains a data.frame with four
-  columns:
-  (1) variable - the input variable names
-  (2) expected_gain - expected gain when project is
+list of 11 elements: 
+  (1) expected_gain: expected gain when project is
   implemented, without knowing the value of the test
-  variable
-  (3) EVPI_do - the Expected Value of Perfect Information on the respective input variable,
-  if the analysis suggests that the expected value of the decision is likely positive
-  (e.g. the project should be done)
-  (4) EVPI_dont - the Expected Value of Perfect Information on the respective input variable,
-  if the analysis suggests that the expected value of the decision is likely negative
-  (e.g. the project should not be done)
+  variable, equals NA when there is no variation in the
+  output variable (2) recommendation: should project be
+  implemented? Decision without knowing the value of the
+  test variable (3) EVPI_do: the Expected Value of
+  Perfect Information (EVPI) for this variable, if the
+  recommended decision is to implement the project. (4)
+  EVPI_dont: the Expected Value of Perfect Information
+  (EVPI) for this variable, if the recommended decision
+  is not to implement the project. (5) tests_var_data:
+  values of the test variable (6) out_var_data: values of
+  the outcome variable (7) out_var_sm: results of loess
+  regression = smoothed outcome variable (8) weight:
+  values by which smoothed outcome variable is weighted
+  (9) out_var_weight: smoothed and weighted outcome
+  variable (10) test_var_name: variable name of test data
+  (11) out_var_name: variable name of outcome data
 }
 \description{
-This function computes the Value of Information for many variables
-contained in the output table of a Monte Carlo simulation. It applies the
-\code{\link{EVPI_empi}} function to compute the amount of money that a
-rational decision-maker should be willing to pay for perfect information
-on each model input variable. See the documentation of the 
-\code{\link{EVPI_empi}} function for more details.
+The Expected Value of Perfect Information is a concept in
+decision analysis. It measures the expected loss of gain
+(expected opportunity loss, EOL) that is incurred because
+the decision-maker does not have perfect information
+about a paricular variable. It is determined by examining
+the influence of that variable on the output value of a
+decision model. Its value is best illustrated by a plot
+of weighed decision outcomes as a function of the
+variable in question. If this curve intersects zero and
+the recommendation without perfect information is to go
+ahead with the project, the EVPI is the negative area
+under the curve, or the positive area if the
+recommendation is not to go ahead. If there is no
+intersection point, the EVPI is zero.
+}
+\details{
+The EVPI is often calculated by assuming that all
+variables except the one being tested take their best
+estimate. This makes it possible to calculate the EVPI
+very quickly, but at a high price: the assumption that
+many variables simply take their best value ignores
+uncertainties about all these variables. In the present
+implementation, this problem is addressed by using the
+outputs of a Monte Carlo simulation and assessing the
+EVPI empirically. In the first step, the output variable
+is smoothed using a loess regression with an automated
+optimization of the bandwidth parameter, based on a
+generalized cross validation procedure. Then the values
+are weighted according to the probability density
+function that has been used for Monte Carlo sampling
+(i.e. a normal distribution, with mean and standard
+deviation being estimated automatically) and the
+resulting positive and negative areas under the curve are
+calculated. After this, the expected gain (exptected mean
+value - EMV) without perfect information (PI) is
+calculated, the recommendation whether to go ahead with
+the project without PI determine and the EVPI returned by
+the function.
 }
 \examples{
 
 
-### In the following example, the sign of the calculation is entirely
-### determined by the variable indep1, so this should be expected to have
-### a high EVPI. Variable indep2 doesn't affect the sign of the output,
-### so it should not have information value.
+### In the following example, the sign of the calculation
+### is entirely determined by the predictor variable
+### 'indep1', so this should be expected to have a high
+### EVPI.
 
 montecarlo <- data.frame(indep1 = rnorm(1000), indep2 = rlnorm(1000))
 montecarlo[, 'output1'] <- montecarlo[, 'indep1'] * montecarlo[, 'indep2']
-montecarlo[, 'output2'] <- (montecarlo[, 'indep1'] * (montecarlo[, 'indep2']) + 5)
 
-empirical_EVPI(montecarlo,"output1")
+evpi1 <- empirical_EVPI(mc = montecarlo, test_var_name = 'indep1', out_var_name = 'output1')
+summary(evpi1)
+plot(evpi1, res = FALSE)
+plot(evpi1, res = TRUE)
+
+
+### In this example, the sign of the output variable does not change depending on the
+### predictor variable 'indep1' so the EVPI should be zero.
+montecarlo[, 'output2'] <- (montecarlo[, 'indep1'] * (montecarlo[, 'indep2']) + 10)
+evpi2 <- empirical_EVPI(mc = montecarlo, test_var_name = 'indep1', out_var_name = 'output2')
+summary(evpi2)
+plot(evpi2, res = FALSE)
+plot(evpi2, res = TRUE)
 }
 \author{
 Eike Luedeling, Katja Schiffers

@@ -1,12 +1,12 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.104
-Date: 2019-10-02
+Version: 1.105.2
+Date: 2019-10-16
 Authors@R: c(
-    person("Eike", "Luedeling",  email = "eike@eikeluedeling.com",  role = c("cre", "aut"), comment="ICRAF"),
+    person("Eike", "Luedeling",  email = "eike@eikeluedeling.com",  role = c("cre", "aut"), comment="University of Bonn"),
     person("Lutz", "Goehring", email = "lutz.goehring@gmx.de", role = "aut", comment="ICRAF and Lutz Goehring Consulting"),
-    person("World Agroforesrtry Centre (ICRAF)", role = "cph"))
+    person("Katja", "Schiffers", email = "katja.schiffers@uni-bonn.de", role = "aut", comment="University of Bonn"))
 Description: Supporting the quantitative analysis of binary welfare based
     decision making processes using Monte Carlo simulations. Decision support
     is given on two levels: (i) The actual decision level is to choose between
@@ -65,6 +65,7 @@ Collate:
     'empirical_EVPI.R'
     'gompertz_yield.R'
     'make_CPT.R'
+    'multi_EVPI.R'
     'plainNames2data.frameNames.R'
     'plsr.mcSimulation.R'
     'random_state.R'
