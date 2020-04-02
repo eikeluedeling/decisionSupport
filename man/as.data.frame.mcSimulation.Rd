@@ -9,7 +9,9 @@
   row.names = NULL,
   optional = FALSE,
   ...,
-  stringsAsFactors = NA
+
+  stringsAsFactors = default.stringsAsFactors()
+
 )
 }
 \arguments{

@@ -67,6 +67,8 @@ Collate:
     'make_CPT.R'
     'multi_EVPI.R'
     'plainNames2data.frameNames.R'
+    'plot_cashflow.R'
+    'plot_npv.R'
     'plsr.mcSimulation.R'
     'random_state.R'
     'sample_CPT.R'
