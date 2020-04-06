@@ -4,6 +4,7 @@ library(decisionSupport)
 # A function to create variables ####
 # This is used for running parts of the model line by line within the function 
 # before running the whole MC
+
 make_variables <- function(est, n = 1)
 {
   x <- random(rho = est, n = n)
@@ -11,8 +12,7 @@ make_variables <- function(est, n = 1)
     assign(i, as.numeric(x[1, i]), envir = .GlobalEnv)
 }
 
-make_variables(estimate_read_csv("Example_Decision_Support/example_input_table.csv"))
-
+make_variables(estimate_read_csv("vignettes/vignette_mcSimulation/example_input_table.csv"))
 
 example_decision_function <- function(x, varnames){
   # ex-post risk: impacts the benefits ####
@@ -140,10 +140,9 @@ return(NPV_DO_minus_DONT=NPV_interv - NPV_n_interv)
 
 # Running the model ####
 
-decisionSupport::decisionSupport(
-  "Example_Decision_Support/example_input_table.csv",
-  outputPath = 'Example_Decision_Support/results',
-  welfareFunction = example_decision_function,
+decisionSupport::mcSimulation(
+  estimate = decisionSupport::estimate_read_csv("vignettes/vignette_mcSimulation/example_input_table.csv"),
+  model_function = example_decision_function,
   numberOfModelRuns = 1e4, #run 10,000 times
   functionSyntax = "plainNames"
 )

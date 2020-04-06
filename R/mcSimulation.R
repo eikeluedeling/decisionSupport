@@ -1,7 +1,7 @@
 #' @include estimate.R
 NULL
 ##############################################################################################
-# mcSimulation(estimate, model_function, numberOfModelRuns, ...)
+# mcSimulation(estimate, model_function, numberOfModelRuns, ...) 
 ##############################################################################################
 #' Perform a Monte Carlo simulation.
 #' 
@@ -9,7 +9,7 @@ NULL
 #' of an input distribution by a mathematical model, i.e. a mathematical function. This is called a
 #' Monte Carlo simulation. For details cf. below.
 #' @param estimate \code{estimate}: estimate of the joint probability distribution of
-#'   the input variables.
+#'   the input variables. This can be read from a csv file and calculated with the \code{\link[decisionSupport]{estimate_read_csv}} function.
 #' @param model_function \code{function}: The function that transforms the input distribution. It 
 #'   has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.
 #' @param  ... Optional arguments of \code{model_function}.
