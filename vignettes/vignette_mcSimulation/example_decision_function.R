@@ -135,14 +135,15 @@ NPV_interv <-
 NPV_n_interv <-
   discount(result_n_interv, discount_rate, calculate_NPV = TRUE)
 
-return(NPV_DO_minus_DONT=NPV_interv - NPV_n_interv)
+return(list(NPV_interv,
+       NPV_n_interv))
 }
 
 # Running the model ####
 
-decisionSupport::mcSimulation(
+p2 <- as.data.frame(decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("vignettes/vignette_mcSimulation/example_input_table.csv"),
   model_function = example_decision_function,
   numberOfModelRuns = 1e4, #run 10,000 times
   functionSyntax = "plainNames"
-)
+))
