@@ -44,6 +44,7 @@ URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
 Collate:
+    'as.data.frame.mcSimulation.R'
     'chance_event.R'
     'paramtnormci_fit.R'
     'paramtnormci_numeric.R'
@@ -64,15 +65,19 @@ Collate:
     'discount.R'
     'empirical_EVPI.R'
     'gompertz_yield.R'
+    'hist.mcSimulation.R'
     'make_CPT.R'
     'multi_EVPI.R'
     'plainNames2data.frameNames.R'
     'plot_cashflow.R'
     'plot_npv.R'
     'plsr.mcSimulation.R'
+    'print.mcSimuation.R'
+    'print.summary.mcSimulation.R'
     'random_state.R'
     'sample_CPT.R'
     'sample_simple_CPT.R'
+    'summary.mcSimulation.R'
     'temp_situations.R'
     'vv.R'
     'as.data.frame.mcSimulation.R'

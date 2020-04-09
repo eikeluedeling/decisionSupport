@@ -98,7 +98,16 @@ NULL
 #'      }
 #'      \item{\code{$y}}{
 #'        \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
-#'        function values for \code{x}.
+#'        function values for \code{x}.The return of the decision model function may include the
+#'        assignment of names for the output variables, e.g. like this:
+#'          \preformatted{
+#'            profit <- function(x){
+#'             revenue - costs
+#'             return(Revenue = revenue,
+#'                    Costs = cost)
+#'          }
+#'        }
+#'        
 #'      }
 #'   } 
 #' @examples
@@ -298,11 +307,20 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
       colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
     }
   }
-  # Return object:
-  returnObject<-list(y=data.frame(y), x=data.frame(x))
-  returnObject$call<-match.call()
-  class(returnObject)<-cbind("mcSimulation", class(returnObject))
   
+  # Define the "mcSimulation" class
+  
+  mcSimulation_class <- setClass("mcSimulation", slots = list(y = "data.frame",
+                                  x ="data.frame",
+                                  call = "language"))
+  
+  
+  # Return object:
+  
+  
+  returnObject <- new("mcSimulation", y = data.frame(y),
+                      x = data.frame(x), 
+                      call = match.call())
   return(returnObject)
 }
 

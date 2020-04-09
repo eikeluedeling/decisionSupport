@@ -33,7 +33,7 @@ plot_cashflow(
 Creates a cashflow plot of the returned list of related outputs from the \code{\link[decisionSupport]{decisionSupport}} function using \code{\link{ggplot2}}
 }
 \details{
-This function automatically defines quantiles (5 to 95% and 25 to 75%) as well as a value for the median.
+This function automatically defines quantiles (5 to 95\% and 25 to 75\%) as well as a value for the median.
 }
 \examples{
 
