@@ -52,12 +52,11 @@ An object of \code{class mcSimulation}, which is a \code{list} with elements:
        \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
        function values for \code{x}.The return of the decision model function may include the
        assignment of names for the output variables, e.g. like this:
-       
-       \preformatted{
-         profit <- function(x){
-           revenue - costs
-           return(Revenue = revenue,
-                  Costs = cost)
+         \preformatted{
+           profit <- function(x){
+            revenue - costs
+            return(list(Revenue = revenue,
+                   Costs = cost))
          }
        }
        

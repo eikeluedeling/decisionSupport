@@ -5,7 +5,8 @@
 \title{Net Present Value plots for Monte Carlo simulation results}
 \usage{
 plot_npv(
-  mcSimulationResults,
+  mcSimulation_object,
+  cols,
   method = "smooth_simple_overlay",
   bins = 150,
   old_names = NULL,
@@ -15,7 +16,9 @@ plot_npv(
 )
 }
 \arguments{
-\item{mcSimulationResults}{is a data frame of Monte Carlo simulation outputs from the \code{\link[decisionSupport:decisionSupport]{decisionSupport}} function}
+\item{mcSimulation_object}{is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function}
+
+\item{cols}{is a list of column names containing NPV values from the \code{mcSimulation_object}. This can also be a single variable name}
 
 \item{bins}{are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150}
 
@@ -31,20 +34,44 @@ plot_npv(
 Several plotting options for NPV outputs
 }
 \examples{
+##############################################################
+# Example 1 (Creating the estimate from the command line):
+#############################################################
+# Create the estimate object:
 
-#Generate random dataset of 2000 Monte Carlo simulations for NPV
+variable = c("revenue", "costs")
+distribution = c("norm", "norm")
+lower = c(10000,  5000)
+upper = c(100000, 50000)
+costBenefitEstimate <- as.estimate(variable, distribution, lower, upper)
 
-test_data <- data.frame(replicate(3, sample(-10000:10000, 2000, rep = TRUE)))
+# (a) Define the model function without name for the return value:
 
-#Make a name for the NPV variables with time append (as is done in the decisionSupport function)  
-names(test_data) <-  gsub(x = names(test_data),
-                          pattern = "X",
-                          replacement = "NPV")
+profit1 <- function(x) {
+  x$revenue - x$costs
+  return(list(Revenues = x$revenue,
+              Costs = x$costs))
+}
+
+# Perform the Monte Carlo simulation:
+
+predictionProfit1 <- mcSimulation(estimate = costBenefitEstimate,
+                                  model_function = profit1,
+                                  numberOfModelRuns = 10000,
+                                  functionSyntax = "data.frameNames")
 
 
-plot_npv(mcSimulationResults = test_data, method = "smooth_simple_overlay")
-plot_npv(mcSimulationResults = test_data, method = "hist_simple_overlay", bins = 30)
-plot_npv(mcSimulationResults = test_data,"boxplot_density", outlier_shape = 3)
+# Plot the NPV
+
+plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+         method = "smooth_simple_overlay")
+
+plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+         method = "hist_simple_overlay", bins = 30)
+
+plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+         method = "boxplot_density", outlier_shape = 3)
+ 
 
 }
 \references{

@@ -103,8 +103,8 @@ NULL
 #'          \preformatted{
 #'            profit <- function(x){
 #'             revenue - costs
-#'             return(Revenue = revenue,
-#'                    Costs = cost)
+#'             return(list(Revenue = revenue,
+#'                    Costs = cost))
 #'          }
 #'        }
 #'        
@@ -308,19 +308,11 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
     }
   }
   
-  # Define the "mcSimulation" class
-  
-  mcSimulation_class <- setClass("mcSimulation", slots = list(y = "data.frame",
-                                  x ="data.frame",
-                                  call = "language"))
-  
   
   # Return object:
   
-  
-  returnObject <- new("mcSimulation", y = data.frame(y),
-                      x = data.frame(x), 
-                      call = match.call())
+  returnObject <- mcSimulation_class(y = data.frame(y), x = data.frame(x),
+                                     call = match.call())
   return(returnObject)
 }
 
