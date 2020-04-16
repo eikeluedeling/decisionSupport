@@ -10,6 +10,6 @@
 #' @export
 as.data.frame.mcSimulation <- function(x, row.names = NULL, optional = FALSE, ..., 
                                        stringsAsFactors = default.stringsAsFactors()){
-  as.data.frame(list(y=x@y,x=x@x), row.names = row.names, optional = optional, ..., 
+  as.data.frame(list(y=x$y,x=x$x), row.names = row.names, optional = optional, ..., 
                 stringsAsFactors = stringsAsFactors)
 }
