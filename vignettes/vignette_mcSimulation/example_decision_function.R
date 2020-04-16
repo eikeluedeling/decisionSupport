@@ -137,7 +137,8 @@ NPV_n_interv <-
   discount(result_n_interv, discount_rate, calculate_NPV = TRUE)
 
 return(list(Invert_NPV = NPV_interv,
-       NO_Invert_NPV = NPV_n_interv))
+       NO_Invert_NPV = NPV_n_interv,
+       Crop_productio = crop_production))
 }
 
 # Running the model ####
@@ -159,6 +160,8 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 # Look for the class of the mcSimulation output
 
 class(test_mcSimulation_function)
+
+str(test_mcSimulation_function)
 
 getClass(test_mcSimulation_function)
 
@@ -219,14 +222,29 @@ class(test_mcSimulation_function_2) == "mcSimulation"
 
 
 
-mcSimulation_DF <- data.frame(test_mcSimulation_function_2@y,
-                              test_mcSimulation_function_2@x)
+
+
+mcSimulation_DF <- data.frame(test_mcSimulation_function$y,
+                              test_mcSimulation_function$x)
 
 
 names(mcSimulation_DF)
 
 
-plot_npv(mcSimulation_DF, cols = "NO_Invert_NPV")
+
+
+
+
+plot_distributions(test_mcSimulation_function, vars = "Crop_productio1",
+                   method = 'boxplot_density',
+                   y_axis_name = "Hi",
+                   axis.title.x = ggplot2::element_text(size = 15, family = "serif"),
+                   legend.position = 'bottom')
+
+
+
+
+class(test_mcSimulation_function)[[1]]
 
 
 

@@ -310,9 +310,10 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
   
   
   # Return object:
+  returnObject <- list(y=data.frame(y), x=data.frame(x))
+  returnObject$call <- match.call()
+  class(returnObject) <- cbind("mcSimulation", class(returnObject))
   
-  returnObject <- mcSimulation_class(y = data.frame(y), x = data.frame(x),
-                                     call = match.call())
   return(returnObject)
 }
 

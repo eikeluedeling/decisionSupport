@@ -1,15 +1,22 @@
-#' Net Present Value plots for Monte Carlo simulation results
+#' Probability distribution plots for Monte Carlo simulation results
 #' 
-#' Several plotting options for NPV outputs
+#' Several plotting options for distribution outputs
 #' 
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
-#' @param cols is a list of column names containing NPV values from the \code{mcSimulation_object}. This can also be a single variable name
+#' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
 #' @param method is the type of plot to be performed in \code\{link{ggplot2}} using \code{\link[ggplot2:geom_density]{geom_histogram}} or \code{\link[ggplot2:geom_histogram]{geom_histogram}} 
 #' @param bins are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150
-#' @param old_names are the variable names from the MC simulation outputs that refer to the NPV values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for NPV variables are preferred 
-#' @param new_names are the variable names to replace the MC simulation outputs that refer to the NPV values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for NPV variables are preferred
-#' @param colors is the color palette to be used for the fill of distribution shapes and boxplots. The default is c("#009999", "#0000FF", "#56B4E9", "#009E73","#F0E442", "#0072B2", "#D55E00", "#CC79A7") assuming a maximum of eight NPV variables
+#' @param old_names are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred 
+#' @param new_names are the variable names to replace the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred
+#' @param colors is the color palette to be used for the fill of distribution shapes and boxplots. The default is c("#009999", "#0000FF", "#56B4E9", "#009E73","#F0E442", "#0072B2", "#D55E00", "#CC79A7") assuming a maximum of eight variables to be compared
 #' @param outlier_shape is the optional shape to replace the outliers in the boxplot. To show no oultiers use NA. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for shape options
+#' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
+#' 
+#' 
+#' #################################################################################################
+#' ################################################################################################
+#' @param y_axis_name is the name to passed to the y-axis title. Default is NULL for 
+#'
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
 #' 
@@ -47,38 +54,39 @@
 #'                                   functionSyntax = "data.frameNames")
 #' 
 #' 
-#' # Plot the NPV
+#' # Plot 
 #' 
-#' plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+#' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "smooth_simple_overlay")
 #' 
-#' plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+#' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "hist_simple_overlay", bins = 30)
 #' 
-#' plot_npv(mcSimulation_object = predictionProfit1, cols = c("Revenues", "Costs"),
+#' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "boxplot_density", outlier_shape = 3)
 #'  
 #' 
-#' @export plot_npv
+#' @export plot_distributions
 #'
-plot_npv <- function(mcSimulation_object, cols, method = "smooth_simple_overlay", bins = 150,
-                     old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".") {
+plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simple_overlay", bins = 150,
+                     old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".",
+                     x_axis_name = "Outcome distribution", y_axis_name = NULL, ...) {
   
   
   # Check if mcSimulation_object is class mcSimulation
   
-  assertthat::assert_that(class(mcSimulation_object) == "mcSimulation",
-                          msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object")
+  assertthat::assert_that(class(test_mcSimulation_function)[[1]] == "mcSimulation",
+                          msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with 'mcSimulation' function.")
   
   
   # Create a dataframe from the mcSimulation_object
   
-  data <- data.frame(mcSimulation_object@y,
-                     mcSimulation_object@x)
+  data <- data.frame(mcSimulation_object$y,
+                     mcSimulation_object$x)
   
   
   # subset NPV variables
-  data <- dplyr::select(data, cols)
+  data <- dplyr::select(data, all_of(vars))
   
   # define the names
   if (is.null(new_names) | is.null(old_names)){
@@ -89,33 +97,42 @@ plot_npv <- function(mcSimulation_object, cols, method = "smooth_simple_overlay"
   data <- dplyr::rename_at(data, dplyr::vars(tidyselect::all_of(old_names)), ~ new_names)
     
     #assign data
-    standard_plot_data <- tidyr::pivot_longer(data, cols)
+    standard_plot_data <- tidyr::pivot_longer(data, all_of(vars))
     
     # define the colors
     if (is.null(colors)){
       colors <- c("#009999", "#0000FF", "#56B4E9", "#009E73",
               "#F0E442", "#0072B2", "#D55E00", "#CC79A7")}
     
+    # define the y_axis_name name
+    if (!is.null(y_axis_name)) y_axis_name <- y_axis_name else
+      if (method == "hist_simple_overlay") y_axis_name <- "Number of points in bin" else
+        y_axis_name <- "Density estimate"
+    
+    
+    # define the standard plot to be used as baseline plot
     standard_plot <-  ggplot2::ggplot(standard_plot_data, aes(x = value, group = name, fill = name)) +
       scale_x_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
       scale_y_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
       scale_fill_manual(values = colors) +
-      labs(x = "Net Present Value", y = "Probability density", fill = "Decision\noption") +
+      labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
     theme_bw() 
     
     if (method == "smooth_simple_overlay") {
-      return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) )
+      return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) +
+               ggplot2::theme(...))
     }
   
     if (method == "hist_simple_overlay") {
-      return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = 150) ) 
+      return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = 150) +
+               ggplot2::theme(...)) 
     }
     
     if (method == "boxplot_density") {
       
       return(
         ggplot2::ggplot(standard_plot_data, aes(x = value, y = name, fill = name)) +
-               geom_density(aes(y = ..count..), alpha = 0.5, color = NA) +
+               geom_density(alpha = 0.5, color = NA) +
                ggstance::geom_boxploth(aes(x = value, y = 0),
                                        #place the boxplot consistently at the bottom of the graph
                                        width = .0025,
@@ -125,7 +142,7 @@ plot_npv <- function(mcSimulation_object, cols, method = "smooth_simple_overlay"
                scale_x_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
                scale_y_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
                scale_fill_manual(values = colors) +
-               labs(x = "Net Present Value", y = "Frequency of model runs", fill = "Decision\noption") +
+               labs(x = x_axis_name, y = y_axis_name, fill = "Decision\noption") +
                facet_wrap(. ~ name) +
                theme_bw() +
                theme(strip.background = element_blank(),
@@ -133,7 +150,8 @@ plot_npv <- function(mcSimulation_object, cols, method = "smooth_simple_overlay"
                  axis.text.x = element_text(
                    angle = 45,
                    hjust = 1,
-                   vjust = 1))
+                   vjust = 1),
+                 ...)
         )
     
       }
