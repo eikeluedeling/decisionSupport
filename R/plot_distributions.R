@@ -1,21 +1,18 @@
-#' Probability distribution plots for Monte Carlo simulation results
+#' Probability distribution plots for various types of Monte Carlo simulation results
 #' 
 #' Several plotting options for distribution outputs
 #' 
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
-#' @param method is the type of plot to be performed in \code\{link{ggplot2}} using \code{\link[ggplot2:geom_density]{geom_histogram}} or \code{\link[ggplot2:geom_histogram]{geom_histogram}} 
+#' @param method is the type of plot to be performed in \code{link{ggplot2}} using \code{\link[ggplot2:geom_density]{geom_histogram}} or \code{\link[ggplot2:geom_histogram]{geom_histogram}} 
 #' @param bins are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150
 #' @param old_names are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred 
 #' @param new_names are the variable names to replace the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred
 #' @param colors is the color palette to be used for the fill of distribution shapes and boxplots. The default is c("#009999", "#0000FF", "#56B4E9", "#009E73","#F0E442", "#0072B2", "#D55E00", "#CC79A7") assuming a maximum of eight variables to be compared
 #' @param outlier_shape is the optional shape to replace the outliers in the boxplot. To show no oultiers use NA. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for shape options
+#' @param x_axis_name is the name to passed to the x-axis title. Default is "Outcome distribution" and allows allow the user to add a customized axis title
+#' @param y_axis_name is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title. If a name is not provided the title will be "Number of points in bin" for the \code{hist_simple_overlay} method and "Density estimate" for all other plot options
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
-#' 
-#' 
-#' #################################################################################################
-#' ################################################################################################
-#' @param y_axis_name is the name to passed to the y-axis title. Default is NULL for 
 #'
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
@@ -54,7 +51,7 @@
 #'                                   functionSyntax = "data.frameNames")
 #' 
 #' 
-#' # Plot 
+#' # Plot the distributions
 #' 
 #' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "smooth_simple_overlay")
