@@ -72,7 +72,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
   
   # Check if mcSimulation_object is class mcSimulation
   
-  assertthat::assert_that(class(test_mcSimulation_function)[[1]] == "mcSimulation",
+  assertthat::assert_that(class(mcSimulation_object)[[1]] == "mcSimulation",
                           msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with 'mcSimulation' function.")
   
   
@@ -128,18 +128,18 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     if (method == "boxplot_density") {
       
       return(
-        ggplot2::ggplot(standard_plot_data, aes(x = value, y = name, fill = name)) +
+        ggplot2::ggplot(standard_plot_data, aes(x = value, fill = name)) +
                geom_density(alpha = 0.5, color = NA) +
                ggstance::geom_boxploth(aes(x = value, y = 0),
                                        #place the boxplot consistently at the bottom of the graph
-                                       width = .0025,
+                                       width = max(density(standard_plot_data$value)$y) * 0.1,
                                        alpha = 0.5,
                                        size = 0.3, 
                                        outlier.shape = outlier_shape) +
                scale_x_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
                scale_y_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
                scale_fill_manual(values = colors) +
-               labs(x = x_axis_name, y = y_axis_name, fill = "Decision\noption") +
+               labs(x = x_axis_name, y = y_axis_name) +
                facet_wrap(. ~ name) +
                theme_bw() +
                theme(strip.background = element_blank(),
