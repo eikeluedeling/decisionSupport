@@ -4,8 +4,7 @@
 \alias{summary.eviSimulation}
 \title{Summarize EVI Simulation Results}
 \usage{
-\method{summary}{eviSimulation}(object, ..., digits = max(3,
-  getOption("digits") - 3))
+\method{summary}{eviSimulation}(object, ..., digits = max(3, getOption("digits") - 3))
 }
 \arguments{
 \item{object}{An object of class \code{eviSimulation}.}
@@ -14,10 +13,10 @@
 
 \item{digits}{how many significant digits are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
-    \code{\link{getOption}("digits")}.  This is a suggestion: enough decimal
+    \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link{signif}}.)}
+    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
 }
 \value{
 An object of class \code{summary.eviSimulation}.

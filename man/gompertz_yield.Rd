@@ -4,10 +4,16 @@
 \alias{gompertz_yield}
 \title{Gompertz function yield prediction for perennials}
 \usage{
-gompertz_yield(max_harvest, time_to_first_yield_estimate,
-  time_to_second_yield_estimate, first_yield_estimate_percent,
-  second_yield_estimate_percent, n_years, var_CV = 0,
-  no_yield_before_first_estimate = TRUE)
+gompertz_yield(
+  max_harvest,
+  time_to_first_yield_estimate,
+  time_to_second_yield_estimate,
+  first_yield_estimate_percent,
+  second_yield_estimate_percent,
+  n_years,
+  var_CV = 0,
+  no_yield_before_first_estimate = TRUE
+)
 }
 \arguments{
 \item{max_harvest}{maximum harvest from the tree (in number of fruits, kg or

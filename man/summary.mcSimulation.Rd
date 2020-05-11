@@ -4,10 +4,15 @@
 \alias{summary.mcSimulation}
 \title{Summarize results from Monte Carlo simulation.}
 \usage{
-\method{summary}{mcSimulation}(object, ..., digits = max(3,
-  getOption("digits") - 3), variables.y = names(object$y),
-  variables.x = if (classicView) names(object$x), classicView = FALSE,
-  probs = c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1))
+\method{summary}{mcSimulation}(
+  object,
+  ...,
+  digits = max(3, getOption("digits") - 3),
+  variables.y = names(object$y),
+  variables.x = if (classicView) names(object$x),
+  classicView = FALSE,
+  probs = c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1)
+)
 }
 \arguments{
 \item{object}{An object of class \code{mcSimulation}.}
@@ -17,10 +22,10 @@ or \code{\link{format}} (\code{classicView=FALSE}).}
 
 \item{digits}{how many significant digits are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
-    \code{\link{getOption}("digits")}.  This is a suggestion: enough decimal
+    \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link{signif}}.)}
+    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
 
 \item{variables.y}{\code{character} or \code{character vector}: Names of the components of the
 simulation function (\code{model_function}), whose results shall be displayed. Defaults to all

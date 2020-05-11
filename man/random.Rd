@@ -9,15 +9,24 @@
 \usage{
 random(rho, n, method, relativeTolerance, ...)
 
-\method{random}{default}(rho = list(distribution = "norm", probabilities
-  = c(0.05, 0.95), quantiles = c(-qnorm(0.95), qnorm(0.95))), n,
-  method = "fit", relativeTolerance = 0.05, ...)
+\method{random}{default}(
+  rho = list(distribution = "norm", probabilities = c(0.05, 0.95), quantiles =
+    c(-qnorm(0.95), qnorm(0.95))),
+  n,
+  method = "fit",
+  relativeTolerance = 0.05,
+  ...
+)
 
-\method{random}{vector}(rho = runif(n = n), n, method = NULL,
-  relativeTolerance = NULL, ...)
+\method{random}{vector}(rho = runif(n = n), n, method = NULL, relativeTolerance = NULL, ...)
 
-\method{random}{data.frame}(rho = data.frame(uniform = runif(n = n)), n,
-  method = NULL, relativeTolerance = NULL, ...)
+\method{random}{data.frame}(
+  rho = data.frame(uniform = runif(n = n)),
+  n,
+  method = NULL,
+  relativeTolerance = NULL,
+  ...
+)
 }
 \arguments{
 \item{rho}{Distribution to be randomly sampled.}

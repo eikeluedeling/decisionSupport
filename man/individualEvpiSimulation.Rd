@@ -4,14 +4,19 @@
 \alias{individualEvpiSimulation}
 \title{Individual Expected Value of Perfect Information Simulation}
 \usage{
-individualEvpiSimulation(welfare, currentEstimate,
+individualEvpiSimulation(
+  welfare,
+  currentEstimate,
   perfectProspectiveNames = row.names(currentEstimate),
-  perfectProspectiveValues = colMeans(as.data.frame(random(rho =
-  currentEstimate, n = numberOfModelRuns, method = randomMethod,
-  relativeTolerance = relativeTolerance))[perfectProspectiveNames]),
-  numberOfModelRuns, randomMethod = "calculate",
-  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
-  verbosity = 0)
+  perfectProspectiveValues = colMeans(as.data.frame(random(rho = currentEstimate, n =
+    numberOfModelRuns, method = randomMethod, relativeTolerance =
+    relativeTolerance))[perfectProspectiveNames]),
+  numberOfModelRuns,
+  randomMethod = "calculate",
+  functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05,
+  verbosity = 0
+)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.

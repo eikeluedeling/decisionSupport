@@ -4,9 +4,16 @@
 \alias{make_CPT}
 \title{Make Conditional Probability tables using the likelihood method}
 \usage{
-make_CPT(parent_effects, parent_weights, b, child_prior,
-  ranking_child = NULL, child_states = NULL, parent_names = NULL,
-  parent_states = NULL)
+make_CPT(
+  parent_effects,
+  parent_weights,
+  b,
+  child_prior,
+  ranking_child = NULL,
+  child_states = NULL,
+  parent_names = NULL,
+  parent_states = NULL
+)
 }
 \arguments{
 \item{parent_effects}{list of vectors describing the effects of all parent node

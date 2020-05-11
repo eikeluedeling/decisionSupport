@@ -4,8 +4,15 @@
 \alias{temp_situations}
 \title{Situation occurrence and resolution}
 \usage{
-temp_situations(n, p_occurrence, p_resolution, normal_outcome = 1,
-  situation_outcome = 0, var_CV_normal = 0, var_CV_situation = 0)
+temp_situations(
+  n,
+  p_occurrence,
+  p_resolution,
+  normal_outcome = 1,
+  situation_outcome = 0,
+  var_CV_normal = 0,
+  var_CV_situation = 0
+)
 }
 \arguments{
 \item{n}{integer; number of values to produce}

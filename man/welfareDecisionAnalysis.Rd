@@ -4,9 +4,15 @@
 \alias{welfareDecisionAnalysis}
 \title{Analysis of the underlying welfare based decision problem.}
 \usage{
-welfareDecisionAnalysis(estimate, welfare, numberOfModelRuns,
-  randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05, verbosity = 0)
+welfareDecisionAnalysis(
+  estimate,
+  welfare,
+  numberOfModelRuns,
+  randomMethod = "calculate",
+  functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05,
+  verbosity = 0
+)
 }
 \arguments{
 \item{estimate}{\code{\link{estimate}} object describing the distribution of the input variables.}

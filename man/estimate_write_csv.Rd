@@ -4,8 +4,13 @@
 \alias{estimate_write_csv}
 \title{Write an Estimate to CSV - File.}
 \usage{
-estimate_write_csv(estimate, fileName, varNamesAsColumn = TRUE,
-  quote = FALSE, ...)
+estimate_write_csv(
+  estimate,
+  fileName,
+  varNamesAsColumn = TRUE,
+  quote = FALSE,
+  ...
+)
 }
 \arguments{
 \item{estimate}{\code{estimate}: Estimate object to write to file.}

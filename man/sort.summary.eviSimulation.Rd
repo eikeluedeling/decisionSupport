@@ -4,8 +4,7 @@
 \alias{sort.summary.eviSimulation}
 \title{Sort Summarized EVI Simulation Results..}
 \usage{
-\method{sort}{summary.eviSimulation}(x, decreasing = TRUE, ...,
-  along = row.names(x$summary$evi)[[1]])
+\method{sort}{summary.eviSimulation}(x, decreasing = TRUE, ..., along = row.names(x$summary$evi)[[1]])
 }
 \arguments{
 \item{x}{An object of class \code{summary.eviSimulation}.}

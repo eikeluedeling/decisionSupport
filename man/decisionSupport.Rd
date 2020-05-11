@@ -4,13 +4,21 @@
 \alias{decisionSupport}
 \title{Welfare Decision and Value of Information Analysis wrapper function.}
 \usage{
-decisionSupport(inputFilePath, outputPath, welfareFunction,
-  numberOfModelRuns, randomMethod = "calculate",
-  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
-  write_table = TRUE, plsrVipAnalysis = TRUE,
-  individualEvpiNames = NULL, sortEvpiAlong = if (individualEvpiNames)
-  individualEvpiNames[[1]] else NULL, oldInputStandard = FALSE,
-  verbosity = 1)
+decisionSupport(
+  inputFilePath,
+  outputPath,
+  welfareFunction,
+  numberOfModelRuns,
+  randomMethod = "calculate",
+  functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05,
+  write_table = TRUE,
+  plsrVipAnalysis = TRUE,
+  individualEvpiNames = NULL,
+  sortEvpiAlong = if (individualEvpiNames) individualEvpiNames[[1]] else NULL,
+  oldInputStandard = FALSE,
+  verbosity = 1
+)
 }
 \arguments{
 \item{inputFilePath}{Path to input csv file, which gives the input \code{\link{estimate}}.}

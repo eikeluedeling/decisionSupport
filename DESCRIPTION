@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.105.2
-Date: 2019-10-16
+Version: 1.105.3
+Date: 2020-05-12
 Authors@R: c(
     person("Eike", "Luedeling",  email = "eike@eikeluedeling.com",  role = c("cre", "aut"), comment="University of Bonn"),
     person("Lutz", "Goehring", email = "lutz.goehring@gmx.de", role = "aut", comment="ICRAF and Lutz Goehring Consulting"),
@@ -73,4 +73,4 @@ Collate:
     'sample_simple_CPT.R'
     'temp_situations.R'
     'vv.R'
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

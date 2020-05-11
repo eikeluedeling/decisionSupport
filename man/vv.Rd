@@ -4,8 +4,16 @@
 \alias{vv}
 \title{value varier function}
 \usage{
-vv(var_mean, var_CV, n, distribution = "normal", absolute_trend = NA,
-  relative_trend = NA, lower_limit = NA, upper_limit = NA)
+vv(
+  var_mean,
+  var_CV,
+  n,
+  distribution = "normal",
+  absolute_trend = NA,
+  relative_trend = NA,
+  lower_limit = NA,
+  upper_limit = NA
+)
 }
 \arguments{
 \item{var_mean}{mean of the variable to be varied}

@@ -4,8 +4,15 @@
 \alias{paramtnormci_numeric}
 \title{Return parameters of truncated normal distribution based on a confidence interval.}
 \usage{
-paramtnormci_numeric(p, ci, lowerTrunc = -Inf, upperTrunc = Inf,
-  relativeTolerance = 0.05, rootMethod = "probability", ...)
+paramtnormci_numeric(
+  p,
+  ci,
+  lowerTrunc = -Inf,
+  upperTrunc = Inf,
+  relativeTolerance = 0.05,
+  rootMethod = "probability",
+  ...
+)
 }
 \arguments{
 \item{p}{\code{numeric} 2-dimensional vector; probabilities of lower and upper bound of the

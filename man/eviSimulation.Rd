@@ -4,10 +4,16 @@
 \alias{eviSimulation}
 \title{Expected Value of Information (EVI) Simulation.}
 \usage{
-eviSimulation(welfare, currentEstimate, prospectiveEstimate,
-  numberOfModelRuns, randomMethod = "calculate",
-  functionSyntax = "data.frameNames", relativeTolerance = 0.05,
-  verbosity = 0)
+eviSimulation(
+  welfare,
+  currentEstimate,
+  prospectiveEstimate,
+  numberOfModelRuns,
+  randomMethod = "calculate",
+  functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05,
+  verbosity = 0
+)
 }
 \arguments{
 \item{welfare}{either a \code{function} or a \code{list} with two \code{functions}, i.e.

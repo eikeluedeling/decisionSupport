@@ -4,8 +4,7 @@
 \alias{random.estimate}
 \title{Generate random numbers for an estimate.}
 \usage{
-\method{random}{estimate}(rho, n, method = "calculate",
-  relativeTolerance = 0.05, ...)
+\method{random}{estimate}(rho, n, method = "calculate", relativeTolerance = 0.05, ...)
 }
 \arguments{
 \item{rho}{\code{estimate}: multivariate distribution to be randomly sampled.}

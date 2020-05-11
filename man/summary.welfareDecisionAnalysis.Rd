@@ -4,8 +4,12 @@
 \alias{summary.welfareDecisionAnalysis}
 \title{Summarize Welfare Decision Analysis results.}
 \usage{
-\method{summary}{welfareDecisionAnalysis}(object, ..., digits = max(3,
-  getOption("digits") - 3), probs = c(0.05, 0.5, 0.95))
+\method{summary}{welfareDecisionAnalysis}(
+  object,
+  ...,
+  digits = max(3, getOption("digits") - 3),
+  probs = c(0.05, 0.5, 0.95)
+)
 }
 \arguments{
 \item{object}{An object of class \code{welfareDecisionAnalysis}.}
@@ -14,10 +18,10 @@
 
 \item{digits}{how many significant digits are to be used for
     numeric and complex \code{x}.  The default, \code{NULL}, uses
-    \code{\link{getOption}("digits")}.  This is a suggestion: enough decimal
+    \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
     places will be used so that the smallest (in magnitude) number has
     this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link{signif}}.)}
+    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
 
 \item{probs}{\code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no 
 quantiles will be displayed.}

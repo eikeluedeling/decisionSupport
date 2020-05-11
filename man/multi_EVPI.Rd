@@ -14,9 +14,16 @@ multi_EVPI(mc, first_out_var, write_table = FALSE, outfolder = NA)
 
 \method{summary}{EVPI_outputs}(object, ...)
 
-\method{plot}{EVPI_outputs}(x, out_var, fileformat = NA,
-  outfolder = NA, scale_results = TRUE, legend_table = NULL,
-  output_legend_table = NULL, ...)
+\method{plot}{EVPI_outputs}(
+  x,
+  out_var,
+  fileformat = NA,
+  outfolder = NA,
+  scale_results = TRUE,
+  legend_table = NULL,
+  output_legend_table = NULL,
+  ...
+)
 }
 \arguments{
 \item{mc}{output table from a Monte Carlo simulation,

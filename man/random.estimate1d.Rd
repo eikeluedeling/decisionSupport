@@ -4,8 +4,7 @@
 \alias{random.estimate1d}
 \title{Generate univariate random numbers defined by a 1-d estimate.}
 \usage{
-\method{random}{estimate1d}(rho, n, method = "calculate",
-  relativeTolerance = 0.05, ...)
+\method{random}{estimate1d}(rho, n, method = "calculate", relativeTolerance = 0.05, ...)
 }
 \arguments{
 \item{rho}{\code{estimate1d}: Univariate distribution to be randomly sampled.}

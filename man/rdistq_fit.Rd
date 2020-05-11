@@ -4,9 +4,16 @@
 \alias{rdistq_fit}
 \title{Quantiles based univariate random number generation (by parameter fitting).}
 \usage{
-rdistq_fit(distribution, n, percentiles = c(0.05, 0.5, 0.95), quantiles,
-  relativeTolerance = 0.05, tolConv = 0.001, fit.weights = rep(1,
-  length(percentiles)), verbosity = 1)
+rdistq_fit(
+  distribution,
+  n,
+  percentiles = c(0.05, 0.5, 0.95),
+  quantiles,
+  relativeTolerance = 0.05,
+  tolConv = 0.001,
+  fit.weights = rep(1, length(percentiles)),
+  verbosity = 1
+)
 }
 \arguments{
 \item{distribution}{A character string that defines the univariate distribution

@@ -4,9 +4,16 @@
 \alias{mcSimulation}
 \title{Perform a Monte Carlo simulation.}
 \usage{
-mcSimulation(estimate, model_function, ..., numberOfModelRuns,
-  randomMethod = "calculate", functionSyntax = "data.frameNames",
-  relativeTolerance = 0.05, verbosity = 0)
+mcSimulation(
+  estimate,
+  model_function,
+  ...,
+  numberOfModelRuns,
+  randomMethod = "calculate",
+  functionSyntax = "data.frameNames",
+  relativeTolerance = 0.05,
+  verbosity = 0
+)
 }
 \arguments{
 \item{estimate}{\code{estimate}: estimate of the joint probability distribution of
