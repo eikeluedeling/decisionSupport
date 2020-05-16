@@ -6,8 +6,8 @@
 #' @param cashflow_var_name is a character string representing the variable name used to define cashflow in the returned list of outputs from the \code{\link[decisionSupport]{decisionSupport}} function.
 #' @param xlabel is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.
 #' @param ylabel is a character string representing the title of the units of the cashflow to be printed on the y axis.
-#' @param color_25_75 is a character string referring to the color name for the shade fill of the 25-75% quantile from the grDevices colors. The default is "grey40". 
-#' @param color_5_95 is a character string referring to the shade fill of the 5-95% quantile from the grDevices colors. The default is "grey70". 
+#' @param color_25_75 is a character string referring to the color name for the shade fill of the 25-75\% quantile from the grDevices colors. The default is "grey40". 
+#' @param color_5_95 is a character string referring to the shade fill of the 5-95\% quantile from the grDevices colors. The default is "grey70". 
 #' @param color_median is a character string  referring to the color name for the median line from the grDevices colors. The default is  "blue".
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis cashflow risk uncertainty
@@ -26,7 +26,8 @@
 #' 
 #' test_data <- data.frame(replicate(20, sample(-10000:10000, 200, rep = TRUE)))
 #' 
-#' #Make a name for the cashflow variables with time append (as is done in the decisionSupport function)  
+#' #Make a name for the cashflow variables with time append (as is done in the decisionSupport function)
+#' 
 #' names(test_data) <-  gsub(x = names(test_data),
 #'                           pattern = "X",
 #'                           replacement = "cashflow")

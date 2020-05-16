@@ -10,7 +10,7 @@
   optional = FALSE,
   ...,
 
-  stringsAsFactors = default.stringsAsFactors()
+  stringsAsFactors = NA
 
 )
 }

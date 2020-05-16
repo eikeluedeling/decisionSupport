@@ -23,9 +23,9 @@ plot_cashflow(
 
 \item{ylabel}{is a character string representing the title of the units of the cashflow to be printed on the y axis.}
 
-\item{color_25_75}{is a character string referring to the color name for the shade fill of the 25-75% quantile from the grDevices colors. The default is "grey40".}
+\item{color_25_75}{is a character string referring to the color name for the shade fill of the 25-75\% quantile from the grDevices colors. The default is "grey40".}
 
-\item{color_5_95}{is a character string referring to the shade fill of the 5-95% quantile from the grDevices colors. The default is "grey70".}
+\item{color_5_95}{is a character string referring to the shade fill of the 5-95\% quantile from the grDevices colors. The default is "grey70".}
 
 \item{color_median}{is a character string  referring to the color name for the median line from the grDevices colors. The default is  "blue".}
 }
@@ -41,7 +41,8 @@ This function automatically defines quantiles (5 to 95\% and 25 to 75\%) as well
 
 test_data <- data.frame(replicate(20, sample(-10000:10000, 200, rep = TRUE)))
 
-#Make a name for the cashflow variables with time append (as is done in the decisionSupport function)  
+#Make a name for the cashflow variables with time append (as is done in the decisionSupport function)
+
 names(test_data) <-  gsub(x = names(test_data),
                           pattern = "X",
                           replacement = "cashflow")
