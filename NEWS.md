@@ -14,3 +14,6 @@ output: html_document
 # Updated plotting functions
 - Add basic function `plot_cashflow` for plotting cashflow 
 - Add general function `plot_distributions` for distribution plots 
+
+# Work in progress
+- Boxploth option in `plot_distributions`
