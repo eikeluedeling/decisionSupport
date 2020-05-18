@@ -15,7 +15,6 @@
 #' @details 
 #' This function automatically defines quantiles (5 to 95\% and 25 to 75\%) as well as a value for the median. 
 #' 
-#' @import tidyr dplyr ggplot2
 #'  
 #' @references 
 #' Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
@@ -38,6 +37,8 @@
 #'               ylabel = "Annual cashflow in USD", 
 #'               color_25_75 = "green4", color_5_95 = "green1",
 #'               color_median = "red")
+#'   
+#' @importFrom magrittr %>%
 #'   
 #'@export plot_cashflow
 #' 
@@ -63,9 +64,9 @@ plot_cashflow <- function(mcSimulationResults, cashflow_var_name,
   assertthat::assert_that(is.character(color_5_95), msg = "color_5_95 is not a character string.")
   assertthat::assert_that(is.character(color_median), msg = "color_median is not a character string.")
   
-  assertthat::assert_that(color_25_75 %in% colors(), msg = "Please choose a color name for color_25_75 from the grDevices colors.")
-  assertthat::assert_that(color_5_95 %in% colors(), msg = "Please choose a color name for color_5_95 from the grDevices colors.")
-  assertthat::assert_that(color_median %in% colors(), msg = "Please choose a color name for color_median from the grDevices colors.")
+  assertthat::assert_that(color_25_75 %in% grDevices::colors(), msg = "Please choose a color name for color_25_75 from the grDevices colors.")
+  assertthat::assert_that(color_5_95 %in% grDevices::colors(), msg = "Please choose a color name for color_5_95 from the grDevices colors.")
+  assertthat::assert_that(color_median %in% grDevices::colors(), msg = "Please choose a color name for color_median from the grDevices colors.")
   
   assertthat::assert_that(any(substr(names(data), 
                                      1, nchar(cashflow_var_name)) == cashflow_var_name), 
@@ -80,8 +81,8 @@ plot_cashflow <- function(mcSimulationResults, cashflow_var_name,
   
   #subset cashflow with cover 
   subset_data <- data %>%
-    dplyr::select(starts_with(cashflow_var_name)) %>%
-    tidyr::pivot_longer(starts_with(cashflow_var_name)) 
+    dplyr::select(dplyr::starts_with(cashflow_var_name)) %>%
+    tidyr::pivot_longer(dplyr::starts_with(cashflow_var_name)) 
   
   subset_data <- subset_data %>%
     dplyr::mutate(x_scale = as.numeric(substr(subset_data$name, 

@@ -17,8 +17,6 @@
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
 #' 
-#' 
-#' @import tidyr dplyr ggplot2 tidyselect
 #'  
 #' @references 
 #' Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
@@ -132,7 +130,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
                geom_density(alpha = 0.5, color = NA) +
                ggstance::geom_boxploth(aes(x = value, y = 0),
                                        #place the boxplot consistently at the bottom of the graph
-                                       width = max(density(standard_plot_data$value)$y) * 0.1,
+                                       width = max(stats::density(standard_plot_data$value)$y) * 0.1,
                                        alpha = 0.5,
                                        size = 0.3, 
                                        outlier.shape = outlier_shape) +
