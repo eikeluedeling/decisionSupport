@@ -81,7 +81,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
   
   
   # subset NPV variables
-  data <- dplyr::select(data, all_of(vars))
+  data <- dplyr::select(data, tidyselect::all_of(vars))
   
   # define the names
   if (is.null(new_names) | is.null(old_names)){
@@ -92,7 +92,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
   data <- dplyr::rename_at(data, dplyr::vars(tidyselect::all_of(old_names)), ~ new_names)
     
     #assign data
-    standard_plot_data <- tidyr::pivot_longer(data, all_of(vars))
+    standard_plot_data <- tidyr::pivot_longer(data, tidyselect::all_of(vars))
     
     # define the colors
     if (is.null(colors)){
@@ -106,12 +106,13 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     
     
     # define the standard plot to be used as baseline plot
-    standard_plot <-  ggplot2::ggplot(standard_plot_data, aes(x = value, group = name, fill = name)) +
-      scale_x_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
-      scale_y_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
-      scale_fill_manual(values = colors) +
-      labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
-    theme_bw() 
+    standard_plot <-  ggplot2::ggplot(standard_plot_data,
+                                      ggplot2::aes(x = value, group = name, fill = name)) +
+      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+      ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+      ggplot2::scale_fill_manual(values = colors) +
+      ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
+      ggplot2::theme_bw() 
     
     if (method == "smooth_simple_overlay") {
       return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) +
@@ -126,23 +127,24 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     if (method == "boxplot_density") {
       
       return(
-        ggplot2::ggplot(standard_plot_data, aes(x = value, fill = name)) +
-               geom_density(alpha = 0.5, color = NA) +
-               ggstance::geom_boxploth(aes(x = value, y = 0),
+        ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, fill = name)) +
+          ggplot2::geom_density(alpha = 0.5, color = NA) +
+               ggstance::geom_boxploth(ggplot2::aes(x = value, y = 0),
                                        #place the boxplot consistently at the bottom of the graph
-                                       width = max(stats::density(standard_plot_data$value)$y) * 0.1,
+                                       width = max(stats::density(standard_plot_data$value)$y * 0.1),
+                                       varwidth = TRUE,
                                        alpha = 0.5,
                                        size = 0.3, 
                                        outlier.shape = outlier_shape) +
-               scale_x_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
-               scale_y_continuous(expand = expansion(mult = 0.01), labels = scales::comma) +
-               scale_fill_manual(values = colors) +
-               labs(x = x_axis_name, y = y_axis_name) +
-               facet_wrap(. ~ name) +
-               theme_bw() +
-               theme(strip.background = element_blank(),
+          ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+          ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+          ggplot2::scale_fill_manual(values = colors) +
+          ggplot2::labs(x = x_axis_name, y = y_axis_name) +
+          ggplot2::facet_wrap(. ~ name, scales = 'free_x') +
+          ggplot2::theme_bw() +
+          ggplot2::theme(strip.background = ggplot2::element_blank(),
                  legend.position = "none",
-                 axis.text.x = element_text(
+                 axis.text.x = ggplot2::element_text(
                    angle = 45,
                    hjust = 1,
                    vjust = 1),
