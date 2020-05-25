@@ -1,4 +1,4 @@
-
+library(tidyverse)
 library(decisionSupport)
 library(ggplot2)
 
@@ -167,6 +167,16 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
   functionSyntax = "plainNames"
 )
 
+plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("Invert_NPV", "NO_Invert_NPV"),
+                   method = 'boxplot_density',
+                   y_axis_name = "Hi",
+                   axis.title.x = ggplot2::element_text(size = 15, family = "serif"))
+
+
+
+
+
+
 # Look for the class of the mcSimulation output
 
 class(test_mcSimulation_function)
@@ -251,6 +261,7 @@ plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("I
 class(test_mcSimulation_function)[[1]]
 
 
-
+plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = c("Cashflow_interv",
+                                                                                      "Cashflow_n_interv"))
 
 

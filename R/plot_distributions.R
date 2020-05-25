@@ -124,14 +124,43 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
                ggplot2::theme(...)) 
     }
     
+    
+    
     if (method == "boxplot_density") {
       
+      # Since the width of boxploth will change depending on the difference between options, we
+      # implemented a small regression to allow the function define the correct value for the
+      # width parameter.
+      
+      # Here we make an assumption to represent a wide range of distribution differences...
+      # Percentage is the most "adequate" value for boxploth width according to the difference between
+      # options (visual selection)
+      
+      data <- data.frame(percentage = c(0.1, 0.15, 0.5, 4),
+                         options_difference = c(100, 11229249, 58838895, 507997898))
+
+      #options_difference = c(11229249, 58838895, 507997898)
+
+      # Compute a linear regression between percentage and option differences
+
+      regression <- lm(percentage ~ options_difference, data = data)
+
+      # Estimate the difference between options provided by the user
+
+      options_difference <- max(standard_plot_data$value) - min(standard_plot_data$value)
+
+      # Compute the boxploth_width parameter using the linear regression coefficients
+
+      boxploth_width_correction <- coefficients(regression)[[1]] + (coefficients(regression)[[2]] * options_difference)
+
       return(
+        
         ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, fill = name)) +
           ggplot2::geom_density(alpha = 0.5, color = NA) +
                ggstance::geom_boxploth(ggplot2::aes(x = value, y = 0),
                                        #place the boxplot consistently at the bottom of the graph
-                                       width = max(stats::density(standard_plot_data$value)$y * 0.1),
+                                       width = max(stats::density(standard_plot_data$value)$y *
+                                                     boxploth_width_correction),
                                        varwidth = TRUE,
                                        alpha = 0.5,
                                        size = 0.3, 
