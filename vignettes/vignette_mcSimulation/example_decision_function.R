@@ -145,8 +145,8 @@ NPV_interv <-
 NPV_n_interv <-
   discount(result_n_interv, discount_rate, calculate_NPV = TRUE)
 
-return(list(Invert_NPV = NPV_interv,
-       NO_Invert_NPV = NPV_n_interv,
+return(list(Interv_NPV = NPV_interv,
+       NO_Interv_NPV = NPV_n_interv,
        Cashflow_interv = result_interv,
        Cashflow_n_interv = result_n_interv))
 }
@@ -167,7 +167,7 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
   functionSyntax = "plainNames"
 )
 
-plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("Invert_NPV", "NO_Invert_NPV"),
+plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("Interv_NPV", "NO_Interv_NPV"),
                    method = 'boxplot_density',
                    y_axis_name = "Hi",
                    axis.title.x = ggplot2::element_text(size = 15, family = "serif"))
@@ -250,7 +250,7 @@ names(mcSimulation_DF)
 
 
 
-plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("Invert_NPV", "NO_Invert_NPV"),
+plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("Interv_NPV", "NO_Interv_NPV"),
                    method = 'boxplot_density',
                    y_axis_name = "Hi",
                    axis.title.x = ggplot2::element_text(size = 15, family = "serif"))

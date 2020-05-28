@@ -20,27 +20,49 @@
 #' Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
 #' 
 #' @examples 
+#'  
+#' ##############################################################
+#' # Example 1 (Creating the estimate from the command line):
+#' #############################################################
+#' # Create the estimate object:
 #' 
-#' #Generate random dataset of 200 Monte Carlo simulations for cashflow
+#' variable = c("revenue", "costs", "n_years")
+#' distribution = c("norm", "norm", "const")
+#' lower = c(10000,  5000, 10)
+#' upper = c(100000, 50000, 10)
+#' costBenefitEstimate <- as.estimate(variable, distribution, lower, upper)
 #' 
-#' test_data <- data.frame(replicate(20, sample(-10000:10000, 200, rep = TRUE)))
+#' # (a) Define the model function without name for the return value:
 #' 
-#' #Make a name for the cashflow variables with time append (as is done in the mcSimulation function)
+#' profit1 <- function(x) {
+#'   
+#'   cashflow <- vv(revenue - costs, n = n_years, var_CV = 100)
+#'   
+#'   return(list(Revenues = revenue,
+#'               Costs = costs,
+#'               Cashflow = cashflow))
+#' }
 #' 
-#' names(test_data) <-  gsub(x = names(test_data),
-#'                           pattern = "X",
-#'                           replacement = "cashflow")
+#' # Perform the Monte Carlo simulation:
+#' 
+#' predictionProfit1 <- mcSimulation(estimate = costBenefitEstimate,
+#'                                   model_function = profit1,
+#'                                   numberOfModelRuns = 10000,
+#'                                   functionSyntax = "plainNames")
 #' 
 #' 
-#' plot_cashflow(mcSimulation_object = test_data, cashflow_var_name = "cashflow",
+#' # Plot the cashflow distribution over time
+#' 
+#' plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow",
 #'               xlabel = "Years with intervention",
-#'               ylabel = "Annual cashflow in USD", 
+#'               ylabel = "Annual cashflow in USD",
 #'               color_25_75 = "green4", color_5_95 = "green1",
 #'               color_median = "red")
+#'
 #'   
 #' @importFrom magrittr %>%
 #'   
-#'@export plot_cashflow
+#' @export plot_cashflow
 #' 
 plot_cashflow <- function(mcSimulation_object, cashflow_var_name, 
                           xlabel = "Timeline of intervention", 
@@ -99,7 +121,7 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   #define the quantiles of cashflow for each value of x_scale based on the replicates of the MC
   
   summary_subset_data <- subset_data %>%
-    group_by(x_scale) %>%
+    dplyr::group_by(x_scale) %>%
     summarize(p5 = quantile(value, 0.05),
               p25 = quantile(value, 0.25),
               p50 = quantile(value, 0.50),
