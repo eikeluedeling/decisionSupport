@@ -143,7 +143,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
 
       # Compute a linear regression between percentage and option differences
 
-      regression <- lm(percentage ~ options_difference, data = data)
+      regression <- stats::lm(percentage ~ options_difference, data = data)
 
       # Estimate the difference between options provided by the user
 
@@ -151,7 +151,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
 
       # Compute the boxploth_width parameter using the linear regression coefficients
 
-      boxploth_width_correction <- coefficients(regression)[[1]] + (coefficients(regression)[[2]] * options_difference)
+      boxploth_width_correction <- stats::coefficients(regression)[[1]] + (stats::coefficients(regression)[[2]] * options_difference)
 
       return(
         

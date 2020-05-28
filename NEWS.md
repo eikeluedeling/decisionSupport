@@ -18,4 +18,4 @@ output: html_document
 
 # Work in progress
 - Use linear regression model to generate values for a correction of the boxplot width (may be replaced with a exponential model, this might be a better fit for the kinds of differences that we generally see in NPVs and other variables)
-- Started to work on the cashflow plot by adding the mcSimulation object (will generate a panel comparison c.f. boxplot in plot_distribiutions)
+- Started to work on the cashflow plot by adding the mcSimulation object (will generate a panel comparison cf. boxplot in plot_distribiutions)
