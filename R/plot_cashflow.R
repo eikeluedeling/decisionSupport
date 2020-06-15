@@ -10,7 +10,8 @@
 #' @param color_5_95 is a character string referring to the shade fill of the 5-95\% quantile from the grDevices colors. The default is "grey70". 
 #' @param color_median is a character string  referring to the color name for the median line from the grDevices colors. The default is  "blue".
 #' @param facet_labels is a character string referring to the names for different decisions. The default is the cashflow_var_name parameter.
-#'  
+#' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
+#' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis cashflow risk uncertainty
 #' 
 #' @details 
@@ -45,8 +46,8 @@
 #'             Revenues_option2 = revenue_option2,
 #'             Costs_option1 = costs_option1,
 #'             Costs_option2 = costs_option2,
-#'             Cashflow_option1 = cashflow_option1,
-#'             Cashflow_option2 = cashflow_option2))
+#'             Cashflow_option_one = cashflow_option1,
+#'             Cashflow_option_two = cashflow_option2))
 #' }
 #' 
 #' # Perform the Monte Carlo simulation:
@@ -59,7 +60,7 @@
 #' 
 #' # Plot the cashflow distribution over time
 #' 
-#' plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow",
+#' plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow_option_one",
 #'               xlabel = "Years with intervention",
 #'               ylabel = "Annual cashflow in USD",
 #'               color_25_75 = "green4", color_5_95 = "green1",
@@ -71,7 +72,7 @@
 #' # Compare the cashflow distribution over time for multiple decision options  
 #' 
 #' plot_cashflow(mcSimulation_object = predictionProfit1, 
-#'               cashflow_var_name = c("Cashflow_option1", "Cashflow_option2"),
+#'               cashflow_var_name = c("Cashflow_option_one", "Cashflow_option_two"),
 #'               xlabel = "Years with intervention",
 #'               ylabel = "Annual cashflow in USD",
 #'               color_25_75 = "green4", color_5_95 = "green1",
@@ -79,6 +80,7 @@
 #'               facet_labels = c("Option 1", "Option 2"))
 #'   
 #' @importFrom magrittr %>%
+#' @importFrom stringr str_detect str_locate
 #'   
 #' @export plot_cashflow
 #' 
@@ -88,7 +90,8 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
                           color_25_75 = "grey40", 
                           color_5_95 = "grey70", 
                           color_median = "blue", 
-                          facet_labels = cashflow_var_name)
+                          facet_labels = cashflow_var_name,
+                          ...)
   {
   
   
@@ -103,7 +106,11 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   data <- data.frame(mcSimulation_object$y,
                      mcSimulation_object$x)
   
-  assertthat::assert_that(is.character(cashflow_var_name), msg = "cashflow_var_name is not a character string.")
+  assertthat::assert_that(is.character(cashflow_var_name),
+                          msg = "cashflow_var_name is not a character string.")
+  assertthat::assert_that(all(!stringr::str_detect(cashflow_var_name, pattern = "[:digit:]")),
+                          msg = "cashflow_var_name contains numbers. Consider renaming your cashflow variables in the model function")
+  
   
   assertthat::assert_that(is.character(xlabel), msg = "xlabel is not a character string.")
   assertthat::assert_that(is.character(ylabel), msg = "ylabel is not a character string.")
@@ -130,27 +137,31 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   #subset cashflow with cover 
   subset_data <- data %>%
     dplyr::select(dplyr::starts_with(cashflow_var_name)) %>%
-    tidyr::pivot_longer(dplyr::starts_with(cashflow_var_name))  
+    tidyr::pivot_longer(dplyr::starts_with(cashflow_var_name)) 
   
-  subset_data <- subset_data %>%
+  # Detect the position of the year character
+  
+  years_position <- stringr::str_locate(subset_data$name, pattern = "[:digit:]")
+  
+  subset_data <- subset_data %>% 
     dplyr::mutate(x_scale = as.numeric(substr(subset_data$name, 
                                               #Add year assignment
-                                              nchar(cashflow_var_name) +1, 
-                                              nchar(subset_data$name))),
+                                              years_position[, 1], 
+                                              years_position[, 2])),
                   #divide options
                   decision_option = as.character(substr(subset_data$name, 
                                                # position of the first decision option
-                                               1, nchar(cashflow_var_name))))
+                                               1, (years_position[, 1] - 1))))
   
   #define the quantiles of cashflow for each value of x_scale based on the replicates of the MC
   
-  summary_subset_data <- subset_data %>%
+  summary_subset_data <- suppressMessages(subset_data %>%
     dplyr::group_by(decision_option, x_scale) %>%
     dplyr::summarize(p5 = quantile(value, 0.05),
               p25 = quantile(value, 0.25),
               p50 = quantile(value, 0.50),
               p75 = quantile(value, 0.75),
-              p95 = quantile(value, 0.95)) 
+              p95 = quantile(value, 0.95))) 
   
   ggplot2::ggplot(summary_subset_data, 
                   ggplot2::aes(x_scale)) +
@@ -172,7 +183,8 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
     ggplot2::facet_wrap(~ factor(decision_option, labels = facet_labels)) +
     ggplot2::theme_bw() +
     ggplot2::theme(legend.margin = ggplot2::margin(-1, 0, 0, 0, unit = "cm"), 
-          strip.background = ggplot2::element_blank())
+          strip.background = ggplot2::element_blank(),
+          ...)
   
   }
 

@@ -12,7 +12,8 @@ plot_cashflow(
   color_25_75 = "grey40",
   color_5_95 = "grey70",
   color_median = "blue",
-  facet_labels = cashflow_var_name
+  facet_labels = cashflow_var_name,
+  ...
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ plot_cashflow(
 \item{color_median}{is a character string  referring to the color name for the median line from the grDevices colors. The default is  "blue".}
 
 \item{facet_labels}{is a character string referring to the names for different decisions. The default is the cashflow_var_name parameter.}
+
+\item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
 \description{
 Creates a cashflow plot of the returned list of related outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function using \code{\link{ggplot2}}
@@ -63,8 +66,8 @@ return(list(Revenues_option1 = revenue_option1,
             Revenues_option2 = revenue_option2,
             Costs_option1 = costs_option1,
             Costs_option2 = costs_option2,
-            Cashflow_option1 = cashflow_option1,
-            Cashflow_option2 = cashflow_option2))
+            Cashflow_option_one = cashflow_option1,
+            Cashflow_option_two = cashflow_option2))
 }
 
 # Perform the Monte Carlo simulation:
@@ -77,7 +80,7 @@ predictionProfit1 <- mcSimulation(estimate = costBenefitEstimate,
 
 # Plot the cashflow distribution over time
 
-plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow",
+plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow_option_one",
               xlabel = "Years with intervention",
               ylabel = "Annual cashflow in USD",
               color_25_75 = "green4", color_5_95 = "green1",
@@ -89,7 +92,7 @@ plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cash
 # Compare the cashflow distribution over time for multiple decision options  
 
 plot_cashflow(mcSimulation_object = predictionProfit1, 
-              cashflow_var_name = c("Cashflow_option1", "Cashflow_option2"),
+              cashflow_var_name = c("Cashflow_option_one", "Cashflow_option_two"),
               xlabel = "Years with intervention",
               ylabel = "Annual cashflow in USD",
               color_25_75 = "green4", color_5_95 = "green1",

@@ -172,9 +172,9 @@ plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("I
                    y_axis_name = "Hi",
                    axis.title.x = ggplot2::element_text(size = 15, family = "serif"))
 
-
-
-
+plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = c("Cashflow_interv",
+                                                                                      "Cashflow_n_interv"),
+              axis.title.x = ggplot2::element_text(size = 15, family = "serif"))
 
 
 # Look for the class of the mcSimulation output
