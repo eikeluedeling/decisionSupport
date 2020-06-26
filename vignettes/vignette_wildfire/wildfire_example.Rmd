@@ -2,7 +2,6 @@
 title: "Controlled burns in conifer forests"
 author: "Eike Luedeling and Cory Whitney, University of Bonn, Germany"
 date: "`r Sys.Date()`"
-csl: elsevier-harvard.csl
 bibliography: wildfire.bib
 output: rmarkdown::html_vignette
 vignette: >

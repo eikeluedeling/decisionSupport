@@ -1,25 +1,16 @@
 ---
-title: "Applying mcSimulation function in decisionSupport"
+title: "Running a Monte Carlo in decisionSupport with the mcSimulation function"
 author: "Cory Whitney, Eduardo Fernandez, and Eike Luedeling <br /><small>INRES-Horticultural Sciences, University of Bonn, Auf dem Huegel 6, 53121 Bonn, Germany<small/>"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Applying mcSimulation function in decisionSupport}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-#bibliography:
- # - packages.bib
-  #- wildfire.bib 
-#csl: elsevier-harvard.csl
+bibliography:
+ - packages.bib
+ - vignettes.bib 
 ---
-<!-- <style> -->
-<!-- img { -->
-<!-- display: block; -->
-<!-- margin: 1!important; -->
-<!-- padding: 0!important; -->
-<!-- border: 0!important} -->
-<!-- </style> -->
 
-<!-- <img src = "sticker.png" alt = "decisionSupport logo" align = "right" width = "20%" height = "20%"/> -->
 
 <style>
 body {
@@ -46,9 +37,26 @@ require(kableExtra)
 library(decisionSupport)
 ```
 
-## Introduction
+### Decision analysis with the decisionSupport package
 
-In this vignette we use the libraries from the tidyverse collection. Install the libraries from CRAN using the `install.packages()` command. For using the libraries, load the packages with the `library()` command.
+#### The decisionSupport package
+
+Many of the variables decision makers need to consider in development cannot be precisely quantified, at least not without unreasonable effort. The major objective of (prescriptive) decision analysis is to support the decision-making processes when faced with this problem [@RN5]. Decision analysis can make forecasts of decision outcomes without precise numbers. 
+
+The decisionSupport package [@R-decisionSupport] implements this as a Monte Carlo simulation, which generates a large number of plausible system outcomes, based on random numbers for each input variable, drawn from user-specified probability distributions. 
+
+1)	an R function that predicts decision outcomes based on the variables named in a separate data table. This R function is customized by the user to address a particular decision problem to provide the decision analysis model.  
+2)	an input table (in .csv format) specifying the names and probability distributions for all variables used in the decision model. These distributions aim to represent the full range of possible values for each component of the model.  
+
+These two inputs are provided as arguments to the `mcSimulation` function, which conducts a Monte Carlo analysis with repeated model runs based on probability distributions for all uncertain variables. The data table and model are customized to fit the particulars of a specific decision.
+
+#### Example – Reservoir Sedimentation in the Upper Volta River Basin of Burkina Faso
+
+We showcase a partial example of a Monte-Carlo-based selection of a sedimentation management strategy for a reservoir in the Upper Volta River Basin of Burkina Faso [@Lanzanova]. These reservoirs have multiple benefits for rural communities and are important for food security and livelihoods. Sedimentation is a major impediment for the functioning of these reservoirs. The design of an efficient sedimentation management intervention requires assessment of multiple uncertain quantities and risks. Decision analysis is highly applicable in such data-scarce environments, where science has traditionally struggled to provide actionable information to policy-makers, development practitioners, NGOs and rural communities. 
+
+Here we walk through a simple example of the use of various decisionSupport functions with the `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/) [@R-base]. 
+
+Install the libraries from CRAN using the `install.packages()` command. For using the libraries, load the packages with the `library()` command.
 
 ```{r install_packages, eval = FALSE}
 install.packages("tidyverse")
@@ -56,13 +64,12 @@ install.packages("tidyverse")
 library(tidyverse)
 ```
 
-Here we generate a model as a function using `decisionSupport` library. We applied the functions `vv()` which produces time series with variation from a pre-defined mean and coefficient of variation, `chance_event()` which randomly simulate whether events occur, and `discount()` which discounts values along a time series.
+Here we generate a model as a function using `decisionSupport` library. The example is a simple version of the model applied in Burkina Faso [@Lanzanova].  We use the `decisionSupport` functions `vv()` to produce time series with variation from a pre-defined mean and coefficient of variation, `chance_event()` to simulate whether events occur and `discount()` to discount values along a time series.
 
 ```{r model}
 example_decision_function <- function(x, varnames){
-  # ex-post risk: impacts the benefits ####
-  # None included yet
-  # ex-ante risk: impacts the implementation of interventions ####
+  
+  # calculate ex-ante risks: impact the implementation of interventions ####
   intervention_NonPopInvolvEvent <-
     chance_event(intervention_NonPopInvolv, 1, 0, n = 1)
   
@@ -197,7 +204,7 @@ return(list(NPV_decision_do = NPV_interv - NPV_n_interv,
 
 ```
 
-Using the model above, we can perform a Monte Carlo simulation with the `mcSimulation()` function from `decisionSupport`. This function generates a distribution representing the desired outputs (see `return()` function above) by calculating random draws in our defined `example_decision_function()`. 
+Using the model function above, we can perform a Monte Carlo simulation with the `mcSimulation()` function from `decisionSupport`. This function generates a distribution representing the desired outputs (see `return()` function above) by calculating random draws in our defined `example_decision_function()`. 
 
 ```{r mcSimulation}
 test_mcSimulation_function <- decisionSupport::mcSimulation(
@@ -209,11 +216,17 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 
 ```
 
+We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us the outcome distribution of the decision (difference in NPV between do and do not do). 
 
 ```{r}
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("NPV_decision_do"),
                    method = 'boxplot_density')
 ```
 
+```{r}
+plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
+
+
+```
 
 ## References

@@ -29,6 +29,7 @@ Imports:
     dplyr,
     fANCOVA (>= 0.5),
     ggplot2 (>= 3.2.0),
+    ggstance,
     grDevices,
     magrittr,
     msm (>= 1.5),
@@ -41,7 +42,6 @@ Imports:
     tidyselect
 Suggests:
     eha (>= 2.4.2),
-    ggstance,
     knitr,
     mc2d (>= 0.1.15),
     pls (>= 2.4.3),
