@@ -41,7 +41,7 @@ library(decisionSupport)
 
 #### The decisionSupport package
 
-Many of the variables decision makers need to consider in development cannot be precisely quantified, at least not without unreasonable effort. The major objective of (prescriptive) decision analysis is to support the decision-making processes when faced with this problem [@RN5]. Decision analysis can make forecasts of decision outcomes without precise numbers. 
+Many of the variables decision makers need to consider in development cannot be precisely quantified, at least not without unreasonable effort. The major objective of (prescriptive) decision analysis is to support the decision-making processes when faced with this problem [@Luedeling2016]. Decision analysis can make forecasts of decision outcomes without precise numbers. 
 
 The decisionSupport package [@R-decisionSupport] implements this as a Monte Carlo simulation, which generates a large number of plausible system outcomes, based on random numbers for each input variable, drawn from user-specified probability distributions. 
 
@@ -52,7 +52,7 @@ These two inputs are provided as arguments to the `mcSimulation` function, which
 
 #### Example – Reservoir Sedimentation in the Upper Volta River Basin of Burkina Faso
 
-We showcase a partial example of a Monte-Carlo-based selection of a sedimentation management strategy for a reservoir in the Upper Volta River Basin of Burkina Faso [@Lanzanova]. These reservoirs have multiple benefits for rural communities and are important for food security and livelihoods. Sedimentation is a major impediment for the functioning of these reservoirs. The design of an efficient sedimentation management intervention requires assessment of multiple uncertain quantities and risks. Decision analysis is highly applicable in such data-scarce environments, where science has traditionally struggled to provide actionable information to policy-makers, development practitioners, NGOs and rural communities. 
+We showcase a partial example of a Monte-Carlo-based selection of a sedimentation management strategy for a reservoir in the Upper Volta River Basin of Burkina Faso [@Lanzanova2019]. These reservoirs have multiple benefits for rural communities and are important for food security and livelihoods. Sedimentation is a major impediment for the functioning of these reservoirs. The design of an efficient sedimentation management intervention requires assessment of multiple uncertain quantities and risks. Decision analysis is highly applicable in such data-scarce environments, where science has traditionally struggled to provide actionable information to policy-makers, development practitioners, NGOs and rural communities. 
 
 Here we walk through a simple example of the use of various decisionSupport functions with the `tidyverse` libraries including `ggplot2`, `plyr` and `dplyr` among others in the [R programming language](https://www.r-project.org/) [@R-base]. 
 
@@ -73,21 +73,25 @@ example_decision_function <- function(x, varnames){
   intervention_NonPopInvolvEvent <-
     chance_event(intervention_NonPopInvolv, 1, 0, n = 1)
   
-  # calculation of common random draws for all intervention model runs ####
+  # pre-calculation of common random draws for all intervention model runs ####
   
+  # profits from Tropical Livestock Units (TLU)
   TLU <- vv(TLU_no_intervention, var_CV, n_years)
   TLU_profit <- vv(profit_per_TLU, var_CV, n_years)
   
+  # benefits of fruit
   precalc_intervention_fruit_benefits <-
     vv(intervention_fruit_area_ha, var_CV, n_years) *
     vv(intervention_fruit_yield_t_ha, var_CV, n_years) *
     vv(intervention_fruit_profit_USD_t, var_CV, n_years)
   
+  # benefits of vegetables
   precalc_intervention_vegetable_benefits <-
     vv(intervention_vegetable_area_ha, var_CV, n_years) *
     vv(intervention_vegetable_yield_t_ha, var_CV, n_years) *
     vv(intervention_vegetable_profit_USD_t, var_CV, n_years)
   
+  # benefits of rainfed crops
   precalc_intervention_rainfed_crop_benefits <-
     vv(intervention_rainfed_crop_area_ha, var_CV, n_years) *
     vv(intervention_rainfed_crop_yield_t_ha, var_CV, n_years) *
@@ -198,7 +202,9 @@ NPV_n_interv <-
 
 # Beware, if you do not name your outputs (left-hand side of the equal sign) in the return section, the variables will be called output_1, _2, etc.
 
-return(list(NPV_decision_do = NPV_interv - NPV_n_interv,
+return(list(Interv_NPV = NPV_interv,
+            NO_Interv_NPV = NPV_n_interv,
+            NPV_decision_do = NPV_interv - NPV_n_interv,
             Cashflow_decision_do = result_interv - result_n_interv))
 }
 
@@ -216,11 +222,20 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 
 ```
 
-We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us the outcome distribution of the decision (difference in NPV between do and do not do). 
+We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us an overlay of the full results of the Monte Carlo model of the decision options, i.e. the expected NPV if we choose to do the intervention `Interv_NPV` or not do the intervention `NO_Interv_NPV`.
 
 ```{r}
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, vars = c("NPV_decision_do"),
-                   method = 'boxplot_density')
+decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+                                    vars = c("Interv_NPV", "NO_Interv_NPV"),
+                                    method = 'smooth_simple_overlay')
+```
+
+We can use the same function for the value of the decision (difference in NPV between do and do not do). This is more helpful for us since it shows us the outcome distribution of the decision itself. 
+
+```{r}
+decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+                                    vars = "NPV_decision_do",
+                                    method = 'boxplot_density')
 ```
 
 ```{r}
