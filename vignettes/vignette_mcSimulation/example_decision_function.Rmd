@@ -244,4 +244,51 @@ plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_nam
 
 ```
 
+
+
+## Work in progress (July 02, 2020)
+
+Here we apply a post-hoc analysis to the mcSimulation outputs. We used the plsr.mcSimulation function to determine the VIP score and coefficients.
+
+We also added a first attempt for the plot_pls() function (not final name obviously)
+
+
+```{r}
+# Apply plsr function to the mcSimulation object. Make sure the resultName has to be the name(character) of the column you want to perform the PLS
+
+pls <- plsr.mcSimulation(object = test_mcSimulation_function,
+                  resultName = names(test_mcSimulation_function$y)[3]) 
+
+# Extract the VIP scores with VIP() from chillR. Not sure now what is "Comp 1" (component we guess)
+
+vipResult <- chillR::VIP(pls)["Comp 1", ]
+
+# The same for the pls coefficients. The use of ,, is new to me
+
+coef <- pls$coefficients[,, 1]
+      
+# Create a df for further plotting
+
+pls_outputs <- data.frame(Variable = names(vipResult),
+                          VIP = vipResult,
+                          Coef = coef)
+
+# Remove the ugly rownames
+
+rownames(pls_outputs) <- NULL
+
+
+# Firt attempt of PLS plot
+
+ggplot(filter(pls_outputs, VIP > 1),
+       aes(VIP, reorder(Variable, VIP), fill = Coef > 0)) +
+  geom_col() +
+  geom_vline(aes(xintercept = 1))
+
+
+```
+
+
+
+
 ## References
