@@ -82,6 +82,7 @@ Collate:
     'plainNames2data.frameNames.R'
     'plot_cashflow.R'
     'plot_distributions.R'
+    'plot_pls.R'
     'plsr.mcSimulation.R'
     'print.mcSimuation.R'
     'print.summary.mcSimulation.R'

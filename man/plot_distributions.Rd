@@ -33,7 +33,7 @@ plot_distributions(
 
 \item{colors}{is the color palette to be used for the fill of distribution shapes and boxplots. The default is c("#009999", "#0000FF", "#56B4E9", "#009E73","#F0E442", "#0072B2", "#D55E00", "#CC79A7") assuming a maximum of eight variables to be compared}
 
-\item{outlier_shape}{is the optional shape to replace the outliers in the boxplot. To show no oultiers use NA. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for shape options}
+\item{outlier_shape}{is the optional shape to replace the outliers in the boxplot. To show no outliers use NA. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for shape options}
 
 \item{x_axis_name}{is the name to passed to the x-axis title. Default is "Outcome distribution" and allows allow the user to add a customized axis title}
 
