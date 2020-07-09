@@ -4,10 +4,22 @@
 \alias{plot_pls}
 \title{Visualizing Projection to Latent Structures (PLS) regression outputs for various types of Monte Carlo simulation results}
 \usage{
-plot_pls(plsrResults)
+plot_pls(
+  plsrResults,
+  input_table = NULL,
+  cut_off_line = 1,
+  threshold = 0.8,
+  ...
+)
 }
 \arguments{
 \item{plsrResults}{is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function}
+
+\item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable name with the label. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
+
+\item{cut_off_line}{is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection}
+
+\item{threshold}{is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.}
 }
 \description{
 Several plotting options for distribution outputs
@@ -51,6 +63,8 @@ resultName = names(predictionProfit1$y))
 }
 \references{
 Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. \url{https://doi.org/10.1007/s13593-020-00624-5}
+Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}
+Luedeling, Eike, and Keith Shepherd. “Decision-Focused Agricultural Research.” Solutions 7, no. 5 (2016): 46–54. \url{https://www.thesolutionsjournal.com/article/decision-focused-agricultural-research/}
 }
 \keyword{Monte-Carlo}
 \keyword{NPV}
