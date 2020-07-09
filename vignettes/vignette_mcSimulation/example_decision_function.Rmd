@@ -244,63 +244,22 @@ plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_nam
 
 ```
 
-
-
-## Work in progress (July 02, 2020)
-
-Here we apply a post-hoc analysis to the mcSimulation outputs. We used the plsr.mcSimulation function to determine the VIP score and coefficients.
-
-We also added a first attempt for the plot_pls() function (not final name obviously)
-
+We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimulation()` to determine the Variable Importance in the Projection (VIP) score and coefficients of a Projection to Latent Structures (PLS) regression model. This function uses the outputs of the `mcSimulation()` selecting all the input variables from the decision analysis function in the parameter `object` and then runs a PLS regression with an outcome variable defined in the parameter `resultName`. We use the code `names(test_mcSimulation_function$y)[3]` to select the outcome variable `r names(test_mcSimulation_function$y)[3]`, which is the third element of the list `y` in our `test_mcSimulation_function` outputs (this must be a character element). 
 
 ```{r}
-# Apply plsr function to the mcSimulation object. Make sure the resultName has to be the name(character) of the column you want to perform the PLS
 
-pls <- plsr.mcSimulation(object = test_mcSimulation_function,
+pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
                   resultName = names(test_mcSimulation_function$y)[3])
 
+```
 
-# Define the VIP function to avoid referring to chillR
+We run the `plot_pls()` on the results from `plsr.mcSimulation()` with a number of standard settings. The length of the bars is equal to VIP with a vertical line at '1' on the x-axis indicating a standard cut-off for VIP used for variable selection [@Whitney2017]. The overall plot only shows those variables with a VIP > 0.8, which is another common cut-off for variable selection [@Lanzanova2019, @Luedeling2016]. The colors of the bars represent the positive or negative coefficient of the given input variable with the output variable.
 
-VIP <- function(object) {
-  
-    if (object$method != "oscorespls")
-      stop("Only implemented for orthogonal scores algorithm.  Refit with 'method = \"oscorespls\"'")
-    if (nrow(object$Yloadings) > 1)
-      stop("Only implemented for single-response models")
-    
-    SS <- c(object$Yloadings)^2 * colSums(object$scores^2)
-    Wnorm2 <- colSums(object$loading.weights^2)
-    SSW <- sweep(object$loading.weights^2, 2, SS / Wnorm2, "*")
-    sqrt(nrow(SSW) * apply(SSW, 1, cumsum) / cumsum(SS))
-  }
+### STOP HERE becuase the mcSimulation is doing something wierd - see the variable 'AAAAH_something_wierd' in the result, not in the model ??? Maybe decisionSupport or other functions overcome this? 
 
-# Extract the VIP scores with VIP() from chillR. Not sure now what is "Comp 1" (component we guess)
+```{r}
 
-vipResult <- VIP(pls)["Comp 1", ]
-
-# The same for the pls coefficients. The use of ,, is new to me
-
-coef <- pls$coefficients[,, 1]
-      
-# Create a df for further plotting
-
-pls_outputs <- data.frame(Variable = names(vipResult),
-                          VIP = vipResult,
-                          Coef = coef)
-
-# Remove the ugly rownames
-
-rownames(pls_outputs) <- NULL
-
-
-# Firt attempt of PLS plot
-
-ggplot(filter(pls_outputs, VIP > 1),
-       aes(VIP, reorder(Variable, VIP), fill = Coef > 0)) +
-  geom_col() +
-  geom_vline(aes(xintercept = 1))
-
+plot_pls(pls_result, threshold = 0, cut_off_line = .1, input_table <- read_csv("example_input_table.csv") )
 
 ```
 

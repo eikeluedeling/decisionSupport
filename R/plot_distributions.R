@@ -71,7 +71,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
   # Check if mcSimulation_object is class mcSimulation
   
   assertthat::assert_that(class(mcSimulation_object)[[1]] == "mcSimulation",
-                          msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with 'mcSimulation' function.")
+                          msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with the 'mcSimulation' function.")
   
   
   # Create a dataframe from the mcSimulation_object
@@ -88,7 +88,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     new_names <- names(data)
     old_names <- names(data)}
     
-  #remane the data and add all_of() to overcome the ambiguity of 'external vector'
+  #rename the data and add all_of() to overcome the ambiguity of 'external vector'
   data <- dplyr::rename_at(data, dplyr::vars(tidyselect::all_of(old_names)), ~ new_names)
     
     #assign data

@@ -3,12 +3,18 @@
 #' Several plotting options for distribution outputs
 #' 
 #' @param plsrResults is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function
+#' @param cut_off_line is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection 
+#' @param threshold is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.
+#' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable name with the label. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
 #' 
 #'  
 #' @references 
 #' Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. \url{https://doi.org/10.1007/s13593-020-00624-5}
+#' Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}
+#' Luedeling, Eike, and Keith Shepherd. “Decision-Focused Agricultural Research.” Solutions 7, no. 5 (2016): 46–54. \url{https://www.thesolutionsjournal.com/article/decision-focused-agricultural-research/}
+
 #' 
 #' @examples 
 #' # Create the estimate object:
@@ -48,7 +54,13 @@
 #' 
 #' @export plot_pls
 #'
-plot_pls <- function(plsrResults){
+plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  threshold = 0.8, ...){
+  
+  
+  # Check if plsrResults is class mvr
+  
+  assertthat::assert_that(class(plsrResults) == "mvr",
+                          msg = "plsrResults is not class 'mvr', please provide a valid object. This does not appear to have been generated with the 'plsr.mcSimulation' function.")
   
   
   # Define the VIP function to avoid referring to chillR::VIP
@@ -80,25 +92,35 @@ plot_pls <- function(plsrResults){
   
   pls_outputs <- data.frame(Variable = names(vipResult),
                             VIP = vipResult,
-                            Coef = coef)
+                            Coefficient = coef)
   
   # Remove the ugly rownames
   
   rownames(pls_outputs) <- NULL
   
+  # Add own variable names from 'label' in the input table
+  
+  # check that the input table is available
+  if (!(is.null(input_table)))
+    
+    # join data frames (use 'by = ' to match columns from both data frames)
+    combined_table <- dplyr::left_join(pls_outputs, input_table, by = c( "Variable" = "variable")) else combined_table <- pls_outputs
+  
+  
   # PLS plot
   
-  ggplot(dplyr::filter(pls_outputs, VIP > 0.8),
-         aes(VIP, reorder(Variable, VIP), fill = Coef > 0)) +
+  ggplot(dplyr::filter(combined_table, VIP > threshold),
+         aes(VIP, reorder(label, VIP), fill = Coefficient > 0)) +
     geom_col() +
-    geom_vline(aes(xintercept = 1)) +
-    scale_fill_manual(breaks = c(TRUE, FALSE), values = c("cadetblue", "firebrick")) +
+    geom_vline(aes(xintercept = cut_off_line)) +
+    scale_fill_manual(breaks = c(TRUE, FALSE), values = c("cadetblue", "firebrick"), labels = c("Positive", "Negative")) +
     scale_x_continuous(expand = expansion(mult = c(0, 0.01))) +
     scale_y_discrete(expand = expansion(add = 0.5)) +
     labs(x = "Variable Importance in Projection",
-         y = NULL) +
+         y = NULL, fill = "Coefficient") +
     theme_bw() +
-    theme(legend.position = "none")
+    theme(legend.position = "bottom") +
+    theme(...)
   
   
   }
