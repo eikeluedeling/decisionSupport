@@ -116,24 +116,37 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
   if (!(is.null(input_table)))
     
     # join data frames (use 'by = ' to match columns from both data frames)
-    combined_table <- dplyr::left_join(pls_outputs, input_table, by = c( "Variable" = "variable")) else combined_table <- pls_outputs
+    combined_table <- dplyr::left_join(pls_outputs, input_table, by = c( "Variable" = "variable")) else
+      combined_table <- pls_outputs
   
+  # Filter the data according to the threshold defined by the user
+  
+  filtered_table <- dplyr::filter(combined_table, VIP > threshold)
+  
+  # Order the variable or labels according VIP
+  
+  if ("label" %in% colnames(filtered_table))
+    
+    ordered_vars <- stats::reorder(filtered_table$label, filtered_table$VIP) else
+      
+      ordered_vars <- stats::reorder(filtered_table$Variable, filtered_table$VIP)
+      
   
   # PLS plot
   
-  ggplot(dplyr::filter(combined_table, VIP > threshold),
-         aes(VIP, reorder(label, VIP), fill = Coefficient > 0)) +
-    geom_col() +
-    geom_vline(aes(xintercept = cut_off_line)) +
-    scale_fill_manual(breaks = c(TRUE, FALSE), values = c(pos_color, neg_color), 
-                      labels = c("Positive", "Negative")) +
-    scale_x_continuous(expand = expansion(mult = c(0, 0.01))) +
-    scale_y_discrete(expand = expansion(add = 0.5)) +
-    labs(x = "Variable Importance in Projection",
-         y = NULL, fill = "Coefficient") +
-    theme_bw() +
-    theme(legend.position = "bottom") +
-    theme(...)
+  ggplot2::ggplot(filtered_table,
+                  ggplot2::aes(VIP, ordered_vars, fill = Coefficient > 0)) +
+    ggplot2::geom_col() +
+    ggplot2::geom_vline(ggplot2::aes(xintercept = cut_off_line)) +
+    ggplot2::scale_fill_manual(breaks = c(TRUE, FALSE), values = c(pos_color, neg_color), 
+                               labels = c("Positive", "Negative")) +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.01))) +
+    ggplot2::scale_y_discrete(expand = ggplot2::expansion(add = 0.5)) +
+    ggplot2::labs(x = "Variable Importance in Projection",
+                  y = NULL, fill = "Coefficient") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.position = "bottom") +
+    ggplot2::theme(...)
   
   
   }
