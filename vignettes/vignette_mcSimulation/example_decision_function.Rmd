@@ -249,7 +249,7 @@ We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimula
 ```{r}
 
 pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
-                  resultName = names(test_mcSimulation_function$y)[3])
+                  resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
 
 ```
 
@@ -259,7 +259,9 @@ We run the `plot_pls()` on the results from `plsr.mcSimulation()` with a number 
 
 ```{r}
 
-plot_pls(pls_result, threshold = 0, cut_off_line = .1, input_table <- read_csv("example_input_table.csv") )
+input_table <- read.csv("example_input_table.csv")
+
+plot_pls(pls_result, threshold = 0, cut_off_line = .1, input_table = input_table)
 
 ```
 

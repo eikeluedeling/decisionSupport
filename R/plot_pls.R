@@ -1,11 +1,15 @@
 #' Visualizing Projection to Latent Structures (PLS) regression outputs for various types of Monte Carlo simulation results
 #' 
-#' Several plotting options for distribution outputs
+#' Plotting the Variable Importance in the Projection (VIP) statistic and coefficients of a PLS model of Monte Carlo outputs
 #' 
 #' @param plsrResults is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function
 #' @param cut_off_line is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection 
 #' @param threshold is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.
 #' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable name with the label. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
+#' @param pos_color is the color to be used for positive coefficient values, default is "cadetblue"
+#' @param neg_color is the color to be used for negative coefficient values, default is "firebrick"
+#' 
+#' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
 #' 
@@ -54,7 +58,8 @@
 #' 
 #' @export plot_pls
 #'
-plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  threshold = 0.8, ...){
+plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  
+                     threshold = 0.8, pos_color = "cadetblue", neg_color = "firebrick", ...){
   
   
   # Check if plsrResults is class mvr
@@ -80,12 +85,19 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  thresho
     sqrt(nrow(SSW) * apply(SSW, 1, cumsum) / cumsum(SS))
   }
   
-  # Extract the VIP scores with VIP() from chillR. Not sure now what is "Comp 1" (component we guess)
+  # Extract the VIP scores with VIP() from chillR. 
+  #User can choose 'ncomp' in the 'plsr.mcSimulation'
   
-  vipResult <- VIP(plsrResults)["Comp 1",]
   
-  # The same for the pls coefficients. The use of ,, is new to us
+  if (plsrResults$ncomp == 1) 
+    
+    #For 1 ncomp no need to do any subsetting
+    vipResult <- VIP(plsrResults) else 
+      
+      # For >2 ncomp we subset to "Comp 1" (component one) to exclude others
+      vipResult <- VIP(plsrResults)["Comp 1",]
   
+  # The same for the pls coefficients (select the only or first component). 
   coef <- plsrResults$coefficients[, , 1]
   
   # Create a df for further plotting
@@ -113,7 +125,8 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  thresho
          aes(VIP, reorder(label, VIP), fill = Coefficient > 0)) +
     geom_col() +
     geom_vline(aes(xintercept = cut_off_line)) +
-    scale_fill_manual(breaks = c(TRUE, FALSE), values = c("cadetblue", "firebrick"), labels = c("Positive", "Negative")) +
+    scale_fill_manual(breaks = c(TRUE, FALSE), values = c(pos_color, neg_color), 
+                      labels = c("Positive", "Negative")) +
     scale_x_continuous(expand = expansion(mult = c(0, 0.01))) +
     scale_y_discrete(expand = expansion(add = 0.5)) +
     labs(x = "Variable Importance in Projection",
