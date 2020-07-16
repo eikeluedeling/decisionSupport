@@ -9,6 +9,8 @@ plot_pls(
   input_table = NULL,
   cut_off_line = 1,
   threshold = 0.8,
+  pos_color = "cadetblue",
+  neg_color = "firebrick",
   ...
 )
 }
@@ -20,9 +22,15 @@ plot_pls(
 \item{cut_off_line}{is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection}
 
 \item{threshold}{is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.}
+
+\item{pos_color}{is the color to be used for positive coefficient values, default is "cadetblue"}
+
+\item{neg_color}{is the color to be used for negative coefficient values, default is "firebrick"}
+
+\item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
 \description{
-Several plotting options for distribution outputs
+Plotting the Variable Importance in the Projection (VIP) statistic and coefficients of a PLS model of Monte Carlo outputs
 }
 \examples{
 # Create the estimate object:
