@@ -18,9 +18,12 @@ text-align: justify}
 </style>
 
 ```{r, include = F}
+#set global options for knitr chunks 
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  fig.width=5, 
+  fig.height=3.5
 )
 ```
 
@@ -64,7 +67,7 @@ install.packages("tidyverse")
 library(tidyverse)
 ```
 
-Here we generate a model as a function using `decisionSupport` library. The example is a simple version of the model applied in Burkina Faso [@Lanzanova].  We use the `decisionSupport` functions `vv()` to produce time series with variation from a pre-defined mean and coefficient of variation, `chance_event()` to simulate whether events occur and `discount()` to discount values along a time series.
+Here we generate a model as a function using `decisionSupport` library. The example is a simple version of the model applied in Burkina Faso [@Lanzanova2019].  We use the `decisionSupport` functions `vv()` to produce time series with variation from a pre-defined mean and coefficient of variation, `chance_event()` to simulate whether events occur and `discount()` to discount values along a time series.
 
 ```{r model}
 example_decision_function <- function(x, varnames){
@@ -172,24 +175,16 @@ example_decision_function <- function(x, varnames){
     TLU_intervention <- TLU
   
   if (decision_intervention_strips){
-  
     livestock_benefits <- TLU_intervention * TLU_profit
-    
     total_benefits <- crop_production + livestock_benefits
-    
     net_benefits <- total_benefits - intervention_cost
-    
     result_interv <- net_benefits}
   
   
   if (!decision_intervention_strips){
-    
     livestock_benefits <- TLU_no_intervention * TLU_profit
-    
     total_benefits <- livestock_benefits
-    
     net_benefits <- total_benefits - intervention_cost
-    
     result_n_interv <- net_benefits}
   
     } #close intervention loop bracket
@@ -200,7 +195,8 @@ NPV_interv <-
 NPV_n_interv <-
   discount(result_n_interv, discount_rate, calculate_NPV = TRUE)
 
-# Beware, if you do not name your outputs (left-hand side of the equal sign) in the return section, the variables will be called output_1, _2, etc.
+# Beware, if you do not name your outputs (left-hand side of the equal sign) in the return section, 
+# the variables will be called output_1, _2, etc.
 
 return(list(Interv_NPV = NPV_interv,
             NO_Interv_NPV = NPV_n_interv,
@@ -247,22 +243,16 @@ plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_nam
 We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimulation()` to determine the Variable Importance in the Projection (VIP) score and coefficients of a Projection to Latent Structures (PLS) regression model. This function uses the outputs of the `mcSimulation()` selecting all the input variables from the decision analysis function in the parameter `object` and then runs a PLS regression with an outcome variable defined in the parameter `resultName`. We use the code `names(test_mcSimulation_function$y)[3]` to select the outcome variable `r names(test_mcSimulation_function$y)[3]`, which is the third element of the list `y` in our `test_mcSimulation_function` outputs (this must be a character element). 
 
 ```{r}
-
 pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
                   resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
-
 ```
 
-We run the `plot_pls()` on the results from `plsr.mcSimulation()` with a number of standard settings. The length of the bars is equal to VIP with a vertical line at '1' on the x-axis indicating a standard cut-off for VIP used for variable selection [@Whitney2017]. The overall plot only shows those variables with a VIP > 0.8, which is another common cut-off for variable selection [@Lanzanova2019, @Luedeling2016]. The colors of the bars represent the positive or negative coefficient of the given input variable with the output variable.
-
-### STOP HERE becuase the mcSimulation is doing something wierd - see the variable 'AAAAH_something_wierd' in the result, not in the model ??? Maybe decisionSupport or other functions overcome this? 
+We run the `plot_pls()` on the results from `plsr.mcSimulation()` with a number of standard settings. The length of the bars is equal to VIP with a vertical line at '1' on the x-axis indicating a standard cut-off for VIP used for variable selection [@Whitney2017]. The overall plot only shows those variables with a VIP > 0.8, which is the common threshold for variable selection [@Lanzanova2019, @Luedeling2016]. The colors of the bars represent the positive or negative coefficient of the given input variable with the output variable.
 
 ```{r}
-
 input_table <- read.csv("example_input_table.csv")
 
-plot_pls(pls_result, threshold = 0, cut_off_line = .1, input_table = input_table)
-
+plot_pls(pls_result, input_table = input_table)
 ```
 
 
