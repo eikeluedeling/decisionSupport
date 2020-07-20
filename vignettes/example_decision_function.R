@@ -1,4 +1,4 @@
-## ---- include = F------------------------------------------------------------------------------------------------------------------------------------
+## ---- include = F--------------------------------------------------------------------------------------
 #set global options for knitr chunks 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -7,24 +7,24 @@ knitr::opts_chunk$set(
   fig.height=3.5
 )
 
-## ---- warning = F, include = F-----------------------------------------------------------------------------------------------------------------------
+## ---- warning = F, include = F-------------------------------------------------------------------------
 #Automatically write R package citation entries to a .bib file
 knitr::write_bib(c(.packages(), 
                    'chillR',
                    'dplyr',
+                   'plyr',
+                   'tidyverse',
                    'ggplot2', 
-                   'kableExtra',
                    'decisionSupport'), 'packages.bib')
-require(tidyverse)
-require(kableExtra)
+
+
+## ---- eval = FALSE-------------------------------------------------------------------------------------
+#  install.packages("decisionSupport")
+
+## ------------------------------------------------------------------------------------------------------
 library(decisionSupport)
 
-## ----install_packages, eval = FALSE------------------------------------------------------------------------------------------------------------------
-#  install.packages("tidyverse")
-#  
-#  library(tidyverse)
-
-## ----model-------------------------------------------------------------------------------------------------------------------------------------------
+## ----model---------------------------------------------------------------------------------------------
 example_decision_function <- function(x, varnames){
   
   # calculate ex-ante risks: impact the implementation of interventions ####
@@ -160,7 +160,7 @@ return(list(Interv_NPV = NPV_interv,
 }
 
 
-## ----mcSimulation------------------------------------------------------------------------------------------------------------------------------------
+## ----mcSimulation--------------------------------------------------------------------------------------
 test_mcSimulation_function <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
   model_function = example_decision_function,
@@ -169,24 +169,24 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 )
 
 
-## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = c("Interv_NPV", "NO_Interv_NPV"),
                                     method = 'smooth_simple_overlay')
 
-## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
 
-## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------
 plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
 
-## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------
 pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
                   resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
 
-## ----------------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------------------
 input_table <- read.csv("example_input_table.csv")
 
 plot_pls(pls_result, input_table = input_table)
