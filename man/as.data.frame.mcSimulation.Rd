@@ -9,9 +9,7 @@
   row.names = NULL,
   optional = FALSE,
   ...,
-
   stringsAsFactors = NA
-
 )
 }
 \arguments{

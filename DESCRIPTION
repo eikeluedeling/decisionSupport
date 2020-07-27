@@ -92,9 +92,3 @@ Collate:
     'summary.mcSimulation.R'
     'temp_situations.R'
     'vv.R'
-    'as.data.frame.mcSimulation.R'
-    'hist.mcSimulation.R'
-    'print.mcSimuation.R'
-    'print.summary.mcSimulation.R'
-    'summary.mcSimulation.R'
-RoxygenNote: 7.1.0
