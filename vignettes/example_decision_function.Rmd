@@ -214,12 +214,13 @@ return(list(Interv_NPV = NPV_interv,
 
 Using the model function above, we can perform a Monte Carlo simulation with the `mcSimulation()` function from `decisionSupport`. This function generates distributions of all variables in the input table as well as the specified model outputs (see `return()` function above) by calculating random draws in our defined `example_decision_function()`. Make sure that all the variables in the input table are included in the model (erroneous variables listed there can cause issues with some of the post-hoc analyses). 
 
+The `numberOfModelRuns` argument is an integer indicating the number of model runs for the Monte Carlo simulation. Unless the model function is very complex, 10,000 runs is a reasonable choice (for complex models, 10,000 model runs can take a while, so especially when the model is still under development, it often makes sense to use a lower number).
 
 ```{r mcSimulation}
 test_mcSimulation_function <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
   model_function = example_decision_function,
-  numberOfModelRuns = 1e4, #run 10,000 times
+  numberOfModelRuns = 1e3, #run 1,000 times
   functionSyntax = "plainNames"
 )
 
@@ -284,8 +285,9 @@ We use the function `data.frame()` to transform the x and y outputs of the `mcSi
 ```{r}
 mcSimulation_table <- data.frame(test_mcSimulation_function$y, test_mcSimulation_function$x)
 
-multi_EVPI(mc = mcSimulation_table, first_out_var = "intervention_mngmt_audit_cost")
+evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "intervention_mngmt_audit_cost")
 
+plot(x = evpi, out_var = "intervention_rainfed_crop_area_ha")
 ```
 
 
