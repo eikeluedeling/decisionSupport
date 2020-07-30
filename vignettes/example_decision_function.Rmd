@@ -210,7 +210,10 @@ return(list(Interv_NPV = NPV_interv,
 
 ```
 
-Using the model function above, we can perform a Monte Carlo simulation with the `mcSimulation()` function from `decisionSupport`. This function generates a distribution representing the desired outputs (see `return()` function above) by calculating random draws in our defined `example_decision_function()`. 
+#### Perform a Monte Carlo simulation
+
+Using the model function above, we can perform a Monte Carlo simulation with the `mcSimulation()` function from `decisionSupport`. This function generates distributions of all variables in the input table as well as the specified model outputs (see `return()` function above) by calculating random draws in our defined `example_decision_function()`. Make sure that all the variables in the input table are included in the model (erroneous variables listed there can cause issues with some of the post-hoc analyses). 
+
 
 ```{r mcSimulation}
 test_mcSimulation_function <- decisionSupport::mcSimulation(
@@ -222,12 +225,15 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 
 ```
 
+#### Plot Net Present Value (NPV) distributions 
+
 We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us an overlay of the full results of the Monte Carlo model of the decision options, i.e. the expected NPV if we choose to do the intervention `Interv_NPV` or not do the intervention `NO_Interv_NPV`.
 
 ```{r}
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = c("Interv_NPV", "NO_Interv_NPV"),
                                     method = 'smooth_simple_overlay')
+
 ```
 
 We can use the same function for the value of the decision (difference in NPV between do and do not do). This is more helpful for us since it shows us the outcome distribution of the decision itself. 
@@ -236,30 +242,51 @@ We can use the same function for the value of the decision (difference in NPV be
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
+
 ```
+
+#### Cashflow analysis
+
+Here we plot the distribution of annual cashflow over the entire simulated period for the intervention. For this we use the `plot_cashflow()` function which uses the specified cashflow outputs from the `mcSimulation()` function (in our case `Cashflow_decision_do`) to show cashflow over time.
 
 ```{r}
 plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
 
-
 ```
+
+#### Projection to Latent Structures (PLS) analysis
 
 We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimulation()` to determine the Variable Importance in the Projection (VIP) score and coefficients of a Projection to Latent Structures (PLS) regression model. This function uses the outputs of the `mcSimulation()` selecting all the input variables from the decision analysis function in the parameter `object` and then runs a PLS regression with an outcome variable defined in the parameter `resultName`. We use the code `names(test_mcSimulation_function$y)[3]` to select the outcome variable `r names(test_mcSimulation_function$y)[3]`, which is the third element of the list `y` in our `test_mcSimulation_function` outputs (this must be a character element). 
 
 ```{r}
 pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
                   resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
+
 ```
 
 We run the `plot_pls()` on the results from `plsr.mcSimulation()` with a number of standard settings. The length of the bars is equal to VIP with a vertical line at '1' on the x-axis indicating a standard cut-off for VIP used for variable selection [@Whitney2017]. The overall plot only shows those variables with a VIP > 0.8, which is the common threshold for variable selection [@Lanzanova2019, @Luedeling2016]. The colors of the bars represent the positive or negative coefficient of the given input variable with the output variable.
+
+Here we import the input table again to replace the labels for the variables on the y-axis. The input table can include a 'label' and 'variable' column. The standard labels (from the 'variable' column) are usually computer readable and not very nice for a plot. The `plot_pls()` function uses the text in the 'label' column as replacement for the default text in the 'variable' column.  
 
 ```{r}
 input_table <- read.csv("example_input_table.csv")
 
 plot_pls(pls_result, input_table = input_table)
+
 ```
 
+#### Value of Information (VoI) analysis
 
+We calculate Value of Information (VoI) analysis with the Expected Value of Perfect Information (EVPI). EVPI measures the expected opportunity loss that is incurred when the decision-maker does not have perfect information about a particular variable. EVPI is determined by examining the influence of that variable on the output value of a decision model. 
+
+We use the function `data.frame()` to transform the x and y outputs of the `mcSimulation()` function for EVPI calculation. We use the ``multi_EVPI()` function to calculate the EVPI for multiple independent variables. For the first_out_var argument we choose 'intervention_mngmt_audit_cost' from the input table since this is the first variable after the NPV and cashflow model outputs, which we would like to exclude from the EVPI analysis.
+
+```{r}
+mcSimulation_table <- data.frame(test_mcSimulation_function$y, test_mcSimulation_function$x)
+
+multi_EVPI(mc = mcSimulation_table, first_out_var = "intervention_mngmt_audit_cost")
+
+```
 
 
 ## References
