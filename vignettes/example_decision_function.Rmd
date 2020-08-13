@@ -287,37 +287,60 @@ mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation
 
 evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 
-
-names(evpi)[1] <- "Interv.NPV"
-
+# use the result of multi_EVPI() (i.e. evpi list) to create a full data frame
 full_evpi_data <- NULL
 
+# use a for loop to select the names of the data frames to use as a new column
 for (i in 1 : length(evpi)){
-  
+
   data <- evpi[[i]]
   
   data["output_variable"] <- names(evpi)[i]
   
+  #merge the data frames
   if (is.null(full_evpi_data)) full_evpi_data <- data else
     
     full_evpi_data <- dplyr::bind_rows(full_evpi_data, data)}
 
+# remove the names of the rows for the full evpi data
 rownames(full_evpi_data) <- NULL
 
+# from pls_plot
 
-```
-We
-
-```{r}
-
-evpi_data <- as.data.frame(evpi)
-evpi_unlist <- unlist(evpi)
-
-outs <- data.frame(variable=rownames(evpi),
-                       expected_gain=unlist(evpi[,"expected_gain"]),
-                       EVPI_do=unlist(evpi[,"EVPI_do"]),
-                       EVPI_dont=unlist(evpi[,"EVPI_dont"]))
+# Add own variable names from 'label' in the input table
+  
+  # check that the input table is available
+  if (!(is.null(input_table)))
     
+    # join data frames (use 'by = ' to match columns from both data frames)
+    combined_table <- dplyr::left_join(full_evpi_data, input_table, by = c( "variable" = "variable")) else
+      combined_table <- full_evpi_data
+  
+  # Filter the data to only show positive EVPI
+  
+  filtered_table <- dplyr::filter(combined_table, EVPI > 0)
+  
+  # Order the variable or labels according EVPI
+  
+  if ("label" %in% colnames(filtered_table))
+    
+    ordered_vars <- stats::reorder(filtered_table$label, filtered_table$EVPI) else
+      
+      ordered_vars <- stats::reorder(filtered_table$variable, filtered_table$EVPI)
+  
+  # ggplot 
+
+library(ggplot2)
+  # temp with multiple output variables
+ggplot(filtered_table, aes(x = EVPI, y = ordered_vars)) +
+  geom_col() + 
+  facet_grid(~output_variable)
+
+ # with one output variable and facet
+ggplot(filter(filtered_table, output_variable == "NPV_decision_do"), aes(x = EVPI, y = variable)) +
+  geom_col() + 
+  facet_grid(~variable)
+
 
 ```
 
