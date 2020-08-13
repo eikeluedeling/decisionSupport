@@ -283,15 +283,28 @@ We calculate Value of Information (VoI) analysis with the Expected Value of Perf
 We use the function `data.frame()` to transform the x and y outputs of the `mcSimulation()` function for EVPI calculation. We use the ``multi_EVPI()` function to calculate the EVPI for multiple independent variables. For the first_out_var argument we choose 'intervention_mngmt_audit_cost' from the input table since this is the first variable after the NPV and cashflow model outputs, which we would like to exclude from the EVPI analysis.
 
 ```{r}
-mcSimulation_table <- data.frame(test_mcSimulation_function$y, test_mcSimulation_function$x)
+mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y)
 
-evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "intervention_mngmt_audit_cost")
+evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 
-#plot from multi_EVPI just plots the input variables
-# shows the y axis of output variables but not of input variables
-# multi_EVPI exports a table (if write_table=T) but the output of the function is completely different
-#a list of EVPI etc. as columns and outcome variables as rows... 
-# The Gonzalo example offers some ideas about how to move ahead but would be easier to have a standard output of multi_EVPI
+
+names(evpi)[1] <- "Interv.NPV"
+
+full_evpi_data <- NULL
+
+for (i in 1 : length(evpi)){
+  
+  data <- evpi[[i]]
+  
+  data["output_variable"] <- names(evpi)[i]
+  
+  if (is.null(full_evpi_data)) full_evpi_data <- data else
+    
+    full_evpi_data <- dplyr::bind_rows(full_evpi_data, data)}
+
+rownames(full_evpi_data) <- NULL
+
+
 ```
 We
 
