@@ -4,7 +4,7 @@
 #' 
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
-#' @param method is the type of plot to be performed in \code{link{ggplot2}} using \code{\link[ggplot2:geom_density]{geom_histogram}} or \code{\link[ggplot2:geom_histogram]{geom_histogram}} 
+#' @param method is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}} 
 #' @param bins are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150
 #' @param old_names are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred 
 #' @param new_names are the variable names to replace the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred
@@ -64,8 +64,8 @@
 #' @export plot_distributions
 #'
 plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simple_overlay", bins = 150,
-                     old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".",
-                     x_axis_name = "Outcome distribution", y_axis_name = NULL, ...) {
+                               old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".",
+                               x_axis_name = "Outcome distribution", y_axis_name = NULL, ...) {
   
   
   # Check if mcSimulation_object is class mcSimulation
@@ -87,99 +87,109 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
   if (is.null(new_names) | is.null(old_names)){
     new_names <- names(data)
     old_names <- names(data)}
-    
+  
   #rename the data and add all_of() to overcome the ambiguity of 'external vector'
   data <- dplyr::rename_at(data, dplyr::vars(tidyselect::all_of(old_names)), ~ new_names)
-    
-    #assign data
-    standard_plot_data <- tidyr::pivot_longer(data, tidyselect::all_of(vars))
-    
-    # define the colors
-    if (is.null(colors)){
-      colors <- c("#009999", "#0000FF", "#56B4E9", "#009E73",
-              "#F0E442", "#0072B2", "#D55E00", "#CC79A7")}
-    
-    # define the y_axis_name name
-    if (!is.null(y_axis_name)) y_axis_name <- y_axis_name else
-      if (method == "hist_simple_overlay") y_axis_name <- "Number of points in bin" else
-        y_axis_name <- "Density estimate"
-    
-    
-    # define the standard plot to be used as baseline plot
-    standard_plot <-  ggplot2::ggplot(standard_plot_data,
-                                      ggplot2::aes(x = value, group = name, fill = name)) +
-      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
-      ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
-      ggplot2::scale_fill_manual(values = colors) +
-      ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
-      ggplot2::theme_bw() 
-    
-    if (method == "smooth_simple_overlay") {
-      return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) +
-               ggplot2::theme(...))
-    }
   
-    if (method == "hist_simple_overlay") {
-      return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = 150) +
-               ggplot2::theme(...)) 
-    }
+  #assign data
+  standard_plot_data <- tidyr::pivot_longer(data, tidyselect::all_of(new_names))
+  
+  # define the colors
+  if (is.null(colors)){
+    colors <- c("#009999", "#0000FF", "#56B4E9", "#009E73",
+                "#F0E442", "#0072B2", "#D55E00", "#CC79A7")}
+  
+  # define the y_axis_name name
+  if (!is.null(y_axis_name)) y_axis_name <- y_axis_name else
+    if (method == "hist_simple_overlay") y_axis_name <- "Number of points in bin" else
+      if (method == "boxplot") y_axis_name <- "Decision option" else
+        y_axis_name <- "Density estimate"
+  
+  # define the standard plot to be used as baseline plot
+  standard_plot <-  ggplot2::ggplot(standard_plot_data,
+                                    ggplot2::aes(x = value, group = name, fill = name)) +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+    ggplot2::scale_fill_manual(values = colors) +
+    ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
+    ggplot2::theme_bw() 
+  
+  if (method == "smooth_simple_overlay") {
+    return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) +
+             ggplot2::theme(...))
+  }
+  
+  if (method == "hist_simple_overlay") {
+    return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = 150) +
+             ggplot2::theme(...)) 
+  }
+  
+  if (method == "boxplot") {
+    return(ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, y = stats::reorder(name, value, FUN = stats::median), fill = name)) + 
+             ggplot2::geom_boxplot(outlier.alpha = 0.3) + 
+             ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+             ggplot2::scale_fill_manual(values = colors) +
+             ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
+             ggplot2::theme_bw() + 
+             ggplot2::theme(legend.position = "none") +
+             ggplot2::theme(...))
+  }
+  
+  
+  if (method == "boxplot_density") {
     
+    # Since the width of boxploth will change depending on the difference between options, we
+    # implemented a small regression to allow the function define the correct value for the
+    # width parameter.
     
+    # Here we make an assumption to represent a wide range of distribution differences...
+    # Percentage is the most "adequate" value for boxploth width according to the difference between
+    # options (visual selection)
     
-    if (method == "boxplot_density") {
+    data <- data.frame(percentage = c(0.1, 0.15, 0.5, 4),
+                       options_difference = c(100, 11229249, 58838895, 507997898))
+    
+    #options_difference = c(11229249, 58838895, 507997898)
+    
+    # Compute a linear regression between percentage and option differences
+    
+    regression <- stats::lm(percentage ~ options_difference, data = data)
+    
+    # Estimate the difference between options provided by the user
+    
+    options_difference <- max(standard_plot_data$value) - min(standard_plot_data$value)
+    
+    # Compute the boxploth_width parameter using the linear regression coefficients
+    
+    boxploth_width_correction <- stats::coefficients(regression)[[1]] + (stats::coefficients(regression)[[2]] * options_difference)
+    
+    return(
       
-      # Since the width of boxploth will change depending on the difference between options, we
-      # implemented a small regression to allow the function define the correct value for the
-      # width parameter.
-      
-      # Here we make an assumption to represent a wide range of distribution differences...
-      # Percentage is the most "adequate" value for boxploth width according to the difference between
-      # options (visual selection)
-      
-      data <- data.frame(percentage = c(0.1, 0.15, 0.5, 4),
-                         options_difference = c(100, 11229249, 58838895, 507997898))
-
-      #options_difference = c(11229249, 58838895, 507997898)
-
-      # Compute a linear regression between percentage and option differences
-
-      regression <- stats::lm(percentage ~ options_difference, data = data)
-
-      # Estimate the difference between options provided by the user
-
-      options_difference <- max(standard_plot_data$value) - min(standard_plot_data$value)
-
-      # Compute the boxploth_width parameter using the linear regression coefficients
-
-      boxploth_width_correction <- stats::coefficients(regression)[[1]] + (stats::coefficients(regression)[[2]] * options_difference)
-
-      return(
-        
-        ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, fill = name)) +
-          ggplot2::geom_density(alpha = 0.5, color = NA) +
-               ggstance::geom_boxploth(ggplot2::aes(x = value, y = 0),
-                                       #place the boxplot consistently at the bottom of the graph
-                                       width = max(stats::density(standard_plot_data$value)$y *
-                                                     boxploth_width_correction),
-                                       varwidth = TRUE,
-                                       alpha = 0.5,
-                                       size = 0.3, 
-                                       outlier.shape = outlier_shape) +
-          ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
-          ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
-          ggplot2::scale_fill_manual(values = colors) +
-          ggplot2::labs(x = x_axis_name, y = y_axis_name) +
-          ggplot2::facet_wrap(. ~ name, scales = 'free_x') +
-          ggplot2::theme_bw() +
-          ggplot2::theme(strip.background = ggplot2::element_blank(),
-                 legend.position = "none",
-                 axis.text.x = ggplot2::element_text(
-                   angle = 45,
-                   hjust = 1,
-                   vjust = 1),
-                 ...)
-        )
+      ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, fill = name)) +
+        ggplot2::geom_density(alpha = 0.5, color = NA) +
+        ggstance::geom_boxploth(ggplot2::aes(x = value, y = 0),
+                                #place the boxplot consistently at the bottom of the graph
+                                width = max(stats::density(standard_plot_data$value)$y *
+                                              boxploth_width_correction),
+                                varwidth = TRUE,
+                                alpha = 0.5,
+                                size = 0.3, 
+                                outlier.shape = outlier_shape) +
+        ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+        ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
+        ggplot2::scale_fill_manual(values = colors) +
+        ggplot2::labs(x = x_axis_name, y = y_axis_name) +
+        ggplot2::facet_wrap(. ~ name, scales = 'free_y') +
+        ggplot2::theme_bw() +
+        ggplot2::theme(strip.background = ggplot2::element_blank(),
+                       legend.position = "none",
+                       axis.text.x = ggplot2::element_text(
+                         angle = 45,
+                         hjust = 1,
+                         vjust = 1),
+                       ...)
+    )
     
-      }
-    
+  }
+  
 }

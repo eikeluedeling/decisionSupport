@@ -237,20 +237,30 @@ decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_func
 
 ```
 
+We use the same function to show the distributions of the 'do' and 'do not do' decision scenarios as boxplots. This can be useful when comparing multiple outputs by illustrating the spread of the data resulting from the decision model. Boxplots show the median (central line), the 25^th^ and 75^th^ percentiles (sides of boxes) and any outliers (light circles outside of boxes). 
+
+```{r plot_distributions_boxplot}
+decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+                                    vars = c("Interv_NPV",
+                                    "NO_Interv_NPV"),
+                                    method = 'boxplot')
+```
+
+
 We can use the same function for the value of the decision (difference in NPV between do and do not do). This is more helpful for us since it shows us the outcome distribution of the decision itself. 
 
-```{r}
+```{r plot_distributions_box_dens}
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
-
 ```
+
 
 #### Cashflow analysis
 
 Here we plot the distribution of annual cashflow over the entire simulated period for the intervention. For this we use the `plot_cashflow()` function which uses the specified cashflow outputs from the `mcSimulation()` function (in our case `Cashflow_decision_do`) to show cashflow over time.
 
-```{r}
+```{r plot_cashflow}
 plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
 
 ```
@@ -283,63 +293,63 @@ We calculate Value of Information (VoI) analysis with the Expected Value of Perf
 We use the function `data.frame()` to transform the x and y outputs of the `mcSimulation()` function for EVPI calculation. We use the ``multi_EVPI()` function to calculate the EVPI for multiple independent variables. For the first_out_var argument we choose 'intervention_mngmt_audit_cost' from the input table since this is the first variable after the NPV and cashflow model outputs, which we would like to exclude from the EVPI analysis.
 
 ```{r}
-mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y)
-
-evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
-
-# use the result of multi_EVPI() (i.e. evpi list) to create a full data frame
-full_evpi_data <- NULL
-
-# use a for loop to select the names of the data frames to use as a new column
-for (i in 1 : length(evpi)){
-
-  data <- evpi[[i]]
-  
-  data["output_variable"] <- names(evpi)[i]
-  
-  #merge the data frames
-  if (is.null(full_evpi_data)) full_evpi_data <- data else
-    
-    full_evpi_data <- dplyr::bind_rows(full_evpi_data, data)}
-
-# remove the names of the rows for the full evpi data
-rownames(full_evpi_data) <- NULL
-
-# from pls_plot
-
-# Add own variable names from 'label' in the input table
-  
-  # check that the input table is available
-  if (!(is.null(input_table)))
-    
-    # join data frames (use 'by = ' to match columns from both data frames)
-    combined_table <- dplyr::left_join(full_evpi_data, input_table, by = c( "variable" = "variable")) else
-      combined_table <- full_evpi_data
-  
-  # Filter the data to only show positive EVPI
-  
-  filtered_table <- dplyr::filter(combined_table, EVPI > 0)
-  
-  # Order the variable or labels according EVPI
-  
-  if ("label" %in% colnames(filtered_table))
-    
-    ordered_vars <- stats::reorder(filtered_table$label, filtered_table$EVPI) else
-      
-      ordered_vars <- stats::reorder(filtered_table$variable, filtered_table$EVPI)
-  
-  # ggplot 
-
-library(ggplot2)
-  # temp with multiple output variables
-ggplot(filtered_table, aes(x = EVPI, y = ordered_vars)) +
-  geom_col() + 
-  facet_grid(~output_variable)
-
- # with one output variable and facet
-ggplot(filter(filtered_table, output_variable == "NPV_decision_do"), aes(x = EVPI, y = variable)) +
-  geom_col() + 
-  facet_grid(~variable)
+# mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y)
+# 
+# evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
+# 
+# # use the result of multi_EVPI() (i.e. evpi list) to create a full data frame
+# full_evpi_data <- NULL
+# 
+# # use a for loop to select the names of the data frames to use as a new column
+# for (i in 1 : length(evpi)){
+# 
+#   data <- evpi[[i]]
+# 
+#   data["output_variable"] <- names(evpi)[i]
+# 
+#   #merge the data frames
+#   if (is.null(full_evpi_data)) full_evpi_data <- data else
+# 
+#     full_evpi_data <- dplyr::bind_rows(full_evpi_data, data)}
+# 
+# # remove the names of the rows for the full evpi data
+# rownames(full_evpi_data) <- NULL
+# 
+# # from pls_plot
+# 
+# # Add own variable names from 'label' in the input table
+# 
+#   # check that the input table is available
+#   if (!(is.null(input_table)))
+# 
+#     # join data frames (use 'by = ' to match columns from both data frames)
+#     combined_table <- dplyr::left_join(full_evpi_data, input_table, by = c( "variable" = "variable")) else
+#       combined_table <- full_evpi_data
+# 
+#   # Filter the data to only show positive EVPI
+# 
+#   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
+# 
+#   # Order the variable or labels according EVPI
+# 
+#   if ("label" %in% colnames(filtered_table))
+# 
+#     ordered_vars <- stats::reorder(filtered_table$label, filtered_table$EVPI) else
+# 
+#       ordered_vars <- stats::reorder(filtered_table$variable, filtered_table$EVPI)
+# 
+#   # ggplot
+# 
+# library(ggplot2)
+#   # temp with multiple output variables
+# ggplot(filtered_table, aes(x = EVPI, y = ordered_vars)) +
+#   geom_col() +
+#   facet_grid(~output_variable)
+# 
+#  # with one output variable and facet
+# ggplot(dplyr::filter(filtered_table, output_variable == "NPV_decision_do"), aes(x = EVPI, y = variable)) +
+#   geom_col() +
+#   facet_grid(~variable)
 
 
 ```
