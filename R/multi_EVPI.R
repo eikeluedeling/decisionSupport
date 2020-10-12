@@ -128,6 +128,9 @@ summary.EVPI_outputs <- function(object, ...){
 
 #' @param x object of class EVPI_outputs as produced with the multi_EVPI function
 #' @param out_var name of the output variable to be plotted
+#'  param fileformat The file format to be used for the outputs. Currently only
+#' NA (for R plot output) and "png" (for a PNG file) are implemented. Note that
+#' when this is !NA, the outfolder parameter must point to a valid folder.
 #' @param fileformat The file format to be used for the outputs. Currently only
 #' NA (for R plot output) and "png" (for a PNG file) are implemented. Note that
 #' when this is !NA, the outfolder parameter must point to a valid folder.
