@@ -43,10 +43,7 @@ summary function plot.}
 
 \item{x}{object of class EVPI_outputs as produced with the multi_EVPI function}
 
-\item{out_var}{name of the output variable to be plotted
- param fileformat The file format to be used for the outputs. Currently only
-NA (for R plot output) and "png" (for a PNG file) are implemented. Note that
-when this is !NA, the outfolder parameter must point to a valid folder.}
+\item{out_var}{name of the output variable to be plotted}
 
 \item{fileformat}{The file format to be used for the outputs. Currently only
 NA (for R plot output) and "png" (for a PNG file) are implemented. Note that

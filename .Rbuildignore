@@ -1,3 +1,4 @@
+^README.Rmd
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^Makefile$
@@ -9,3 +10,4 @@
 ^R/benchmark$
 
 ^NEWS\.md$
+^Meta$

@@ -24,26 +24,37 @@ License: GPL-3
 Depends:
     R (>= 3.1.3)
 Imports:
+    assertthat,
     chillR (>= 0.62),
+    dplyr,
+    fANCOVA (>= 0.5),
+    ggplot2 (>= 3.2.0),
+    ggstance,
+    grDevices,
+    magrittr,
     msm (>= 1.5),
     mvtnorm (>= 1.0.2),
-    stats (>= 3.1.3),
-    rriskDistributions (>= 2.0),
     nleqslv (>= 2.6),
-    fANCOVA (>= 0.5),
-    ggplot2 (>= 3.2.0)
+    rriskDistributions (>= 2.0),
+    stats (>= 3.1.3),
+    stringr,
+    tidyr,
+    tidyselect
 Suggests:
     eha (>= 2.4.2),
+    knitr,
     mc2d (>= 0.1.15),
     pls (>= 2.4.3),
-    testthat (>= 0.9.1),
-    knitr,
-    rmarkdown
+    rmarkdown,
+    scales,
+    testthat (>= 0.9.1)
 VignetteBuilder: knitr
 URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
-Collate:
+RoxygenNote: 7.1.1
+Collate: 
+    'as.data.frame.mcSimulation.R'
     'chance_event.R'
     'paramtnormci_fit.R'
     'paramtnormci_numeric.R'
@@ -63,14 +74,21 @@ Collate:
     'decisionSupport-package.R'
     'discount.R'
     'empirical_EVPI.R'
+    'global_variables.R'
     'gompertz_yield.R'
+    'hist.mcSimulation.R'
     'make_CPT.R'
     'multi_EVPI.R'
     'plainNames2data.frameNames.R'
+    'plot_cashflow.R'
+    'plot_distributions.R'
+    'plot_pls.R'
     'plsr.mcSimulation.R'
+    'print.mcSimuation.R'
+    'print.summary.mcSimulation.R'
     'random_state.R'
     'sample_CPT.R'
     'sample_simple_CPT.R'
+    'summary.mcSimulation.R'
     'temp_situations.R'
     'vv.R'
-RoxygenNote: 7.1.0
