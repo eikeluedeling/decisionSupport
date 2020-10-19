@@ -12,6 +12,7 @@
 #' @param outlier_shape is the optional shape to replace the outliers in the boxplot. To show no outliers use NA. See \code{\link[ggplot2:aes_linetype_size_shape]{shape}} for shape options
 #' @param x_axis_name is the name to passed to the x-axis title. Default is "Outcome distribution" and allows allow the user to add a customized axis title
 #' @param y_axis_name is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title. If a name is not provided the title will be "Number of points in bin" for the \code{hist_simple_overlay} method and "Density estimate" for all other plot options
+#' @param base_size accepts arguments for standard text size to be passed to the complete themes of \code{\link[ggplot2]{ggplot}}. The default is 11
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #'
 #' 
@@ -65,7 +66,7 @@
 #'
 plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simple_overlay", bins = 150,
                                old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".",
-                               x_axis_name = "Outcome distribution", y_axis_name = NULL, ...) {
+                               x_axis_name = "Outcome distribution", y_axis_name = NULL, base_size = 11, ...) {
   
   
   # Check if mcSimulation_object is class mcSimulation
@@ -112,7 +113,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
     ggplot2::scale_fill_manual(values = colors) +
     ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
-    ggplot2::theme_bw() 
+    ggplot2::theme_bw(base_size = base_size) 
   
   if (method == "smooth_simple_overlay") {
     return(standard_plot + ggplot2::geom_density(color = NA, alpha = 0.5) +
@@ -130,7 +131,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
              ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0.01), labels = scales::comma) +
              ggplot2::scale_fill_manual(values = colors) +
              ggplot2::labs(x = x_axis_name, y = y_axis_name , fill = "Decision\noption") +
-             ggplot2::theme_bw() + 
+             ggplot2::theme_bw(base_size = base_size) + 
              ggplot2::theme(legend.position = "none") +
              ggplot2::theme(...))
   }
@@ -180,7 +181,7 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
         ggplot2::scale_fill_manual(values = colors) +
         ggplot2::labs(x = x_axis_name, y = y_axis_name) +
         ggplot2::facet_wrap(. ~ name, scales = 'free_y') +
-        ggplot2::theme_bw() +
+        ggplot2::theme_bw(base_size = base_size) +
         ggplot2::theme(strip.background = ggplot2::element_blank(),
                        legend.position = "none",
                        axis.text.x = ggplot2::element_text(
