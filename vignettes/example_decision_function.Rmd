@@ -216,16 +216,6 @@ Using the model function above, we can perform a Monte Carlo simulation with the
 
 The `numberOfModelRuns` argument is an integer indicating the number of model runs for the Monte Carlo simulation. Unless the model function is very complex, 10,000 runs is a reasonable choice (for complex models, 10,000 model runs can take a while, so especially when the model is still under development, it often makes sense to use a lower number).
 
-### NOTE FOR EIKE ####
-We modified the mcSimulation() function (the R file) had all the functions together in one file. We split these up into individual R files, including: 
-print.summary.mcSimulation.R
-print.mcSimuation.R
-plsr.mcSimulation.R
-summary.mcSimulation.R
-hist.mcSimulation.R 
-as.data.frame.mcSimulation.R).
-# DELETE THIS NOTE ####
-
 ```{r mcSimulation}
 test_mcSimulation_function <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
@@ -239,11 +229,6 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 #### Plot Net Present Value (NPV) distributions 
 
 We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us an overlay of the full results of the Monte Carlo model of the decision options, i.e. the expected NPV if we choose to do the intervention `Interv_NPV` or not do the intervention `NO_Interv_NPV`.
-
-### NOTE FOR EIKE ####
-This is another major change. 
-We added the requested base_size option most recently...
-# Delete this note ####
 
 ```{r}
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
@@ -298,7 +283,7 @@ Here we import the input table again to replace the labels for the variables on 
 ```{r}
 input_table <- read.csv("example_input_table.csv")
 
-plot_pls(pls_result, input_table = input_table)
+plot_pls(pls_result, input_table = input_table, threshold = 0)
 
 ```
 
@@ -306,73 +291,21 @@ plot_pls(pls_result, input_table = input_table)
 
 We calculate Value of Information (VoI) analysis with the Expected Value of Perfect Information (EVPI). EVPI measures the expected opportunity loss that is incurred when the decision-maker does not have perfect information about a particular variable. EVPI is determined by examining the influence of that variable on the output value of a decision model. 
 
-We use the function `data.frame()` to transform the x and y outputs of the `mcSimulation()` function for EVPI calculation. We use the ``multi_EVPI()` function to calculate the EVPI for multiple independent variables. For the first_out_var argument we choose 'intervention_mngmt_audit_cost' from the input table since this is the first variable after the NPV and cashflow model outputs, which we would like to exclude from the EVPI analysis.
+We use the function `data.frame()` to transform the x and y outputs of the `mcSimulation()` function for EVPI calculation. We use the `multi_EVPI()` function to calculate the EVPI for multiple independent variables. For the first_out_var argument we choose 'intervention_mngmt_audit_cost' from the input table since this is the first variable after the NPV and cashflow model outputs, which we would like to exclude from the EVPI analysis.
 
-### NOTE FOR EIKE ####
-This is work in progress. 
-# Delete this note ####
+```{r evpi, message = FALSE}
+#here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
+# this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
+mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
 
-```{r}
-# #here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
-# # this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
-# mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
-# 
-# evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
-# 
-# # use the result of multi_EVPI() (i.e. evpi list) to create a full data frame
-# full_evpi_data <- NULL
-# 
-# # use a for loop to select the names of the data frames to use as a new column
-# for (i in 1 : length(evpi)){
-# 
-#   data <- evpi[[i]]
-# 
-#   data["output_variable"] <- names(evpi)[i]
-# 
-#   #merge the data frames
-#   if (is.null(full_evpi_data)) full_evpi_data <- data else
-# 
-#     full_evpi_data <- dplyr::bind_rows(full_evpi_data, data)}
-# 
-# # remove the names of the rows for the full evpi data
-# rownames(full_evpi_data) <- NULL
-# 
-# # from pls_plot
-# 
-# # Add own variable names from 'label' in the input table
-# 
-#   # check that the input table is available
-#   if (!(is.null(input_table)))
-# 
-#     # join data frames (use 'by = ' to match columns from both data frames)
-#     combined_table <- dplyr::left_join(full_evpi_data, input_table, by = c( "variable" = "variable")) else
-#       combined_table <- full_evpi_data
-# 
-#   # Filter the data to only show positive EVPI
-# 
-#   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
-# 
-#   # Order the variable or labels according EVPI
-# 
-#   if ("label" %in% colnames(filtered_table))
-# 
-#     ordered_vars <- stats::reorder(filtered_table$label, filtered_table$EVPI) else
-# 
-#       ordered_vars <- stats::reorder(filtered_table$variable, filtered_table$EVPI)
-# 
-#   # ggplot
-# 
-# library(ggplot2)
-#   # temp with multiple output variables
-# ggplot(filtered_table, aes(x = EVPI, y = ordered_vars)) +
-#   geom_col() +
-#   facet_grid(~output_variable)
-# 
-#  # with one output variable and facet
-# ggplot(dplyr::filter(filtered_table, output_variable == "NPV_decision_do"), aes(x = EVPI, y = variable)) +
-#   geom_col() +
-#   facet_grid(~variable)
+evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
+```
 
+We run the `plot_evpi()` on the results from `multi_EVPI()` with standard settings. The length of the bars is equal to EVPI.
+
+```{r evpi_plot}
+
+plot_evpi(evpi, decision_vars = "NPV_decision_do")
 
 ```
 

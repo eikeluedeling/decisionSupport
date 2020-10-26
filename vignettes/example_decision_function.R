@@ -1,4 +1,4 @@
-## ---- include = F--------------------------------------------------------------------------------------
+## ---- include = F-------------------------------------------------------------
 #set global options for knitr chunks 
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   fig.height=3.5
 )
 
-## ---- warning = F, include = F-------------------------------------------------------------------------
+## ---- warning = F, include = F------------------------------------------------
 #Automatically write R package citation entries to a .bib file
 knitr::write_bib(c(.packages(), 
                    'chillR',
@@ -18,13 +18,13 @@ knitr::write_bib(c(.packages(),
                    'decisionSupport'), 'packages.bib')
 
 
-## ---- eval = FALSE-------------------------------------------------------------------------------------
+## ---- eval = FALSE------------------------------------------------------------
 #  install.packages("decisionSupport")
 
-## ------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(decisionSupport)
 
-## ----model---------------------------------------------------------------------------------------------
+## ----model--------------------------------------------------------------------
 example_decision_function <- function(x, varnames){
   
   # calculate ex-ante risks: impact the implementation of interventions ####
@@ -160,34 +160,57 @@ return(list(Interv_NPV = NPV_interv,
 }
 
 
-## ----mcSimulation--------------------------------------------------------------------------------------
+## ----mcSimulation-------------------------------------------------------------
 test_mcSimulation_function <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
   model_function = example_decision_function,
-  numberOfModelRuns = 1e4, #run 10,000 times
+  numberOfModelRuns = 1e3, #run 1,000 times
   functionSyntax = "plainNames"
 )
 
 
-## ------------------------------------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = c("Interv_NPV", "NO_Interv_NPV"),
-                                    method = 'smooth_simple_overlay')
+                                    method = 'smooth_simple_overlay', 
+                                    base_size = 7)
 
-## ------------------------------------------------------------------------------------------------------
+
+## ----plot_distributions_boxplot-----------------------------------------------
+decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+                                    vars = c("Interv_NPV",
+                                    "NO_Interv_NPV"),
+                                    method = 'boxplot')
+
+## ----plot_distributions_box_dens----------------------------------------------
 decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
 
-## ------------------------------------------------------------------------------------------------------
+## ----plot_cashflow------------------------------------------------------------
 plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
 
-## ------------------------------------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
 pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
                   resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
 
-## ------------------------------------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
 input_table <- read.csv("example_input_table.csv")
 
-plot_pls(pls_result, input_table = input_table)
+plot_pls(pls_result, input_table = input_table, threshold = 0)
+
+
+## -----------------------------------------------------------------------------
+#here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
+# this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
+mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
+
+evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
+
+## -----------------------------------------------------------------------------
+
+plot_evpi(evpi, decision_vars = "NPV_decision_do")
+
 

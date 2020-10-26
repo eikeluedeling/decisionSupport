@@ -17,7 +17,7 @@ plot_pls(
 \arguments{
 \item{plsrResults}{is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function}
 
-\item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable name with the label. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
+\item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
 
 \item{cut_off_line}{is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection}
 
