@@ -6,8 +6,8 @@
 \usage{
 plot_evpi(
   EVPIresults,
-  input_table = NULL,
   decision_vars,
+  input_table = NULL,
   new_names = NULL,
   unit = NULL,
   bar_color = "cadetblue",
@@ -17,13 +17,15 @@ plot_evpi(
 \arguments{
 \item{EVPIresults}{are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function}
 
-\item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
-
 \item{decision_vars}{are the names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function}
+
+\item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
 
 \item{new_names}{are the reformatted replacement names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function}
 
 \item{unit}{is the symbol to display before the evpi value on the x axis. It accepts text or (many) unicode formatted symbol text}
+
+\item{bar_color}{is the color to be used for the EVPI barplot. Default is "cadetblue"}
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
@@ -34,7 +36,8 @@ Plotting the Expected Value of Perfect Information (EVPI) of Monte Carlo outputs
 
 # Create a data.frame
 
-montecarlo <- data.frame(indep1 = rnorm(1000, sd = 50, mean = 100), indep2 = rnorm(1000, sd = 100, mean = 100))
+montecarlo <- data.frame(indep1 = rnorm(1000, sd = 50, mean = 100), 
+                         indep2 = rnorm(1000, sd = 100, mean = 100))
 montecarlo[, 'output1'] <- montecarlo[, 'indep1'] * montecarlo[, 'indep2']
 montecarlo[, 'output2'] <- (montecarlo[, 'indep1'] * (montecarlo[, 'indep2']) + 10)
 

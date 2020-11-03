@@ -96,13 +96,11 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   
   
   # Check if mcSimulation_object is class mcSimulation
-  
   assertthat::assert_that(class(mcSimulation_object)[[1]] == "mcSimulation",
                           msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with 'mcSimulation' function.")
   
   
   # Create a dataframe from the mcSimulation_object
-  
   data <- data.frame(mcSimulation_object$y,
                      mcSimulation_object$x)
   
@@ -140,7 +138,6 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
     tidyr::pivot_longer(dplyr::starts_with(cashflow_var_name)) 
   
   # Detect the position of the year character
-  
   years_position <- stringr::str_locate(subset_data$name, pattern = "[:digit:]")
   
   subset_data <- subset_data %>% 
@@ -154,7 +151,6 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
                                                1, (years_position[, 1] - 1))))
   
   #define the quantiles of cashflow for each value of x_scale based on the replicates of the MC
-  
   summary_subset_data <- suppressMessages(subset_data %>%
     dplyr::group_by(decision_option, x_scale) %>%
     dplyr::summarize(p5 = quantile(value, 0.05),

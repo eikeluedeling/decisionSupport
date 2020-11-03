@@ -1,12 +1,13 @@
 #' Visualizing the results of Expected Value of Perfect Information (EVPI) analysis for various types of Monte Carlo simulation results
 #' 
 #' Plotting the Expected Value of Perfect Information (EVPI) of Monte Carlo outputs
-
+#'
 #' @param EVPIresults are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function
 #' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
 #' @param decision_vars are the names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param new_names are the reformatted replacement names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param unit is the symbol to display before the evpi value on the x axis. It accepts text or (many) unicode formatted symbol text
+#' @param bar_color is the color to be used for the EVPI barplot. Default is "cadetblue"
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #' 
 #' 
@@ -22,7 +23,8 @@
 #' 
 #' # Create a data.frame
 #'
-#' montecarlo <- data.frame(indep1 = rnorm(1000, sd = 50, mean = 100), indep2 = rnorm(1000, sd = 100, mean = 100))
+#' montecarlo <- data.frame(indep1 = rnorm(1000, sd = 50, mean = 100), 
+#'                          indep2 = rnorm(1000, sd = 100, mean = 100))
 #' montecarlo[, 'output1'] <- montecarlo[, 'indep1'] * montecarlo[, 'indep2']
 #' montecarlo[, 'output2'] <- (montecarlo[, 'indep1'] * (montecarlo[, 'indep2']) + 10)
 #' 
@@ -35,9 +37,23 @@
 #' 
 #' @export plot_evpi
 #' 
-plot_evpi <- function(EVPIresults, input_table = NULL, decision_vars, new_names = NULL, 
-                      unit = NULL, bar_color = "cadetblue", ...){
+plot_evpi <- function(EVPIresults, 
+                      decision_vars, 
+                      input_table = NULL, 
+                      new_names = NULL, 
+                      unit = NULL, 
+                      bar_color = "cadetblue", 
+                      ...){
   
+  # Check if EVPIresults is class mvr
+  assertthat::assert_that("EVPI_outputs" %in% class(EVPIresults),
+                          msg = "EVPIresults is not class 'EVPI_outputs', please provide a valid object. This does not appear to have been generated with the 'multi_EVPI' function.")
+
+  # Check that input table is a data frame (or not)
+  if (!is.null(input_table))
+  assertthat::assert_that(any(class(input_table) %in% c("tbl_df", "tbl", "data.frame")), 
+                          msg = "The input_table is not a data.frame or tibble (tbl, tbl_df) class, please provide a valid object.")
+    
   # use the result of multi_EVPI() to create a full data frame
   full_evpi_data <- NULL
 
@@ -68,6 +84,10 @@ plot_evpi <- function(EVPIresults, input_table = NULL, decision_vars, new_names 
 
   # Filter the data to only show positive EVPI
   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
+  
+  # Check that the decision_vars are in the evpi data set
+  assertthat::assert_that(any(filtered_table$output_variable %in% decision_vars), 
+                          msg = "The names provided for decision_vars do not match the names in the EVPIresults. Make sure that they are in the EVPIresults and are spelled correctly.")
   
   # subset the data according to the user-defined decision variables
   data <-

@@ -56,18 +56,21 @@
 #' 
 #' @export plot_pls
 #'
-plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,  
-                     threshold = 0.8, pos_color = "cadetblue", neg_color = "firebrick", ...){
+plot_pls <- function(plsrResults, 
+                     input_table = NULL, 
+                     cut_off_line = 1,  
+                     threshold = 0.8, 
+                     pos_color = "cadetblue", 
+                     neg_color = "firebrick", 
+                     ...){
   
   
   # Check if plsrResults is class mvr
-  
   assertthat::assert_that(class(plsrResults) == "mvr",
                           msg = "plsrResults is not class 'mvr', please provide a valid object. This does not appear to have been generated with the 'plsr.mcSimulation' function.")
   
   
   # Define the VIP function to avoid referring to chillR::VIP
-  
   VIP <- function(object) {
     
     if (object$method != "oscorespls")
@@ -86,7 +89,6 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
   # Extract the VIP scores with VIP() from chillR. 
   #User can choose 'ncomp' in the 'plsr.mcSimulation'
   
-  
   if (plsrResults$ncomp == 1) 
     
     #For 1 ncomp no need to do any subsetting
@@ -99,13 +101,11 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
   coef <- plsrResults$coefficients[, , 1]
   
   # Create a df for further plotting
-  
   pls_outputs <- data.frame(Variable = names(vipResult),
                             VIP = vipResult,
                             Coefficient = coef)
   
   # Remove the ugly rownames
-  
   rownames(pls_outputs) <- NULL
   
   # Add own variable names from 'label' in the input table
@@ -118,11 +118,9 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
       combined_table <- pls_outputs
   
   # Filter the data according to the threshold defined by the user
-  
   filtered_table <- dplyr::filter(combined_table, VIP > threshold)
   
   # Order the variable or labels according VIP
-  
   if ("label" %in% colnames(filtered_table))
     
     ordered_vars <- stats::reorder(filtered_table$label, filtered_table$VIP) else
@@ -131,7 +129,6 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
       
   
   # PLS plot
-  
   ggplot2::ggplot(filtered_table,
                   ggplot2::aes(VIP, ordered_vars, fill = Coefficient > 0)) +
     ggplot2::geom_col() +
@@ -145,7 +142,6 @@ plot_pls <- function(plsrResults, input_table = NULL, cut_off_line = 1,
     ggplot2::theme_bw() +
     ggplot2::theme(legend.position = "bottom") +
     ggplot2::theme(...)
-  
   
   }
   

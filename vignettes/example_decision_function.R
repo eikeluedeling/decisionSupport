@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
 knitr::write_bib(c(.packages(), 
                    'chillR',
                    'dplyr',
+                   'patchwork',
                    'plyr',
                    'tidyverse',
                    'ggplot2', 
@@ -202,15 +203,20 @@ input_table <- read.csv("example_input_table.csv")
 plot_pls(pls_result, input_table = input_table, threshold = 0)
 
 
-## -----------------------------------------------------------------------------
+## ----evpi, message = FALSE----------------------------------------------------
 #here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
 # this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
 mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
 
 evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 
-## -----------------------------------------------------------------------------
+## ----evpi_plot----------------------------------------------------------------
 
 plot_evpi(evpi, decision_vars = "NPV_decision_do")
+
+
+## ----compound_figure----------------------------------------------------------
+
+# compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
 
 

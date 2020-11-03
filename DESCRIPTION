@@ -56,6 +56,7 @@ RoxygenNote: 7.1.1
 Collate: 
     'as.data.frame.mcSimulation.R'
     'chance_event.R'
+    'compound_figure.R'
     'paramtnormci_fit.R'
     'paramtnormci_numeric.R'
     'rtnorm90ci.R'

@@ -64,19 +64,26 @@
 #' 
 #' @export plot_distributions
 #'
-plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simple_overlay", bins = 150,
-                               old_names = NULL, new_names = NULL, colors = NULL, outlier_shape = ".",
-                               x_axis_name = "Outcome distribution", y_axis_name = NULL, base_size = 11, ...) {
+plot_distributions <- function(mcSimulation_object, 
+                               vars, 
+                               method = "smooth_simple_overlay", 
+                               bins = 150,
+                               old_names = NULL, 
+                               new_names = NULL, 
+                               colors = NULL, 
+                               outlier_shape = ".",
+                               x_axis_name = "Outcome distribution", 
+                               y_axis_name = NULL, 
+                               base_size = 11, 
+                               ...) {
   
   
   # Check if mcSimulation_object is class mcSimulation
-  
   assertthat::assert_that(class(mcSimulation_object)[[1]] == "mcSimulation",
                           msg = "mcSimulation_object is not class 'mcSimulation', please provide a valid object. This does not appear to have been generated with the 'mcSimulation' function.")
   
   
   # Create a dataframe from the mcSimulation_object
-  
   data <- data.frame(mcSimulation_object$y,
                      mcSimulation_object$x)
   
@@ -153,15 +160,12 @@ plot_distributions <- function(mcSimulation_object, vars, method = "smooth_simpl
     #options_difference = c(11229249, 58838895, 507997898)
     
     # Compute a linear regression between percentage and option differences
-    
     regression <- stats::lm(percentage ~ options_difference, data = data)
     
     # Estimate the difference between options provided by the user
-    
     options_difference <- max(standard_plot_data$value) - min(standard_plot_data$value)
     
     # Compute the boxploth_width parameter using the linear regression coefficients
-    
     boxploth_width_correction <- stats::coefficients(regression)[[1]] + (stats::coefficients(regression)[[2]] * options_difference)
     
     return(

@@ -32,6 +32,7 @@ knitr::opts_chunk$set(
 knitr::write_bib(c(.packages(), 
                    'chillR',
                    'dplyr',
+                   'patchwork',
                    'plyr',
                    'tidyverse',
                    'ggplot2', 
@@ -301,7 +302,7 @@ mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation
 evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 ```
 
-We run the `plot_evpi()` on the results from `multi_EVPI()` with standard settings. The length of the bars is equal to EVPI.
+We use the function `plot_evpi()` on the results from `multi_EVPI()` to plot the Expected Value of Perfect Information (EVPI). Here we show the results with the standard settings. The length of the bars is equal to EVPI.
 
 ```{r evpi_plot}
 
@@ -309,5 +310,12 @@ plot_evpi(evpi, decision_vars = "NPV_decision_do")
 
 ```
 
+Fianlly, we provide a single function for a quick assessment. The `compound_figure()` function can be used to run the full decision assessment for a simple binary decision ('do' or 'do not do').
+
+```{r compound_figure}
+
+# compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
+
+```
 
 ## References
