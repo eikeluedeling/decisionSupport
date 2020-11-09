@@ -8,6 +8,7 @@ knitr::opts_chunk$set(
 )
 
 ## ---- warning = F, include = F------------------------------------------------
+
 #Automatically write R package citation entries to a .bib file
 knitr::write_bib(c(.packages(), 
                    'chillR',
@@ -216,7 +217,6 @@ plot_evpi(evpi, decision_vars = "NPV_decision_do")
 
 
 ## ----compound_figure----------------------------------------------------------
-
-# compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
+compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
 
 

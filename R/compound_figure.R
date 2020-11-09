@@ -7,10 +7,41 @@
 #' @param decision_var_name is the name of the decision outcome named in the \code{return()} of 'model'. This will be used in all plots and analyses except for the cashflow plot. For now this is just one decision option
 #' @param cashflow_var_name is the name of the cashflow variable named in the \code{return()} of 'model'. This will be used in the cashflow plot
 #' @param model_runs is the number of time that the model should run. The default is 10,000
-#' @param distribution_method is the method used in the distribution plot see the \code{\link[decisionSupport:plot_distribution]{plot_distribution}} function
+#' @param distribution_method is the method used in the distribution plot see the \code{\link[decisionSupport:plot_distributions]{plot_distributions}} function
 #' 
+#' @examples 
+#' ##############################################################
+#' # Example 1 (Creating the estimate from the command line):
+#' #############################################################
+#' # Create the estimate object:
 #' 
+#' cost_benefit_table <- data.frame(label = c("Revenue", "Costs"),
+#'                                   variable = c("revenue", "costs"),
+#'                                   distribution = c("norm", "norm"),
+#'                                   lower = c(100,  500),
+#'                                   median = c(NA, NA),
+#'                                   upper = c(10000, 5000))
 #' 
+#' # (a) Define the model function without name for the return value:
+#' 
+#' profit1 <- function() {
+#'   Decision <- revenue - costs
+#'   cashflow <- rnorm(rep(revenue, 20))
+#'   return(list(Revenues = revenue,
+#'               Costs = costs, 
+#'               cashflow = cashflow, 
+#'               Decision = Decision))
+#' }
+#' 
+#' compound_figure(model = profit1, 
+#' input_table = cost_benefit_table, 
+#' decision_var_name = "Decision",
+#' cashflow_var_name = "cashflow",
+#' model_runs = 1e2, 
+#' distribution_method = 'smooth_simple_overlay')
+#' 
+#' @import patchwork
+#' @export compound_figure
 #' 
 compound_figure <- function(model, 
                             input_table, 
@@ -51,7 +82,8 @@ evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = decision_var_name)
 evpi_plot <- plot_evpi(evpi, decision_vars = decision_var_name, input_table = input_table)
 
 # use the patchwork library to create the compound figure
-((distribution_plot + cashflow_plot) / (pls_plot + evpi_plot)) #& 
+figure <- ((distribution_plot + cashflow_plot) / (pls_plot + evpi_plot)) #& 
   #ggplot2::theme(strip.text.x = ggplot2::element_blank())
   #future iterations of this function may remove the axis title
+return(figure)
 }

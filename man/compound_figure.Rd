@@ -24,8 +24,40 @@ compound_figure(
 
 \item{model_runs}{is the number of time that the model should run. The default is 10,000}
 
-\item{distribution_method}{is the method used in the distribution plot see the \code{\link[decisionSupport:plot_distribution]{plot_distribution}} function}
+\item{distribution_method}{is the method used in the distribution plot see the \code{\link[decisionSupport:plot_distributions]{plot_distributions}} function}
 }
 \description{
 Simple compound figure of model results and analyses of a binary decision (do or do not do). The figure includes the distribution of the expected outcome, the expected cashflow, as well as the variable importance and the value of information
+}
+\examples{
+##############################################################
+# Example 1 (Creating the estimate from the command line):
+#############################################################
+# Create the estimate object:
+
+cost_benefit_table <- data.frame(label = c("Revenue", "Costs"),
+                                  variable = c("revenue", "costs"),
+                                  distribution = c("norm", "norm"),
+                                  lower = c(100,  500),
+                                  median = c(NA, NA),
+                                  upper = c(10000, 5000))
+
+# (a) Define the model function without name for the return value:
+
+profit1 <- function() {
+  Decision <- revenue - costs
+  cashflow <- rnorm(rep(revenue, 20))
+  return(list(Revenues = revenue,
+              Costs = costs, 
+              cashflow = cashflow, 
+              Decision = Decision))
+}
+
+compound_figure(model = profit1, 
+input_table = cost_benefit_table, 
+decision_var_name = "Decision",
+cashflow_var_name = "cashflow",
+model_runs = 1e2, 
+distribution_method = 'smooth_simple_overlay')
+
 }

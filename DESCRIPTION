@@ -35,6 +35,7 @@ Imports:
     msm (>= 1.5),
     mvtnorm (>= 1.0.2),
     nleqslv (>= 2.6),
+    patchwork,
     rriskDistributions (>= 2.0),
     stats (>= 3.1.3),
     stringr,
