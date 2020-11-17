@@ -219,7 +219,7 @@ Using the model function above, we can perform a Monte Carlo simulation with the
 The `numberOfModelRuns` argument is an integer indicating the number of model runs for the Monte Carlo simulation. Unless the model function is very complex, 10,000 runs is a reasonable choice (for complex models, 10,000 model runs can take a while, so especially when the model is still under development, it often makes sense to use a lower number).
 
 ```{r mcSimulation}
-test_mcSimulation_function <- decisionSupport::mcSimulation(
+mcSimulation_results <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
   model_function = example_decision_function,
   numberOfModelRuns = 1e3, #run 1,000 times
@@ -233,7 +233,7 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 We can use the `plot_distributions()` function to produce one of the several plotting options for distribution outputs. This shows us an overlay of the full results of the Monte Carlo model of the decision options, i.e. the expected NPV if we choose to do the intervention `Interv_NPV` or not do the intervention `NO_Interv_NPV`.
 
 ```{r}
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = c("Interv_NPV", "NO_Interv_NPV"),
                                     method = 'smooth_simple_overlay', 
                                     base_size = 7)
@@ -243,7 +243,7 @@ decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_func
 We use the same function to show the distributions of the 'do' and 'do not do' decision scenarios as boxplots. This can be useful when comparing multiple outputs by illustrating the spread of the data resulting from the decision model. Boxplots show the median (central line), the 25^th^ and 75^th^ percentiles (sides of boxes) and any outliers (light circles outside of boxes). 
 
 ```{r plot_distributions_boxplot}
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = c("Interv_NPV",
                                     "NO_Interv_NPV"),
                                     method = 'boxplot')
@@ -253,7 +253,7 @@ decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_func
 We can use the same function for the value of the decision (difference in NPV between do and do not do). This is more helpful for us since it shows us the outcome distribution of the decision itself. 
 
 ```{r plot_distributions_box_dens}
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
 ```
@@ -264,17 +264,17 @@ decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_func
 Here we plot the distribution of annual cashflow over the entire simulated period for the intervention. For this we use the `plot_cashflow()` function which uses the specified cashflow outputs from the `mcSimulation()` function (in our case `Cashflow_decision_do`) to show cashflow over time.
 
 ```{r plot_cashflow}
-plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
+plot_cashflow(mcSimulation_object = mcSimulation_results, cashflow_var_name = "Cashflow_decision_do")
 
 ```
 
 #### Projection to Latent Structures (PLS) analysis
 
-We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimulation()` to determine the Variable Importance in the Projection (VIP) score and coefficients of a Projection to Latent Structures (PLS) regression model. This function uses the outputs of the `mcSimulation()` selecting all the input variables from the decision analysis function in the parameter `object` and then runs a PLS regression with an outcome variable defined in the parameter `resultName`. We use the code `names(test_mcSimulation_function$y)[3]` to select the outcome variable `r names(test_mcSimulation_function$y)[3]`, which is the third element of the list `y` in our `test_mcSimulation_function` outputs (this must be a character element). 
+We apply a post-hoc analysis to the `mcSimulation()` outputs with `plsr.mcSimulation()` to determine the Variable Importance in the Projection (VIP) score and coefficients of a Projection to Latent Structures (PLS) regression model. This function uses the outputs of the `mcSimulation()` selecting all the input variables from the decision analysis function in the parameter `object` and then runs a PLS regression with an outcome variable defined in the parameter `resultName`. We use the code `names(mcSimulation_results$y)[3]` to select the outcome variable `r names(mcSimulation_results$y)[3]`, which is the third element of the list `y` in our `mcSimulation_results` outputs (this must be a character element). 
 
 ```{r}
-pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
-                  resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
+pls_result <- plsr.mcSimulation(object = mcSimulation_results,
+                  resultName = names(mcSimulation_results$y)[3], ncomp = 1)
 
 ```
 
@@ -298,7 +298,7 @@ We use the function `data.frame()` to transform the x and y outputs of the `mcSi
 ```{r evpi, message = FALSE}
 #here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
 # this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
-mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
+mcSimulation_table <- data.frame(mcSimulation_results$x, mcSimulation_results$y[1:3])
 
 evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 ```
@@ -314,7 +314,7 @@ plot_evpi(evpi, decision_vars = "NPV_decision_do")
 Finally, we provide a single function for a quick assessment. The `compound_figure()` function can be used to run the full decision assessment for a simple binary decision ('do' or 'do not do').
 
 ```{r compound_figure}
-compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
+compound_figure(mcSimulation_object = mcSimulation_results, input_table = input_table, plsrResults = pls_result, EVPIresults = evpi, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
 
 ```
 

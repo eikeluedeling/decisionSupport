@@ -86,7 +86,7 @@ plot_evpi <- function(EVPIresults,
   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
   
   # Check that the decision_vars are in the evpi data set
-  assertthat::assert_that(any(decision_vars %in% filtered_table$output_variable), 
+  assertthat::assert_that(any(filtered_table$output_variable %in%  decision_vars), 
                           msg = "The names provided for decision_vars do not match the names in the EVPIresults. Make sure that they are in the EVPIresults and are spelled correctly.")
   
   # subset the data according to the user-defined decision variables
