@@ -313,8 +313,8 @@ plot_evpi(evpi, decision_vars = "NPV_decision_do")
 
 Finally, we provide a single function for a quick assessment. The `compound_figure()` function can be used to run the full decision assessment for a simple binary decision ('do' or 'do not do').
 
-```{r compound_figure}
-compound_figure(mcSimulation_object = mcSimulation_results, input_table = input_table, plsrResults = pls_result, EVPIresults = evpi, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
+```{r compound_figure, fig.width=7, fig.height=4}
+compound_figure(mcSimulation_object = mcSimulation_results, input_table = input_table, plsrResults = pls_result, EVPIresults = evpi, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do", base_size = 7)
 
 ```
 

@@ -163,7 +163,7 @@ return(list(Interv_NPV = NPV_interv,
 
 
 ## ----mcSimulation-------------------------------------------------------------
-test_mcSimulation_function <- decisionSupport::mcSimulation(
+mcSimulation_results <- decisionSupport::mcSimulation(
   estimate = decisionSupport::estimate_read_csv("example_input_table.csv"),
   model_function = example_decision_function,
   numberOfModelRuns = 1e3, #run 1,000 times
@@ -172,30 +172,30 @@ test_mcSimulation_function <- decisionSupport::mcSimulation(
 
 
 ## -----------------------------------------------------------------------------
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = c("Interv_NPV", "NO_Interv_NPV"),
                                     method = 'smooth_simple_overlay', 
                                     base_size = 7)
 
 
 ## ----plot_distributions_boxplot-----------------------------------------------
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = c("Interv_NPV",
                                     "NO_Interv_NPV"),
                                     method = 'boxplot')
 
 ## ----plot_distributions_box_dens----------------------------------------------
-decisionSupport::plot_distributions(mcSimulation_object = test_mcSimulation_function, 
+decisionSupport::plot_distributions(mcSimulation_object = mcSimulation_results, 
                                     vars = "NPV_decision_do",
                                     method = 'boxplot_density')
 
 ## ----plot_cashflow------------------------------------------------------------
-plot_cashflow(mcSimulation_object = test_mcSimulation_function, cashflow_var_name = "Cashflow_decision_do")
+plot_cashflow(mcSimulation_object = mcSimulation_results, cashflow_var_name = "Cashflow_decision_do")
 
 
 ## -----------------------------------------------------------------------------
-pls_result <- plsr.mcSimulation(object = test_mcSimulation_function,
-                  resultName = names(test_mcSimulation_function$y)[3], ncomp = 1)
+pls_result <- plsr.mcSimulation(object = mcSimulation_results,
+                  resultName = names(mcSimulation_results$y)[3], ncomp = 1)
 
 
 ## -----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ plot_pls(pls_result, input_table = input_table, threshold = 0)
 ## ----evpi, message = FALSE----------------------------------------------------
 #here we subset the outputs from the mcSimulation function (y) by selecting the correct variables
 # this should be done by the user (be sure to run the multi_EVPI only on the variables that the user wants)
-mcSimulation_table <- data.frame(test_mcSimulation_function$x, test_mcSimulation_function$y[1:3])
+mcSimulation_table <- data.frame(mcSimulation_results$x, mcSimulation_results$y[1:3])
 
 evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 
@@ -216,7 +216,7 @@ evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = "Interv_NPV")
 plot_evpi(evpi, decision_vars = "NPV_decision_do")
 
 
-## ----compound_figure----------------------------------------------------------
-compound_figure(model = example_decision_function, input_table = input_table, model_runs = 1e2, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do")
+## ----compound_figure, fig.width=7, fig.height=4-------------------------------
+compound_figure(mcSimulation_object = mcSimulation_results, input_table = input_table, plsrResults = pls_result, EVPIresults = evpi, decision_var_name = "NPV_decision_do", cashflow_var_name = "Cashflow_decision_do", base_size = 7)
 
 

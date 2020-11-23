@@ -11,6 +11,8 @@
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param plsrResults is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function
 #' @param EVPIresults are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function
+#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
+#' 
 #' 
 #' @examples 
 #' ##############################################################
@@ -54,7 +56,25 @@ compound_figure <- function(model = NULL,
                             distribution_method = 'smooth_simple_overlay',
                             mcSimulation_object = NULL, 
                             plsrResults = NULL, 
-                            EVPIresults = NULL) {
+                            EVPIresults = NULL, 
+                            
+                            x_axis_name_distribution = "Outcome distribution",
+                            y_axis_name_distribution = NULL,
+                            
+                            x_axis_name_cashflow = "Timeline of intervention", 
+                            y_axis_name_cashflow = "Cashflow", 
+                            legend_name_cashflow = "Quantiles (%)",
+                            legend_labels_cashflow = c("5 to 95", "25 to 75", "median"),
+                            
+                            x_axis_name_pls = "Variable Importance in Projection",
+                            y_axis_name_pls = NULL, 
+                            legend_name_pls = "Coefficient",
+                            legend_labels_pls = c("Positive", "Negative"),
+                            
+                            x_axis_name_evpi = "Expected Value of Perfect Information",
+                            y_axis_name_evpi = NULL,
+                            
+                            base_size = 11) {
 
   if(is.null(mcSimulation_object) & is.null(model))
     stop("Please provide either 'model' or the mcSimulation_object", call. = FALSE)
@@ -73,12 +93,19 @@ compound_figure <- function(model = NULL,
 distribution_plot <- decisionSupport::plot_distributions(mcSimulation_object = monte_carlo, 
                                     vars = decision_var_name,
                                     method = distribution_method, 
-                                    legend.position = "none")
+                                    legend.position = "none", 
+                                    x_axis_name = x_axis_name_distribution,
+                                    y_axis_name = y_axis_name_distribution,
+                                    base_size = base_size)
 
 #### Cashflow analysis
 cashflow_plot <- plot_cashflow(mcSimulation_object = monte_carlo, 
                                cashflow_var_name = cashflow_var_name,
-                               facet_labels = "")
+                               x_axis_name = x_axis_name_cashflow,
+                               y_axis_name = y_axis_name_cashflow,
+                               legend_name = legend_name_cashflow,
+                               legend_labels = legend_labels_cashflow,
+                               facet_labels = "", base_size = base_size)
 
 #### Projection to Latent Structures (PLS) analysis
 
@@ -89,10 +116,13 @@ if(!is.null(plsrResults))
       pls_result <- plsr.mcSimulation(object = monte_carlo,
                                       resultName = decision_var_name, ncomp = 1) }
 
-
-
 # Run the `plot_pls()` on the results from `plsr.mcSimulation()` 
-pls_plot <- plot_pls(pls_result, input_table = input_table, threshold = 0.8)
+pls_plot <- plot_pls(pls_result, input_table = input_table, threshold = 0.8,
+                     x_axis_name = x_axis_name_pls,
+                     y_axis_name = y_axis_name_pls,
+                     legend_name = legend_name_pls,
+                     legend_labels = legend_labels_pls,
+                     base_size = base_size)
 
 #### Value of Information (VoI) analysis
 # subset the outputs from the mcSimulation function (y) by selecting the correct variables
@@ -108,12 +138,18 @@ if(!is.null(EVPIresults))
 # run the `plot_evpi()` on the results from `multi_EVPI()` with standard settings. 
 # The length of the bars is equal to EVPI.
 evpi_plot <- plot_evpi(evpi, decision_vars = decision_var_name, input_table = input_table, 
-                       new_names = "")
+                       new_names = "", 
+                       x_axis_name = x_axis_name_evpi,
+                       y_axis_name = y_axis_name_evpi,
+                       base_size = base_size)
 
 # use the patchwork library to create the compound figure
-figure <- ((distribution_plot + cashflow_plot) / (pls_plot + evpi_plot)) #& 
-  #ggplot2::theme(strip.text = ggplot2::element_blank())
-  #ggplot2::theme(axis.title = ggplot2::element_blank())
-  #future iterations of this function may remove the axis title
+if(is.null(evpi_plot))
+   figure <- ((distribution_plot + cashflow_plot) / (pls_plot + patchwork::plot_spacer()))
+  
+else
+  
+   figure <- ((distribution_plot + cashflow_plot) / (pls_plot + evpi_plot)) 
+
 return(figure)
 }

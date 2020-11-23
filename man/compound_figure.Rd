@@ -5,16 +5,20 @@
 \title{Compound figure for decision support}
 \usage{
 compound_figure(
-  model,
+  model = NULL,
   input_table,
   decision_var_name,
   cashflow_var_name,
   model_runs = 10000,
-  distribution_method = "smooth_simple_overlay"
+  distribution_method = "smooth_simple_overlay",
+  mcSimulation_object = NULL,
+  plsrResults = NULL,
+  EVPIresults = NULL,
+  base_size = 11
 )
 }
 \arguments{
-\item{model}{is a user defined model function see the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function}
+\item{model}{is a user defined model function see the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function. Either 'model' or 'mcSimulation_object' must be provided. If both are given then 'model' has precedence and the model will be calculated for the figure}
 
 \item{input_table}{is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.}
 
@@ -25,6 +29,14 @@ compound_figure(
 \item{model_runs}{is the number of time that the model should run. The default is 10,000}
 
 \item{distribution_method}{is the method used in the distribution plot see the \code{\link[decisionSupport:plot_distributions]{plot_distributions}} function}
+
+\item{mcSimulation_object}{is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function}
+
+\item{plsrResults}{is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function}
+
+\item{EVPIresults}{are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function}
+
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 }
 \description{
 Simple compound figure of model results and analyses of a binary decision (do or do not do). The figure includes the distribution of the expected outcome, the expected cashflow, as well as the variable importance and the value of information

@@ -7,12 +7,15 @@
 plot_cashflow(
   mcSimulation_object,
   cashflow_var_name,
-  xlabel = "Timeline of intervention",
-  ylabel = "Cashflow",
+  x_axis_name = "Timeline of intervention",
+  y_axis_name = "Cashflow",
+  legend_name = "Quantiles (\%)",
+  legend_labels = c("5 to 95", "25 to 75", "median"),
   color_25_75 = "grey40",
   color_5_95 = "grey70",
   color_median = "blue",
   facet_labels = cashflow_var_name,
+  base_size = 11,
   ...
 )
 }
@@ -21,9 +24,13 @@ plot_cashflow(
 
 \item{cashflow_var_name}{is a character string representing the variable name used to define cashflow in the returned list of outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function. If multiple decision options are provided this will produce a comparative panel plot.}
 
-\item{xlabel}{is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.}
+\item{x_axis_name}{is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.}
 
-\item{ylabel}{is a character string representing the title of the units of the cashflow to be printed on the y axis.}
+\item{y_axis_name}{is a character string representing the title of the units of the cashflow to be printed on the y axis.}
+
+\item{legend_name}{is a character string representing the title of the legend}
+
+\item{legend_labels}{is a character string representing the labels of the legend. The default is inner, outer and median quantiles, i.e. `c("5 to 95", "25 to 75", "median")` and replacements should follow the same order}
 
 \item{color_25_75}{is a character string referring to the color name for the shade fill of the 25-75\% quantile from the grDevices colors. The default is "grey40".}
 
@@ -32,6 +39,8 @@ plot_cashflow(
 \item{color_median}{is a character string  referring to the color name for the median line from the grDevices colors. The default is  "blue".}
 
 \item{facet_labels}{is a character string referring to the names for different decisions. The default is the cashflow_var_name parameter.}
+
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
@@ -81,8 +90,8 @@ predictionProfit1 <- mcSimulation(estimate = costBenefitEstimate,
 # Plot the cashflow distribution over time
 
 plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow_option_one",
-              xlabel = "Years with intervention",
-              ylabel = "Annual cashflow in USD",
+              x_axis_name = "Years with intervention",
+              y_axis_name = "Annual cashflow in USD",
               color_25_75 = "green4", color_5_95 = "green1",
               color_median = "red")
 
@@ -93,8 +102,8 @@ plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cash
 
 plot_cashflow(mcSimulation_object = predictionProfit1, 
               cashflow_var_name = c("Cashflow_option_one", "Cashflow_option_two"),
-              xlabel = "Years with intervention",
-              ylabel = "Annual cashflow in USD",
+              x_axis_name = "Years with intervention",
+              y_axis_name = "Annual cashflow in USD",
               color_25_75 = "green4", color_5_95 = "green1",
               color_median = "red", 
               facet_labels = c("Option 1", "Option 2"))

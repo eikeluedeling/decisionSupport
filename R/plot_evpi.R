@@ -7,7 +7,10 @@
 #' @param decision_vars are the names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param new_names are the reformatted replacement names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param unit is the symbol to display before the evpi value on the x axis. It accepts text or (many) unicode formatted symbol text
+#' @param x_axis_name is the name to passed to the x-axis title. Default is "Expected Value of Perfect Information" and allows allow the user to add a customized axis title
+#' @param y_axis_name is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title
 #' @param bar_color is the color to be used for the EVPI barplot. Default is "cadetblue"
+#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #' 
 #' 
@@ -42,7 +45,10 @@ plot_evpi <- function(EVPIresults,
                       input_table = NULL, 
                       new_names = NULL, 
                       unit = NULL, 
+                      x_axis_name = "Expected Value of Perfect Information",
+                      y_axis_name = NULL,
                       bar_color = "cadetblue", 
+                      base_size = 11, 
                       ...){
   
   # Check if EVPIresults is class mvr
@@ -85,13 +91,19 @@ plot_evpi <- function(EVPIresults,
   # Filter the data to only show positive EVPI
   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
   
+  # add a stop for cases where there are no positive EVPI
+  if(nrow(filtered_table) == 0) {
+    warning("There are no variables with a positive EVPI. You probably do not need a plot for that.", 
+         call. = FALSE)
+    return(invisible(NULL)) }
+  
+  
   # Check that the decision_vars are in the evpi data set
-  assertthat::assert_that(any(filtered_table$output_variable %in%  decision_vars), 
+  assertthat::assert_that(any(decision_vars %in% filtered_table$output_variable), 
                           msg = "The names provided for decision_vars do not match the names in the EVPIresults. Make sure that they are in the EVPIresults and are spelled correctly.")
   
   # subset the data according to the user-defined decision variables
-  data <-
-    dplyr::filter(filtered_table, output_variable %in% decision_vars)
+  data <- dplyr::filter(filtered_table, output_variable %in% decision_vars)
   
   if (is.null(new_names))
     decision_labels <- decision_vars else
@@ -114,9 +126,9 @@ ggplot2::ggplot(data,
   ggplot2::geom_col(fill = bar_color) +
   ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.01)), 
                               labels = scales::dollar_format(prefix = unit)) +
-  ggplot2::labs(y = NULL, x = "Expected Value of Perfect Information") + 
+  ggplot2::labs(y = y_axis_name, x = x_axis_name) + 
   ggplot2::facet_wrap( ~ output_variable, scales = "free") +
-  ggplot2::theme_bw() +
+  ggplot2::theme_bw(base_size = base_size) +
   ggplot2::theme(strip.background = ggplot2::element_blank()) + 
   ggplot2::theme(...)
 

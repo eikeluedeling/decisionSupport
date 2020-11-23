@@ -9,8 +9,13 @@ plot_pls(
   input_table = NULL,
   cut_off_line = 1,
   threshold = 0.8,
+  x_axis_name = "Variable Importance in Projection",
+  y_axis_name = NULL,
+  legend_name = "Coefficient",
+  legend_labels = c("Positive", "Negative"),
   pos_color = "cadetblue",
   neg_color = "firebrick",
+  base_size = 11,
   ...
 )
 }
@@ -23,9 +28,19 @@ plot_pls(
 
 \item{threshold}{is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.}
 
+\item{x_axis_name}{is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.}
+
+\item{y_axis_name}{is a character string representing the title of the units of the cashflow to be printed on the y axis.}
+
+\item{legend_name}{is a character string representing the title of the legend}
+
+\item{legend_labels}{is a character string representing the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order}
+
 \item{pos_color}{is the color to be used for positive coefficient values, default is "cadetblue"}
 
 \item{neg_color}{is the color to be used for negative coefficient values, default is "firebrick"}
+
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }

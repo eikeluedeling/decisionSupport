@@ -40,7 +40,7 @@ plot_distributions(
 
 \item{y_axis_name}{is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title. If a name is not provided the title will be "Number of points in bin" for the \code{hist_simple_overlay} method and "Density estimate" for all other plot options}
 
-\item{base_size}{accepts arguments for standard text size to be passed to the complete themes of \code{\link[ggplot2]{ggplot}}. The default is 11}
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
