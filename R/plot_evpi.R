@@ -7,8 +7,8 @@
 #' @param decision_vars are the names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param new_names are the reformatted replacement names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param unit is the symbol to display before the evpi value on the x axis. It accepts text or (many) unicode formatted symbol text
-#' @param x_axis_name is the name to passed to the x-axis title. Default is "Expected Value of Perfect Information" and allows allow the user to add a customized axis title
-#' @param y_axis_name is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title
+#' @param x_axis_name is the name (character string) to be passed to the x-axis title. Default is "Expected Value of Perfect Information" and allows allow the user to add a customized axis title
+#' @param y_axis_name is the name (character string) to be passed to the y-axis title. Default is NULL to allow the user to add a customized axis title
 #' @param bar_color is the color to be used for the EVPI barplot. Default is "cadetblue"
 #' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}

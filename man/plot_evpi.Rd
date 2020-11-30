@@ -28,9 +28,9 @@ plot_evpi(
 
 \item{unit}{is the symbol to display before the evpi value on the x axis. It accepts text or (many) unicode formatted symbol text}
 
-\item{x_axis_name}{is the name to passed to the x-axis title. Default is "Expected Value of Perfect Information" and allows allow the user to add a customized axis title}
+\item{x_axis_name}{is the name (character string) to be passed to the x-axis title. Default is "Expected Value of Perfect Information" and allows allow the user to add a customized axis title}
 
-\item{y_axis_name}{is the name to passed to the y-axis title. Default is NULL to allow the user to add a customized axis title}
+\item{y_axis_name}{is the name (character string) to be passed to the y-axis title. Default is NULL to allow the user to add a customized axis title}
 
 \item{bar_color}{is the color to be used for the EVPI barplot. Default is "cadetblue"}
 

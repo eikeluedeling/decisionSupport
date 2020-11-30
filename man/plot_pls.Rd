@@ -28,13 +28,13 @@ plot_pls(
 
 \item{threshold}{is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.}
 
-\item{x_axis_name}{is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.}
+\item{x_axis_name}{is the name (character string) for the title of the timeline of the intervention to be printed on the x axis in quotes.}
 
-\item{y_axis_name}{is a character string representing the title of the units of the cashflow to be printed on the y axis.}
+\item{y_axis_name}{is the name (character string) for the title of the units of the cashflow to be printed on the y axis.}
 
-\item{legend_name}{is a character string representing the title of the legend}
+\item{legend_name}{is the name (character string) for the title of the legend}
 
-\item{legend_labels}{is a character string representing the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order}
+\item{legend_labels}{is the name (character string) for the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order}
 
 \item{pos_color}{is the color to be used for positive coefficient values, default is "cadetblue"}
 

@@ -6,10 +6,10 @@
 #' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
 #' @param cut_off_line is the vertical line for the VIP variable selection. The default is 1 on the x-axis, which is a standard cut-off for VIP used for variable selection 
 #' @param threshold is the filter for reducing the number of variables shown in the plot. With this set to 0 all variables with a VIP > 0 will be shown (often a very long list). In the default setting the overall plot only shows those variables with a VIP > 0.8, which is a common cut-off for variable selection.
-#' @param x_axis_name is a character string representing the title of the timeline of the intervention to be printed on the x axis in quotes.
-#' @param y_axis_name is a character string representing the title of the units of the cashflow to be printed on the y axis.
-#' @param legend_name is a character string representing the title of the legend
-#' @param legend_labels is a character string representing the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order
+#' @param x_axis_name is the name (character string) for the title of the timeline of the intervention to be printed on the x axis in quotes.
+#' @param y_axis_name is the name (character string) for the title of the units of the cashflow to be printed on the y axis.
+#' @param legend_name is the name (character string) for the title of the legend
+#' @param legend_labels is the name (character string) for the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order
 #' @param pos_color is the color to be used for positive coefficient values, default is "cadetblue"
 #' @param neg_color is the color to be used for negative coefficient values, default is "firebrick"
 #' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default

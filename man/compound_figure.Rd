@@ -14,6 +14,18 @@ compound_figure(
   mcSimulation_object = NULL,
   plsrResults = NULL,
   EVPIresults = NULL,
+  x_axis_name_distribution = "Outcome distribution",
+  y_axis_name_distribution = NULL,
+  x_axis_name_cashflow = "Timeline of intervention",
+  y_axis_name_cashflow = "Cashflow",
+  legend_name_cashflow = "Quantiles (\%)",
+  legend_labels_cashflow = c("5 to 95", "25 to 75", "median"),
+  x_axis_name_pls = "Variable Importance in Projection",
+  y_axis_name_pls = NULL,
+  legend_name_pls = "Coefficient",
+  legend_labels_pls = c("Positive", "Negative"),
+  x_axis_name_evpi = "Expected Value of Perfect Information",
+  y_axis_name_evpi = NULL,
   base_size = 11
 )
 }
@@ -35,6 +47,12 @@ compound_figure(
 \item{plsrResults}{is an object of Projection to Latent Structures (PLS) regression outputs from the \code{\link[decisionSupport:plsr.mcSimulation]{plsr.mcSimulation}} function}
 
 \item{EVPIresults}{are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function}
+
+\item{x_axis_name_distribution, y_axis_name_distribution, x_axis_name_cashflow, y_axis_name_cashflow, x_axis_name_pls, y_axis_name_pls, x_axis_name_evpi, y_axis_name_evpi}{are the names (character strings) to pass to the axis titles for the respective plots (distribution, cashflow, pls, evpi)}
+
+\item{legend_name_cashflow, legend_name_pls}{are the names (character strings) representing the title of the legend}
+
+\item{legend_labels_cashflow, legend_labels_pls}{are the names (character strings) representing the labels of the legend}
 
 \item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 }
