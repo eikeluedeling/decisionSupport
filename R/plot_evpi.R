@@ -2,6 +2,9 @@
 #' 
 #' Plotting the Expected Value of Perfect Information (EVPI) of Monte Carlo outputs
 #'
+#' @author Eduardo Fernandez (\email{efernand@@uni-bonn.de})
+#' @author Cory Whitney (\email{cory.whitney@@uni-bonn.de})
+#' 
 #' @param EVPIresults are the results of the \code{\link[decisionSupport:multi_EVPI]{multi_EVPI}} function
 #' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
 #' @param decision_vars are the names of the decision variables in the output of the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
@@ -13,13 +16,16 @@
 #' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #' 
+#' @return This function returns a plot of classes \code{'gg'}, 
+#' and \code{'ggplot'}. This allows the user to
+#' continue editing some features of the plots through the syntax 
+#' \code{'+'}.
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value EVPI perfect-information risk uncertainty
 #' 
-#'  
 #' @references 
-#' Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. \url{https://doi.org/10.1007/s13593-020-00624-5}
-#' Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}
+#' Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. https://doi.org/10.1007/s13593-020-00624-5.
+#' Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. https://doi.org/10.1016/j.envsoft.2019.01.016.
 #' Luedeling, Eike, and Keith Shepherd. “Decision-Focused Agricultural Research.” Solutions 7, no. 5 (2016): 46–54. \url{https://www.thesolutionsjournal.com/article/decision-focused-agricultural-research/}
 #' 
 #' @examples 

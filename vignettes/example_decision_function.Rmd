@@ -1,6 +1,6 @@
 ---
 title: "Applying the mcSimulation function in decisionSupport"
-author: "Cory Whitney, Eduardo Fernandez, and Eike Luedeling <br /><small>INRES-Horticultural Sciences, University of Bonn, Auf dem Huegel 6, 53121 Bonn, Germany<small/>"
+author: "Eduardo Fernandez, Cory Whitney and Eike Luedeling <br /><small>INRES-Horticultural Sciences, University of Bonn, Auf dem Huegel 6, 53121 Bonn, Germany<small/>"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Applying the mcSimulation function in decisionSupport}
@@ -65,7 +65,6 @@ The package can be loaded with the `library()` function for further use in this 
 ```{r}
 library(decisionSupport)
 ```
-
 
 #### Example – Reservoir Sedimentation in the Upper Volta River Basin of Burkina Faso
 

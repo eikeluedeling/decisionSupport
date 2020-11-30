@@ -44,6 +44,12 @@ plot_pls(
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
+\value{
+This function returns a plot of classes \code{'gg'}, 
+and \code{'ggplot'}. This allows the user to
+continue editing some features of the plots through the syntax 
+\code{'+'}.
+}
 \description{
 Plotting the Variable Importance in the Projection (VIP) statistic and coefficients of a PLS model of Monte Carlo outputs
 }
@@ -88,6 +94,11 @@ resultName = names(predictionProfit1$y))
 Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. \url{https://doi.org/10.1007/s13593-020-00624-5}
 Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}
 Luedeling, Eike, and Keith Shepherd. “Decision-Focused Agricultural Research.” Solutions 7, no. 5 (2016): 46–54. \url{https://www.thesolutionsjournal.com/article/decision-focused-agricultural-research/}
+}
+\author{
+Eduardo Fernandez (\email{efernand@uni-bonn.de})
+
+Cory Whitney (\email{cory.whitney@uni-bonn.de})
 }
 \keyword{Monte-Carlo}
 \keyword{NPV}

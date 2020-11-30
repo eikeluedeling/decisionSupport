@@ -56,8 +56,16 @@ compound_figure(
 
 \item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
 }
+\value{
+This function returns a plot of classes \code{'patchwork'}, \code{'gg'}, 
+and \code{'ggplot'}. This allows the user to
+continue editing some features of the plots through the syntax (i.e. \code{'&'},
+and \code{'+'}) from both libraries.
+}
 \description{
-Simple compound figure of model results and analyses of a binary decision (do or do not do). The figure includes the distribution of the expected outcome, the expected cashflow, as well as the variable importance and the value of information
+Simple compound figure of model results and analyses of a binary decision 
+(do or do not do). The figure includes the distribution of the expected outcome, 
+the expected cashflow, as well as the variable importance and the value of information
 }
 \examples{
 ##############################################################
@@ -91,3 +99,20 @@ model_runs = 1e2,
 distribution_method = 'smooth_simple_overlay')
 
 }
+\references{
+Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. https://doi.org/10.1007/s13593-020-00624-5.
+Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. https://doi.org/10.1016/j.envsoft.2019.01.016.
+Ruett, Marius, Cory Whitney, and Eike Luedeling. “Model-Based Evaluation of Management Options in Ornamental Plant Nurseries.” Journal of Cleaner Production 271 (June 2020): 122653. https://doi.org/10.1016/j.jclepro.2020.122653.
+}
+\author{
+Eduardo Fernandez (\email{efernand@uni-bonn.de})
+
+Cory Whitney (\email{cory.whitney@uni-bonn.de})
+}
+\keyword{Monte-Carlo}
+\keyword{NPV}
+\keyword{decision-analysis}
+\keyword{decisionSupport}
+\keyword{net-present-value}
+\keyword{risk}
+\keyword{uncertainty}

@@ -44,6 +44,12 @@ plot_cashflow(
 
 \item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
 }
+\value{
+This function returns a plot of classes \code{'gg'}, 
+and \code{'ggplot'}. This allows the user to
+continue editing some features of the plots through the syntax 
+\code{'+'}.
+}
 \description{
 Creates a cashflow plot of the returned list of related outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function using \code{\link{ggplot2}}
 }
@@ -111,6 +117,11 @@ plot_cashflow(mcSimulation_object = predictionProfit1,
 }
 \references{
 Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
+}
+\author{
+Eduardo Fernandez (\email{efernand@uni-bonn.de})
+
+Cory Whitney (\email{cory.whitney@uni-bonn.de})
 }
 \keyword{Monte-Carlo}
 \keyword{cashflow}

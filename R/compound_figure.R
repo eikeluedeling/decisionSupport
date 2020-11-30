@@ -1,6 +1,11 @@
 #' Compound figure for decision support
 #' 
-#' Simple compound figure of model results and analyses of a binary decision (do or do not do). The figure includes the distribution of the expected outcome, the expected cashflow, as well as the variable importance and the value of information
+#' Simple compound figure of model results and analyses of a binary decision 
+#' (do or do not do). The figure includes the distribution of the expected outcome, 
+#' the expected cashflow, as well as the variable importance and the value of information
+#' 
+#' @author Eduardo Fernandez (\email{efernand@@uni-bonn.de})
+#' @author Cory Whitney (\email{cory.whitney@@uni-bonn.de})
 #' 
 #' @param model is a user defined model function see the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function. Either 'model' or 'mcSimulation_object' must be provided. If both are given then 'model' has precedence and the model will be calculated for the figure
 #' @param input_table is a data frame with at least two columns named 'variable' and 'label'. The 'variable column should have one entry for the name of each variable contained in any of the plots. In preparing the figure, the function will replace the variable names with the labels. If the label is missing then the plot will show 'NA' in the place of the variable name. Default is NULL and uses the original variable names.
@@ -16,6 +21,17 @@
 #' @param legend_labels_cashflow,legend_labels_pls are the names (character strings) representing the labels of the legend 
 #' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
 #' 
+#' @return This function returns a plot of classes \code{'patchwork'}, \code{'gg'}, 
+#' and \code{'ggplot'}. This allows the user to
+#' continue editing some features of the plots through the syntax (i.e. \code{'&'},
+#' and \code{'+'}) from both libraries.
+#'
+#' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
+#'
+#' @references 
+#' Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. https://doi.org/10.1007/s13593-020-00624-5.
+#' Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. https://doi.org/10.1016/j.envsoft.2019.01.016.
+#' Ruett, Marius, Cory Whitney, and Eike Luedeling. “Model-Based Evaluation of Management Options in Ornamental Plant Nurseries.” Journal of Cleaner Production 271 (June 2020): 122653. https://doi.org/10.1016/j.jclepro.2020.122653.
 #' 
 #' @examples 
 #' ##############################################################
@@ -82,8 +98,8 @@ compound_figure <- function(model = NULL,
   if(is.null(mcSimulation_object) & is.null(model))
     stop("Please provide either 'model' or the mcSimulation_object", call. = FALSE)
     
-  if(!is.null(mcSimulation_object))
-    if(class(mcSimulation_object)[[1]] == "mcSimulation") {
+  if(!is.null(mcSimulation_object) & 
+     class(mcSimulation_object)[[1]] == "mcSimulation") {
       monte_carlo <- mcSimulation_object} else {
   
       monte_carlo <- decisionSupport::mcSimulation(
@@ -112,8 +128,8 @@ cashflow_plot <- plot_cashflow(mcSimulation_object = monte_carlo,
 
 #### Projection to Latent Structures (PLS) analysis
 
-if(!is.null(plsrResults))
-  if(class(plsrResults) == "mvr") {
+if(!is.null(plsrResults) & 
+   class(plsrResults) == "mvr") {
     pls_result <- plsrResults} else {
       
       pls_result <- plsr.mcSimulation(object = monte_carlo,
@@ -132,8 +148,8 @@ pls_plot <- plot_pls(pls_result, input_table = input_table, threshold = 0.8,
 mcSimulation_table <- data.frame(monte_carlo$x, monte_carlo$y[decision_var_name])
 
 # Run the multi_EVPI() or supply result
-if(!is.null(EVPIresults))
-  if("EVPI_outputs" %in% class(EVPIresults)) {
+if(!is.null(EVPIresults) & 
+   "EVPI_outputs" %in% class(EVPIresults)) {
     evpi <- EVPIresults} else {
       
       evpi <- multi_EVPI(mc = mcSimulation_table, first_out_var = decision_var_name) }

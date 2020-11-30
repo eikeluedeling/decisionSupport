@@ -2,6 +2,9 @@
 #' 
 #' Several plotting options for distribution outputs
 #' 
+#' @author Eduardo Fernandez (\email{efernand@@uni-bonn.de})
+#' @author Cory Whitney (\email{cory.whitney@@uni-bonn.de})
+#' 
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
 #' @param method is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}} 
@@ -15,12 +18,18 @@
 #' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
 #' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
 #'
+#' @return This function returns a plot of classes \code{'gg'}, 
+#' and \code{'ggplot'}. This allows the user to
+#' continue editing some features of the plots through the syntax 
+#' \code{'+'}.
 #' 
 #' @keywords Monte-Carlo decisionSupport decision-analysis net-present-value NPV risk uncertainty
 #' 
-#'  
 #' @references 
-#' Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
+#' Do, Hoa, Eike Luedeling, and Cory Whitney. “Decision Analysis of Agroforestry Options Reveals Adoption Risks for Resource-Poor Farmers.” Agronomy for Sustainable Development 40, no. 3 (June 2020): 20. https://doi.org/10.1007/s13593-020-00624-5.
+#' Lanzanova, Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. https://doi.org/10.1016/j.envsoft.2019.01.016.
+#' Ruett, Marius, Cory Whitney, and Eike Luedeling. “Model-Based Evaluation of Management Options in Ornamental Plant Nurseries.” Journal of Cleaner Production 271 (June 2020): 122653. https://doi.org/10.1016/j.jclepro.2020.122653.
+#' 
 #' 
 #' @examples 
 #' ##############################################################
