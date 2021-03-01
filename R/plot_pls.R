@@ -15,8 +15,8 @@
 #' @param legend_labels is the name (character string) for the labels of the legend. The default is `c("Positive", "Negative")` and replacements should follow the same order
 #' @param pos_color is the color to be used for positive coefficient values, default is "cadetblue"
 #' @param neg_color is the color to be used for negative coefficient values, default is "firebrick"
-#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
-#' @param ... accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}
+#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}} default
+#' @param ... accepts arguments to be passed to \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}}
 #' 
 #' @return This function returns a plot of classes \code{'gg'}, 
 #' and \code{'ggplot'}. This allows the user to

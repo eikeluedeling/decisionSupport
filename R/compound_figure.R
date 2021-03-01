@@ -19,7 +19,7 @@
 #' @param x_axis_name_distribution,y_axis_name_distribution,x_axis_name_cashflow,y_axis_name_cashflow,x_axis_name_pls,y_axis_name_pls,x_axis_name_evpi,y_axis_name_evpi are the names (character strings) to pass to the axis titles for the respective plots (distribution, cashflow, pls, evpi)
 #' @param legend_name_cashflow,legend_name_pls are the names (character strings) representing the title of the legend
 #' @param legend_labels_cashflow,legend_labels_pls are the names (character strings) representing the labels of the legend 
-#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default
+#' @param base_size is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}} default
 #' 
 #' @return This function returns a plot of classes \code{'patchwork'}, \code{'gg'}, 
 #' and \code{'ggplot'}. This allows the user to

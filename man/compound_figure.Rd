@@ -54,7 +54,7 @@ compound_figure(
 
 \item{legend_labels_cashflow, legend_labels_pls}{are the names (character strings) representing the labels of the legend}
 
-\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}} default}
 }
 \value{
 This function returns a plot of classes \code{'patchwork'}, \code{'gg'}, 

@@ -23,5 +23,5 @@ An object of class \code{summary.eviSimulation}.
 Sort summarized EVI simulation results according to their EVI.
 }
 \seealso{
-\code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base]{sort}}
+\code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base:sort]{base::sort}}
 }

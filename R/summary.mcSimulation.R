@@ -8,7 +8,10 @@
 #' @param object An object of class \code{mcSimulation}.
 #' @param ... Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE})
 #'   or \code{\link{format}} (\code{classicView=FALSE}).
-#' @inheritParams base::format
+#' @param digits how many significant digits are to be used for numeric and complex x.
+#' The default, NULL, uses \code{getOption("digits")}. This is a suggestion: enough decimal places
+#' will be used so that the smallest (in magnitude) number has this many significant digits,
+#' and also to satisfy nsmall. (For the interpretation for complex numbers see \code{\link[base:Round]{signif}}.)
 #' @param variables.y \code{character} or \code{character vector}: Names of the components of the
 #'   simulation function (\code{model_function}), whose results shall be displayed. Defaults to all
 #'   components.

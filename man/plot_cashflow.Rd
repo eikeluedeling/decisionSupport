@@ -40,9 +40,9 @@ plot_cashflow(
 
 \item{facet_labels}{are the names (character string) for the decisions. The default is the cashflow_var_name parameter.}
 
-\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:theme_bw]{ggplot::theme_bw}} default}
+\item{base_size}{is the base text size to be used for the plot. The default is 11, this is the \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}} default}
 
-\item{...}{accepts arguments to be passed to \code{\link[ggplot2:theme]{ggplot::theme}}}
+\item{...}{accepts arguments to be passed to \code{\link[ggplot2:ggtheme]{ggplot2::ggtheme}}}
 }
 \value{
 This function returns a plot of classes \code{'gg'}, 

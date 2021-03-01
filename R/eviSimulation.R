@@ -277,7 +277,10 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
 #'  the function \code{\link{eviSimulation}}.
 #' @param object An object of class \code{eviSimulation}.
 #' @param ... Further arguments passed to \code{\link{summary.welfareDecisionAnalysis}}.
-#' @inheritParams base::format
+#' @param digits how many significant digits are to be used for numeric and complex x.
+#' The default, NULL, uses \code{getOption("digits")}. This is a suggestion: enough decimal places
+#' will be used so that the smallest (in magnitude) number has this many significant digits,
+#' and also to satisfy nsmall. (For the interpretation for complex numbers see \code{\link[base:Round]{signif}}.)
 #' @return An object of class \code{summary.eviSimulation}.
 #' @seealso \code{\link{eviSimulation}}, \code{\link{print.summary.eviSimulation}}, 
 #' \code{\link{summary.welfareDecisionAnalysis}}, \ifelse{latex}{\cr}{ }
@@ -315,7 +318,7 @@ summary.eviSimulation <- function(object,
 #' @param along \code{character}: the name of the valuation variable along which the EVI 
 #'  should be sorted.
 #' @return An object of class \code{summary.eviSimulation}.
-#' @seealso \code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base]{sort}}
+#' @seealso \code{\link{eviSimulation}}, \code{\link{summary.eviSimulation}}, \code{\link[base:sort]{base::sort}}
 #' @export
 sort.summary.eviSimulation <- function(x, decreasing=TRUE, ..., along=row.names(x$summary$evi)[[1]]){
   eviRanking<-order(x=as.numeric(x$summary$evi[along,]), decreasing=decreasing)
