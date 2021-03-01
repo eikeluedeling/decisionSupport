@@ -68,7 +68,7 @@ NULL
 #'       }
 #'   }
 #' @references Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Intangibles" in Business},
-#'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{http://www.howtomeasureanything.com/}.
+#'   John Wiley & Sons, Hoboken, New Jersey, 2014, 3rd Ed, \url{https://www.howtomeasureanything.com/}.
 #'   
 #'   Gravelle, Hugh and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
 #' @seealso \code{\link{welfareDecisionAnalysis}}, \code{\link{mcSimulation}}, \code{\link{estimate}},

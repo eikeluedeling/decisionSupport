@@ -116,7 +116,7 @@ plot_cashflow(mcSimulation_object = predictionProfit1,
   
 }
 \references{
-Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \url{https://doi.org/10.1016/j.envsoft.2019.01.016}.
+Lanzanova Denis, Cory Whitney, Keith Shepherd, and Eike Luedeling. “Improving Development Efficiency through Decision Analysis: Reservoir Protection in Burkina Faso.” Environmental Modelling & Software 115 (May 1, 2019): 164–75. \doi{10.1016/j.envsoft.2019.01.016}.
 }
 \author{
 Eduardo Fernandez (\email{efernand@uni-bonn.de})
