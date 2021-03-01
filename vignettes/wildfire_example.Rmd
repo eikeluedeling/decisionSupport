@@ -2,11 +2,10 @@
 title: "Controlled burns in conifer forests"
 author: "Eike Luedeling and Cory Whitney, University of Bonn, Germany"
 date: "`r Sys.Date()`"
-csl: elsevier-harvard.csl
 bibliography: wildfire.bib
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{decisionSupport wildfire}
+  %\VignetteIndexEntry{Controlled burns in conifer forests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

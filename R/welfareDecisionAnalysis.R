@@ -282,7 +282,10 @@ welfareDecisionAnalysis <- function(estimate, welfare, numberOfModelRuns,
 #'  \ifelse{latex}{\cr}{ }\code{\link{welfareDecisionAnalysis}}.
 #' @param object An object of class \code{welfareDecisionAnalysis}.
 #' @param ... Further arguments passed to \code{\link{format}}.
-#' @inheritParams base::format
+#' @param digits how many significant digits are to be used for numeric and complex x.
+#' The default, NULL, uses \code{getOption("digits")}. This is a suggestion: enough decimal places
+#' will be used so that the smallest (in magnitude) number has this many significant digits,
+#' and also to satisfy nsmall. (For the interpretation for complex numbers see \code{\link[base:Round]{signif}}.)
 #' @param probs \code{numeric vector}: quantiles that shall be displayed; if \code{=NULL} no 
 #'   quantiles will be displayed.
 #' @return An object of class \code{summary.welfareDecisionAnalysis}.

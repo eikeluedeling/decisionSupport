@@ -17,7 +17,7 @@ mcSimulation(
 }
 \arguments{
 \item{estimate}{\code{estimate}: estimate of the joint probability distribution of
-the input variables.}
+the input variables. This can be read from a csv file and calculated with the \code{\link[decisionSupport]{estimate_read_csv}} function.}
 
 \item{model_function}{\code{function}: The function that transforms the input distribution. It 
 has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.}
@@ -50,7 +50,16 @@ An object of \code{class mcSimulation}, which is a \code{list} with elements:
      }
      \item{\code{$y}}{
        \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
-       function values for \code{x}.
+       function values for \code{x}.The return of the decision model function may include the
+       assignment of names for the output variables, e.g. like this:
+         \preformatted{
+           profit <- function(x){
+            revenue - costs
+            return(list(Revenue = revenue,
+                   Costs = cost))
+         }
+       }
+       
      }
   }
 }

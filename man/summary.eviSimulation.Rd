@@ -11,12 +11,10 @@
 
 \item{...}{Further arguments passed to \code{\link{summary.welfareDecisionAnalysis}}.}
 
-\item{digits}{how many significant digits are to be used for
-    numeric and complex \code{x}.  The default, \code{NULL}, uses
-    \code{\link[base]{getOption}("digits")}.  This is a suggestion: enough decimal
-    places will be used so that the smallest (in magnitude) number has
-    this many significant digits, and also to satisfy \code{nsmall}.
-    (For the interpretation for complex numbers see \code{\link[base]{signif}}.)}
+\item{digits}{how many significant digits are to be used for numeric and complex x.
+The default, NULL, uses \code{getOption("digits")}. This is a suggestion: enough decimal places
+will be used so that the smallest (in magnitude) number has this many significant digits,
+and also to satisfy nsmall. (For the interpretation for complex numbers see \code{\link[base:Round]{signif}}.)}
 }
 \value{
 An object of class \code{summary.eviSimulation}.

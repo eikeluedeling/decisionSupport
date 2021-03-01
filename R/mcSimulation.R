@@ -1,33 +1,7 @@
-#
-# file: mcSimulation.R
-#
-# This file is part of the R-package decisionSupport
-# 
-# Authors: 
-#   Lutz Göhring <lutz.goehring@gmx.de>
-#   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
-#
-# Copyright (C) 2015 World Agroforestry Centre (ICRAF) 
-#	http://www.worldagroforestry.org
-# 
-# The R-package decisionSupport is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# The R-package decisionSupport is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with the R-package decisionSupport.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################################
 #' @include estimate.R
 NULL
 ##############################################################################################
-# mcSimulation(estimate, model_function, numberOfModelRuns, ...)
+# mcSimulation(estimate, model_function, numberOfModelRuns, ...) 
 ##############################################################################################
 #' Perform a Monte Carlo simulation.
 #' 
@@ -35,7 +9,7 @@ NULL
 #' of an input distribution by a mathematical model, i.e. a mathematical function. This is called a
 #' Monte Carlo simulation. For details cf. below.
 #' @param estimate \code{estimate}: estimate of the joint probability distribution of
-#'   the input variables.
+#'   the input variables. This can be read from a csv file and calculated with the \code{\link[decisionSupport]{estimate_read_csv}} function.
 #' @param model_function \code{function}: The function that transforms the input distribution. It 
 #'   has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.
 #' @param  ... Optional arguments of \code{model_function}.
@@ -124,7 +98,16 @@ NULL
 #'      }
 #'      \item{\code{$y}}{
 #'        \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
-#'        function values for \code{x}.
+#'        function values for \code{x}.The return of the decision model function may include the
+#'        assignment of names for the output variables, e.g. like this:
+#'          \preformatted{
+#'            profit <- function(x){
+#'             revenue - costs
+#'             return(list(Revenue = revenue,
+#'                    Costs = cost))
+#'          }
+#'        }
+#'        
 #'      }
 #'   } 
 #' @examples
@@ -324,207 +307,13 @@ mcSimulation <- function(estimate, model_function, ..., numberOfModelRuns,
       colnames(y)<-paste("output_",c(1:ncol(y)),sep="")
     }
   }
+  
+  
   # Return object:
-  returnObject<-list(y=data.frame(y), x=data.frame(x))
-  returnObject$call<-match.call()
-  class(returnObject)<-cbind("mcSimulation", class(returnObject))
+  returnObject <- list(y=data.frame(y), x=data.frame(x))
+  returnObject$call <- match.call()
+  class(returnObject) <- cbind("mcSimulation", class(returnObject))
   
   return(returnObject)
 }
-##############################################################################################
-# as.data.frame.mcSimulation(x, row.names, optional, ..., stringsAsFactors)
-##############################################################################################
-#' Coerce Monte Carlo simulation results to a data frame.
-#' 
-#' Coerces Monte Carlo simulation results to a data frame.
-#' @param x An object of class \code{mcSimulation}.
-#' @inheritParams base::as.data.frame
-#' @seealso \code{\link{as.data.frame}}
-#' @export
-as.data.frame.mcSimulation <- function(x, row.names = NULL, optional = FALSE, ..., 
-                                       stringsAsFactors = NA){
-  
-  if(is.na(stringsAsFactors)) {
-    stringsAsFactors <-
-      if(getRversion() < "4.1.0") default.stringsAsFactors()
-        else FALSE}
-  
-  as.data.frame(list(y=x$y,x=x$x), row.names = row.names, optional = optional, ..., 
-                stringsAsFactors = stringsAsFactors)
-}
-##############################################################################################
-# print.mcSimulation(x, ...)
-##############################################################################################
-#' Print Basic Results from Monte Carlo Simulation.
-#' 
-#' This function prints basic results from Monte Carlo simulation  and returns it invisible.
-#' @param x An object of class \code{mcSimulation}.
-#' @param ... Further arguments to be passed to \code{\link{print.data.frame}}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{print.data.frame}}
-#' @export
-print.mcSimulation <- function(x, ...){
-  #ToDo: Review
-  cat("Call:\n")
-  print(x$call)
-  cat("\nMonte Carlo simulation results:\n")
-  print.data.frame(as.data.frame(x),...)
-}
-##############################################################################################
-# summary.mcSimulation(object, ...)
-##############################################################################################
-#' Summarize results from Monte Carlo simulation.
-#' 
-#' A summary of the results of a Monte Carlo simulation obtained by the function 
-#' \code{\link{mcSimulation}} is produced.
-#' @param object An object of class \code{mcSimulation}.
-#' @param ... Further arguments passed to \code{\link{summary.data.frame}} (\code{classicView=TRUE})
-#'   or \code{\link{format}} (\code{classicView=FALSE}).
-#' @inheritParams base::format
-#' @param variables.y \code{character} or \code{character vector}: Names of the components of the
-#'   simulation function (\code{model_function}), whose results shall be displayed. Defaults to all
-#'   components.
-#' @param variables.x \code{character} or \code{character vector}: Names of the components of the
-#'   input variables to the simulation function, i.e. the names of the variables in the input
-#'   \code{estimate}, whose random sampling results shall be displayed. Defaults to all components.
-#' @param classicView \code{logical}: if \code{TRUE} the results are summarized using
-#'   \code{\link{summary.data.frame}}, if \code{FALSE} further output is produced and the quantile
-#'   information can be chosen. Cf. section Value and argument \code{probs}. Default is
-#'   \code{FALSE}.
-#' @param probs \code{numeric vector}: quantiles that shall be displayed if 
-#'   \code{classicView=FALSE}.
-#' @return An object of class \code{summary.mcSimulation}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{print.summary.mcSimulation}}, \code{\link{summary.data.frame}}
-#' @export
-summary.mcSimulation <- function(object,
-                                 ...,
-                                 digits = max(3, getOption("digits")-3),
-                                 variables.y=names(object$y),
-                                 variables.x=if(classicView) names(object$x),
-                                 classicView=FALSE,
-                                 probs=c(0, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 1)
-){
-  #ToDo: Review
-  data<-as.data.frame(list(y=(object$y)[variables.y],x=(object$x)[variables.x]))
-  if( classicView ){
-    res<-list(summary=summary.data.frame(object=as.data.frame(data),...,digits=digits),
-              call=object$call)
-  } else{
-    chance_loss<-function(x){
-      length(x[x<0])/length(x)
-    }
-    chance_zero<-function(x){
-      length(x[x==0])/length(x)
-    }
-    chance_gain<-function(x){
-      length(x[x>0])/length(x)
-    }
-    
-    #		data<-mcResult$y[variables]
-    
-    summaryDf<-as.data.frame(t(apply(X=data, MARGIN=2, FUN=quantile, probs=probs)))
-    summaryDf<-cbind(summaryDf,
-                     mean=colMeans(data),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_loss=apply(X=data, MARGIN=2, FUN=chance_loss),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_zero=apply(X=data, MARGIN=2, FUN=chance_zero),
-                     deparse.level=1)
-    summaryDf<-cbind(summaryDf,
-                     chance_gain=apply(X=data, MARGIN=2, FUN=chance_gain),
-                     deparse.level=1)
-    
-    summaryDf<-format(x=summaryDf, digits=digits, ...)
-    res<-list(summary=summaryDf,
-              call=object$call)
-  }
-  
-  class(res)<-"summary.mcSimulation"
-  res
-}
-##############################################################################################
-# print.summary.mcSimulation(x, ...)
-##############################################################################################
-#' Print the summary of a Monte Carlo simulation.
-#' 
-#' This function prints the summary of of \code{mcSimulation} obtained by \code{\link{summary.mcSimulation}}.
-#' @param x An object of class \code{mcSimulation}.
-#' @param ... Further arguments to be passed to \code{\link{print.data.frame}}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{summary.mcSimulation}}, 
-#'   \code{\link{print.data.frame}}
-#' @export
-print.summary.mcSimulation <- function(x, ...){
-  cat("Call:\n")
-  print(x$call)
-  cat("\nSummary of Monte Carlo simulation:\n")
-  print(x$summary,...)
-}
-##############################################################################################
-# hist.mcSimulation(x, ...)
-##############################################################################################
-#' Plot Histogram of results of a Monte Carlo Simulation
-#' 
-#' This function plots the histograms of the results of
-#' \code{\link{mcSimulation}}.
-#' @param x An object of class \code{mcSimulation}.
-#' @param xlab \code{character}: x label of the histogram. If it is not
-#'   provided, i.e. equals \code{NULL} the name of the chosen variable by
-#'   argument \code{resultName} is used.
-#' @param main \code{character}: main title of the histogram.
-#' @inheritParams graphics::hist
-#' @param ... Further arguments to be passed to \code{\link[graphics]{hist}}.
-#' @param colorQuantile \code{character vector}: encoding the colors of the 
-#'   quantiles defined in argument \code{colorProbability}.
-#' @param colorProbability \code{numeric vector}: defines the quantiles that 
-#'   shall be distinguished by the colors chosen in argument 
-#'   \code{colorQuantile}. Must be of the same length as \code{colorQuantile}.
-#' @param resultName \code{character}: indicating the name of the component of
-#'   the simulation function (\code{model_function}) which results histogram
-#'   shall be generated. If \code{model_function} is single valued, no name
-#'   needs to be supplied. Otherwise, one valid name has to be specified.
-#'   Defaults to \code{NULL}.
-#' @return an object of class "\code{histogram}". For details see 
-#'   \code{\link[graphics]{hist}}.
-#' @seealso \code{\link{mcSimulation}}, \code{\link{hist}}. For a list of colors
-#'   available in R see \code{\link[grDevices]{colors}}.
-#' @export
-hist.mcSimulation <- function(x, breaks=100, col=NULL, xlab=NULL, main=paste("Histogram of " , xlab), ...,
-                              colorQuantile   =c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"), 
-                              colorProbability=c(1.00,    0.95,     0.75,     0.55,         0.45,     0.25,     0.05),
-                              resultName=NULL){
-  # ToDo: review!!!
-  if( is.list(x$y) ){
-    if( !is.null(resultName) ){
-      result<-x$y[[resultName]]
-      if( is.null(xlab) )
-        xlab<-resultName
-    } else {
-      if(length(names(x$y))==1){
-        result<-unlist(x$y)
-        if( is.null(xlab) )
-          xlab<-names(x$y)[[1]]
-      }
-      else 
-        stop("No component of the model function chosen!")
-    }
-    if( main==paste("Histogram of " , xlab))
-      main<-paste("Histogram of " , xlab, " Monte Carlo Simulation")
-  } else { 
-    result<-x$y
-  }
-  if(!isTRUE(is.null(colorQuantile))){
-    resultNames<-NULL
-    if( length(colorQuantile) != length(colorProbability) )
-      stop("length(colorQuantile) != length(colorProbability)")
-    histPrepare<-hist(result, breaks=breaks, plot=FALSE)
-    probability<-cumsum(histPrepare$density * diff(histPrepare$breaks))
-    color<-c()
-    for( i in seq(along=probability) ){
-      for( j in seq(along=colorQuantile) )
-        if(probability[i] < colorProbability[j]) color[i]<-colorQuantile[j]
-    }	
-  } else
-    color=col
-  hist(result, breaks=breaks, col=color, xlab=xlab, main=main,...)
-}
+
