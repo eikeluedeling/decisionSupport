@@ -12,6 +12,8 @@ Status](http://www.r-pkg.org/badges/version/decisionSupport?color=yellow)](https
 
 # decisionSupport
 
+[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" height="120"/>](https://cran.r-project.org/web/packages/decisionSupport/index.html)
+
 The R-package decisionSupport is free software: you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
