@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" align="right" height="120"/>](https://cran.r-project.org/web/packages/decisionSupport/index.html)
+
 <!-- badges: start -->
 
 [![CRAN
@@ -11,8 +13,6 @@ Status](http://www.r-pkg.org/badges/version/decisionSupport?color=yellow)](https
 <!-- badges: end -->
 
 # decisionSupport
-
-[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" height="120"/>](https://cran.r-project.org/web/packages/decisionSupport/index.html)
 
 The R-package decisionSupport is free software: you can redistribute it
 and/or modify it under the terms of the GNU General Public License as
@@ -26,12 +26,12 @@ Public License for more details.
 
 You should have received a copy of the GNU General Public License along
 with the R-package decisionSupport. If not, see
-<http://www.gnu.org/licenses/>.
+<a href="http://www.gnu.org/licenses/" class="uri">http://www.gnu.org/licenses/</a>.
 
 <!-- Links: start -->
 
 | Quick Links                                                            |
-| :--------------------------------------------------------------------- |
+|:-----------------------------------------------------------------------|
 | [**CRAN Version**](https://cran.r-project.org/package=decisionSupport) |
 
 <!-- Links: end -->

@@ -3,6 +3,10 @@ output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" align="right" height="120"/>](https://cran.r-project.org/web/packages/decisionSupport/index.html)
+
+
 <!-- badges: start -->
 [![CRAN Status](http://www.r-pkg.org/badges/version/decisionSupport?color=yellow)](https://cran.r-project.org/package=decisionSupport)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/decisionSupport?color=orange)](https://cran.r-project.org/package=decisionSupport)
