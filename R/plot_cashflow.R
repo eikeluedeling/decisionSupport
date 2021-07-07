@@ -119,9 +119,9 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   
   assertthat::assert_that(is.character(cashflow_var_name),
                           msg = "cashflow_var_name is not a character string.")
-  assertthat::assert_that(all(!stringr::str_detect(cashflow_var_name, pattern = "[:digit:]")),
-                          msg = "cashflow_var_name contains numbers. Consider renaming your cashflow variables in the model function")
   
+  assertthat::assert_that(unique(mcSimulation_object$x$n_years) > 1,
+                          msg = "n_years are not more than '1'. Consider adding more years to the model.")
   
   assertthat::assert_that(is.character(x_axis_name), msg = "x_axis_name is not a character string.")
   assertthat::assert_that(is.character(y_axis_name), msg = "y_axis_name is not a character string.")
@@ -145,23 +145,26 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
     data <- data[stats::complete.cases(data), ]
   }
   
-  #subset cashflow with cover 
+  # order the data frame
   subset_data <- data %>%
     dplyr::select(dplyr::starts_with(cashflow_var_name)) %>%
     tidyr::pivot_longer(dplyr::starts_with(cashflow_var_name)) 
   
-  # Detect the position of the year character
-  years_position <- stringr::str_locate(subset_data$name, pattern = "[:digit:]")
+  # create an empty list to save outputs of for loop
+  subset_list <- list()
   
-  subset_data <- subset_data %>% 
-    dplyr::mutate(x_scale = as.numeric(substr(subset_data$name, 
-                                              #Add year assignment
-                                              years_position[, 1], 
-                                              years_position[, 2])),
-                  #divide options
-                  decision_option = as.character(substr(subset_data$name, 
-                                               # position of the first decision option
-                                               1, (years_position[, 1] - 1))))
+  # create a for loop according to the cashflow_var_name 
+  # to seperate the decision option and the year on the x-axis
+  for(i in 1 : length(cashflow_var_name)) {
+
+    subset_list[[i]] <- subset_data %>% 
+    tidyr::separate(name, c("decision_option", "x_scale"), 
+                    sep = nchar(cashflow_var_name[i])) %>%
+      dplyr::filter(decision_option == cashflow_var_name[i])
+  }
+  
+  # Bind the lists of data back together  
+  subset_data <- dplyr::bind_rows(subset_list)
   
   #define the quantiles of cashflow for each value of x_scale based on the replicates of the MC
   summary_subset_data <- suppressMessages(subset_data %>%
@@ -173,7 +176,7 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
               p95 = quantile(value, 0.95))) 
   
   ggplot2::ggplot(summary_subset_data, 
-                  ggplot2::aes(x_scale)) +
+                  ggplot2::aes(as.numeric(x_scale))) +
     ggplot2::geom_ribbon(
       ggplot2::aes(ymin = p5, ymax = p95, fill = legend_labels[1])) +
     ggplot2::geom_ribbon(
