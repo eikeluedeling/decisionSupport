@@ -70,7 +70,8 @@
 #' 
 #' # Plot the cashflow distribution over time
 #' 
-#' plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow_option_one",
+#' plot_cashflow(mcSimulation_object = predictionProfit1, 
+#'               cashflow_var_name = "Cashflow_option_one",
 #'               x_axis_name = "Years with intervention",
 #'               y_axis_name = "Annual cashflow in USD",
 #'               color_25_75 = "green4", color_5_95 = "green1",
@@ -120,8 +121,8 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   assertthat::assert_that(is.character(cashflow_var_name),
                           msg = "cashflow_var_name is not a character string.")
   
-  assertthat::assert_that(unique(mcSimulation_object$x$n_years) > 1,
-                          msg = "n_years are not more than '1'. Consider adding more years to the model.")
+  #assertthat::assert_that(unique(mcSimulation_object$x$n_years) > 1,
+   #                       msg = "n_years are not more than '1'. Consider adding more years to the model.")
   
   assertthat::assert_that(is.character(x_axis_name), msg = "x_axis_name is not a character string.")
   assertthat::assert_that(is.character(y_axis_name), msg = "y_axis_name is not a character string.")
