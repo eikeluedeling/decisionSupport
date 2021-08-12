@@ -93,23 +93,25 @@ plot_evpi <- function(EVPIresults,
   combined_table <- dplyr::left_join(full_evpi_data, 
                                      input_table, by = c( "variable" = "variable")) else
     combined_table <- full_evpi_data
+  
+  # Check that the decision_vars are in the evpi data set
+  assertthat::assert_that(any(decision_vars %in% combined_table$output_variable), 
+                          msg = "The names provided for decision_vars do not match the names in the EVPIresults. Make sure that they are in the EVPIresults and are spelled correctly.")
+  
 
   # Filter the data to only show positive EVPI
   filtered_table <- dplyr::filter(combined_table, EVPI > 0)
   
-  # add a stop for cases where there are no positive EVPI
-  if(nrow(filtered_table) == 0) {
-    warning("There are no variables with a positive EVPI. You probably do not need a plot for that.", 
-         call. = FALSE)
-    return(invisible(NULL)) }
-  
-  
-  # Check that the decision_vars are in the evpi data set
-  assertthat::assert_that(any(decision_vars %in% filtered_table$output_variable), 
-                          msg = "The names provided for decision_vars do not match the names in the EVPIresults. Make sure that they are in the EVPIresults and are spelled correctly.")
-  
+    
   # subset the data according to the user-defined decision variables
   data <- dplyr::filter(filtered_table, output_variable %in% decision_vars)
+  
+  # add a stop for cases where there are no positive EVPI
+  if(nrow(data) == 0) {
+    warning("There are no variables with a positive EVPI. You probably do not need a plot for that.", 
+            call. = FALSE)
+    return(invisible(NULL)) }
+  
   
   if (is.null(new_names))
     decision_labels <- decision_vars else

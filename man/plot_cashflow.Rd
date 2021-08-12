@@ -95,7 +95,8 @@ predictionProfit1 <- mcSimulation(estimate = costBenefitEstimate,
 
 # Plot the cashflow distribution over time
 
-plot_cashflow(mcSimulation_object = predictionProfit1, cashflow_var_name = "Cashflow_option_one",
+plot_cashflow(mcSimulation_object = predictionProfit1, 
+              cashflow_var_name = "Cashflow_option_one",
               x_axis_name = "Years with intervention",
               y_axis_name = "Annual cashflow in USD",
               color_25_75 = "green4", color_5_95 = "green1",
