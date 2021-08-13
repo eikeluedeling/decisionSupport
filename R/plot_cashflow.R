@@ -121,9 +121,6 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   assertthat::assert_that(is.character(cashflow_var_name),
                           msg = "cashflow_var_name is not a character string.")
   
-  #assertthat::assert_that(unique(mcSimulation_object$x$n_years) > 1,
-   #                       msg = "n_years are not more than '1'. Consider adding more years to the model.")
-  
   assertthat::assert_that(is.character(x_axis_name), msg = "x_axis_name is not a character string.")
   assertthat::assert_that(is.character(y_axis_name), msg = "y_axis_name is not a character string.")
   
@@ -155,7 +152,7 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   subset_list <- list()
   
   # create a for loop according to the cashflow_var_name 
-  # to seperate the decision option and the year on the x-axis
+  # to separate the decision option and the year on the x-axis
   for(i in 1 : length(cashflow_var_name)) {
 
     subset_list[[i]] <- subset_data %>% 
@@ -166,6 +163,10 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
   
   # Bind the lists of data back together  
   subset_data <- dplyr::bind_rows(subset_list)
+  
+  # Check that time is more than 2 to produce a useful error
+  assertthat::assert_that(all(unique(subset_data$x_scale) != ""),
+                          msg = "Time scale is not greater than or equal to '2'. Consider adding more time to the model.")
   
   #define the quantiles of cashflow for each value of x_scale based on the replicates of the MC
   summary_subset_data <- suppressMessages(subset_data %>%
