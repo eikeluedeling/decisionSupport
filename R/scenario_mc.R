@@ -131,7 +131,8 @@ scenario_mc<-function(base_estimate, scenarios, model_function, ..., numberOfMod
     
     estim<-base_estimate
     
-    parameter_lines<-which(!(1:nrow(scenarios)==which(scenarios$Variable=="Runs")))
+    if(!("Runs" %in% scenarios$Variable)) parameter_lines<-1:nrow(scenarios) else
+      parameter_lines<-which(!(1:nrow(scenarios)==which(scenarios$Variable=="Runs")))
     
     for (i in parameter_lines)
     {
