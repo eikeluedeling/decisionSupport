@@ -29,14 +29,13 @@ names of the variables in the input \code{estimate} which random sampling
 results shall be displayed. Defaults to all components.}
 
 \item{method}{the multivariate regression method to be used.  If
-    \code{"model.frame"}, the model frame is returned.}
+\code{"model.frame"}, the model frame is returned.}
 
-\item{scale}{numeric vector, or logical.  If numeric vector, \eqn{X}
-    is scaled by dividing each variable with the corresponding element
-    of \code{scale}.  If \code{scale} is \code{TRUE}, \eqn{X} is scaled
-    by dividing each variable by its sample standard deviation.  If
-    cross-validation is selected, scaling by the standard deviation is
-    done for every segment.}
+\item{scale}{numeric vector, or logical.  If numeric vector, \eqn{X} is
+scaled by dividing each variable with the corresponding element of
+\code{scale}.  If \code{scale} is \code{TRUE}, \eqn{X} is scaled by dividing
+each variable by its sample standard deviation.  If cross-validation is
+selected, scaling by the standard deviation is done for every segment.}
 
 \item{ncomp}{the number of components to include in the model (see below).}
 
