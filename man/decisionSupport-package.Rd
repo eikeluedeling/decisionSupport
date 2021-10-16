@@ -101,7 +101,7 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
 \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}
 }
 \author{
-Eike Luedeling (\href{http://www.eikeluedeling.com/}{personal website}) \email{eike@eikeluedeling.com},
+Eike Luedeling (\href{http://www.eikeluedeling.com/index.html}{personal website}) \email{eike@eikeluedeling.com},
   Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
  Katja Schiffers \email{katja.schiffers@uni-bonn.de}
 

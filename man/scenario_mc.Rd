@@ -102,7 +102,7 @@ See documentation of the \code{\link[decisionSupport:decisionSupport]{mc_Simulat
    return(Profit=profit)}
    
  ### define a base_estimate, to be used when no other information is provided
- through the scenario data.frame
+ # through the scenario data.frame
    
  base_estimate<-as.estimate(variable=c("cost_1","cost_2","benefit_1","benefit_2"),
                               distribution=c("norm","posnorm","norm","posnorm"),
@@ -113,7 +113,8 @@ See documentation of the \code{\link[decisionSupport:decisionSupport]{mc_Simulat
                                      
  scenarios<-data.frame(Variable=c("Runs","cost_1","cost_1","cost_1","cost_2","cost_2",
                                   "benefit_1","benefit_1","benefit_2"),
-                       param=c("x","lower","upper","distribution","lower","upper","lower","upper","lower"),
+                       param=c("x","lower","upper","distribution","lower","upper",
+                               "lower","upper","lower"),
                        Scenario_1=c(100,40,70,"posnorm",30,90,20,35,10),
                        Scenario_2=c(50,100,200,"norm",10,40,35,75,5),
                        Scenario_3=c(10,400,750,"norm",400,600,30,70,60))

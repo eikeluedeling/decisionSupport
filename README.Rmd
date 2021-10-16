@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" align="right" height="120"/>](https://cran.r-project.org/web/packages/decisionSupport/index.html)
+[<img src="https://raw.githubusercontent.com/eikeluedeling/decisionSupport/master/vignettes/decisionSupport.png" align="right" height="120"/>](https://CRAN.R-project.org/package=decisionSupport)
 
 
 <!-- badges: start -->

@@ -9,7 +9,7 @@ NULL
 #' implementation of scenarios. The standard \code{\link[decisionSupport:decisionSupport]{mc_Simulation}} function only allows
 #' specifying one set of estimates (i.e. distribution, lower and upper bounds) for each random
 #' variable. This is inconvenient when we want to run simulations for heterogeneous populations
-#' that include subsets with #' particular characteristics, e.g. small and large farms. It may
+#' that include subsets with particular characteristics, e.g. small and large farms. It may
 #' then make sense to specify separate distributions for input variables for each of the subsets.
 #' The \code{scenario_mc} function facilitates this.
 #' 
@@ -78,7 +78,7 @@ NULL
 #'    return(Profit=profit)}
 #'    
 #'  ### define a base_estimate, to be used when no other information is provided
-#'  through the scenario data.frame
+#'  # through the scenario data.frame
 #'    
 #'  base_estimate<-as.estimate(variable=c("cost_1","cost_2","benefit_1","benefit_2"),
 #'                               distribution=c("norm","posnorm","norm","posnorm"),
@@ -89,7 +89,8 @@ NULL
 #'                                      
 #'  scenarios<-data.frame(Variable=c("Runs","cost_1","cost_1","cost_1","cost_2","cost_2",
 #'                                   "benefit_1","benefit_1","benefit_2"),
-#'                        param=c("x","lower","upper","distribution","lower","upper","lower","upper","lower"),
+#'                        param=c("x","lower","upper","distribution","lower","upper",
+#'                                "lower","upper","lower"),
 #'                        Scenario_1=c(100,40,70,"posnorm",30,90,20,35,10),
 #'                        Scenario_2=c(50,100,200,"norm",10,40,35,75,5),
 #'                        Scenario_3=c(10,400,750,"norm",400,600,30,70,60))

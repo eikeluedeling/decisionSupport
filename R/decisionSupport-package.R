@@ -112,7 +112,7 @@ NULL
 #'    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
 #' @docType package
 #' @name decisionSupport-package
-#' @author Eike Luedeling (\href{http://www.eikeluedeling.com/}{personal website}) \email{eike@@eikeluedeling.com},
+#' @author Eike Luedeling (\href{http://www.eikeluedeling.com/index.html}{personal website}) \email{eike@@eikeluedeling.com},
 #'   Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
 #'	 Katja Schiffers \email{katja.schiffers@@uni-bonn.de}	
 #' @author Maintainer: Eike Luedeling \email{eike@@eikeluedeling.com}
