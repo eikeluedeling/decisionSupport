@@ -86,7 +86,7 @@ This function is a wrapper around the \code{\link[decisionSupport:decisionSuppor
 implementation of scenarios. The standard \code{\link[decisionSupport:decisionSupport]{mc_Simulation}} function only allows
 specifying one set of estimates (i.e. distribution, lower and upper bounds) for each random
 variable. This is inconvenient when we want to run simulations for heterogeneous populations
-that include subsets with #' particular characteristics, e.g. small and large farms. It may
+that include subsets with particular characteristics, e.g. small and large farms. It may
 then make sense to specify separate distributions for input variables for each of the subsets.
 The \code{scenario_mc} function facilitates this.
 }
