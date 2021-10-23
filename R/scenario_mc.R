@@ -141,7 +141,8 @@ scenario_mc<-function(base_estimate, scenarios, model_function, ..., numberOfMod
       if(!is.na(scenarios[i,scens]))
         {if(scenarios$param[i]=="both")
         {estim$marginal[scenarios[i,1],"lower"]<-as.numeric(scenarios[i,scens])
-          estim$marginal[scenarios[i,1],"upper"]<-as.numeric(scenarios[i,scens])}
+          estim$marginal[scenarios[i,1],"upper"]<-as.numeric(scenarios[i,scens])
+          estim$marginal[scenarios[i,1],"distribution"]<-"const"}
         if(scenarios$param[i]=="lower")
           if(!is.na(as.numeric(scenarios[i,scens])))
             estim$marginal[scenarios[i,1],"lower"]<-as.numeric(scenarios[i,scens])
