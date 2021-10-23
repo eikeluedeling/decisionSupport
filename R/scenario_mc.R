@@ -27,7 +27,9 @@ NULL
 #'   \code{lower} and \code{upper}, except for the row corresponding to \code{Runs} in the \code{Variable}
 #'   column (for this the entry doesn't matter). For each scenario column (whose name is the scenario
 #'   name), the scenario-specific values must be specified. If the value in the \code{Runs} row is NA,
-#'   the \code{numberOfModelRuns} object will be used instead (if that's also NA, you get an error).
+#'   the \code{numberOfModelRuns} object will be used instead (if that's also NA, you get an error). \code{param}
+#'   can also be "both", in which case both lower and upper bounds are set to the respective number, and
+#'   the distribution is set to "const".
 #' @param model_function \code{function}: The function that transforms the input distribution. It 
 #'   has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.
 #' @param  ... Optional arguments of \code{model_function}.
