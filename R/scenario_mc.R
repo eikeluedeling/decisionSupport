@@ -33,8 +33,8 @@ NULL
 #' @param model_function \code{function}: The function that transforms the input distribution. It 
 #'   has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.
 #' @param  ... Optional arguments of \code{model_function}.
-#' @param numberOfModelRuns The number of times running the model function. This doesn't need to be
-#'   provided when the the \code{scenarios} data.frame contains a \code{Runs} line that specifies a
+#' @param numberOfModelRuns The number of times to run the model function. This doesn't need to be
+#'   provided when the \code{scenarios} data.frame contains a \code{Runs} line that specifies a
 #'   particular number of runs for each scenario.
 #' @param randomMethod \code{character}: The method to be used to sample the distribution
 #'   representing the input estimate. For details see option \code{method} in 

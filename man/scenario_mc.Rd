@@ -32,15 +32,17 @@ as a \code{Runs} element. The \code{param} column can only contain the strings \
 \code{lower} and \code{upper}, except for the row corresponding to \code{Runs} in the \code{Variable}
 column (for this the entry doesn't matter). For each scenario column (whose name is the scenario
 name), the scenario-specific values must be specified. If the value in the \code{Runs} row is NA,
-the \code{numberOfModelRuns} object will be used instead (if that's also NA, you get an error).}
+the \code{numberOfModelRuns} object will be used instead (if that's also NA, you get an error). \code{param}
+can also be "both", in which case both lower and upper bounds are set to the respective number, and
+the distribution is set to "const".}
 
 \item{model_function}{\code{function}: The function that transforms the input distribution. It 
 has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.}
 
 \item{...}{Optional arguments of \code{model_function}.}
 
-\item{numberOfModelRuns}{The number of times running the model function. This doesn't need to be
-provided when the the \code{scenarios} data.frame contains a \code{Runs} line that specifies a
+\item{numberOfModelRuns}{The number of times to run the model function. This doesn't need to be
+provided when the \code{scenarios} data.frame contains a \code{Runs} line that specifies a
 particular number of runs for each scenario.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
