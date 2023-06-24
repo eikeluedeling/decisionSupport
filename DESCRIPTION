@@ -29,6 +29,7 @@ Depends:
 Imports:
     assertthat,
     chillR (>= 0.62),
+    class,
     dplyr,
     fANCOVA (>= 0.5),
     ggplot2 (>= 3.2.0),

@@ -76,6 +76,7 @@
 #'  
 #' 
 #' @export plot_distributions
+#' @import class
 #'
 plot_distributions <- function(mcSimulation_object, 
                                vars, 
