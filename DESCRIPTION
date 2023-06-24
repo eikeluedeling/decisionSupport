@@ -56,7 +56,7 @@ VignetteBuilder: knitr
 URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Collate: 
     'as.data.frame.mcSimulation.R'
     'chance_event.R'

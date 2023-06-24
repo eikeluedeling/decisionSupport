@@ -10,8 +10,7 @@
   col = NULL,
   mainSuffix = " welfare simulation result",
   ...,
-  colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW",
-    "GREY"),
+  colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"),
   colorProbability = c(1, 0.95, 0.75, 0.55, 0.45, 0.25, 0.05),
   resultName = NULL
 )
@@ -37,7 +36,7 @@
   }
 
 \item{col}{a colour to be used to fill the bars.
-    The default of \code{NULL} yields unfilled bars.}
+    The default used to be \code{NULL} (unfilled bars) in \R versions before 4.0.0.}
 
 \item{mainSuffix}{\code{character}: Suffix of the main titles of the histograms.}
 

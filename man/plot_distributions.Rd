@@ -9,6 +9,7 @@ plot_distributions(
   vars,
   method = "smooth_simple_overlay",
   bins = 150,
+  binwidth = NULL,
   old_names = NULL,
   new_names = NULL,
   colors = NULL,
@@ -27,6 +28,8 @@ plot_distributions(
 \item{method}{is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}}}
 
 \item{bins}{are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150}
+
+\item{binwidth}{is the width of the bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number is 1000. When both \code{bins} and \code{binwidth} are defined, the later overrides \code{bins}}
 
 \item{old_names}{are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred}
 
@@ -88,6 +91,9 @@ plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues",
 
 plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
          method = "hist_simple_overlay", bins = 30)
+
+plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Costs"),
+         method = "hist_simple_overlay", binwidth = 1000)
 
 plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
          method = "boxplot_density", outlier_shape = 3)

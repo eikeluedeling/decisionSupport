@@ -9,6 +9,7 @@
 #' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
 #' @param method is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}} 
 #' @param bins are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150
+#' @param binwidth is the width of the bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number is 1000. When both \code{bins} and \code{binwidth} are defined, the later overrides \code{bins}
 #' @param old_names are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred 
 #' @param new_names are the variable names to replace the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred
 #' @param colors is the color palette to be used for the fill of distribution shapes and boxplots. The default is c("#009999", "#0000FF", "#56B4E9", "#009E73","#F0E442", "#0072B2", "#D55E00", "#CC79A7") assuming a maximum of eight variables to be compared
@@ -67,6 +68,9 @@
 #' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "hist_simple_overlay", bins = 30)
 #' 
+#' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Costs"),
+#'          method = "hist_simple_overlay", binwidth = 1000)
+#' 
 #' plot_distributions(mcSimulation_object = predictionProfit1, vars = c("Revenues", "Costs"),
 #'          method = "boxplot_density", outlier_shape = 3)
 #'  
@@ -77,6 +81,7 @@ plot_distributions <- function(mcSimulation_object,
                                vars, 
                                method = "smooth_simple_overlay", 
                                bins = 150,
+                               binwidth = NULL,
                                old_names = NULL, 
                                new_names = NULL, 
                                colors = NULL, 
@@ -137,7 +142,8 @@ plot_distributions <- function(mcSimulation_object,
   }
   
   if (method == "hist_simple_overlay") {
-    return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = 150) +
+    return(standard_plot + ggplot2::geom_histogram(color = NA, alpha = 0.5, bins = bins,
+                                                   position = "identity", binwidth = binwidth) +
              ggplot2::theme(...)) 
   }
   
