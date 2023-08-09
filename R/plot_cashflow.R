@@ -194,7 +194,7 @@ plot_cashflow <- function(mcSimulation_object, cashflow_var_name,
     ggplot2::guides(fill = 
                       ggplot2::guide_legend(reverse=T, order = 1)) +
     ggplot2::labs(x= x_axis_name, y= y_axis_name, fill = legend_name, color = "") +
-    ggplot2::facet_wrap(~ factor(decision_option, labels = facet_labels)) +
+    ggplot2::facet_wrap(~ factor(decision_option, levels = cashflow_var_name, labels = facet_labels)) +
     ggplot2::theme_bw(base_size = base_size) +
     ggplot2::theme(legend.margin = ggplot2::margin(-0.75, 0, 0, 0, unit = "cm"), 
           strip.background = ggplot2::element_blank(),

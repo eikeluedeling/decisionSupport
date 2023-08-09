@@ -11,8 +11,7 @@
   xlab = NULL,
   main = paste("Histogram of ", xlab),
   ...,
-  colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW",
-    "GREY"),
+  colorQuantile = c("GREY", "YELLOW", "ORANGE", "DARK GREEN", "ORANGE", "YELLOW", "GREY"),
   colorProbability = c(1, 0.95, 0.75, 0.55, 0.45, 0.25, 0.05),
   resultName = NULL
 )
@@ -38,7 +37,7 @@
   }
 
 \item{col}{a colour to be used to fill the bars.
-    The default of \code{NULL} yields unfilled bars.}
+    The default used to be \code{NULL} (unfilled bars) in \R versions before 4.0.0.}
 
 \item{xlab}{\code{character}: x label of the histogram. If it is not
 provided, i.e. equals \code{NULL} the name of the chosen variable by

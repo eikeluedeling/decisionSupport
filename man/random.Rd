@@ -48,7 +48,7 @@ determined by given quantiles or for distributions purely defined empirically.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Quantiles based univariate random number generation.
+\item \code{random(default)}: Quantiles based univariate random number generation.
 \describe{
   \item{\bold{Arguments}}{
      \describe{  
@@ -101,7 +101,7 @@ determined by given quantiles or for distributions purely defined empirically.
   } 
 }
 
-\item \code{vector}: Univariate random number generation by drawing from a given 
+\item \code{random(vector)}: Univariate random number generation by drawing from a given 
 empirical sample.
 \describe{
    \item{\bold{Arguments}}{
@@ -136,7 +136,7 @@ empirical sample.
   } 
 }
 
-\item \code{data.frame}: Multivariate random number generation by drawing from a given empirical sample.
+\item \code{random(data.frame)}: Multivariate random number generation by drawing from a given empirical sample.
 \describe{
   \item{\bold{Arguments}}{
     \describe{
@@ -169,8 +169,8 @@ empirical sample.
      }  
    }
  }
-}}
 
+}}
 \examples{
  x<-random(n=10000)
  hist(x,breaks=100)
