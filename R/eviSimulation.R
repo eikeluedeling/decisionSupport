@@ -234,7 +234,7 @@ eviSimulation<-function(welfare, currentEstimate, prospectiveEstimate, numberOfM
                                             verbosity=verbosity)
   
   # Perform the prospective decision analysis:
-  if( class(prospectiveEstimate) == "estimate"){
+  if(inherits(prospectiveEstimate, "estimate")){
     # Perform the decision analysis:
     analysisProspective<-welfareDecisionAnalysis( estimate=prospectiveEstimate,
                                                   welfare=welfare,
@@ -291,7 +291,7 @@ summary.eviSimulation <- function(object,
                                   digits = max(3, getOption("digits")-3)){	
   summaryList<-list(evi=format(x=object$evi, digits=digits),
                     current=summary(object$current, ..., digits=digits)$summary,
-                    prospective=if( class(object$prospective)=="welfareDecisionAnalysis" ){
+                    prospective=if( inherits(object$prospective,"welfareDecisionAnalysis" )){
                       summary(object$prospective, ..., digits=digits)$summary
                     } else {
                       lapply(X=object$prospective, 
@@ -396,7 +396,7 @@ hist.eviSimulation <- function(x, breaks=100, col=NULL, mainSuffix=" welfare sim
        colorProbability=colorProbability,
        resultName=resultName)
   # Plot the distribution(s) for the prospective information for the chosen component:
-  if( class(x$prospective)=="welfareDecisionAnalysis" ){
+  if( inherits(x$prospective,"welfareDecisionAnalysis" )){
     hist(x$prospective, breaks=breaks, col=col, 
          main=paste("Prospective", mainSuffix), 
          ...,

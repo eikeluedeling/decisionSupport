@@ -93,9 +93,13 @@ NULL
 #' 	\code{\link[chillR:VIP]{VIP}} and \code{\link{individualEvpiSimulation}}.
 #' }
 #'
-#' 
-#' @section Copyright for all developments before April 2018 \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}: 
-#' 	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}
+#' @section Development history:
+#'    This package was initially developed at the
+#'    \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}.
+#'    Since April 2018, it is maintained by the
+#'    \href{https://www.gartenbauwissenschaft.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
+#'    at the \href{https://www.uni-bonn.de/en}{University of Bonn}.
+#'    
 #' @section License:
 #'    The R-package \pkg{decisionSupport} is free software: you can redistribute it and/or modify
 #'    it under the terms of the GNU General Public License as published by

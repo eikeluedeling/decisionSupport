@@ -129,7 +129,7 @@ cashflow_plot <- plot_cashflow(mcSimulation_object = monte_carlo,
 #### Projection to Latent Structures (PLS) analysis
 
 if(!is.null(plsrResults) & 
-   class(plsrResults) == "mvr") {
+   inherits(plsrResults, "mvr")) {
     pls_result <- plsrResults} else {
       
       pls_result <- plsr.mcSimulation(object = monte_carlo,

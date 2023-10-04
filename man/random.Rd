@@ -74,31 +74,25 @@ determined by given quantiles or for distributions purely defined empirically.
   }
   \item{\bold{Details}}{
     \describe{
-      \item{ }{
         The distribution family is determined by \code{rho[["distribution"]]}. For the  
         possibilities cf. \code{\link{rdistq_fit}}.
-      }
-      \item{ }{
+      
         \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same 
         length. The first defines the probabilities of the quantiles, the second defines the quantiles 
         values which determine the parametric distribution.
-      }
     }
   }
   \item{\bold{Value}}{
     \describe{
-      \item{ }{
         A numeric vector of length \code{n} containing the generated random numbers.
-      }
     }
   }
   \item{\bold{See Also}}{
     \describe{
-      \item{ }{
         \code{\link{rdistq_fit}}
-      }  
+        
     } 
-  } 
+   }
 }
 
 \item \code{vector}: Univariate random number generation by drawing from a given 
@@ -122,16 +116,14 @@ empirical sample.
   }
   \item{\bold{Value}}{
     \describe{
-      \item{ }{
          A \code{numeric vector} of length \code{n} containing the generated random numbers.
-      }
+      
     }
   }
   \item{\bold{See Also}}{
     \describe{
-       \item{ }{
          \code{\link{sample}}
-       } 
+       
     } 
   } 
 }
@@ -156,16 +148,12 @@ empirical sample.
   }
   \item{\bold{Value}}{
     \describe{
-      \item{ }{
          A \code{data.frame} with \code{n} rows containing the generated random numbers.  
-       }
      }
    }
    \item{\bold{See Also}}{
      \describe{
-       \item{ }{
          \code{\link{sample}}
-       }
      }  
    }
  }

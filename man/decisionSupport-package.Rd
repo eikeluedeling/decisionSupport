@@ -69,9 +69,13 @@ easy-to-use interface.
 	\code{\link[chillR:VIP]{VIP}} and \code{\link{individualEvpiSimulation}}.
 }
 }
-\section{Copyright for all developments before April 2018 \ifelse{latex}{\out{\copyright}}{\ifelse{html}{\out{&copy}}{(C)}}}{
- 
-	  \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}
+\section{Development history}{
+
+   This package was initially developed at the
+   \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}.
+   Since April 2018, it is maintained by the
+   \href{http://inresgb-lehre.iaas.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
+   at the \href{https://www.uni-bonn.de/en}{University of Bonn}.
 }
 
 \section{License}{

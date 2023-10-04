@@ -74,31 +74,25 @@ random <- function(rho,n,method, relativeTolerance, ...) UseMethod("random")
 #'    }
 #'    \item{\bold{Details}}{
 #'      \describe{
-#'        \item{ }{
 #'          The distribution family is determined by \code{rho[["distribution"]]}. For the  
 #'          possibilities cf. \code{\link{rdistq_fit}}.
-#'        }
-#'        \item{ }{
+#'        
 #'          \code{rho[["probabilities"]]} and \code{[[rho"quantiles"]]} are numeric vectors of the same 
 #'          length. The first defines the probabilities of the quantiles, the second defines the quantiles 
 #'          values which determine the parametric distribution.
-#'        }
 #'      }
 #'    }
 #'    \item{\bold{Value}}{
 #'      \describe{
-#'        \item{ }{
 #'          A numeric vector of length \code{n} containing the generated random numbers.
-#'        }
 #'      }
 #'    }
 #'    \item{\bold{See Also}}{
 #'      \describe{
-#'        \item{ }{
 #'          \code{\link{rdistq_fit}}
-#'        }  
+#'          
 #'      } 
-#'    } 
+#'     }
 #'  }    
 #' @examples
 #'  x<-random(n=10000)
@@ -188,16 +182,14 @@ random.default <- function(rho=list(distribution="norm", probabilities=c(0.05,0.
 #'      }
 #'      \item{\bold{Value}}{
 #'        \describe{
-#'          \item{ }{
 #'             A \code{numeric vector} of length \code{n} containing the generated random numbers.
-#'          }
+#'          
 #'        }
 #'      }
 #'      \item{\bold{See Also}}{
 #'        \describe{
-#'           \item{ }{
 #'             \code{\link{sample}}
-#'           } 
+#'           
 #'        } 
 #'      } 
 #'    }  
@@ -232,16 +224,12 @@ random.vector <- function(rho=runif(n=n),
 #'     }
 #'     \item{\bold{Value}}{
 #'       \describe{
-#'         \item{ }{
 #'            A \code{data.frame} with \code{n} rows containing the generated random numbers.  
-#'          }
 #'        }
 #'      }
 #'      \item{\bold{See Also}}{
 #'        \describe{
-#'          \item{ }{
 #'            \code{\link{sample}}
-#'          }
 #'        }  
 #'      }
 #'    }

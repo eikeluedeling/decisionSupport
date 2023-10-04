@@ -1,8 +1,8 @@
 Package: decisionSupport
 Type: Package
 Title: Quantitative Support of Decision Making under Uncertainty
-Version: 1.109
-Date: 2021-11-18
+Version: 1.111
+Date: 2022-05-09
 Authors@R: c(
     person("Eike", "Luedeling",  email = "eike@eikeluedeling.com",  role = c("cre", "aut"), comment="University of Bonn"),
     person("Lutz", "Goehring", email = "lutz.goehring@gmx.de", role = "aut", comment="ICRAF and Lutz Goehring Consulting"),
