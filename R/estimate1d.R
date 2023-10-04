@@ -131,7 +131,7 @@ estimate1d<-function(distribution, lower, upper, ...){
         }
       }
       ### Check 1-d property:
-      if ( !is.atomic(optionalArguments[[i]]) )
+      if ( !is.atomic(optionalArguments[[i]]) || is.null(optionalArguments[[i]]) )
         stop("Optional argument \"", i, "\" is not atomic.")
       if ( length(optionalArguments[[i]]) > 1 )
         stop("Optional argument \"", i, "\" is not 1 dimensional.")

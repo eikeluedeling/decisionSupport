@@ -32,7 +32,7 @@ set.seed(100)
 n= 1000
 tolerance=3/sqrt(n)
 
-test_that("Individual EVPI is calculated for 2-D correltated current estimate.",{
+test_that("Individual EVPI is calculated for 2-D correlated current estimate.",{
   # Define the model for the profit:
   profitModel <- function(x){
     x$revenue-x$costs
