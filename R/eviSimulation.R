@@ -291,11 +291,7 @@ summary.eviSimulation <- function(object,
                                   digits = max(3, getOption("digits")-3)){	
   summaryList<-list(evi=format(x=object$evi, digits=digits),
                     current=summary(object$current, ..., digits=digits)$summary,
-<<<<<<< HEAD
                     prospective=if( inherits(object$prospective,"welfareDecisionAnalysis" )){
-=======
-                    prospective=if(inherits(object$prospective, "welfareDecisionAnalysis")){
->>>>>>> 2910e6441777c23ad330998fa18c871e4db74934
                       summary(object$prospective, ..., digits=digits)$summary
                     } else {
                       lapply(X=object$prospective, 
@@ -400,11 +396,7 @@ hist.eviSimulation <- function(x, breaks=100, col=NULL, mainSuffix=" welfare sim
        colorProbability=colorProbability,
        resultName=resultName)
   # Plot the distribution(s) for the prospective information for the chosen component:
-<<<<<<< HEAD
   if( inherits(x$prospective,"welfareDecisionAnalysis" )){
-=======
-  if( inherits(x$prospective, "welfareDecisionAnalysis")){
->>>>>>> 2910e6441777c23ad330998fa18c871e4db74934
     hist(x$prospective, breaks=breaks, col=col, 
          main=paste("Prospective", mainSuffix), 
          ...,

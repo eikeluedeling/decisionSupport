@@ -74,7 +74,7 @@ easy-to-use interface.
    This package was initially developed at the
    \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}.
    Since April 2018, it is maintained by the
-   \href{http://inresgb-lehre.iaas.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
+   \href{https://www.gartenbauwissenschaft.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
    at the \href{https://www.uni-bonn.de/en}{University of Bonn}.
 }
 

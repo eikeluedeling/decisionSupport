@@ -669,6 +669,7 @@ random.estimate <- function(rho,n,method="calculate", relativeTolerance=0.05, ..
 ##############################################################################################
 # Generate the random numbers for the correlated subset of an estimate
 #
+#' @export 
 random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ...){
   x<-NULL
   if(method=="calculate"){
@@ -691,6 +692,7 @@ random.estimateCorrelated <- function(rho, n, method, relativeTolerance=0.05, ..
 ##############################################################################################
 # Generate the random numbers for the uncorrelated subset of an estimate
 #
+#' @export 
 random.estimateUnCorrelated <- function(rho, n, method="calculate", relativeTolerance=0.05, ...){
   x<-NULL
   for(i in row.names(rho)){

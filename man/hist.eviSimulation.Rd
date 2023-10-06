@@ -35,8 +35,7 @@
     the amount of available memory).
   }
 
-\item{col}{a colour to be used to fill the bars.
-    The default used to be \code{NULL} (unfilled bars) in \R versions before 4.0.0.}
+\item{col}{a colour to be used to fill the bars.}
 
 \item{mainSuffix}{\code{character}: Suffix of the main titles of the histograms.}
 
