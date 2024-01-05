@@ -55,6 +55,7 @@ Suggests:
     testthat (>= 0.9.1)
 VignetteBuilder: knitr
 URL: http://www.worldagroforestry.org/
+BugReports: https://github.com/eikeluedeling/decisionSupport/issues
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
 RoxygenNote: 7.2.3
