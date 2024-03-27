@@ -25,7 +25,7 @@ plot_distributions(
 
 \item{vars}{is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name}
 
-\item{method}{is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}}}
+\item{method}{is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggplot2:geom_boxplot]{geom_boxplot}}}
 
 \item{bins}{are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150}
 
