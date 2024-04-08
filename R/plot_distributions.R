@@ -7,7 +7,7 @@
 #' 
 #' @param mcSimulation_object is an object of Monte Carlo simulation outputs from the \code{\link[decisionSupport:mcSimulation]{mcSimulation}} function
 #' @param vars is a vector containing variable names from the \code{mcSimulation_object}. This can also be a single variable name
-#' @param method is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggstance:geom_boxploth]{geom_boxploth}} 
+#' @param method is the plot option to be used in \code{link{ggplot2}}: "smooth_simple_overlay" creates a density plot with \code{\link[ggplot2:geom_density]{geom_density}}, "hist_simple_overlay" creates a histogram with \code{\link[ggplot2:geom_histogram]{geom_histogram}}, "boxplot" creates a boxplot with \code{\link[ggplot2:geom_boxplot]{geom_boxplot}} and "boxplot_density" creates a density plot with a boxplot using \code{\link[ggplot2:geom_density]{geom_density}} and \code{\link[ggplot2:geom_boxplot]{geom_boxplot}}
 #' @param bins are the number of bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number of bins is 150
 #' @param binwidth is the width of the bins to use for the \code{\link[ggplot2:geom_histogram]{geom_histogram}}. Default number is 1000. When both \code{bins} and \code{binwidth} are defined, the later overrides \code{bins}
 #' @param old_names are the variable names from the MC simulation outputs that refer to the distribution values. This should be a vector of character strings. This is set to NULL with the assumption that the existing names for variables are preferred 
@@ -188,7 +188,7 @@ plot_distributions <- function(mcSimulation_object,
       
       ggplot2::ggplot(standard_plot_data, ggplot2::aes(x = value, fill = name)) +
         ggplot2::geom_density(alpha = 0.5, color = NA) +
-        ggstance::geom_boxploth(ggplot2::aes(x = value, y = 0),
+          ggplot2::geom_boxplot(ggplot2::aes(x = value, y = 0),
                                 #place the boxplot consistently at the bottom of the graph
                                 width = max(stats::density(standard_plot_data$value)$y *
                                               boxploth_width_correction),
