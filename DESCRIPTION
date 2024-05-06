@@ -33,7 +33,6 @@ Imports:
     dplyr,
     fANCOVA (>= 0.5),
     ggplot2 (>= 3.2.0),
-    ggstance,
     grDevices,
     magrittr,
     msm (>= 1.5),
