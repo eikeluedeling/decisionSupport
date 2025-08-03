@@ -74,7 +74,7 @@ easy-to-use interface.
    This package was initially developed at the
    \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}.
    Since April 2018, it is maintained by the
-   \href{https://www.gartenbauwissenschaft.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
+   \href{https://www.gartenbauwissenschaften.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
    at the \href{https://www.uni-bonn.de/en}{University of Bonn}.
 }
 
@@ -102,10 +102,27 @@ Hubbard, Douglas W., \emph{How to Measure Anything? - Finding the Value of "Inta
   Hugh Gravelle and Ray Rees, \emph{Microeconomics}, Pearson Education Limited, 3rd edition, 2004.
 }
 \seealso{
+Useful links:
+\itemize{
+  \item \url{http://www.worldagroforestry.org/}
+}
+
+
 \code{\link{welfareDecisionAnalysis}}, \code{\link{eviSimulation}}, \code{\link{mcSimulation}}
 }
 \author{
-Eike Luedeling (\href{http://www.eikeluedeling.com/index.html}{personal website}) \email{eike@eikeluedeling.com},
+\strong{Maintainer}: Eike Luedeling \email{eike@eikeluedeling.com} (University of Bonn)
+
+Authors:
+\itemize{
+  \item Lutz Goehring \email{lutz.goehring@gmx.de} (ICRAF and Lutz Goehring Consulting)
+  \item Katja Schiffers \email{katja.schiffers@uni-bonn.de} (University of Bonn)
+  \item Cory Whitney \email{cory.whitney@uni-bonn.de} (University of Bonn)
+  \item Eduardo Fernandez \email{efernand@uni-bonn.de} (University of Bonn)
+}
+
+
+Eike Luedeling \email{eike@eikeluedeling.com},
   Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@gmx.de},
  Katja Schiffers \email{katja.schiffers@uni-bonn.de}
 

@@ -97,7 +97,7 @@ NULL
 #'    This package was initially developed at the
 #'    \href{http://www.worldagroforestry.org/}{World Agroforestry Centre (ICRAF)}.
 #'    Since April 2018, it is maintained by the
-#'    \href{https://www.gartenbauwissenschaft.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
+#'    \href{https://www.gartenbauwissenschaften.uni-bonn.de/}{Horticultural Sciences group (HortiBonn)}
 #'    at the \href{https://www.uni-bonn.de/en}{University of Bonn}.
 #'    
 #' @section License:
@@ -114,9 +114,10 @@ NULL
 #' 
 #'    You should have received a copy of the GNU General Public License
 #'    along with the R-package decisionSupport.  If not, see \url{http://www.gnu.org/licenses/}.
-#' @docType package
+
+"_PACKAGE"
 #' @name decisionSupport-package
-#' @author Eike Luedeling (\href{http://www.eikeluedeling.com/index.html}{personal website}) \email{eike@@eikeluedeling.com},
+#' @author Eike Luedeling \email{eike@@eikeluedeling.com},
 #'   Lutz \enc{Göhring}{Goehring} \email{lutz.goehring@@gmx.de},
 #'	 Katja Schiffers \email{katja.schiffers@@uni-bonn.de}	
 #' @author Maintainer: Eike Luedeling \email{eike@@eikeluedeling.com}
