@@ -22,12 +22,12 @@ in \code{\link[decisionSupport:decisionSupport]{mc_Simulation}}. The distributio
 are used as default distributions in the simulation, but their parameters can be overridden by
 information in the \code{scenarios} data.frame. In brief, this is an estimate of the joint probability distribution of
 the input variables. This can be read from a csv file and calculated with the
-\code{\link[decisionSupport:decisionSupport]{estimate_read_csv}} function. It can also be generated with the 
+\code{\link[decisionSupport:decisionSupport]{estimate_read_csv}} function. It can also be generated with the
 \code{\link[decisionSupport:decisionSupport]{as.estimate}} function.}
 
 \item{scenarios}{\code{data.frame}: Specifies values that should be adjusted in each scenario.
 Must contain columns \code{Variable} and \code{param} and one column for each scenario. The
-\code{Variable} column can only contain variable names that appear in \code{base_estimate}, as well 
+\code{Variable} column can only contain variable names that appear in \code{base_estimate}, as well
 as a \code{Runs} element. The \code{param} column can only contain the strings \code{distribution},
 \code{lower} and \code{upper}, except for the row corresponding to \code{Runs} in the \code{Variable}
 column (for this the entry doesn't matter). For each scenario column (whose name is the scenario
@@ -36,7 +36,7 @@ the \code{numberOfModelRuns} object will be used instead (if that's also NA, you
 can also be "both", in which case both lower and upper bounds are set to the respective number, and
 the distribution is set to "const".}
 
-\item{model_function}{\code{function}: The function that transforms the input distribution. It 
+\item{model_function}{\code{function}: The function that transforms the input distribution. It
 has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.}
 
 \item{...}{Optional arguments of \code{model_function}.}
@@ -46,7 +46,7 @@ provided when the \code{scenarios} data.frame contains a \code{Runs} line that s
 particular number of runs for each scenario.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
-representing the input estimate. For details see option \code{method} in 
+representing the input estimate. For details see option \code{method} in
 \code{\link{random.estimate}}.}
 
 \item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
@@ -64,12 +64,12 @@ more verbose is output information.}
 An object of \code{class mcSimulation}, which is a \code{list} with elements:
   \describe{
      \item{\code{$x}}{
-        \code{data.frame} containing the sampled \eqn{x -} (input) values which are generated 
+        \code{data.frame} containing the sampled \eqn{x -} (input) values which are generated
         from \code{base_estimate} and possibly modified by \code{scenarios}. To identify the scenario, the scenario name is provided in the
         \code{scenario} column.
      }
      \item{\code{$y}}{
-       \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
+       \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model
        function values for \code{x}.The return of the decision model function may include the
        assignment of names for the output variables, e.g. like this:
          \preformatted{
@@ -79,7 +79,7 @@ An object of \code{class mcSimulation}, which is a \code{list} with elements:
                    Costs = cost))
          }
        }
-       
+
      }
   }
 }
@@ -96,44 +96,53 @@ The \code{scenario_mc} function facilitates this.
 See documentation of the \code{\link[decisionSupport:decisionSupport]{mc_Simulation}} function.
 }
 \examples{
- 
- ### define a model_function
- 
- profit<-function(x)
- {profit<-benefit_1+benefit_2-cost_1-cost_2
-   return(Profit=profit)}
-   
- ### define a base_estimate, to be used when no other information is provided
- # through the scenario data.frame
-   
- base_estimate<-as.estimate(variable=c("cost_1","cost_2","benefit_1","benefit_2"),
-                              distribution=c("norm","posnorm","norm","posnorm"),
-                              lower=c(40,10,50,30),
-                              upper=c(100,200,300,100))
-            
- ### define a scenario data.frame, which will override values in the base_estimate
-                                     
- scenarios<-data.frame(Variable=c("Runs","cost_1","cost_1","cost_1","cost_2","cost_2",
-                                  "benefit_1","benefit_1","benefit_2"),
-                       param=c("x","lower","upper","distribution","lower","upper",
-                               "lower","upper","lower"),
-                       Scenario_1=c(100,40,70,"posnorm",30,90,20,35,10),
-                       Scenario_2=c(50,100,200,"norm",10,40,35,75,5),
-                       Scenario_3=c(10,400,750,"norm",400,600,30,70,60))
-                       
- ### run a simulation
-              
- results<-scenario_mc(base_estimate, scenarios, model_function=profit,
-                      functionSyntax="plainNames")
-                      
- ### plot and inspect results
- 
- hist(results)
- summary(results)
- print(results)
- 
- 
- 
+
+### define a model_function
+
+profit <- function(x) {
+  profit <- benefit_1 + benefit_2 - cost_1 - cost_2
+  return(Profit = profit)
+}
+
+### define a base_estimate, to be used when no other information is provided
+# through the scenario data.frame
+
+base_estimate <- as.estimate(
+  variable = c("cost_1", "cost_2", "benefit_1", "benefit_2"),
+  distribution = c("norm", "posnorm", "norm", "posnorm"),
+  lower = c(40, 10, 50, 30),
+  upper = c(100, 200, 300, 100)
+)
+
+### define a scenario data.frame, which will override values in the base_estimate
+
+scenarios <- data.frame(
+  Variable = c(
+    "Runs", "cost_1", "cost_1", "cost_1", "cost_2", "cost_2",
+    "benefit_1", "benefit_1", "benefit_2"
+  ),
+  param = c(
+    "x", "lower", "upper", "distribution", "lower", "upper",
+    "lower", "upper", "lower"
+  ),
+  Scenario_1 = c(100, 40, 70, "posnorm", 30, 90, 20, 35, 10),
+  Scenario_2 = c(50, 100, 200, "norm", 10, 40, 35, 75, 5),
+  Scenario_3 = c(10, 400, 750, "norm", 400, 600, 30, 70, 60)
+)
+
+### run a simulation
+
+results <- scenario_mc(base_estimate, scenarios,
+  model_function = profit,
+  functionSyntax = "plainNames"
+)
+
+### plot and inspect results
+
+hist(results)
+summary(results)
+print(results)
+
 }
 \seealso{
 \code{\link{mcSimulation}}, \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, \code{\link{estimate}}, \code{\link{random.estimate}}

@@ -57,7 +57,7 @@ URL: http://www.worldagroforestry.org/
 Encoding: UTF-8
 Classification/JEL: I38, O16, O21, O22, O23
 RoxygenNote: 7.3.2
-Collate: 
+Collate:
     'as.data.frame.mcSimulation.R'
     'chance_event.R'
     'compound_figure.R'
@@ -90,7 +90,7 @@ Collate:
     'plot_evpi.R'
     'plot_pls.R'
     'plsr.mcSimulation.R'
-    'print.mcSimuation.R'
+    'print.mcSimulation.R'
     'print.summary.mcSimulation.R'
     'random_state.R'
     'sample_CPT.R'

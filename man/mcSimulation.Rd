@@ -19,7 +19,7 @@ mcSimulation(
 \item{estimate}{\code{estimate}: estimate of the joint probability distribution of
 the input variables. This can be read from a csv file and calculated with the \code{\link[decisionSupport]{estimate_read_csv}} function.}
 
-\item{model_function}{\code{function}: The function that transforms the input distribution. It 
+\item{model_function}{\code{function}: The function that transforms the input distribution. It
 has to return a single \code{numeric} value or a \code{list} with named \code{numeric} values.}
 
 \item{...}{Optional arguments of \code{model_function}.}
@@ -27,7 +27,7 @@ has to return a single \code{numeric} value or a \code{list} with named \code{nu
 \item{numberOfModelRuns}{The number of times running the model function.}
 
 \item{randomMethod}{\code{character}: The method to be used to sample the distribution
-representing the input estimate. For details see option \code{method} in 
+representing the input estimate. For details see option \code{method} in
 \code{\link{random.estimate}}.}
 
 \item{functionSyntax}{\code{character}: The syntax which has to be used to implement the model
@@ -45,11 +45,11 @@ more verbose is output information.}
 An object of \code{class mcSimulation}, which is a \code{list} with elements:
   \describe{
      \item{\code{$x}}{
-        \code{data.frame} containing the sampled \eqn{x -} (input) values which are generated 
+        \code{data.frame} containing the sampled \eqn{x -} (input) values which are generated
         from \code{estimate}.
      }
      \item{\code{$y}}{
-       \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model 
+       \code{data.frame} containing the simulated \eqn{y -} (output) values, i.e. the model
        function values for \code{x}.The return of the decision model function may include the
        assignment of names for the output variables, e.g. like this:
          \preformatted{
@@ -59,31 +59,31 @@ An object of \code{class mcSimulation}, which is a \code{list} with elements:
                    Costs = cost))
          }
        }
-       
+
      }
   }
 }
 \description{
-This function generates a random sample of an output distribution defined as the transformation 
+This function generates a random sample of an output distribution defined as the transformation
 of an input distribution by a mathematical model, i.e. a mathematical function. This is called a
 Monte Carlo simulation. For details cf. below.
 }
 \details{
 This method solves the following problem. Given a multivariate random variable \eqn{x =
-(x_1,\ldots,x_k)} with joint probability distribution \eqn{P}, i.e. 
-  \deqn{x \sim P.}{x ~ P} 
-Then the continuous function 
-  \deqn{f:R^k \rightarrow R^l, y = f(x)}{f:R^k --> R^l, y = f(x)} 
-defines another random variable with distribution 
+(x_1,\ldots,x_k)} with joint probability distribution \eqn{P}, i.e.
+  \deqn{x \sim P.}{x ~ P}
+Then the continuous function
+  \deqn{f:R^k \rightarrow R^l, y = f(x)}{f:R^k --> R^l, y = f(x)}
+defines another random variable with distribution
   \deqn{y \sim f(P).}{y ~ f(P).}
-Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination 
-of the probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the 
-probability density \eqn{\phi} of \eqn{y} as follows: The input distribution \eqn{P} is provided 
-as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfModelRuns} is  
-generated using \code{\link{random.estimate}}. Then the function values \eqn{y=f(x)} are 
+Given a probability density \eqn{\rho} of x that defines \eqn{P} the problem is the determination
+of the probability density \eqn{\phi} that defines \eqn{f(P)}. This method samples the
+probability density \eqn{\phi} of \eqn{y} as follows: The input distribution \eqn{P} is provided
+as \code{estimate}. From \code{estimate} a sample \code{x} with \code{numberOfModelRuns} is
+generated using \code{\link{random.estimate}}. Then the function values \eqn{y=f(x)} are
 calculated, where \eqn{f} is \code{model_function}.
 
-\code{functionSyntax} defines the syntax of \code{model_function}, which has to be used, as 
+\code{functionSyntax} defines the syntax of \code{model_function}, which has to be used, as
 follows:
 \describe{
   \item{\code{"data.frameNames"}}{
@@ -106,7 +106,7 @@ follows:
            profit<-function(x){
              x[,"revenue"]-x[,"costs"]
            }
-        }     
+        }
      }
   \item{\code{"plainNames"}}{
     \code{model_function} is constructed, e.g. like this:
@@ -116,89 +116,101 @@ follows:
          }
        }
        \dfn{Note}: this is the slowest of the possibilities for \code{functionSyntax}.
-   }     
+   }
  }
 }
 \examples{
- #############################################################
- # Example 1 (Creating the estimate from the command line):
- #############################################################
- # Create the estimate object:
- variable=c("revenue","costs")
- distribution=c("norm","norm")
- lower=c(10000,  5000)
- upper=c(100000, 50000)
- costBenefitEstimate<-as.estimate(variable, distribution, lower, upper)
- # (a) Define the model function without name for the return value:
- profit1<-function(x){
-   x$revenue-x$costs
- }
- # Perform the Monte Carlo simulation:
- predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
-                                 model_function=profit1, 
-                                 numberOfModelRuns=10000,
-                                 functionSyntax="data.frameNames")
- # Show the simulation results:
- print(summary(predictionProfit1))
- hist(predictionProfit1,xlab="Profit")
- #############################################################
- # (b) Define the model function with a name for the return value:
- profit1<-function(x){
-   list(Profit=x$revenue-x$costs)
- } 
- # Perform the Monte Carlo simulation:
- predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
-                                 model_function=profit1, 
-                                 numberOfModelRuns=10000,
-                                 functionSyntax="data.frameNames")
- # Show the simulation results:
- print(summary(predictionProfit1, classicView=TRUE))
- hist(predictionProfit1) 
- #########################################################
- # (c) Using plain names in the model function syntax
- profit1<-function(){
-   list(Profit=revenue-costs)
- } 
- # Perform the Monte Carlo simulation:
- predictionProfit1<-mcSimulation( estimate=costBenefitEstimate, 
-                                 model_function=profit1, 
-                                 numberOfModelRuns=1000,
-                                 functionSyntax="plainNames")
- # Show the simulation results:
- print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
- hist(predictionProfit1) 
- #########################################################
- # (d) Using plain names in the model function syntax and
- #     define the model function without name for the return value:
- profit1<-function() revenue-costs
- # Perform the Monte Carlo simulation:
- predictionProfit1<-mcSimulation( estimate=costBenefitEstimate,
-                                  model_function=profit1,
-                                  numberOfModelRuns=1000,
-                                  functionSyntax="plainNames")
- # Show the simulation results:
- print(summary(predictionProfit1, probs=c(0.05,0.50,0.95)))
- hist(predictionProfit1, xlab="Profit")
- #############################################################
- # Example 2(Reading the estimate from file):
- #############################################################
- # Define the model function:
- profit2<-function(x){
-   Profit<-x[["sales"]]*(x[["productprice"]] - x[["costprice"]])
-   list(Profit=Profit)
- }  
- # Read the estimate of sales, productprice and costprice from file:
- inputFileName=system.file("extdata","profit-4.csv",package="decisionSupport")
- parameterEstimate<-estimate_read_csv(fileName=inputFileName)
- print(parameterEstimate)
- # Perform the Monte Carlo simulation:
- predictionProfit2<-mcSimulation( estimate=parameterEstimate, 
-                                 model_function=profit2, 
-                                 numberOfModelRuns=10000,
-                                 functionSyntax="data.frameNames")
- # Show the simulation results:
- print(summary(predictionProfit2))
- hist(predictionProfit2) 
+#############################################################
+# Example 1 (Creating the estimate from the command line):
+#############################################################
+# Create the estimate object:
+variable <- c("revenue", "costs")
+distribution <- c("norm", "norm")
+lower <- c(10000, 5000)
+upper <- c(100000, 50000)
+costBenefitEstimate <- as.estimate(variable, distribution, lower, upper)
+# (a) Define the model function without name for the return value:
+profit1 <- function(x) {
+  x$revenue - x$costs
+}
+# Perform the Monte Carlo simulation:
+predictionProfit1 <- mcSimulation(
+  estimate = costBenefitEstimate,
+  model_function = profit1,
+  numberOfModelRuns = 10000,
+  functionSyntax = "data.frameNames"
+)
+# Show the simulation results:
+print(summary(predictionProfit1))
+hist(predictionProfit1, xlab = "Profit")
+#############################################################
+# (b) Define the model function with a name for the return value:
+profit1 <- function(x) {
+  list(Profit = x$revenue - x$costs)
+}
+# Perform the Monte Carlo simulation:
+predictionProfit1 <- mcSimulation(
+  estimate = costBenefitEstimate,
+  model_function = profit1,
+  numberOfModelRuns = 10000,
+  functionSyntax = "data.frameNames"
+)
+# Show the simulation results:
+print(summary(predictionProfit1, classicView = TRUE))
+hist(predictionProfit1)
+#########################################################
+#
+#
+# (c) Using plain names in the model function syntax
+profit1 <- function() {
+  list(Profit = revenue - costs)
+}
+# Perform the Monte Carlo simulation:
+predictionProfit1 <- mcSimulation(
+  estimate = costBenefitEstimate,
+  model_function = profit1,
+  numberOfModelRuns = 1000,
+  functionSyntax = "plainNames"
+)
+# Show the simulation results:
+print(summary(predictionProfit1, probs = c(0.05, 0.50, 0.95)))
+hist(predictionProfit1)
+#########################################################
+# (d) Using plain names in the model function syntax and
+#     define the model function without name for the return value:
+profit1 <- function() revenue - costs
+# Perform the Monte Carlo simulation:
+predictionProfit1 <- mcSimulation(
+  estimate = costBenefitEstimate,
+  model_function = profit1,
+  numberOfModelRuns = 1000,
+  functionSyntax = "plainNames"
+)
+# Show the simulation results:
+print(summary(predictionProfit1, probs = c(0.05, 0.50, 0.95)))
+hist(predictionProfit1, xlab = "Profit")
+#############################################################
+# Example 2(Reading the estimate from file):
+#############################################################
+# Define the model function:
+profit2 <- function(x) {
+  Profit <- x[["sales"]] * (x[["productprice"]] - x[["costprice"]])
+  list(Profit = Profit)
+}
+# Read the estimate of sales, productprice and costprice from file:
+inputFileName <- system.file("extdata", "profit-4.csv", package = "decisionSupport")
+parameterEstimate <- estimate_read_csv(fileName = inputFileName)
+print(parameterEstimate)
+# Perform the Monte Carlo simulation:
+predictionProfit2 <- mcSimulation(
+  estimate = parameterEstimate,
+  model_function = profit2,
+  numberOfModelRuns = 10000,
+  functionSyntax = "data.frameNames"
+)
+# Show the simulation results:
+print(summary(predictionProfit2))
+hist(predictionProfit2)
 }
 \seealso{
 \code{\link{print.mcSimulation}}, \code{\link{summary.mcSimulation}}, \code{\link{hist.mcSimulation}}, \code{\link{estimate}}, \code{\link{random.estimate}}
