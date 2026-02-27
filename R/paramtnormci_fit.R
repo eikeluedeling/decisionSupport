@@ -8,7 +8,7 @@
 #   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
-#	http://www.worldagroforestry.org
+# 	http://www.worldagroforestry.org
 #
 # The R-package decisionSupport is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,87 +79,99 @@
 #'
 #' @seealso \code{\link[msm]{tnorm}}, \code{\link[stats]{constrOptim}}
 #' @export
-paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc=Inf, relativeTolerance=0.05,
-                             fitMethod="Nelder-Mead", ...){
+paramtnormci_fit <- function(p, ci, median = mean(ci), lowerTrunc = -Inf, upperTrunc = Inf, relativeTolerance = 0.05,
+                             fitMethod = "Nelder-Mead", ...) {
   # Namespace requirements:
-  requiredPackage<-"msm"
-  if( !requireNamespace(requiredPackage, quietly = TRUE) )
-    stop("Package \"",requiredPackage,"\" needed for truncated normal distributions. Please install it.",
-         call. = FALSE)
+  requiredPackage <- "msm"
+  if (!requireNamespace(requiredPackage, quietly = TRUE)) {
+    stop("Package \"", requiredPackage, "\" needed for truncated normal distributions. Please install it.",
+      call. = FALSE
+    )
+  }
   # Constants:
   # 95%-critical value of standard normal distribution (c_0.95=1.645):
-  c_0.95=qnorm(0.95)
+  c_0.95 <- qnorm(0.95)
   # Check preconditions
-  if ( is.null(p) || !all(!is.na(p)))
+  if (is.null(p) || !all(!is.na(p))) {
     stop("p must be supplied.")
-  if ( is.null(ci) || !all(!is.na(ci)))
+  }
+  if (is.null(ci) || !all(!is.na(ci))) {
     stop("ci must be supplied.")
-  if ( is.null(lowerTrunc) || is.null(upperTrunc) || is.na(lowerTrunc) || is.na(upperTrunc) )
+  }
+  if (is.null(lowerTrunc) || is.null(upperTrunc) || is.na(lowerTrunc) || is.na(upperTrunc)) {
     stop("lower and upper truncation points must be supplied.")
-  if (length(p)!=2)
+  }
+  if (length(p) != 2) {
     stop("p must be of length 2.")
-  if (length(ci)!=2)
+  }
+  if (length(ci) != 2) {
     stop("ci must be of length 2.")
+  }
   # Prepare input variable: types
-  p<-as.numeric(p)
-  ci<-as.numeric(ci)
-  lowerTrunc<-as.numeric(lowerTrunc)
-  upperTrunc<-as.numeric(upperTrunc)
-  if(p[[1]] >= p[[2]])
+  p <- as.numeric(p)
+  ci <- as.numeric(ci)
+  lowerTrunc <- as.numeric(lowerTrunc)
+  upperTrunc <- as.numeric(upperTrunc)
+  if (p[[1]] >= p[[2]]) {
     stop("p[[1]] >= p[[2]]")
-  if(ci[[1]] >= ci[[2]])
+  }
+  if (ci[[1]] >= ci[[2]]) {
     stop("ci[[1]] >= ci[[2]]")
-  names(p)<-c("lower", "upper")
-  names(ci)<-c("lower", "upper")
-  if ( !((lowerTrunc < ci[["lower"]] &&  ci[["upper"]] < upperTrunc))  )
+  }
+  names(p) <- c("lower", "upper")
+  names(ci) <- c("lower", "upper")
+  if (!((lowerTrunc < ci[["lower"]] && ci[["upper"]] < upperTrunc))) {
     stop("ci is not a subset of [lowerTrunc, upperTrunc]!")
-  if( sum(p) != 1)
-    stop( "sum(p) != 1 " )
+  }
+  if (sum(p) != 1) {
+    stop("sum(p) != 1 ")
+  }
   # Quantile definition:
-  if(!is.null(median) && !is.na(as.numeric(median))){
-    median<-as.numeric(median)
-    if ( !(( ci[["lower"]] < median &&  median < ci[["upper"]] ))  )
+  if (!is.null(median) && !is.na(as.numeric(median))) {
+    median <- as.numeric(median)
+    if (!((ci[["lower"]] < median && median < ci[["upper"]]))) {
       stop("ci does not contain the median!")
-    q<-c(ci[["lower"]], median, ci[["upper"]])
-    p<-c(p[["lower"]], 0.5, p[["upper"]])
+    }
+    q <- c(ci[["lower"]], median, ci[["upper"]])
+    p <- c(p[["lower"]], 0.5, p[["upper"]])
   } else {
     warning("median is not supplied; fitting the parameters of a truncated normal distribution only
             on the confidence interval might not lead to the desired distributions shape.")
-    q<-c(ci[["lower"]], ci[["upper"]])
-    p<-c(p[["lower"]],  p[["upper"]])
+    q <- c(ci[["lower"]], ci[["upper"]])
+    p <- c(p[["lower"]], p[["upper"]])
   }
   # Initialize the fit:
-  mean_init <- if( !is.null(median) ) median else mean(ci)
-  sd_init <- (mean(ci) - ci[["lower"]])/c_0.95
+  mean_init <- if (!is.null(median)) median else mean(ci)
+  sd_init <- (mean(ci) - ci[["lower"]]) / c_0.95
 
   # Function defined by the difference between confidence probabilities p and the calculated
   # probability for certain values of the parameters mean and sd. Thus this function defines
   # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd):
-  f_calc <-function(x){
-    y <- msm::ptnorm(q=q, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc) - p
+  f_calc <- function(x) {
+    y <- msm::ptnorm(q = q, mean = x[1], sd = x[2], lower = lowerTrunc, upper = upperTrunc) - p
     # Produce error in case on NAs such that the function can be caught
-    if (any(is.na(y))) stop ("NAs produced")
+    if (any(is.na(y))) stop("NAs produced")
     y
   }
   # Fall back function for f_calc by random sampling simulation, i.e. function defined by the
   # difference between confidence probabilities p and the simulated probability for certain values
   # of the parameters mean and sd. Thus this function defines
   # mean and sd by f_calc(x) = 0, (x[1]:=mean, x[2]:=sd):
-  f_sim<-function(x){
-    n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-    r<- msm::rtnorm(n=n, mean=x[1], sd=x[2], lower=lowerTrunc, upper=upperTrunc)
-    y <- length(r[ r<= q ])/n - p
+  f_sim <- function(x) {
+    n <- 100 * as.integer(1 / (relativeTolerance * relativeTolerance))
+    r <- msm::rtnorm(n = n, mean = x[1], sd = x[2], lower = lowerTrunc, upper = upperTrunc)
+    y <- length(r[r <= q]) / n - p
     y
   }
   # Function wrapping f_calc and f_sim and thus defining mean and sd by f(x) = 0
   # (x[1]:=mean, x[2]:=sd):
-  f <- function(x){
-    tryCatch(f_calc(x=x),
-             error=function(e) f_sim(x=x)
+  f <- function(x) {
+    tryCatch(f_calc(x = x),
+      error = function(e) f_sim(x = x)
     )
   }
   # The squared euclidean norm of the function f:
-  g <- function(x) sum(f(x)*f(x))
+  g <- function(x) sum(f(x) * f(x))
 
   # The optimization constraint:
   # sd > 0 (for numerical stability)
@@ -169,41 +181,43 @@ paramtnormci_fit <- function(p, ci, median=mean(ci), lowerTrunc=-Inf, upperTrunc
   # x_1 = mean
   # x_2 = sd
   # B_1 = 0
-  A <- rbind(c( 0, 1))
-  B <- rbind(c(  0 ))
-  constraints<-list(ineqA=A, ineqB=B)
+  A <- rbind(c(0, 1))
+  B <- rbind(c(0))
+  constraints <- list(ineqA = A, ineqB = B)
 
   # Fit the paramteters mean and sd:
-  optimizationResult<-stats::constrOptim(theta=c(mean_init, sd_init),
-                                         f=g,
-                                         grad=NULL,
-                                         ui=A,
-                                         ci=-B,
-                                         method=fitMethod, ...)
-  # Save the fitted target parameters:
-  mean<-optimizationResult$par[1]
-  sd<-optimizationResult$par[2]
-  # Check postcondition:
-  tryCatch(q_calc <- msm::qtnorm(p, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc),
-           error=function(e){
-             n<-100*as.integer(1/(relativeTolerance*relativeTolerance))
-             r<- msm::rtnorm(n=n, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-             q_calc <- quantile(x=r,probs=p)
-           }
+  optimizationResult <- stats::constrOptim(
+    theta = c(mean_init, sd_init),
+    f = g,
+    grad = NULL,
+    ui = A,
+    ci = -B,
+    method = fitMethod, ...
   )
-  p_calc<-msm::ptnorm(q=q, mean=mean, sd=sd, lower=lowerTrunc, upper=upperTrunc)
-  for( j in seq(along=p) ){
-    scale <- if( p[[j]] > 0 ) p[[j]] else NULL
-    if( !isTRUE( msg<-all.equal(p[[j]], p_calc[[j]],  scale=scale, tolerance=relativeTolerance) ) ){
-      warning("Fitted value of ", 100*p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
-              "Target value of ", 100*p[[j]], "%-quantile: ", q[[j]],   "\n  ",
-              "Fitted cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
-              "Target cumulative probability at value ", q[[j]], " : ", p[[j]], "\n  ",
-              msg)
+  # Save the fitted target parameters:
+  mean <- optimizationResult$par[1]
+  sd <- optimizationResult$par[2]
+  # Check postcondition:
+  tryCatch(q_calc <- msm::qtnorm(p, mean = mean, sd = sd, lower = lowerTrunc, upper = upperTrunc),
+    error = function(e) {
+      n <- 100 * as.integer(1 / (relativeTolerance * relativeTolerance))
+      r <- msm::rtnorm(n = n, mean = mean, sd = sd, lower = lowerTrunc, upper = upperTrunc)
+      q_calc <- quantile(x = r, probs = p)
+    }
+  )
+  p_calc <- msm::ptnorm(q = q, mean = mean, sd = sd, lower = lowerTrunc, upper = upperTrunc)
+  for (j in seq(along = p)) {
+    scale <- if (p[[j]] > 0) p[[j]] else NULL
+    if (!isTRUE(msg <- all.equal(p[[j]], p_calc[[j]], scale = scale, tolerance = relativeTolerance))) {
+      warning(
+        "Fitted value of ", 100 * p[[j]], "%-quantile: ", q_calc[[j]], "\n  ",
+        "Target value of ", 100 * p[[j]], "%-quantile: ", q[[j]], "\n  ",
+        "Fitted cumulative probability at value ", q[[j]], " : ", p_calc[[j]], "\n  ",
+        "Target cumulative probability at value ", q[[j]], " : ", p[[j]], "\n  ",
+        msg
+      )
     }
   }
   # Return the fitted parameters:
-  list(mean=mean, sd=sd)
+  list(mean = mean, sd = sd)
 }
-
-

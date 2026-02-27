@@ -8,7 +8,7 @@
 #   Eike Luedeling (ICRAF) <eike@eikeluedeling.com>
 #
 # Copyright (C) 2015 World Agroforestry Centre (ICRAF)
-#	http://www.worldagroforestry.org
+# 	http://www.worldagroforestry.org
 #
 # The R-package decisionSupport is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #'
 #' The variable names of a function are transformed from plain variable names to data.frame names
 #' of the form \code{x$<globalName>}.
-#' @param modelFunction a function whose body contains variables with plain names. The 
+#' @param modelFunction a function whose body contains variables with plain names. The
 #'   function must not contain any arguments.
 #' @param plainNames a \code{character} vector containing the names of the  variables that
 #'   shall be transformed.
@@ -53,63 +53,67 @@
 #'   If there are local functions within the function \code{modelFunction} defined, whose arguments
 #'   have identical names to any of the \code{plainNames} the function fails!
 #' @examples
-#'  profit1<-function(){
-#'    list(Profit=revenue-costs)
-#'  }
-#'  profit2<-plainNames2data.frameNames(modelFunction=profit1, 
-#'                                                plainNames=c("revenue", "costs"))
+#' profit1 <- function() {
+#'   list(Profit = revenue - costs)
+#' }
+#' profit2 <- plainNames2data.frameNames(
+#'   modelFunction = profit1,
+#'   plainNames = c("revenue", "costs")
+#' )
 #   #CAVE: here is a problem with the environment: ToDo check!!! (cf. above where eval is used)
-#'  print(profit2)
-#'  is.function(profit2)
-#'  profit2(data.frame("revenue"=10,"costs"=2))
+#' print(profit2)
+#' is.function(profit2)
+#' profit2(data.frame("revenue" = 10, "costs" = 2))
 #' @seealso \code{\link{mcSimulation}}, \code{\link{estimate}}
 #' @export
-plainNames2data.frameNames<-function(modelFunction, plainNames){
-	modelFunctionString<-deparse(modelFunction)
-	# Replace all occurences of the global variable names:
-	for (i in plainNames){
-		modelFunctionString<-gsub(pattern=i,
-															replacement=paste("x$",i,sep=""),
-															x=modelFunctionString,
-															fixed=TRUE)
-	}
-	# Replace only the first occurrence of "()" ; ToDo: regular expression s.t. any "(    )" is replace, i.e. not depending on the
-	# count of whitespaces:
-	modelFunctionString<-sub(pattern=c("()"),replacement=c("(x)"),x=modelFunctionString, fixed=TRUE)
-	#print(modelFunctionString)
-	# ToDo: Probably here some problem with the environment emerges:
-	modelFunctionData.frameNames<-eval(parse(text=modelFunctionString))
-	# Return the transformed function:
-	modelFunctionData.frameNames
+plainNames2data.frameNames <- function(modelFunction, plainNames) {
+  modelFunctionString <- deparse(modelFunction)
+  # Replace all occurences of the global variable names:
+  for (i in plainNames) {
+    modelFunctionString <- gsub(
+      pattern = i,
+      replacement = paste("x$", i, sep = ""),
+      x = modelFunctionString,
+      fixed = TRUE
+    )
+  }
+  # Replace only the first occurrence of "()" ; ToDo: regular expression s.t. any "(    )" is replace, i.e. not depending on the
+  # count of whitespaces:
+  modelFunctionString <- sub(pattern = c("()"), replacement = c("(x)"), x = modelFunctionString, fixed = TRUE)
+  # print(modelFunctionString)
+  # ToDo: Probably here some problem with the environment emerges:
+  modelFunctionData.frameNames <- eval(parse(text = modelFunctionString))
+  # Return the transformed function:
+  modelFunctionData.frameNames
 }
-if(0){
-	##############################################################################################
-	# Test it:
-	profit1<-function(){
-		list(Profit=revenue-costs)
-	}
-	profit2<-plainNames2data.frameNames(modelFunction=profit1, plainNames=c("revenue", "costs"))
-	# CAVE: here is a problem with the environment: ToDo check!!! (cf. above where eval is used)
-	print(profit2)
-	is.function(profit2)
-	profit2(data.frame("revenue"=10,"costs"=2))
-	##############################################################################################
-	# Scratch:
-	profit1String<-deparse(profit1)
-	print(profit1String)
-	#profit2String<-cat(paste(sub(pattern=c("revenue"),replacement=c("x$revenue"),x=profit1String),collapse="\n"))
-	# Replace all occurences of "revenue":
-	profit2String<-gsub(pattern=c("revenue"),replacement=c("x$revenue"),x=profit1String, fixed=TRUE)
-	print(profit2String)
-	# Replace all occurences of "costs":
-	profit2String<-gsub(pattern=c("costs"),replacement=c("x$costs"),x=profit2String, fixed=TRUE)
-	print(profit2String)
-	# Replace only the first occurrence of "()" ; ToDo: regular expression s.t. any "(    )" is replace, i.e. not depending on the
-	# count of whitespaces:
-	profit2String<-sub(pattern=c("()"),replacement=c("(x)"),x=profit2String, fixed=TRUE)
-	print(profit2String)
-	profit2<-eval(parse(text=profit2String))
-	print(profit2)
-	is.function(profit2)
-	profit2(data.frame("revenue"=10,"costs"=2))
+if (0) {
+  ##############################################################################################
+  # Test it:
+  profit1 <- function() {
+    list(Profit = revenue - costs)
+  }
+  profit2 <- plainNames2data.frameNames(modelFunction = profit1, plainNames = c("revenue", "costs"))
+  # CAVE: here is a problem with the environment: ToDo check!!! (cf. above where eval is used)
+  print(profit2)
+  is.function(profit2)
+  profit2(data.frame("revenue" = 10, "costs" = 2))
+  ##############################################################################################
+  # Scratch:
+  profit1String <- deparse(profit1)
+  print(profit1String)
+  # profit2String<-cat(paste(sub(pattern=c("revenue"),replacement=c("x$revenue"),x=profit1String),collapse="\n"))
+  # Replace all occurences of "revenue":
+  profit2String <- gsub(pattern = c("revenue"), replacement = c("x$revenue"), x = profit1String, fixed = TRUE)
+  print(profit2String)
+  # Replace all occurences of "costs":
+  profit2String <- gsub(pattern = c("costs"), replacement = c("x$costs"), x = profit2String, fixed = TRUE)
+  print(profit2String)
+  # Replace only the first occurrence of "()" ; ToDo: regular expression s.t. any "(    )" is replace, i.e. not depending on the
+  # count of whitespaces:
+  profit2String <- sub(pattern = c("()"), replacement = c("(x)"), x = profit2String, fixed = TRUE)
+  print(profit2String)
+  profit2 <- eval(parse(text = profit2String))
+  print(profit2)
+  is.function(profit2)
+  profit2(data.frame("revenue" = 10, "costs" = 2))
 }

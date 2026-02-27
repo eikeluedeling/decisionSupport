@@ -1,8 +1,8 @@
-#calculate time-dependent yields from fruit trees
+# calculate time-dependent yields from fruit trees
 
 
 #' Gompertz function yield prediction for perennials
-#' 
+#'
 #' Yields of trees or other perennial plants have to be simulated in order to
 #' predict the outcomes of many interventions. Unlike annual crops, however,
 #' trees normally yield nothing for a few years after planting, following which
@@ -16,7 +16,7 @@
 #' points in time, which the user can specify. They are described by a year
 #' number and by a percentage of the maximum yield that is attained at that
 #' time.
-#' 
+#'
 #' @param max_harvest maximum harvest from the tree (in number of fruits, kg or
 #' other units)
 #' @param time_to_first_yield_estimate year (or other time unit) number, for
@@ -50,43 +50,45 @@
 #' @author Eike Luedeling
 #' @keywords "yield function" utility
 #' @examples
-#' 
-#' gompertz_yield(max_harvest=1000,
-#'                time_to_first_yield_estimate=5,
-#'                time_to_second_yield_estimate=15,
-#'                first_yield_estimate_percent=10,
-#'                second_yield_estimate_percent=90,
-#'                n_years=30,
-#'                var_CV=5,
-#'                no_yield_before_first_estimate=TRUE)
+#'
+#' gompertz_yield(
+#'   max_harvest = 1000,
+#'   time_to_first_yield_estimate = 5,
+#'   time_to_second_yield_estimate = 15,
+#'   first_yield_estimate_percent = 10,
+#'   second_yield_estimate_percent = 90,
+#'   n_years = 30,
+#'   var_CV = 5,
+#'   no_yield_before_first_estimate = TRUE
+#' )
 #' @export gompertz_yield
-gompertz_yield<-function(max_harvest,time_to_first_yield_estimate,
-                         time_to_second_yield_estimate,
-                         first_yield_estimate_percent,
-                         second_yield_estimate_percent,n_years,var_CV=0,
-                         no_yield_before_first_estimate=TRUE)
-{
-  a=max_harvest
-  t1=time_to_first_yield_estimate
-  t2=time_to_second_yield_estimate
-  p1=first_yield_estimate_percent/100
-  
-  p2=second_yield_estimate_percent/100
+gompertz_yield <- function(max_harvest, time_to_first_yield_estimate,
+                           time_to_second_yield_estimate,
+                           first_yield_estimate_percent,
+                           second_yield_estimate_percent, n_years, var_CV = 0,
+                           no_yield_before_first_estimate = TRUE) {
+  a <- max_harvest
+  t1 <- time_to_first_yield_estimate
+  t2 <- time_to_second_yield_estimate
+  p1 <- first_yield_estimate_percent / 100
 
-  if (p1>0.999) p1<-0.999
-  if (p1<0.001) p1<-0.001
-  if (p2>0.999) p2<-0.999
-  if (p2<0.001) p2<-0.001
-  if(t1==t2) t2<-t1+1
-  c<-sum(log(log(p2)/log(p1))/(t1-t2))
-  b<-(-log(p1)/exp(-c*t1))
-  gompertz<-function(x){a*exp(-b*exp(-c*x))}
-  
-  yield_n_years_ideal<-gompertz(1:n_years)
-  yield_n_years_real<-unlist(lapply(yield_n_years_ideal,vv,var_CV=var_CV,n=1))
-  if(no_yield_before_first_estimate&t1>1)
-  {yield_n_years_real[1:min(c(n_years,t1-1))]<-0}
+  p2 <- second_yield_estimate_percent / 100
+
+  if (p1 > 0.999) p1 <- 0.999
+  if (p1 < 0.001) p1 <- 0.001
+  if (p2 > 0.999) p2 <- 0.999
+  if (p2 < 0.001) p2 <- 0.001
+  if (t1 == t2) t2 <- t1 + 1
+  c <- sum(log(log(p2) / log(p1)) / (t1 - t2))
+  b <- (-log(p1) / exp(-c * t1))
+  gompertz <- function(x) {
+    a * exp(-b * exp(-c * x))
+  }
+
+  yield_n_years_ideal <- gompertz(1:n_years)
+  yield_n_years_real <- unlist(lapply(yield_n_years_ideal, vv, var_CV = var_CV, n = 1))
+  if (no_yield_before_first_estimate & t1 > 1) {
+    yield_n_years_real[1:min(c(n_years, t1 - 1))] <- 0
+  }
   return(yield_n_years_real)
 }
-
-
