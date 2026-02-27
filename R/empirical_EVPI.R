@@ -185,9 +185,9 @@ plot.EVPI_res <- function(x, res = TRUE, ...){
                      out_var = x$out_var_data, 
                      out_var_sm = x$out_var_sm)
     
-    ggplot2::ggplot(x1,ggplot2::aes_string("test_var","out_var")) + 
+    ggplot2::ggplot(x1, ggplot2::aes(.data[["test_var"]], .data[["out_var"]])) + 
       ggplot2::geom_jitter(alpha = 0.2) +
-      ggplot2::geom_line(ggplot2::aes(x = x1$test_var, y = x1$out_var_sm), col = "red") +
+      ggplot2::geom_line(ggplot2::aes(x = .data[["test_var"]], y = .data[["out_var_sm"]]), col = "red") +
       ggplot2::labs(title = "Original data with loess prediction", 
                     x = x$test_var_name, 
                     y = x$out_var_name) +
@@ -208,7 +208,7 @@ plot.EVPI_res <- function(x, res = TRUE, ...){
                      out_var_weight = x$out_var_weight)
     ylab <- paste("Weighted", x$out_var_name, sep = " ")
     
-    ggplot2::ggplot(x1,ggplot2::aes_string("test_var","out_var_weight")) + 
+    ggplot2::ggplot(x1, ggplot2::aes(.data[["test_var"]], .data[["out_var_weight"]])) + 
       ggplot2::geom_line() +
       ggplot2::geom_area(data=unique(subset(x1, x1$out_var_weight>=0)), fill="lightgreen") +
       ggplot2::geom_area(data=unique(subset(x1, x1$out_var_weight<0)), fill="tomato") +
