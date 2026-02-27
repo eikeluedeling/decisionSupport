@@ -90,7 +90,7 @@ Collate:
     'plot_evpi.R'
     'plot_pls.R'
     'plsr.mcSimulation.R'
-    'print.mcSimuation.R'
+    'print.mcSimulation.R'
     'print.summary.mcSimulation.R'
     'random_state.R'
     'sample_CPT.R'
