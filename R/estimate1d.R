@@ -27,6 +27,7 @@
 #' @include rdist90ci_exact.R 
 #' @include rdistq_fit.R
 #' @include rtnorm90ci.R 
+#' @include rmetalog90ci.R
 NULL
 ##############################################################################################
 # estimate1d(distribution, lower, upper,...)
@@ -211,9 +212,15 @@ as.estimate1d<-function(x, ...){
 #'    \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #'    \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
 #    \code{"tnorm"}                \tab  \link[msm:tnorm]{Truncated Normal}           \tab \code{\link[=rdistq_fit]{fit}} 
+#'    \code{"metalog"}              \tab \href{https://en.wikipedia.org/wiki/Metalog_distribution}{Metalog} \tab \code{\link[=rmetalog90ci]{fit}}  \cr
 #'    }
 #'    For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
 #'    fitted nor calculated.  
+#'    For \code{distribution="metalog"} the argument \code{method} is obsolete, as the Metalog
+#'    distribution is always fitted on the quantiles \code{rho[["lower"]]}, \code{rho[["median"]]}
+#'    and \code{rho[["upper"]]} (\code{rho[["median"]]} is mandatory in this case). Optional
+#'    elements \code{rho[["boundedness"]]}, \code{rho[["bounds_lower"]]} and
+#'    \code{rho[["bounds_upper"]]} are passed on to \code{\link{rmetalog90ci}}.
 #'    }
 #'    \item{\code{rho[["method"]]}}{
 #'    If supplied, i.e. \code{!is.null(rho[["method"]])}, this value overwrites the function 
@@ -268,6 +275,18 @@ random.estimate1d<-function(rho ,n , method="calculate", relativeTolerance=0.05,
                           lower=rho[["lower"]],
                           upper=rho[["upper"]])
   } 
+  ## The Metalog distribution is always fitted on the supplied quantiles, i.e. the procedure is the 
+  ## same for all methods:
+  else if(match(rho[["distribution"]], "metalog", nomatch = 0)){
+    x <-  rmetalog90ci(n=n,
+                       lower=rho[["lower"]],
+                       median=rho[["median"]],
+                       upper=rho[["upper"]],
+                       boundedness=rho[["boundedness"]],
+                       bounds_lower=rho[["bounds_lower"]],
+                       bounds_upper=rho[["bounds_upper"]],
+                       relativeTolerance=relativeTolerance)
+  }
   ## Generate the random numbers by calculating the distribution parameters from lower and upper:
   else if(method=="calculate"){
     # ToDo: extract this block as function rdist90ci_calculate()?
