@@ -50,6 +50,7 @@ Suggests:
     mc2d (>= 0.1.15),
     pls (>= 2.4.3),
     rmarkdown,
+    rmetalog (>= 1.0.0),
     scales,
     testthat (>= 0.9.1)
 VignetteBuilder: knitr
@@ -61,6 +62,7 @@ Collate:
     'as.data.frame.mcSimulation.R'
     'chance_event.R'
     'compound_figure.R'
+    'rmetalog90ci.R'
     'paramtnormci_fit.R'
     'paramtnormci_numeric.R'
     'rtnorm90ci.R'

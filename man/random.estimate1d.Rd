@@ -45,9 +45,15 @@ generating function (cf. below).
   \code{"triang"}               \tab \link[mc2d:triangular]{Triangular}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
   \code{"gompertz"}             \tab \link[eha:Gompertz]{Gompertz}                 \tab \code{\link[=rdistq_fit]{fit}}  \cr
   \code{"pert"}                 \tab  \link[mc2d:pert]{(Modified) PERT}            \tab \code{\link[=rdistq_fit]{fit}}  \cr
+  \code{"metalog"}              \tab \href{https://en.wikipedia.org/wiki/Metalog_distribution}{Metalog} \tab \code{\link[=rmetalog90ci]{fit}}  \cr
   }
   For \code{distribution="const"} the argument \code{method} is obsolete, as a constant is neither
   fitted nor calculated.  
+  For \code{distribution="metalog"} the argument \code{method} is obsolete, as the Metalog
+  distribution is always fitted on the quantiles \code{rho[["lower"]]}, \code{rho[["median"]]}
+  and \code{rho[["upper"]]} (\code{rho[["median"]]} is mandatory in this case). Optional
+  elements \code{rho[["boundedness"]]}, \code{rho[["bounds_lower"]]} and
+  \code{rho[["bounds_upper"]]} are passed on to \code{\link{rmetalog90ci}}.
   }
   \item{\code{rho[["method"]]}}{
   If supplied, i.e. \code{!is.null(rho[["method"]])}, this value overwrites the function 
